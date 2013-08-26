@@ -1,0 +1,588 @@
+
+#pagelet_composer{
+    float:left;
+    width:100%;
+}
+
+#pagelet_composer .swTitle{
+    color:#5a7a35;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.clearfix:after{
+    clear: both;
+    display:block;
+    font-size:0;
+    height:0;
+    line-height:0;
+    visibility:hidden;;
+}
+
+#swComposerMsgBox .swComposerMsgBox{
+    border: 1px solid #ccc;
+    min-height:80px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+#swComposerMsgBox .content table{
+    border-spacing:0;
+    width:100%;
+}
+
+#swComposerMsgBox .content .inputContainer{
+    min-height:40px;
+}
+
+#swComposerMsgBox .content .inputContainer .textInput{
+    font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size:12px;
+    width:100%;
+    min-height:40px;
+    height:40px;
+    resize:none;
+    border:none;
+    outline:none;
+    background:transparent;
+    overflow:hidden;
+    padding:0 5px 0 5px;
+}
+
+.swComposerMsgBox .top{
+    height:15px;
+    text-align:right;
+    padding-right:5px;
+}
+
+.clear{
+    clear:both;
+}
+
+#pagelet_stream{
+    margin-top:30px;
+}
+
+#pagelet_stream .vertical{
+    background:transparent url('../images/vertical.png') center no-repeat;
+    height:1px;
+}
+
+.swStream{
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+.swComposerMsgBox .bottom{
+    height:20px;
+    text-align:left;
+}
+
+.swComposerMsgBox .bottom ul{
+    float:right;
+    height:20px;
+    width:93px;
+}
+
+.swComposerMsgBox .bottom ul li{
+    float:left;
+    margin-left:10px;
+    height:20px;
+    width:20px;
+}
+
+.swComposerMsgBox .bottom ul li span{
+    display:block;
+    width:20px;
+    height:20px;
+    cursor:pointer;
+}
+
+.swComposerMsgBox .bottom .swTagPhoto{
+    background:transparent url('../images/bottomtagcontrol.png') top left no-repeat ;
+}
+
+.swComposerMsgBox .bottom .swTagVideo{
+    background:transparent url('../images/bottomtagcontrol.png') -25px 0 no-repeat ;
+}
+
+.swComposerMsgBox .bottom  .swTagLink{
+    background:transparent url('../images/bottomtagcontrol.png') -50px 0 no-repeat ;
+}
+
+.swComposerMsgBox .bottom .swTagPlace{
+    background:transparent url('../images/bottomtagcontrol.png') -75px 0 no-repeat ;
+}
+
+.swTagClear{
+    height: 15px;
+    font-weight:bold;
+    font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size:12px;
+    color:#808085;
+}
+
+.content{
+    position:relative;
+}
+
+.swTagClear:hover{
+    text-decoration:none;
+    color:#b8bfac;
+}
+
+#tagElements{
+    border-top:1px dashed #ccc;
+    margin-top:5px;
+    padding-top:3px;
+    padding-bottom:3px;
+}
+
+.swComposerTagControl{
+    margin-top:7px;
+    float:left;
+    width:100%;
+}
+
+.swComposerTagControl .left{
+    float:left;
+}
+
+.swComposerTagControl .left .tag{
+    float:left;
+    display:block;
+    width:76px;
+    height:17px;
+    background:transparent url('../images/tagbg.png') no-repeat;
+    color: white;
+    font-size:11px;
+    padding:2px;
+    font-weight:bold;
+    line-height:15px;;
+}
+
+.swComposerTagControl .left .tag .btnClear,.swComposerTagControl .left .tag .btnClear:hover{
+    float:right;
+    text-decoration:none;
+    color:#95B570;
+    margin-right:5px;
+}
+
+.swComposerTagControl .right .moreTag{
+    display:inline-block;
+    height:23px;
+    line-height:23px;
+    color:#e8781a;
+    cursor:pointer;
+    font-size:11.3px;
+    font-weight:bold;
+    margin-right:10px;
+    width:70px;
+    background:url('../images/category.png') right center no-repeat;
+}
+
+.swComposerTagControl .right{
+    float:right;
+}
+
+.swComposerTagControl .right .swShareButton,.swComposerTagControl .right .swShareButton:hover{
+    /*float:right;*/
+    width:56px;
+    height:23px;
+    line-height:23px;
+    font-family:Arial;
+    font-size:12px;
+    font-weight:bold;
+    color: white;
+    text-align:center;
+    text-decoration:none;
+    background:transparent url('../images/sharebtn.png') no-repeat;
+    border:none;
+    cursor:pointer;
+}
+
+.swStreamStory {
+    margin-bottom:7px;
+    padding-top:8px;
+    padding-bottom:8px;
+    background:transparent url('../images/vertical.png') center bottom no-repeat;
+}
+
+.swStreamStory .storyContent .swStoryImage{
+    display:inline;
+    width:38px;
+    min-height:38px;
+    height:100%;
+    margin-right:5px;
+    float:left;
+}
+
+.swStreamStory .storyContent .swStoryImage img, .swCommentPosted .swImg img, .swCommentBox .swImg img{
+    width:30px;
+    height:30px;
+}
+
+.swStreamStory .storyContent .mainWrapper{
+    display: inline-block;
+    height:100%;
+    width:450px;
+}
+
+.swStreamCaption{
+    display:inline;
+}
+
+.swStreamCaption a{
+    color:#1078B4;
+    font-weight:bold;
+    font-size: 13px;
+}
+
+.actorName{
+    display:inline;
+}
+
+.actorName a{
+    margin-bottom: 5px;
+}
+
+.swStreamMsg{
+    display:inline;
+    width: 450px;
+    height: 100%;
+
+}
+
+.swStreamMsg .msgBody{
+    color:#808085;
+    width: 450px;
+    height: 100%;
+    word-wrap: break-word;
+    text-align:justify;
+    display: block;
+    font-size: 13px;
+    line-height: 1.38;
+    margin-top: 5px;
+
+}
+
+.msgBodyShare {
+    color:#808085;
+    width: 450px;
+    height: 100%;
+    word-wrap: break-word;
+    text-align:justify;
+    display: block;
+    font-size: 10px;
+    line-height: 1.38;
+    margin-top: 5px;
+    border:1px #0C8962 solid;
+}
+
+.swTimeStatus{
+    margin-top: 5px;
+    font-size:8.5px;
+    font-weight:bold;
+    color:#88A861;
+    width:100px;
+}
+
+.taggedImageStatus{
+    border-top:1px dashed #ccc;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+.taggedImageStatus img{
+    max-height:300px;
+    max-width:300px;
+}
+
+.swStreamStory .storyContent .bottomWrapper{
+    height:10px;
+    /*width:500px;*/
+}
+
+.swMsgControl{
+    float: right;
+}
+
+.bottomWrapper .swMsgControl li{
+    float:left;
+}
+
+.bottomWrapper .swMsgControl .link{
+    font-size:9.15px;
+    font-weight:bold;
+    margin-right:3px;
+
+    margin-top: 2px;
+
+}
+
+.bottomWrapper .swMsgControl .link a,.bottomWrapper .swMsgControl .link a:hover{
+    color:#1078b4;
+    text-decoration:none;
+    font-weight: bold;
+
+}
+
+ul.swMsgControl {
+    margin-top: -10px;
+}
+
+.swMsgControl .link {
+    line-height: 15px;
+}
+
+
+button.follow-button, button.Hover, button.Pressed { line-height:11px;margin-top: -3px; }
+button.follow-button img { vertical-align: middle; }
+
+button.follow-button {
+    background:      #ffffff;
+    padding:         2px 4px 2px 4px;      /* Button padding */
+    font-size:       11px;
+    font-weight:     bold;
+    display:         inline;
+    color:           black;
+    border:          1px solid #90a967;
+    font-family:     Arial, sans-serif;
+    cursor:          pointer;		   /* Resurrect the pointer */
+    text-decoration: none;                 /* Remove default underline style from hyperlink */
+}
+
+/* I decided to separate gradients */
+
+button.follow-button {
+    background: rgb(241,246,235); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+}
+
+.comment-wrapper {
+    margin-top: 10px;
+}
+
+.view-more-comments {
+    margin: 1px 50px;
+    font-weight: bold;
+    background:#e9fbd3;
+    color: #666;
+    padding: 6px;
+}
+.view-more-comments:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.swCommentPosted{
+    margin: 1px 50px;
+    padding: 5px;
+    z-index:999;
+    position:relative;
+    background:#E5EDD9;
+}
+
+.swCommentPosted a{
+    color:#1078b4;
+    font-weight:bold;
+    margin-left:5px;
+    margin-top: 2px;
+
+}
+
+.swCommentPosted div.swImg{
+    float:left;
+    margin-right: 5px;
+}
+
+.swCommentPosted div{
+    display:table-cell;
+}
+
+.swCommentPosted div label{
+    display:block;
+    position:relative;
+}
+
+.swCommentPosted .swCommentImg{
+    float:left;
+    width:25px;
+    height:25px;
+}
+
+img.swCommentImg {
+    margin-top: -1px;
+}
+
+.swCommentPosted .swTimeComment{
+    margin-left:5px;
+    font-size:8.5px;
+    color:#88A861;
+    margin-top: 2px;
+}
+
+.userComment {
+    font-size: 12px;
+}
+
+.swPostedCommment{
+    text-align:justify;
+    width: 400px;
+    color:#666;
+    line-height: 1.38;
+    word-wrap: break-word;
+    font-size: 12px;
+}
+
+label.swPostedCommment {
+    margin-left: 3px;
+}
+
+.swCommentBox div, .swCommentBox form{
+    display:table-cell;
+    height:100%;
+}
+
+.swCommentBox{
+    margin: 1px 50px;
+    z-index:999;
+    position:relative;
+    background:#e9fbd3;
+    display:none;
+    padding: 5px;
+}
+
+.swCommentBox .swCommentImg{
+    float:left;
+    width:25px;
+    height:25px;
+}
+
+.swCommentBox .swBoxCommment{
+    margin-left:5px;
+    width:330px;
+    overflow:hidden;
+    resize:none;
+    word-wrap: break-word;
+    float: left;
+}
+
+.swCommentBox .swSubmitComment {
+    font-size:8.5px;
+    border:1px solid #90a967;
+    margin-top:5px;
+    margin-bottom:5px;
+    margin-left: 10px;
+    cursor:pointer;
+    float: left;
+}
+
+#pagelet_stream_pager{
+    height:22px;
+    line-height:22px;
+    background:#f2f7ec;
+    border:1px solid #ccc;
+    text-align:right;
+    padding-right:10px;
+}
+
+#pagelet_stream_pager a{
+    color:#90a967;
+    font-size:9.15px;
+    font-weight:bold;
+}
+
+.allWraper{
+    width:550px;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.content_stt {
+    height: auto;
+    width: 100%;
+    float: left;
+    border:#BDC7D8 solid 1px;
+}
+.textInput{
+    width: 98%;
+    border: none;
+    resize: none;
+    margin: 0;
+    padding: 0;
+}
+.pam
+{
+    border-top:1px dashed #CCC;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+}
+
+.picture-ava {
+
+    width:100px;
+    height: 100px;
+    background-color: #c0c0c0;
+    float: left;
+
+}
+.prefix_text {
+    margin-left: 10px;
+    float: left;
+    font-size: 11px;
+    font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+    color: #333;
+    line-height: 1.28;
+    text-align: left;
+    height: auto;
+    width: 400px;
+}
+.button-share{
+    float: left;
+    text-align:right;
+    margin-top: 10px;
+    background-color:#F2F2F2;
+    border: 1px solid #CCC;
+    width:550px;
+}
+
+.btnshare{
+    background: #90A967;
+    border: solid 1px #2e8b57;
+
+}
+
+.black{
+    display: none;
+    position: absolute;
+    top: -5000px;
+    left: -5000px;
+    width: 10000px;
+    height: 10000px;
+    background-color: #2C2828;
+    z-index:1001;
+    -moz-opacity: 0.4;
+    opacity:.40;
+    filter: alpha(opacity=40);
+}
+.editshare {
+    top: 60px;
+    left: 5px;
+    position: absolute;
+}
+.blockImage{
+    margin-right:3px;
+    float:left;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
