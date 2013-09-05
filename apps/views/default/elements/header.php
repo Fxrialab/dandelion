@@ -114,7 +114,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName)." ".ucfirst($cu
                                                 $getIDRequest = $getRecordRequest->data->userA;
                                                 foreach($ListPeopleRequestTo[$getIDRequest] as $People) {
                                                     $UserNameRequest = ucfirst($People->data->firstName).' '.ucfirst($People->data->lastName);
-                                                    $peopleIDRequest = substr($People->recordID, 2);
+                                                    $peopleIDRequest = str_replace(':', '_', $People->recordID);
                                                     $avatar    =   $People->data->profilePic;
                                                     ?>
                                                     <ul class="flyoutItemList NewNotify" id="people-<?php echo $peopleIDRequest; ?>">
@@ -130,12 +130,12 @@ $currentUserName        = ucfirst($currentUser->data->firstName)." ".ucfirst($cu
                                                                                 <div class="notifyFooter swTimeComment" title="<?php echo $getRecordRequest->data->published; ?>"></div>
                                                                             </div>
                                                                             <span class="actionFriend">
-                                                                                <a id="acceptFriend" href="">
-                                                                                    <img class="btnFi" src="<?php echo F3::get('STATIC'); ?>images/agree.png"/>
+                                                                                <a href="">
+                                                                                    <img class="btnFi" id="acceptFriend" src="<?php echo F3::get('STATIC'); ?>images/agree.png"/>
                                                                                 </a>
                                                                                 <input type="hidden" id="PeopleID" name="id" value="<?php echo $peopleIDRequest;?>">
-                                                                                <a id="cancelFriend" href="">
-                                                                                    <img class="btnFi" src="<?php echo F3::get('STATIC'); ?>images/cancel.png"/>
+                                                                                <a  href="">
+                                                                                    <img class="btnFi" id="cancelFriend" src="<?php echo F3::get('STATIC'); ?>images/cancel.png"/>
                                                                                 </a>
                                                                             </span>
                                                                         </div>
