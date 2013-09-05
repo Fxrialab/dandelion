@@ -66,14 +66,14 @@ class OrientDBCommandCommand extends OrientDBCommandAbstract
         if (($this->mode == OrientDB::COMMAND_QUERY || $this->mode == OrientDB::COMMAND_SELECT_SYNC) && count($this->attribs) == 3) {
             throw new OrientDBWrongParamsException('Fetch is useless with COMMAND_QUERY');
         }
-        $this->query = $this->attribs[1];
+        $this->query = trim($this->attribs[1]);
         $this->fetchPlan = '*:0';
         if (count($this->attribs) == 3) {
             $this->fetchPlan = $this->attribs[2];
         }
 
         // Add mode
-        if ($this->mode == OrientDB::COMMAND_QUERY || $this->mode == OrientDB::COMMAND_SELECT_SYNC) {
+        if ($this->mode == OrientDB::COMMAND_QUERY || $this->mode == OrientDB::COMMAND_SELECT_SYNC || $this->mode == OrientDB::COMMAND_SELECT_GREMLIN) {
             $this->addByte(self::MODE_SYNC);
         } else {
             $this->addByte(self::MODE_ASYNC);
@@ -82,6 +82,8 @@ class OrientDBCommandCommand extends OrientDBCommandAbstract
             $objName = 'com.orientechnologies.orient.core.sql.query.OSQLAsynchQuery';
         } elseif ($this->mode == OrientDB::COMMAND_SELECT_SYNC) {
             $objName = 'com.orientechnologies.orient.core.sql.query.OSQLSynchQuery';
+        } elseif ($this->mode == OrientDB::COMMAND_SELECT_GREMLIN) {
+            $objName = 'com.orientechnologies.orient.graph.gremlin.OCommandGremlin';
         } else {
             $objName = 'com.orientechnologies.orient.core.sql.OCommandSQL';
         }
@@ -93,7 +95,7 @@ class OrientDBCommandCommand extends OrientDBCommandAbstract
         // Query text serialization in TEXT mode
         $buff .= pack('N', strlen($this->query));
         $buff .= $this->query;
-        if ($this->mode == OrientDB::COMMAND_SELECT_ASYNC || $this->mode == OrientDB::COMMAND_SELECT_SYNC) {
+        if ($this->mode == OrientDB::COMMAND_SELECT_ASYNC || $this->mode == OrientDB::COMMAND_SELECT_SYNC || $this->mode == OrientDB::COMMAND_SELECT_GREMLIN) {
             // Limit set to -1 to ignore and use TEXT MODE
             $buff .= pack('N', -1);
             // Add a fetchplan
