@@ -7,7 +7,7 @@
  */
 class HomeController extends AppController
 {
-    protected $uses     = array("Activity");
+    protected $uses     = array("Activity", "User");
     protected $helpers  = array();
 
     public function __construct()
@@ -32,6 +32,9 @@ class HomeController extends AppController
 
             // get activities
             $activitiesRC = $this->Activity->findByCondition("owner = ? AND type = ? ORDER BY published DESC LIMIT 10", array($this->getCurrentUser()->recordID,"post"));
+            $gremlin = $this->User->sqlGremlin("current.in.username", "@rid = ?", array('#'.$this->getCurrentUser()->recordID));
+            var_dump($gremlin);
+
             if ($activitiesRC)
             {
                 $homes = array();

@@ -10,7 +10,7 @@ include_once(CONFIG.'amqConfig.php');
 
 class AppController extends Controller
 {
-    protected $uses     = array("User", "Friendship", "Sessions", "Follow", "Activity");
+    protected $uses     = array("User", "Friendship", "Sessions", "Follow", "Activity", "Edge");
     protected $helpers  = array("Amqp");
 
     protected $layout   = '';
@@ -81,6 +81,8 @@ class AppController extends Controller
             require (UI . ELEMENTS . $element . '.php');
         }
     }
+
+
 
     public function getMacAddress()
     {
@@ -169,8 +171,8 @@ class AppController extends Controller
                 'published' => $published
             );
             // create activity for currentUser
-            $this->Activity->create($activity);
-
+            $activityRC = $this->Activity->create($activity);
+            //$this->Edge->createEdge('#'.$actorID, '#'.$activityRC);
             $friends = $this->getFriendsStt($actor->recordID);
             //var_dump($findUserBOfFollow);
             //var_dump($friends);

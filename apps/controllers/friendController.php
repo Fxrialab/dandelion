@@ -18,34 +18,33 @@ class FriendController extends AppController
 
     public function sentFriendRequest()
     {
-        $userB  = F3::get("POST.id");
+        $getID  = F3::get("POST.id");
         $userA  = $this->getCurrentUser()->recordID;
+        $userB  = str_replace(substr($userA, 2), $getID, $userA);
         //prepare data
         $relationship   = array(
             'userA'         => $userA,
             'relationship'  => 'request',
             'status'        => 'new',
-            'userB'         => str_replace(substr($userA, 2), $userB, $userA),
+            'userB'         => $userB,
             'published'     => time()
         );
         //save data
-        $this->Friendship->create($relationship);
-        $this->Information->createLink(" friends","LINKSET","friendship.userA", "information.userID");
+        $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
     }
 
     public function acceptFriendship()
     {
         $getIdUserB = F3::GET("POST.id");
         $userA      = $this->getCurrentUser()->recordID;
-        $userB      = str_replace(substr($userA, 2), $getIdUserB, $userA);
+        $userB      = str_replace('_', ':', $getIdUserB);
         //update a record
         $updateRecord   = array(
             'relationship'  => 'friend',
             'status'        => 'ok'
         );
         $this->Friendship->updateByCondition($updateRecord, "userA = ? AND userB = ?", array($userB, $userA));
-        $this->Information->createLink(" friends","LINKSET","friendship.userA", "information.userID");
-        //prepare data
+        /*//prepare data
         $relationship   = array(
             'userA'         => $userA,
             'relationship'  => 'friend',
@@ -54,8 +53,7 @@ class FriendController extends AppController
             'published'     => time()
         );
         //save data
-        $this->Friendship->create($relationship);
-        $this->Information->createLink(" friends","LINKSET", "friendship.userA", "information.userID");
+        $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);*/
     }
 
     public function unAcceptFriendship()
@@ -68,7 +66,6 @@ class FriendController extends AppController
             'status'  => 'later'
         );
         $this->Friendship->updateByCondition($updateRecord, "userA = ? AND userB = ?", array($userB, $userA));
-        $this->Information->createLink(" friends","LINKSET","friendship.userA", "information.userID");
     }
 }
 

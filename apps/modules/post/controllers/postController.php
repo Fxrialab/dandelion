@@ -6,7 +6,7 @@
 
 class PostController extends AppController {
 
-    protected $uses = array ("Friendship", "User", "Follow", "Status", "Comment", "Photo");
+    protected $uses = array ("Friendship", "User", "Follow", "Status", "Comment", "Post");
 
     public function __construct() {
         parent::__construct();
@@ -164,6 +164,7 @@ class PostController extends AppController {
 
             // save
             $status = $this->Status->create($postEntry);
+            //$this->Post->createEdge('#'.$status,'#'.$currentUser->recordID);
             F3::set('statusID',$status);
             // track activity
             $this->trackActivity($currentUser, 'HomePost', $status, $published);
@@ -218,6 +219,8 @@ class PostController extends AppController {
                 );
 
                 $commentRC  = $this->Comment->create($commentEntryCase1);
+                /*$this->Post->createEdge('#'.$commentRC, '#'.$postID);
+                $this->Post->createEdge('#'.$currentUser->recordID, '#'.$commentRC);*/
                 $commentID  = $commentRC;
             }else {
                 $commentEntryCase2 = array(
@@ -230,6 +233,8 @@ class PostController extends AppController {
                     "tagged"        => $tagged
                 );
                 $commentRC  = $this->Comment->create($commentEntryCase2);
+                /*$this->Post->createEdge('#'.$commentRC, '#'.$postID);
+                $this->Post->createEdge('#'.$currentUser->recordID, '#'.$commentRC);*/
                 $commentID  = $commentRC;
             }
             /* Update number comment */

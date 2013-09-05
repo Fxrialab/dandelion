@@ -8,12 +8,12 @@
 require_once (CONTROLLERS . "appController.php");
 require_once (CONTROLLERS . "elementController.php");
 
-F3::route('GET /min',
+/*F3::route('GET /min',
     function() {
         Web::minify($_GET['base'],explode(',',$_GET['files']));
     },
     CACHE_TIME
-);
+);*/
 
 $url            = $_SERVER["REQUEST_URI"];
 $params_full    = explode('/',$url);

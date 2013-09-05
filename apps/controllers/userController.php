@@ -7,7 +7,7 @@
  */
 class UserController extends AppController
 {
-    protected $uses     = array("User", "Notify", "Sessions");
+    protected $uses     = array("User", "Notify", "Sessions", "Post");
     protected $helpers  = array("Encryption", "Validate", "Email", "String", "Time");
 
     public function __construct()
@@ -53,7 +53,8 @@ class UserController extends AppController
                     $data['confirmationCodeValidUntil'] = $confirmationCodeValidUntil;
 
                     // exclude form submit button and checkbox from data and create a new user
-                    $userID = $this->User->create($data, 'submitForm,regCheckbox');
+                    //$userID = $this->User->createRecord($data, 'submitForm,regCheckbox');
+                    $this->User->create($data, 'submitForm,regCheckbox');
                     $this->EmailHelper->sendConfirmationEmail($data['email'],$confirmationCode);
 
                     F3::set('MsgSignUp','You are registered success. Please check mail and confirm !');
@@ -97,7 +98,9 @@ class UserController extends AppController
                         'requestFriend' => 0,
                         'message'       => 0
                     );
-                    $this->Notify->create($notify);
+                    $notify = $this->Notify->create($notify);
+                    echo $notify."<br />";
+                    //$this->Edge->createEdge('#'.$user->recordID, '#'.$notify);
                     F3::set('MsgConfirm','Thank you confirm email. Now, you can login !') ;
                 }else {
                     F3::set('MsgConfirm','The confirmation code or email are incorrect. Please, try check mail again !');
