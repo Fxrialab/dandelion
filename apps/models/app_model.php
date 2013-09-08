@@ -115,7 +115,7 @@ class AppModel {
      * GREMLIN() SQL function
      *
      */
-    public function sqlGremlin($command, $conditions, $values)
+    public function sqlGremlin($command, $conditions=null, $values=null)
     {
         $toFind = '.map';
         $check = strpos($command, $toFind);
@@ -126,54 +126,23 @@ class AppModel {
             $tempArray = $parentResult;
         }
 
-        switch ($command)
+        $sql = "SELECT GREMLIN( '".$command."' ) FROM ".$this->_className;
+        if ($conditions && $values)
         {
-            case "current":
-            case "current.out":
-            case "current.out.both":
-            case "current.in":
-            case "current.in.map":
-            case "current.in.both":
-            case "current.in.both.map":
-            case "current.both":
-            case "current.out.in":
-            case "current.out.in.both":
-            case "current.in.out":
-            case "current.in.out.both":
-                $sql = "SELECT GREMLIN( '".$command."' ) FROM ".$this->_className;
-                if ($conditions && $values)
-                {
-                    for ($i = 0;  $i < count($values);  $i++) {
-                        $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
-                        $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
-                    }
-                    $sql = $sql." WHERE " . $conditions;
-                }
-                echo $sql."<br />";
-                $queryResult    = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
-                $obResult       = $this->varDumpToString($queryResult);
-                $stringResult   = $this->getResultString($obResult);
-                if ($tempArray)
-                    $result         = $this->getContentGremlin($stringResult, $tempArray);
-                else
-                    $result         = $this->getContentGremlin($stringResult);
-                break;
-            default:
-                $sql = "SELECT GREMLIN( '".$command."' ) FROM ".$this->_className;
-                if ($conditions && $values)
-                {
-                    for ($i = 0;  $i < count($values);  $i++) {
-                        $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
-                        $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
-                    }
-                    $sql = $sql." WHERE " . $conditions;
-                }
-                echo $sql."<br />";
-                $queryResult    = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
-                $stringResult   = $this->getResultString($queryResult[0]);
-                $result         = $this->getContentGremlin($stringResult);
-                break;
+            for ($i = 0;  $i < count($values);  $i++) {
+                $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
+                $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
+            }
+            $sql = $sql." WHERE " . $conditions;
         }
+        echo $sql."<br />";
+        $queryResult    = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
+        $stringResult   = $this->getResultString($queryResult[0]->content);
+        if ($tempArray)
+            $result     = $this->getContentGremlin($stringResult, $tempArray);
+        else
+            $result     = $this->getContentGremlin($stringResult);
+
         return $result;
     }
 
@@ -213,32 +182,11 @@ class AppModel {
      */
     public function getResultString($var)
     {
-        $toFirstFind    = "GREMLIN";
-        $toSecondFind   = "]'</font>";
-        $toThirdFind    = "}]'";
-        $toFourthFind   = "}'</font>";
-        $firstPos   = strpos($var, $toFirstFind) + strlen($toFirstFind);
-        $secondPos  = strpos($var, $toSecondFind);
-        $thirdPos   = strpos($var, $toThirdFind);
-        $fourthFind = strpos($var, $toFourthFind);
-        $start      = (int)$firstPos;
-        if ($secondPos)
-        {
-            $end    = (int)$secondPos;
-            $result = substr($var, $start + 1, $end - $start);
-        }else {
-            if ($thirdPos)
-            {
-                $end    = (int)$thirdPos;
-                $result = substr($var, $start + 1, $end - $start);
-            }
-            elseif ($fourthFind)
-            {
-                $end    = (int)$fourthFind;
-                $result = substr($var, $start + 1, $end - $start);
-            }else
-                $result = substr($var, $start + 1);
-        }
+        $toFind = "GREMLIN";
+        $pos    = strpos($var, $toFind) + strlen($toFind);
+        $start  = (int)$pos;
+        $result = substr($var, $start + 1, strlen($var) - $start);
+
         return $result;
     }
 
@@ -253,20 +201,15 @@ class AppModel {
         $arrayResult = array();
         if ($pos1)
         {
-            $replace1 = str_replace($toFirstFind, '', $resultGremlin);
-            $replace2 = str_replace(')', '', $replace1);
-            $replace3 = str_replace('[', '', $replace2);
-            $replace4 = str_replace(']', '', $replace3);
-            $arrayResult = explode(',', $replace4);
+            $replace = str_replace(array($toFirstFind, ')', '[', ']'), '', $resultGremlin);
+            $arrayResult = explode(',', $replace);
         }else {
             $toSecondFind = '[#';
             $pos2 = strpos($resultGremlin,$toSecondFind);
-            echo $pos2;
             if ($pos2)
             {
-                $replace1 = str_replace('v[#', '', $resultGremlin);
-                $replace2 = str_replace(']', '', $replace1);
-                array_push($arrayResult, $replace2);
+                $replace = str_replace(array('v[#', ']'), '', $resultGremlin);
+                array_push($arrayResult, $replace);
             }else {
                 $toThirdFind = '}';
                 $pos3 = strpos($resultGremlin,$toThirdFind);
@@ -274,37 +217,26 @@ class AppModel {
                 {
                     if ($parentResult)
                     {
-                        $replace1 = str_replace('&quot;', '', $resultGremlin);
-                        $recordArray = explode('},{', $replace1);
-                        foreach ($parentResult as $node)
+                        $startPos = strpos($resultGremlin, '[');
+                        $endPos = strpos($resultGremlin, ']');
+                        if (!$startPos && !$endPos)
                         {
-                            foreach ($recordArray as $record)
-                            {
-                                $replace2 = str_replace('[{', '', $record);
-                                $replace3 = str_replace('}]', '', $replace2);
-                                $replace4 = str_replace('{', '', $replace3);
-                                $replace5 = str_replace('}', '', $replace4);
-                                $replace6 = str_replace(':', '=>', $replace5);
-                                $result   = explode(',', $replace6);
-                                foreach ($result as $parameter)
-                                {
-                                    $title = substr($parameter, 0, strpos($parameter, '=>'));
-                                    $value = substr($parameter, strlen($title) + strlen('=>'));
-                                    $arrayResult[$node][$title] = $value;
-                                }
-                            }
+                            $jsonString = '['.$resultGremlin.']';;
+                        }else {
+                            $jsonString = $resultGremlin;
                         }
+                        $obj = json_decode($jsonString);
+                        $arrayResult = array_combine($parentResult, $obj);
                     }
                 }else {
-                    $replace1 = str_replace('"', '', $resultGremlin);
-                    $replace2 = str_replace('[', '', $replace1);
-                    $replace3 = str_replace(']', '', $replace2);
-                    $arrayResult = explode(',', $replace3);
+                    $replace = str_replace(array('"', '[', ']'), '', $resultGremlin);
+                    $arrayResult = explode(',', $replace);
                 }
             }
         }
         return $arrayResult;
     }
+
     //create new record in class with column field by key
 	public function create($data, $excludes='')
     {

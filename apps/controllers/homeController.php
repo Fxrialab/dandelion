@@ -29,11 +29,8 @@ class HomeController extends AppController
         if ($this->isLogin())
         {
             $this->layout = 'default';
-
             // get activities
             $activitiesRC = $this->Activity->findByCondition("owner = ? AND type = ? ORDER BY published DESC LIMIT 10", array($this->getCurrentUser()->recordID,"post"));
-            $gremlin = $this->User->sqlGremlin("current.in.username", "@rid = ?", array('#'.$this->getCurrentUser()->recordID));
-            var_dump($gremlin);
 
             if ($activitiesRC)
             {
