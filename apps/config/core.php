@@ -12,7 +12,7 @@ define('CACHE_TIME', 3600);
 //not cache for development environment
 F3::set('CACHE', FALSE);
 // site name
-F3::set('SITE', 'joinShare Network');
+F3::set('SITE', 'UserWired Network');
 // debug level
 F3::set('DEBUG', 3);
 // declare F3 structure
