@@ -72,6 +72,16 @@ class Controller {
         return F3::get("SESSION.loggedUser");
     }
 
+    public function render($page,$type)
+    {
+        if ($this->layout != '')
+        {
+            require_once(UI . LAYOUTS . $this->layout . '.php');
+        }else {
+            echo F3::render($page);
+        }
+    }
+
     public function renderModule($action,$type)
     {
         $postInfo = Register::getModule($type);
@@ -79,5 +89,7 @@ class Controller {
         $themePath = $postInfo[0]['viewPath'];
         require_once(MODULES.$themePath.$action.".php");
     }
+
+
 }
 ?>

@@ -28,6 +28,9 @@ $start = $time;
                         $this->element('profileElement');
                         $this->element('whoViewElement');
                         //$this->element('clubElement');
+                        ?>
+                        <div class="autoloadModuleElement"></div>
+                        <?php
                         $this->element('followerElement');
                         //$this->elementModules('elementSugFriend','suggest');
                         ?>

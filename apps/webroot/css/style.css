@@ -511,10 +511,38 @@ ul {
     font-weight:bold;
 }
 
+.autoloadModuleElement {
+    overflow: hidden;
+}
+
 .moduleContent{
-    float:left;
-    padding-top:10px;
+    /*float:left;
+    padding-top:10px;*/
     padding-bottom:10px;
+}
+
+.moduleContent .people {
+    padding: 5px;
+    overflow: hidden;
+}
+
+.moduleContent .people .profilePic {
+    float: left;
+    margin-right: 5px;
+}
+
+.moduleContent .people .info {
+    overflow: hidden;
+}
+
+.info .peopleName {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.info .peopleMutual {
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 .swFriendBox{
@@ -651,9 +679,9 @@ ul {
     padding-left:10px;
     padding-right:10px;
     padding-bottom:10px;
-    border-left:1px solid #d8e4c7;
+    /*border-left:1px solid #d8e4c7;
     border-right:1px solid #d8e4c7;
-    border-bottom:1px solid #ccc;
+    border-bottom:1px solid #ccc;*/
 }
 
 .navMenu{

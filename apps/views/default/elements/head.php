@@ -15,6 +15,7 @@
     <!-- Supports by jquery libs-->
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.min.js"></script>
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.autoSize-min.js"></script>
+    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.timers-1.0.0.js"></script>
     <!--Supports by social network libs-->
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/inputToggle.js"></script>
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/pretty.js"></script>
@@ -38,4 +39,38 @@
         $cssMod = substr($cssFile[1],1); ?>
         <link type="text/css" rel="stylesheet" href="<?php echo F3::get('STATIC_MOD').$cssMod; ?>"/>
     <?php }   ?>
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            $(".autoloadModuleElement").everyTime(10000,function(i){
+                $.ajax({
+                    type: "GET",
+                    url: "/pull",
+                    cache: false,
+                    success: function(html){
+                        $(".autoloadModuleElement").html(html);
+                        var lengthChild     = $('.autoloadModuleElement > div').length;
+                        var actionArrays    = [];
+                        var action;
+                        for (var i=1;i <=lengthChild; i++)
+                        {
+                            action = $('.autoloadModuleElement > div:nth-child('+i+')').attr('class');
+                            actionArrays.push(action);
+                        }
+                        console.log(actionArrays);
+                        $.ajax({
+                            type: "POST",
+                            url: "/loadSuggest",
+                            data: {actionsName: actionArrays},
+                            cache: false,
+                            success: function(html){
+                                $(".autoloadModuleElement").html(html);
+                            }
+                        })
+                    }
+                })
+            });
+
+        });
+    </script>
 </head>

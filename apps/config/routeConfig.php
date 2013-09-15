@@ -35,6 +35,9 @@ class RouteConfig
         /* Route config for notification */
         'notify_POST'           => "notifyController,homeController",
         'updateNotification_POST'   => "notifyController,homeController",
+        /* Route config for load suggest element */
+        'pull_GET'              => "homeController",
+        'loadSuggest_POST'      => "homeController",
     );
 
     public $modules = array(

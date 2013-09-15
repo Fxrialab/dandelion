@@ -7,7 +7,7 @@
  */
 class HomeController extends AppController
 {
-    protected $uses     = array("Activity", "User");
+    protected $uses     = array("Activity", "User", "Friendship", "Actions");
     protected $helpers  = array();
 
     public function __construct()
@@ -31,7 +31,66 @@ class HomeController extends AppController
             $this->layout = 'default';
             // get activities
             $activitiesRC = $this->Activity->findByCondition("owner = ? AND type = ? ORDER BY published DESC LIMIT 10", array($this->getCurrentUser()->recordID,"post"));
+            //check loaded feature
+            /*Test */
+            /*$current = array();
+            $loggedUser = $this->getCurrentUser()->recordID;
+            $findSuggestFriends = $this->User->sqlGremlin("current.out.both", "@rid = ?", array('#'.$loggedUser));
 
+            $groupFriend = array_keys(array_count_values($findSuggestFriends));
+            array_push($current, $loggedUser);
+            $yourFriends = array_diff($groupFriend, $current);
+            echo "---------your friends--------";
+            var_dump($yourFriends);
+            $neighborCurrentUser= $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$loggedUser));
+            echo "-----------neighbor of current user----------";
+
+            var_dump($neighborCurrentUser);
+            if (current($yourFriends) != '')
+            {
+                foreach ($yourFriends as $yourFriend)
+                {
+                    $infoYourFriend = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$yourFriend));
+                    echo "----------information of suggest friends-----------";
+                    var_dump($infoYourFriend);
+                    $neighborFriends = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$yourFriend));
+                    echo "----------neighbor of friends----------";
+                    var_dump($neighborFriends);
+                    if (current($neighborCurrentUser) != '')
+                    {
+                        $mutualFriends= array_intersect($neighborCurrentUser, $neighborFriends);
+                        echo "----------mutual friends-----------";
+                        var_dump($mutualFriends);
+                        //count number mutual friend
+                        $numMutualFriends = count($mutualFriends);
+                        echo "NUMBER MUTUAL FRIEND: ".$numMutualFriends."<br />";
+                        //get info of mutual friend
+                        foreach ($mutualFriends as $mutualFriend)
+                        {
+                            //var_dump($mutualFriend);
+                            $infoMutualFriend= $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
+                            echo "----------information of mutual friends-----------";
+                            var_dump($infoMutualFriend);
+                        }
+                        //var_dump($infoMutualFriend);
+                    }
+
+                }
+            }*/
+            /*$time = microtime();
+            $time = explode(" ", $time);
+            $time = $time[1] + $time[0];
+            $start = $time;
+
+            $this->peopleYouMayKnow();
+
+            $time = microtime();
+            $time = explode(" ", $time);
+            $time = $time[1] + $time[0];
+            $finish = $time;
+            $totaltime = ($finish - $start);
+            printf ("Gremlin feature Loaded in %f Seconds.", $totaltime);
+            echo "<br />";*/
             if ($activitiesRC)
             {
                 $homes = array();
@@ -149,6 +208,32 @@ class HomeController extends AppController
             }
         }else {
             header("Location: /");
+        }
+    }
+
+    public function pull()
+    {
+        if ($this->isLogin())
+        {
+            $listActionsForSuggest  = $this->Actions->findByCondition("isSuggest = ?", array('yes'));
+            $actionClusterID        = $this->Actions->getClusterID();
+            $actionID               = $actionClusterID.":".rand(0, count($listActionsForSuggest) - 1);
+            $suggestAction          = $this->Actions->findByCondition("isSuggest = 'yes' AND @rid = ?", array('#'.$actionID));
+
+            F3::set('listActions', $suggestAction);
+            $this->render('elements/loadedSuggestElement.php','default');
+        }
+    }
+
+    public function loadSuggest()
+    {
+        if ($this->isLogin())
+        {
+            $actionArrays = F3::get('POST.actionsName');
+            foreach ($actionArrays as $action)
+            {
+                $this->suggest($action);
+            }
         }
     }
 }

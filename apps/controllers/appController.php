@@ -60,16 +60,6 @@ class AppController extends Controller
         return ucfirst($this->getCurrentUser()->data->firstName) . " ". ucfirst($this->getCurrentUser()->data->lastName);
     }
 
-    public function render($page,$type)
-    {
-        if ($this->layout != '')
-        {
-            require_once(UI . LAYOUTS . $this->layout . '.php');
-        }else {
-            echo F3::render($page);
-        }
-    }
-
     public function element($element)
     {
         if (file_exists(UI . ELEMENTS . $element . '.php'))
@@ -314,6 +304,99 @@ class AppController extends Controller
                     }
                 }
             }
+        }
+    }
+
+    public function peopleYouMayKnow()
+    {
+        /*Test */
+        $current = array();
+        $loggedUser = $this->getCurrentUser()->recordID;
+        $findSuggestFriends = $this->User->sqlGremlin("current.out.both", "@rid = ?", array('#'.$loggedUser));
+
+        $groupFriend = array_keys(array_count_values($findSuggestFriends));
+        array_push($current, $loggedUser);
+        $yourFriends = array_diff($groupFriend, $current);
+        $neighborCurrentUser = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$loggedUser));
+
+        if (current($yourFriends) != '')
+        {
+            foreach ($yourFriends as $yourFriend)
+            {
+                $relationShipAtoB[$yourFriend] = $this->Friendship->findByCondition("userA = ? AND userB = ?", array($loggedUser, $yourFriend));
+                $relationShipBtoA[$yourFriend] = $this->Friendship->findByCondition("userA = ? AND userB = ?", array($yourFriend, $loggedUser));
+                if (!$relationShipAtoB[$yourFriend] && !$relationShipBtoA[$yourFriend])
+                {
+                    $infoYourFriend[$yourFriend]  = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$yourFriend));
+                    $neighborFriends[$yourFriend] = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$yourFriend));
+
+                    if (current($neighborCurrentUser) != '')
+                    {
+                        $mutualFriends[$yourFriend] = array_intersect($neighborCurrentUser, $neighborFriends[$yourFriend]);
+
+                        foreach ($mutualFriends[$yourFriend] as $mutualFriend)
+                        {
+                            $infoMutualFriend[$mutualFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
+                        }
+                    }
+                }
+            }
+            F3::set('yourFriend', $yourFriends);
+            F3::set('infoYourFriend', $infoYourFriend);
+            F3::set('relationShipAtoB', $relationShipAtoB);
+            F3::set('relationShipBtoA', $relationShipBtoA);
+            F3::set('numMutualFriends', $mutualFriends);
+            F3::set('infoMutualFriend', $infoMutualFriend);
+        }
+        $this->render("elements/peopleYouMayKnowElement.php",'default');
+    }
+
+    public function friendRequest()
+    {
+        $loggedUser = $this->getCurrentUser()->recordID;
+        $neighborCurrentUser = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$loggedUser));
+
+        if (current($neighborCurrentUser) != '')
+        {
+            foreach ($neighborCurrentUser as $neighbor)
+            {
+                $requestRelationShip[$neighbor] = $this->Friendship->findByCondition("userA = ? AND userB = ? AND relationship = 'request'", array($neighbor, $loggedUser));
+
+                if ($requestRelationShip[$neighbor])
+                {
+                    $infoRequestUser[$neighbor] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$neighbor));
+                    $neighborRequestUser[$neighbor] = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$neighbor));
+                    $mutualFriends[$neighbor] = array_intersect($neighborCurrentUser, $neighborRequestUser[$neighbor]);
+
+                    foreach ($mutualFriends[$neighbor] as $mutualFriend)
+                    {
+                        $infoMutualFriend[$mutualFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
+                    }
+                    F3::set('infoRequestUser', $infoRequestUser);
+                    F3::set('numMutualFriends', $mutualFriends);
+                    F3::set('infoMutualFriend', $infoMutualFriend);
+                }
+            }
+            F3::set('neighborCurrentUser', $neighborCurrentUser);
+            F3::set('requestRelationShip', $requestRelationShip);
+
+        }
+        $this->render("elements/friendRequestElement.php",'default');
+    }
+
+    public function suggest($for)
+    {
+        switch ($for)
+        {
+            case 'peopleYouMayKnow':
+                $this->peopleYouMayKnow();
+                break;
+            case 'friendRequests':
+                $this->friendRequest();
+                break;
+            case 'findGroup':
+            case 'findPreferences':
+                break;
         }
     }
 }

@@ -88,8 +88,8 @@ class UserController extends AppController
                     // change status
                     $user->data->status = 'confirmed';
                     // reset confirmation info
-                    $user->data->confirmationCode = '';
-                    $user->data->confirmationCodeValidUntil = NULL;
+                    $user->data->confirmationCode = 'none';
+                    $user->data->confirmationCodeValidUntil = 'none';
                     $this->User->update($user->recordID, $user);
                     /* Create notify for user */
                     $notify = array(

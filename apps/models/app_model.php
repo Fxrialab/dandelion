@@ -117,14 +117,14 @@ class AppModel {
      */
     public function sqlGremlin($command, $conditions=null, $values=null)
     {
-        $toFind = '.map';
+        /*$toFind = '.map';
         $check = strpos($command, $toFind);
         $tempArray = array();
         if ($check)
         {
             $parentResult = $this->checkCommand($toFind, $command, $conditions, $values);
             $tempArray = $parentResult;
-        }
+        }*/
 
         $sql = "SELECT GREMLIN( '".$command."' ) FROM ".$this->_className;
         if ($conditions && $values)
@@ -135,12 +135,12 @@ class AppModel {
             }
             $sql = $sql." WHERE " . $conditions;
         }
-        echo $sql."<br />";
+        //echo $sql."<br />";
         $queryResult    = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
         $stringResult   = $this->getResultString($queryResult[0]->content);
-        if ($tempArray)
+        /*if ($tempArray)
             $result     = $this->getContentGremlin($stringResult, $tempArray);
-        else
+        else*/
             $result     = $this->getContentGremlin($stringResult);
 
         return $result;
@@ -196,6 +196,7 @@ class AppModel {
      */
     public function getContentGremlin($resultGremlin, $parentResult=null)
     {
+        //echo $resultGremlin."<br />";
         $toFirstFind = '(com.tinkerpop.blueprints.impls.orient.OrientVertex|#';
         $pos1 =  strpos($resultGremlin,$toFirstFind);
         $arrayResult = array();
@@ -215,8 +216,8 @@ class AppModel {
                 $pos3 = strpos($resultGremlin,$toThirdFind);
                 if ($pos3)
                 {
-                    if ($parentResult)
-                    {
+                    /*if ($parentResult)
+                    {*/
                         $startPos = strpos($resultGremlin, '[');
                         $endPos = strpos($resultGremlin, ']');
                         if (!$startPos && !$endPos)
@@ -225,9 +226,14 @@ class AppModel {
                         }else {
                             $jsonString = $resultGremlin;
                         }
+                        //$replace = str_replace(array('"'), '', $jsonString);
                         $obj = json_decode($jsonString);
-                        $arrayResult = array_combine($parentResult, $obj);
-                    }
+                        //var_dump($parentResult);
+                        //echo $jsonString;
+                        //var_dump($obj);
+                        $arrayResult = $obj;
+                        //$arrayResult = array_combine($parentResult, $obj);
+                    //}
                 }else {
                     $replace = str_replace(array('"', '[', ']'), '', $resultGremlin);
                     $arrayResult = explode(',', $replace);

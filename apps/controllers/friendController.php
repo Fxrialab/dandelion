@@ -44,7 +44,7 @@ class FriendController extends AppController
             'status'        => 'ok'
         );
         $this->Friendship->updateByCondition($updateRecord, "userA = ? AND userB = ?", array($userB, $userA));
-        /*//prepare data
+        //prepare data
         $relationship   = array(
             'userA'         => $userA,
             'relationship'  => 'friend',
@@ -53,7 +53,7 @@ class FriendController extends AppController
             'published'     => time()
         );
         //save data
-        $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);*/
+        $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
     }
 
     public function unAcceptFriendship()

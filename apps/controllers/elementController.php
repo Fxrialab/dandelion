@@ -23,7 +23,7 @@ class ElementController extends Controller
 
     public function header()
     {
-        $currentUser        = $this->getCurrentUser();
+        $currentUser    = $this->getCurrentUser();
         F3::set('queueAmq',$currentUser->recordID);
         //********** Notifications for request friend, follow and comment post status or question & answer *******************//
         //With request friend
@@ -67,4 +67,9 @@ class ElementController extends Controller
             F3::set('allComment',$resultComments);
         }
     }
+
+    /*public function peopleYouMayKnowElement()
+    {
+
+    }*/
 }
