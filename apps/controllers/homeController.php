@@ -216,12 +216,33 @@ class HomeController extends AppController
         if ($this->isLogin())
         {
             $listActionsForSuggest  = $this->Actions->findByCondition("isSuggest = ?", array('yes'));
-            $actionClusterID        = $this->Actions->getClusterID();
-            $actionID               = $actionClusterID.":".rand(0, count($listActionsForSuggest) - 1);
-            $suggestAction          = $this->Actions->findByCondition("isSuggest = 'yes' AND @rid = ?", array('#'.$actionID));
+            $actionIDArrays = array();
+            if ($listActionsForSuggest)
+            {
+                foreach ($listActionsForSuggest as $listAction)
+                {
+                    array_push($actionIDArrays, $listAction->recordID);
+                }
 
-            F3::set('listActions', $suggestAction);
-            $this->render('elements/loadedSuggestElement.php','default');
+                if ($actionIDArrays && count($actionIDArrays) > 2)
+                {
+                    $randomKeys = array_rand($actionIDArrays,2);
+                }else {
+                    $randomKeys = array_rand($actionIDArrays,1);
+                }
+                //var_dump($randomKeys);
+                foreach ($randomKeys as $key)
+                {
+                    //var_dump($actionIDArrays[$key]);
+                    $suggestAction[$actionIDArrays[$key]] = $this->Actions->findByCondition("isSuggest = 'yes' AND @rid = ?", array('#'.$actionIDArrays[$key]));
+                    //var_dump($suggestAction);
+                }
+                //check if suggest by friend request is null. Will not return to load element
+                F3::set('actionIDArrays', $actionIDArrays);
+                F3::set('randomKeys', $randomKeys);
+                F3::set('listActions', $suggestAction);
+                $this->render('elements/loadedSuggestElement.php','default');
+            }
         }
     }
 

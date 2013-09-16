@@ -8,7 +8,7 @@
 
 class FriendController extends AppController
 {
-    protected $uses     = array("Friendship", "Information");
+    protected $uses     = array("Friendship", "Information", "Actions");
     protected $helpers  = array();
 
     public function __construct()
@@ -31,6 +31,18 @@ class FriendController extends AppController
         );
         //save data
         $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
+        //After friend request is sent. The friendRequests action will be create
+        $existFriendRequestAction   = $this->Action->findOne("actionName = ?", array('Friend Requests'));
+        if (!$existFriendRequestAction)
+        {
+            $actionRC       = array(
+                'actionName'    => 'Friend Requests',
+                'actionElement' => 'friendRequests',
+                'isSearch'      => 'no',
+                'isSuggest'     => 'yes',
+            );
+            $this->Actions->create($actionRC);
+        }
     }
 
     public function acceptFriendship()
@@ -54,6 +66,18 @@ class FriendController extends AppController
         );
         //save data
         $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
+        //After friend is accept. The peopleYouMayKnow action will be create
+        $existPeopleYouMayKnowAction   = $this->Action->findOne("actionName = ?", array('People You May Know'));
+        if (!$existPeopleYouMayKnowAction)
+        {
+            $actionRC       = array(
+                'actionName'    => 'People You May Know',
+                'actionElement' => 'peopleYouMayKnow',
+                'isSearch'      => 'yes',
+                'isSuggest'     => 'yes',
+            );
+            $this->Actions->create($actionRC);
+        }
     }
 
     public function unAcceptFriendship()
