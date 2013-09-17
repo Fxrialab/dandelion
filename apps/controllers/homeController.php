@@ -224,12 +224,7 @@ class HomeController extends AppController
                     array_push($actionIDArrays, $listAction->recordID);
                 }
 
-                if ($actionIDArrays && count($actionIDArrays) > 2)
-                {
-                    $randomKeys = array_rand($actionIDArrays,2);
-                }else {
-                    $randomKeys = array_rand($actionIDArrays,1);
-                }
+                $randomKeys = $this->randomKeys($actionIDArrays, 'randomSuggestElement');
                 //var_dump($randomKeys);
                 foreach ($randomKeys as $key)
                 {

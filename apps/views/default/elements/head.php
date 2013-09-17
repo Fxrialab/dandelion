@@ -25,7 +25,7 @@
     <!--Supports for video embed task-->
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.oembed.min.js"></script>
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.oembed.js"></script>
-    <!--Supports for display dialog-->
+    <!--Supports for display dialog when share status-->
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/fanc/jquery-ui-1.8.min.js"></script>
     <link type="text/css" rel="stylesheet" href="<?php echo F3::get('STATIC'); ?>js/fanc/jquery-ui-1.8.css"/>
     <link type="text/css" rel="stylesheet" href="<?php echo F3::get('STATIC'); ?>js/fanc/jquery.ui.theme.css"/>
