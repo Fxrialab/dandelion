@@ -6,7 +6,7 @@
 
 class PostController extends AppController {
 
-    protected $uses = array ("Friendship", "User", "Follow", "Status", "Comment", "Post");
+    protected $uses = array ("Friendship", "User", "Follow", "Status", "Comment", "Post","Photo");
 
     public function __construct() {
         parent::__construct();

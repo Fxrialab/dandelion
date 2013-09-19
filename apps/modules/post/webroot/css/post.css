@@ -459,6 +459,7 @@ label.swPostedCommment {
     background:#e9fbd3;
     display:none;
     padding: 5px;
+    float: left;margin-left: 50px;
 }
 
 .swCommentBox .swCommentImg{

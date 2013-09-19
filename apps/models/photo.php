@@ -6,11 +6,11 @@
  * Project: userwired Network - Version: 1.0
  */
 require_once ('app_model.php');
-class Post extends AppModel
+class Photo extends AppModel
 {
     public function __construct()
     {
-        parent::__construct(13, 'post');
+        parent::__construct(20, 'photo');
     }
 
     public function __destruct() {

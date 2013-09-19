@@ -14,6 +14,6 @@ class RouteModuleConfig
         'morePostComment_POST'  => "PostController",
         'shareStatus_POST'      => "PostController",
         'insertStatus_POST'     => "PostController",
-        'detailStatus_GET'     => "PostController",
+        'detailStatus_GET'      => "PostController",
     );
 }

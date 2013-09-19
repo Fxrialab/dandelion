@@ -10,7 +10,7 @@ class Sessions extends AppModel
 {
     public function __construct()
     {
-        parent::__construct(13, 'sessions');
+        parent::__construct(12, 'sessions');
     }
 
     public function __destruct() {
