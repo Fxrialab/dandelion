@@ -12,7 +12,7 @@ $infoRequestUser    = F3::get('infoRequestUser');
 $mutualFriends      = F3::get('numMutualFriends');
 $infoMutualFriend   = F3::get('infoMutualFriend');
 
-if (current($neighborCurrentUser) != '' && $infoRequestUser)
+if ($neighborCurrentUser && current($neighborCurrentUser) != '' && $infoRequestUser)
 {
     ?>
     <div class="module friendRequests">
@@ -24,29 +24,34 @@ if (current($neighborCurrentUser) != '' && $infoRequestUser)
                 $randYourFriend = $requestUserArrays[$key];
                 $requestUserName        = ucfirst($infoRequestUser[$randYourFriend][0]->firstName)." ".$infoRequestUser[$randYourFriend][0]->lastName;
                 $requestUserProfilePic  = $infoRequestUser[$randYourFriend][0]->profilePic;
-                $numberMutualFriend     = count($mutualFriends[$randYourFriend]);
-                if ($mutualFriends[$randYourFriend] != null)
-                { ?>
+                ?>
                     <div class="people clear" id="">
                         <a href="" class="profilePic"><img src="<?php echo F3::get('BASE_URL'); ?><?php echo $requestUserProfilePic; ?>" width="45" height="50" alt="" class="swTinyBoxImage" /></a>
                         <div class="info">
                             <a class="peopleName" href="/profile?id="><?php echo $requestUserName; ?></a>
-                            <div class="peopleMutual">
-                                <a href="#"><?php echo $numberMutualFriend; ?> mutual friends</a>
-                            </div>
+                            <?php
+                            if ($mutualFriends[$randYourFriend] != null)
+                            {
+                                $numberMutualFriend     = count($mutualFriends[$randYourFriend]);
+                            ?>
+                                <div class="peopleMutual">
+                                    <a href="#"><?php echo $numberMutualFriend; ?> mutual friends</a>
+                                </div>
+                            <?php
+                                //}
+                                /*echo "info mutual friend: <br />";
+                                foreach ($mutualFriends[$randYourFriend] as $friend)
+                                {
+                                    //var_dump($friend);
+                                    echo $infoMutualFriend[$friend][0]->email."<br />";
+                                }*/
+                            } ?>
                             <div class="uiAddFriend">
                                 <a href="#">Confirm Friend</a>
                             </div>
                         </div>
                     </div>
                 <?php
-                }
-                /*echo "info mutual friend: <br />";
-                foreach ($mutualFriends[$randYourFriend] as $friend)
-                {
-                    //var_dump($friend);
-                    echo $infoMutualFriend[$friend][0]->email."<br />";
-                }*/
             }
             ?>
         </div>

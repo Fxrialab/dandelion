@@ -176,7 +176,7 @@ class AppController extends Controller
                     //@todo handling follow after: HN
                     if($findUserBOfFollow)
                     {
-                        $checkFriends   = $this->Friendship->findByCondition("userA = ? AND status = 'ok' userB = ?", array($friends[$i]->data->userB, $findUserBOfFollow->data->userB));
+                        $checkFriends   = $this->Friendship->findByCondition("userA = ? AND status = 'ok' AND userB = ?", array($friends[$i]->data->userB, $findUserBOfFollow->data->userB));
                         if($checkFriends == null)
                         {
                             $activity   = array(
@@ -328,7 +328,6 @@ class AppController extends Controller
         $current = array();
         $loggedUser = $this->getCurrentUser()->recordID;
         $findSuggestFriends = $this->User->sqlGremlin("current.out.both", "@rid = ?", array('#'.$loggedUser));
-
         $groupFriend = array_keys(array_count_values($findSuggestFriends));
         array_push($current, $loggedUser);
         $yourFriends = array_diff($groupFriend, $current);
@@ -345,70 +344,81 @@ class AppController extends Controller
                     array_push($yourFriendArrays, $yourFriend);
                 }
             }
+
             $randomKeys = $this->randomKeys($yourFriendArrays, 'randomFriendID');
-            foreach ($randomKeys as $key)
+            if ($randomKeys)
             {
-                $randYourFriend = $yourFriendArrays[$key];
-                $infoYourFriend[$randYourFriend]  = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$randYourFriend));
-                $neighborFriends[$randYourFriend] = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$randYourFriend));
-
-                if (current($neighborCurrentUser) != '')
+                foreach ($randomKeys as $key)
                 {
-                    $mutualFriends[$randYourFriend] = array_intersect($neighborCurrentUser, $neighborFriends[$randYourFriend]);
+                    $randYourFriend = $yourFriendArrays[$key];
+                    $infoYourFriend[$randYourFriend]  = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$randYourFriend));
+                    $neighborFriends[$randYourFriend] = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$randYourFriend));
 
-                    foreach ($mutualFriends[$randYourFriend] as $mutualFriend)
+                    if (current($neighborCurrentUser) != '')
                     {
-                        $infoMutualFriend[$mutualFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
+                        $mutualFriends[$randYourFriend] = array_intersect($neighborCurrentUser, $neighborFriends[$randYourFriend]);
+
+                        foreach ($mutualFriends[$randYourFriend] as $mutualFriend)
+                        {
+                            $infoMutualFriend[$mutualFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
+                        }
                     }
                 }
+                F3::set('infoYourFriend', $infoYourFriend);
+                F3::set('numMutualFriends', $mutualFriends);
+                F3::set('infoMutualFriend', $infoMutualFriend);
             }
             F3::set('yourFriendArrays', $yourFriendArrays);
             F3::set('randomKeys', $randomKeys);
             F3::set('yourFriend', $yourFriends);
-            F3::set('infoYourFriend', $infoYourFriend);
-            F3::set('numMutualFriends', $mutualFriends);
-            F3::set('infoMutualFriend', $infoMutualFriend);
         }
         $this->render("elements/peopleYouMayKnowElement.php",'default');
+
     }
 
     public function friendRequest()
     {
         $loggedUser = $this->getCurrentUser()->recordID;
         $neighborCurrentUser = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$loggedUser));
-        $requestUserArrays   = array();
-        if (current($neighborCurrentUser) != '')
+        if ($neighborCurrentUser)
         {
-            foreach ($neighborCurrentUser as $neighbor)
+            $requestUserArrays   = array();
+            if (current($neighborCurrentUser) != '')
             {
-                $requestRelationShip[$neighbor] = $this->Friendship->findByCondition("userA = ? AND userB = ? AND relationship = 'request'", array($neighbor, $loggedUser));
-
-                if ($requestRelationShip[$neighbor])
+                foreach ($neighborCurrentUser as $neighbor)
                 {
-                    array_push($requestUserArrays, $neighbor);
-                }
-            }
-            $randomKeys = $this->randomKeys($requestUserArrays, 'randomFriendID');
-            foreach ($randomKeys as $key)
-            {
-                $randYourFriend = $requestUserArrays[$key];
-                $infoRequestUser[$randYourFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$randYourFriend));
-                $neighborRequestUser[$randYourFriend] = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$randYourFriend));
-                $mutualFriends[$randYourFriend] = array_intersect($neighborCurrentUser, $neighborRequestUser[$randYourFriend]);
+                    $requestRelationShip[$neighbor] = $this->Friendship->findByCondition("userA = ? AND userB = ? AND relationship = 'request'", array($neighbor, $loggedUser));
 
-                foreach ($mutualFriends[$randYourFriend] as $mutualFriend)
-                {
-                    $infoMutualFriend[$mutualFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
+                    if ($requestRelationShip[$neighbor])
+                    {
+                        array_push($requestUserArrays, $neighbor);
+                    }
                 }
-                F3::set('infoRequestUser', $infoRequestUser);
-                F3::set('numMutualFriends', $mutualFriends);
-                F3::set('infoMutualFriend', $infoMutualFriend);
+                $randomKeys = $this->randomKeys($requestUserArrays, 'randomFriendID');
+                foreach ($randomKeys as $key)
+                {
+                    $randYourFriend = $requestUserArrays[$key];
+                    $infoRequestUser[$randYourFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$randYourFriend));
+                    $neighborRequestUser[$randYourFriend] = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$randYourFriend));
+                    $mutualFriends[$randYourFriend] = array_intersect($neighborCurrentUser, $neighborRequestUser[$randYourFriend]);
+
+                    if ($mutualFriends[$randYourFriend])
+                    {
+                        foreach ($mutualFriends[$randYourFriend] as $mutualFriend)
+                        {
+                            $infoMutualFriend[$mutualFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
+                        }
+                        F3::set('numMutualFriends', $mutualFriends);
+                        F3::set('infoMutualFriend', $infoMutualFriend);
+                    }
+                    F3::set('infoRequestUser', $infoRequestUser);
+                }
+                F3::set('requestUserArrays', $requestUserArrays);
+                F3::set('randomKeys', $randomKeys);
+                F3::set('neighborCurrentUser', $neighborCurrentUser);
             }
-            F3::set('requestUserArrays', $requestUserArrays);
-            F3::set('randomKeys', $randomKeys);
-            F3::set('neighborCurrentUser', $neighborCurrentUser);
+            $this->render("elements/friendRequestElement.php",'default');
         }
-        $this->render("elements/friendRequestElement.php",'default');
     }
 
     public function suggest($for)

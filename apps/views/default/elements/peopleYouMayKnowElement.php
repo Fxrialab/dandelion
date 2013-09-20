@@ -11,8 +11,7 @@ $yourFriends        = F3::get('yourFriend');
 $infoYourFriend     = F3::get('infoYourFriend');
 $mutualFriends      = F3::get('numMutualFriends');
 $infoMutualFriend   = F3::get('infoMutualFriend');
-
-if (current($yourFriends) != '')
+if ($yourFriends && current($yourFriends) != '' && $yourFriendArrays)
 {
     ?>
     <div class="module peopleYouMayKnow">

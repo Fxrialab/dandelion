@@ -73,7 +73,7 @@
     <script type="text/javascript">
         $(document).ready(function()
         {
-            $(".autoloadModuleElement").everyTime(10000,function(i){
+            $(".autoloadModuleElement").everyTime(60000,function(i){
                 $.ajax({
                     type: "GET",
                     url: "/pull",
