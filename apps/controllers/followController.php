@@ -20,15 +20,18 @@ class FollowController extends AppController
     {
         $getIDUser  = F3::GET("POST.id");
         $userA      = $this->getCurrentUser()->recordID;
-        $userB      = str_replace(substr($userA, 2), $getIDUser, $userA);
+        $userB      = $this->User->getClusterID().':'.$getIDUser;
         //filter follow status, qa, photo and all
         $statusID   = F3::GET("POST.statusID");
+        echo $statusID;
         $qaID       = F3::GET("POST.qaID");
         $photoID    = F3::GET("POST.photoID");
         $userID     = $userB;
         $published  = time();
+
+        $existStatusFollowingRC = $this->Follow->findOne("userA = ? AND ID = ?", array($userA, str_replace('_', ':', $statusID)));
         //prepare data
-        if ($statusID && $userID)
+        if ($statusID && $userID && !$existStatusFollowingRC)
         {
             $data = array(
                 'userA'         => $userA,
@@ -89,7 +92,8 @@ class FollowController extends AppController
     {
         $getIDUser  = F3::GET("POST.id");
         $userA      = $this->getCurrentUser()->recordID;
-        $userB      = str_replace(substr($userA, 2), $getIDUser, $userA);
+        $userB      = $this->User->getClusterID().':'.$getIDUser;;
+        echo $userB;
         //filter follow status, qa, photo and all
         $statusID   = F3::GET("POST.statusID");
         $qaID       = F3::GET("POST.qaID");

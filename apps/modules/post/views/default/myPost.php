@@ -135,22 +135,17 @@ if($statusFriendship =='friend' || $currentUserID ==$otherUserID)
                                     {
                                         if(!$listStatus[$i]->data->contentShare)
                                         {  ?>
-                                            <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $lastStatus; ?>')">- Share</a></li>
+                                            <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $lastStatus; ?>')">- Share -</a></li>
                                             <?php
                                         } else { $mainStatus = $listStatus[$i]->data->mainStatus ; ?>
-                                            <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $mainStatus; ?>')">- Share</a></li>
+                                            <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $mainStatus; ?>')">- Share -</a></li>
                                             <?php
                                         } ?>
-                                        <div style="float: left;">
-                                            <span class="btnFollow">
-                                                <form class="followBtn" id="FollowID-<?php echo $postID; ?>">
-                                                    <input type="hidden" name="id" value="<?php echo substr($otherUserID, 2); ?>">
-                                                    <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
-                                                    <input type="hidden" id="getURL" name="getURL" value="<?php echo F3::get('STATIC_MOD'); ?>">
-                                                    <button class='follow-button' id="followID-<?php echo $postID; ?>" name="getStatus-<?php echo $statusFollow[$lastStatus] ;?>"  type="submit" ></button>
-                                                </form>
-                                            </span>
-                                        </div>
+                                        <li class="link"><a class="follow-button" id="followID-<?php echo $postID; ?>" name="getStatus-<?php echo $statusFollow[$lastStatus] ;?>"></a></li>
+                                        <form class="followBtn" id="FollowID-<?php echo $postID; ?>">
+                                            <input type="hidden" name="id" value="<?php echo substr($otherUserID, strpos($otherUserID, ':') + 1); ?>">
+                                            <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
+                                        </form>
                                         <?php
                                     }
                                 }

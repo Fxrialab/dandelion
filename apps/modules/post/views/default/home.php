@@ -105,18 +105,13 @@ if ($activities)
                     if($status_actor != $currentUserID)
                     {       ?>
                        <!-- <script type="text/javascript" src="<?php /*echo F3::get('STATIC'); */?>js/joinShare/follow.js"></script>-->
-                        <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $statusID; ?>')">- Share</a></li>
+                        <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $statusID; ?>')">- Share -</a></li>
+                        <li class="link"><a class="follow-button" id="followID-<?php echo $rpStatusID; ?>" name="getStatus-<?php echo $statusFollow[$statusID] ;?>"></a></li>
+                        <form class="followBtn" id="FollowID-<?php echo $rpStatusID; ?>">
+                            <input type="hidden" name="id" value="<?php echo substr($actor, strpos($actor, ':') + 1); ?>">
+                            <input type="hidden" name="statusID" value="<?php echo $rpStatusID; ?>">
+                        </form>
 
-                        <div style="float: left;">
-                            <p class="btnFollow">
-                            <form class="followBtn" id="FollowID-<?php echo $rpStatusID; ?>">
-                                <input type="hidden" name="id" value="<?php echo substr($actor, strpos($actor, ':') + 1); ?>">
-                                <input type="hidden" name="statusID" value="<?php echo $rpStatusID; ?>">
-                                <input type="hidden" id="getURL" name="getURL" value="<?php echo F3::get('STATIC_MOD'); ?>">
-                                <button class='follow-button' id="followID-<?php echo $rpStatusID; ?>" name="getStatus-<?php echo $statusFollow[$statusID] ;?>"  type="submit" ></button>
-                            </form>
-                            </p>
-                        </div>
                         <?php
                     }
                 ?>

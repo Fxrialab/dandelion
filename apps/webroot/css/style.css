@@ -2205,22 +2205,22 @@ button.close {
 }
 
 .Hover {
-    border: 1px solid #bbbbbb !important;
     color: #777777 !important;
-    box-shadow: 0px 1px 2px #dddddd;
+    /*border: 1px solid #bbbbbb !important;
+    box-shadow: 0px 1px 2px #dddddd;*/
 }
 
 .Pressed {
     background: rgb(241,246,235) !important;
-    -moz-box-shadow:    0px 1px 1px 0px #cccccc inset;
+    /*-moz-box-shadow:    0px 1px 1px 0px #cccccc inset;
     -webkit-box-shadow: 0px 1px 1px 0px #cccccc inset;
     box-shadow:         0px 1px 1px 0px #cccccc inset;
-    text-shadow: 0px 1px 0px #fff;
+    text-shadow: 0px 1px 0px #fff;*/
 }
 
 .Unfollow {
     color: #C53D36 !important;
-    box-shadow: 0px 1px 2px #dddddd;
+    /*box-shadow: 0px 1px 2px #dddddd;*/
 }
 /** photo **/
 #test {
@@ -3273,4 +3273,8 @@ a.favoriteLinks {
 
 .hiddenSpan {
     display: none;
+}
+
+.uiAddFriend {
+    margin-top: 10px;
 }

@@ -19,11 +19,12 @@ class HomePost extends AppController{
                 if($currentUser->recordID != $statusRC->data->actor)
                     $userRC = $this->User->findOne("@rid = ?",array($statusRC->data->actor));
                 else
-                    $userRC = $this->User->findOne("@rid = ?",array($statusRC->data->owner));;
+                    $userRC = $this->User->findOne("@rid = ?",array($statusRC->data->owner));
                 $commentOfStatusRC[$statusID]   = $this->Comment->findByCondition("post = ? LIMIT 4 ORDER BY published DESC", array($statusID));
                 $numberCommentInStatusRC[$statusID] = $this->Comment->count("post = ?", array($statusID));
                 $followRC[$statusID]            = $this->Follow->findOne("userA = ? AND userB = ? AND filterFollow = 'post' AND ID = ?", array($currentUser->recordID, $entry->data->actor, $statusID));
-                $statusFollow[$statusID]        = ($followRC[$statusID] == null) ? 'null' : $followRC[$statusID]->data->follow;
+                //var_dump($followRC);
+                $statusFollow[$statusID]        = ($followRC[$statusID]) ? $followRC[$statusID]->data->follow : 'null';
 
                 if ($commentOfStatusRC[$statusID])
                 {
@@ -36,6 +37,7 @@ class HomePost extends AppController{
                 }else {
                     $userComment = null;
                 }
+                //var_dump($userComment);
                 $entry = array(
                     'type'          => 'post',
                     'key'           => $key,
@@ -65,14 +67,25 @@ class HomePost extends AppController{
             if($statusRC)
             {
                 $statusID   = $statusRC->recordID;
-                if($statusRC->data->owner != $statusRC->data->actor)
-                    $userRC = $this->User->findOne("@rid = ?",array($statusRC->data->owner));
+                if($currentUser->recordID != $statusRC->data->actor)
+                    $userRC = $this->User->findOne("@rid = ?",array($statusRC->data->actor));
                 else
-                    $userRC = '';
+                    $userRC = $this->User->findOne("@rid = ?",array($statusRC->data->owner));
                 $commentsOfStatus[$statusID] = $this->Comment->findByCondition("post = ? LIMIT 4 ORDER BY published DESC", array($statusID));
                 $numberOfCommentsStatus[$statusID] = $this->Comment->count("post = ?", array($statusID));
                 $getStatusFollow[$statusID]  = $this->Follow->findOne("userA = ? AND userB = ? AND filterFollow = 'post' AND ID = ?", array($currentUser->recordID, $entry->data->actor, $statusID));
                 $statusFollow[$statusID]     = ($getStatusFollow[$statusID] == null) ? 'null' : $getStatusFollow[$statusID]->data->follow;
+                if ($commentsOfStatus[$statusID])
+                {
+                    $comments = $commentsOfStatus[$statusID];
+                    $pos = (count($comments) < 4 ? count($comments) : 4);
+                    for($j = $pos - 1; $j >= 0; $j--)
+                    {
+                        $userComment[$comments[$j]->data->actor] = $this->User->load($comments[$j]->data->actor);
+                    }
+                }else {
+                    $userComment = null;
+                }
                 $entry = array(
                     "type"          => 'post',
                     "key"           => $key,
@@ -83,7 +96,8 @@ class HomePost extends AppController{
                     "actions"       => $statusRC,
                     "actor"         => $statusRC->data->actor,
                     "statusID"      => $statusID,
-                    "otherUser"     => $userRC
+                    "otherUser"     => $userRC,
+                    'userComment'   => $userComment,
                 );
             }
             return $entry;
