@@ -104,7 +104,6 @@ if ($activities)
                 <?php
                     if($status_actor != $currentUserID)
                     {       ?>
-                       <!-- <script type="text/javascript" src="<?php /*echo F3::get('STATIC'); */?>js/joinShare/follow.js"></script>-->
                         <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $statusID; ?>')">- Share -</a></li>
                         <li class="link"><a class="follow-button" id="followID-<?php echo $rpStatusID; ?>" name="getStatus-<?php echo $statusFollow[$statusID] ;?>"></a></li>
                         <form class="followBtn" id="FollowID-<?php echo $rpStatusID; ?>">

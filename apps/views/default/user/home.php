@@ -14,10 +14,10 @@ $useID = F3::get('queueAmq');
         var commentID;
         var actiID;
         var activity_id =m.data.value;
-        console.log(activity_id);
+        //console.log(activity_id);
         var type = activity_id.slice(0,1);
         var currentID = $('.currentHome0').val();
-        console.log('type: ', type);
+        //console.log('type: ', type);
         if(type==1){
             var activity = activity_id.slice(1);
             if(currentID==null){
@@ -34,6 +34,10 @@ $useID = F3::get('queueAmq');
                     cache: false,
                     success: function(html){
                         $("ul#swStreamStories").prepend(html);
+                        var getID = $('.follow-button').attr('id').replace('followID-', '');
+                        $("ul.swMsgControl #followID-"+getID+"").removeClass('follow-button');
+                        $("ul.swMsgControl #followID-"+getID+"").addClass('followTemp1');
+                        new FollowByElement('.followTemp1');
                     },
                     data: {activity_id:activity }
                 });

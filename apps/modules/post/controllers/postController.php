@@ -283,6 +283,9 @@ class PostController extends AppController {
                 {
                     $comments[($status->recordID)] = $this->Comment->findByCondition("post = ? ORDER BY published ASC LIMIT 4", array($status->recordID));
                     $numberOfComments[($status->recordID)] = $this->Comment->count("post = ?", array($status->recordID));
+                    //get status follow
+                    $getStatusFollow[($status->recordID)] = $this->Follow->findOne("userA = ? AND follow = ? AND filterFollow = 'post' AND ID = ?", array($currentUser->recordID,'following',$status->recordID));
+                    $statusFollow[($status->recordID)]    = ($getStatusFollow[($status->recordID)] == null) ? 'null' : $getStatusFollow[($status->recordID)]->data->follow;
                     $postActor[($status->data->actor)]    = $this->User->load($status->data->actor);
                     if ($comments[($status->recordID)])
                     {
@@ -298,6 +301,7 @@ class PostController extends AppController {
                 F3::set("listStatus", $statusRC);
                 F3::set("comments", $comments);
                 F3::set("numberOfComments", $numberOfComments);
+                F3::set("statusFollow", $statusFollow);
                 F3::set("postActor", $postActor);
                 F3::set("commentActor",$commentActor);
 

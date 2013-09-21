@@ -160,6 +160,7 @@ $(function() {
             cache: false,
             success: function(html){
                 $("#swStreamStories").append(html);
+                new FollowByElement('.followMorePostStatus');
             }
         });
     });

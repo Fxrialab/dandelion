@@ -73,18 +73,12 @@ $statusFollow   = F3::get('statusFollow');
                                 if(($status->data->owner != $UserName->recordID) && ($status->data->actor != $UserName->recordID)) {
 
                                     if($status->data ->actor != $UserName->recordID) {       ?>
-                                        <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $postID; ?>')">- Share</a></li>
-
-                                        <div style="float: left;">
-                                            <p class="btnFollow">
-                                            <form class="followBtn" id="FollowID-<?php echo $postID; ?>">
-                                                <input type="hidden" name="id" value="<?php echo substr($status->data ->actor, strpos($status->data ->actor, ':') + 1); ?>">
-                                                <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
-                                                <input type="hidden" id="getURL" name="getURL" value="<?php echo F3::get('STATIC_MOD'); ?>">
-                                                <button class='follow-button' id="followID-<?php echo $postID; ?>" name="getStatus-<?php echo  $postID  ;?>"  type="submit" ></button>
-                                            </form>
-                                            </p>
-                                        </div>
+                                        <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $postID; ?>')">- Share -</a></li>
+                                        <li class="link"><a class="follow-button" id="followID-<?php echo $postID; ?>" name="getStatus-<?php echo $statusFollow[$lastStatus] ;?>"></a></li>
+                                        <form class="followBtn" id="FollowID-<?php echo $postID; ?>">
+                                            <input type="hidden" name="id" value="<?php echo substr($status->data ->actor, strpos($status->data ->actor, ':') + 1); ?>">
+                                            <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
+                                        </form>
                                     <?php
                                     }}
                                 ?>

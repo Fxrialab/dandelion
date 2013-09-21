@@ -1,5 +1,6 @@
 <?php
-class HomePost extends AppController{
+class HomePost extends AppController
+{
     protected $uses = array ("User", "Follow", "Status", "Comment");
 
     public function __construct() {

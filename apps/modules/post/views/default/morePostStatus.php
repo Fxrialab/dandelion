@@ -5,6 +5,7 @@ $userProfileInfo    = F3::get('userProfileInfo');
 $listStatus         = F3::get('listStatus');
 $comments           = F3::get('comments');
 $numberOfComments   = F3::get('numberOfComments');
+$statusFollow       = F3::get('statusFollow');
 $postActor          = F3::get('postActor');
 $commentActor       = F3::get('commentActor');
 $currentUserID      = $currentUser->recordID;
@@ -76,23 +77,17 @@ if($listStatus)
             <div class="bottomWrapper">
                 <ul class="swMsgControl">
                     <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $postID;?>">Comment -</a></li>
-                    <li class="link"><a href="">Share</a></li>
+                    <li class="link"><a href="">Share -</a></li>
                     <?php
-                        if ($currentUserID != $userProfileID)
+                        if ($currentUserID != $listStatus[$i]->data->actor || $listStatus[$i]->data->followStt)
                         {
-                            if($listStatus[$i]->data->actor != $currentUser)
+                            if($listStatus[$i]->data->actor != $currentUserID)
                             {       ?>
-                                <!--<script type="text/javascript" src="<?php /*echo F3::get('STATIC'); */?>js/joinShare/follow.js"></script>-->
-                                <div style="float: left;">
-                                    <p class="btnFollow">
-                                    <form class="followBtn" id="FollowID-<?php echo $postID; ?>">
-                                        <input type="hidden" name="id" value="<?php echo substr($userProfileID, 2); ?>">
-                                        <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
-                                        <input type="hidden" id="getURL" name="getURL" value="<?php echo F3::get('STATIC_MOD'); ?>">
-                                        <button class='follow-button' id="followID-<?php echo $postID; ?>" name="getStatus-<?php //echo $statusFollow[$lastStatus] ;?>"  type="submit" ></button>
-                                    </form>
-                                    </p>
-                                </div>
+                                <li class="link"><a class="followMorePostStatus" id="followID-<?php echo $postID; ?>" name="getStatus-<?php echo $statusFollow[$lastStatus] ;?>"></a></li>
+                                <form class="followBtn" id="FollowID-<?php echo $postID; ?>">
+                                    <input type="hidden" name="id" value="<?php echo substr($userProfileID, strpos($userProfileID, ':') + 1); ?>">
+                                    <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
+                                </form>
                                 <?php
                             }
                         }
