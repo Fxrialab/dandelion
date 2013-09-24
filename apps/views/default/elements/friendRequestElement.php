@@ -22,10 +22,11 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '' && $infoRequestU
             foreach ($randomKeys as $key)
             {
                 $randYourFriend = $requestUserArrays[$key];
+                $friendRequestID        = substr($randYourFriend, strpos($randYourFriend, ':') + 1);
                 $requestUserName        = ucfirst($infoRequestUser[$randYourFriend][0]->firstName)." ".$infoRequestUser[$randYourFriend][0]->lastName;
                 $requestUserProfilePic  = $infoRequestUser[$randYourFriend][0]->profilePic;
                 ?>
-                    <div class="people clear" id="">
+                    <div class="people clear" id="unit<?php echo $friendRequestID; ?>">
                         <a href="" class="profilePic"><img src="<?php echo F3::get('BASE_URL'); ?><?php echo $requestUserProfilePic; ?>" width="45" height="50" alt="" class="swTinyBoxImage" /></a>
                         <div class="info">
                             <a class="peopleName" href="/profile?id="><?php echo $requestUserName; ?></a>
@@ -47,7 +48,7 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '' && $infoRequestU
                                 }*/
                             } ?>
                             <div class="uiAddFriend">
-                                <a href="#">Confirm Friend</a>
+                                <a class="confirmFriend" id="<?php echo $friendRequestID; ?>" href="#">Confirm Friend</a>
                             </div>
                         </div>
                     </div>

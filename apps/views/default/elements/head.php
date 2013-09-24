@@ -67,6 +67,7 @@
                         cache: false,
                         success: function(html){
                             $(".autoloadModuleElement").html(html);
+                            new IsActionsForSuggest();
                         }
                     })
                 }
@@ -99,6 +100,7 @@
                             cache: false,
                             success: function(html){
                                 $(".autoloadModuleElement").html(html);
+                                new IsActionsForSuggest();
                             }
                         })
                     }

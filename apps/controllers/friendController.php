@@ -20,7 +20,7 @@ class FriendController extends AppController
     {
         $getID  = F3::get("POST.id");
         $userA  = $this->getCurrentUser()->recordID;
-        $userB  = str_replace(substr($userA, 2), $getID, $userA);
+        $userB  = $this->User->getClusterID().':'.$getID;
         //prepare data
         $relationship   = array(
             'userA'         => $userA,
@@ -49,7 +49,7 @@ class FriendController extends AppController
     {
         $getIdUserB = F3::GET("POST.id");
         $userA      = $this->getCurrentUser()->recordID;
-        $userB      = str_replace('_', ':', $getIdUserB);
+        $userB      = $this->User->getClusterID().':'.$getIdUserB;
         //update a record
         $updateRecord   = array(
             'relationship'  => 'friend',
@@ -84,7 +84,7 @@ class FriendController extends AppController
     {
         $getIdUserB = F3::GET("POST.id");
         $userA      = $this->getCurrentUser()->recordID;
-        $userB      = str_replace(substr($userA, 2), $getIdUserB, $userA);
+        $userB      = $this->User->getClusterID().':'.$getIdUserB;
         //update a record
         $updateRecord   = array(
             'status'  => 'later'

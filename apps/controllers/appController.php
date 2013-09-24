@@ -358,15 +358,18 @@ class AppController extends Controller
                     {
                         $mutualFriends[$randYourFriend] = array_intersect($neighborCurrentUser, $neighborFriends[$randYourFriend]);
 
-                        foreach ($mutualFriends[$randYourFriend] as $mutualFriend)
+                        if ($mutualFriends[$randYourFriend])
                         {
-                            $infoMutualFriend[$mutualFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
+                            foreach ($mutualFriends[$randYourFriend] as $mutualFriend)
+                            {
+                                $infoMutualFriend[$mutualFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
+                            }
+                            F3::set('numMutualFriends', $mutualFriends);
+                            F3::set('infoMutualFriend', $infoMutualFriend);
                         }
                     }
+                    F3::set('infoYourFriend', $infoYourFriend);
                 }
-                F3::set('infoYourFriend', $infoYourFriend);
-                F3::set('numMutualFriends', $mutualFriends);
-                F3::set('infoMutualFriend', $infoMutualFriend);
             }
             F3::set('yourFriendArrays', $yourFriendArrays);
             F3::set('randomKeys', $randomKeys);

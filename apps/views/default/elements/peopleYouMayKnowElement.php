@@ -11,7 +11,7 @@ $yourFriends        = F3::get('yourFriend');
 $infoYourFriend     = F3::get('infoYourFriend');
 $mutualFriends      = F3::get('numMutualFriends');
 $infoMutualFriend   = F3::get('infoMutualFriend');
-if ($yourFriends && current($yourFriends) != '' && $yourFriendArrays)
+if ($yourFriends && current($yourFriends) != '' && $yourFriendArrays && $infoMutualFriend)
 {
     ?>
     <div class="module peopleYouMayKnow">
@@ -21,12 +21,13 @@ if ($yourFriends && current($yourFriends) != '' && $yourFriendArrays)
             foreach ($randomKeys as $key)
             {
                 $randYourFriend         = $yourFriendArrays[$key];
+                $yourFriendID           = substr($randYourFriend, strpos($randYourFriend, ':') + 1);
                 $yourFriendName         = ucfirst($infoYourFriend[$randYourFriend][0]->firstName)." ".$infoYourFriend[$randYourFriend][0]->lastName;
                 $yourFriendProfilePic   = $infoYourFriend[$randYourFriend][0]->profilePic;
                 $numberMutualFriend     = count($mutualFriends[$randYourFriend]);
                 if ($mutualFriends[$randYourFriend] != null)
                 { ?>
-                    <div class="people clear" id="">
+                    <div class="people clear" id="unit<?php echo $yourFriendID; ?>">
                         <a href="" class="profilePic"><img src="<?php echo F3::get('BASE_URL'); ?><?php echo $yourFriendProfilePic; ?>" width="45" height="50" alt="" class="swTinyBoxImage" /></a>
                         <div class="info">
                             <a class="peopleName" href="/profile?id="><?php echo $yourFriendName; ?></a>
@@ -34,7 +35,7 @@ if ($yourFriends && current($yourFriends) != '' && $yourFriendArrays)
                                 <a href="#"><?php echo $numberMutualFriend; ?> mutual friends</a>
                             </div>
                             <div class="uiAddFriend">
-                                <a href="#">Add Friend</a>
+                                <a class="addFriendSmallUI" id="<?php echo $yourFriendID; ?>" href="#">Add Friend</a>
                             </div>
                         </div>
                     </div>
