@@ -17,7 +17,7 @@ $otherUserName  = ucfirst($otherUser->data->firstName)." ".ucfirst($otherUser->d
 $currentUserName= ucfirst($currentUser->data->firstName)." ".ucfirst($currentUser->data->lastName);
 
 if($otherUserID != $currentUserID) {
-    $rpOtherUserID  = substr($otherUserID, 2);
+    $rpOtherUserID  = substr($otherUserID, strpos($otherUserID, ':') + 1);
     ?>
     <div class="module profile">
         <div class="swWelcomeBox clearfix">

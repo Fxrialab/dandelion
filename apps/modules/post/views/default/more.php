@@ -114,7 +114,7 @@ if ($activities)
 
                     if($status_actor != $currentUserID) {       ?>
                         <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $statusID; ?>')">- Share -</a></li>
-                        <li class="link"><a class="tempFollowBtn" id="followID-<?php echo $rpStatusID; ?>" name="getStatus-<?php echo $statusFollow[$statusID] ;?>"></a></li>
+                        <li class="link"><a class="followMoreStatus" id="followID-<?php echo $rpStatusID; ?>" name="getStatus-<?php echo $statusFollow[$statusID] ;?>"></a></li>
                         <form class="followBtn" id="FollowID-<?php echo $rpStatusID; ?>">
                             <input type="hidden" name="id" value="<?php echo substr($actor, strpos($actor, ':') + 1); ?>">
                             <input type="hidden" name="statusID" value="<?php echo $rpStatusID; ?>">

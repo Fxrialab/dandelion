@@ -82,7 +82,6 @@ ul {
     position:relative !important;
     left:0;
     top:0;
-    z-index: 10;
 }
 
 .fix_elem{
@@ -1914,11 +1913,16 @@ a.blue{
     height:30px;
 }
 
+.notifyBlock .profilePic {
+    overflow: hidden;
+    float: left;
+    margin-right: 5px;
+}
+
 .notification{
     padding:5px;
     background:#9abc6e;
     border-bottom:1px solid #DFE9D1;
-    cursor:pointer;
 }
 
 .notification:hover{
@@ -1934,8 +1938,10 @@ a.blue{
     color: #FCF7F7;
     text-decoration:none;
     font-size:10.8px;
-    float:left;
-    width:300px;
+}
+
+.name_time {
+    float: left;
 }
 
 .notifyMainLink {
@@ -1944,8 +1950,6 @@ a.blue{
 
 .actionFriend {
     float: right;
-    margin-right: 60px;
-    margin-top: -7px;
 }
 img.light {
     outline: 1px solid #ddd;
@@ -1955,13 +1959,12 @@ img.light {
 
 .Name{
     margin-right:5px;
+    cursor: pointer;
 }
 
 .notifyPhotoAuthor{
     width:30px;
     height:30px;
-    margin-right:5px;
-    float: left;
 }
 
 .notifyFooter{
@@ -2305,7 +2308,7 @@ button.close {
 }
 /* header */
 .btnFi{
-    margin-bottom: -8px;
+
 }
 
 /*---------Edit profile page--------*/

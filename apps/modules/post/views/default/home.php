@@ -25,7 +25,6 @@ if ($activities)
     $status_published       = $status->data->published;
     //var_dump($otherUser);
      ?>
-    <!--<script type="text/javascript" src="<?php /*echo F3::get('STATIC_MOD'); */?>post/webroot/js/socialewired.followbtn.js"></script>-->
 <li class="swStreamStory ">
     <input type="hidden" class="currentHome<?php echo $key; ?>" value="<?php echo $activityID; ?>" />
     <div class="storyContent">

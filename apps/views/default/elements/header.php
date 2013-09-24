@@ -114,22 +114,23 @@ $currentUserName        = ucfirst($currentUser->data->firstName)." ".ucfirst($cu
                                                 $getIDRequest = $getRecordRequest->data->userA;
                                                 foreach($ListPeopleRequestTo[$getIDRequest] as $People) {
                                                     $UserNameRequest = ucfirst($People->data->firstName).' '.ucfirst($People->data->lastName);
-                                                    $peopleIDRequest = str_replace(':', '_', $People->recordID);
+                                                    $peopleIDRequest = substr($People->recordID, strpos($People->recordID, ':')+1);
                                                     $avatar    =   $People->data->profilePic;
                                                     ?>
                                                     <ul class="flyoutItemList NewNotify" id="people-<?php echo $peopleIDRequest; ?>">
                                                         <form id="RequestOfID-<?php echo $peopleIDRequest; ?>">
                                                             <li class="notification">
-                                                                <a class="notifyMainLink" href=""></a>
                                                                 <div class="notifyBlock">
-                                                                    <img class="notifyPhotoAuthor light" src="<?php echo $avatar; ?>" />
+                                                                    <div class="profilePic">
+                                                                        <img class="notifyPhotoAuthor light" src="<?php echo $avatar; ?>" />
+                                                                    </div>
                                                                     <div class="notifyInfo">
                                                                         <div class="notifyText">
                                                                             <div class="name_time">
                                                                                 <span class="blue Name"><?php echo $UserNameRequest; ?></span><br />
                                                                                 <div class="notifyFooter swTimeComment" title="<?php echo $getRecordRequest->data->published; ?>"></div>
                                                                             </div>
-                                                                            <span class="actionFriend">
+                                                                            <div class="actionFriend">
                                                                                 <a href="">
                                                                                     <img class="btnFi" id="acceptFriend" src="<?php echo F3::get('STATIC'); ?>images/agree.png"/>
                                                                                 </a>
@@ -137,7 +138,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName)." ".ucfirst($cu
                                                                                 <a  href="">
                                                                                     <img class="btnFi" id="cancelFriend" src="<?php echo F3::get('STATIC'); ?>images/cancel.png"/>
                                                                                 </a>
-                                                                            </span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>

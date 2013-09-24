@@ -16,7 +16,7 @@ $(function(){
             cache: false,
             success: function(html){
                 $("#swStreamStories").append(html);
-                new FollowByElement('.tempFollowBtn');
+                new FollowByElement('.followMoreStatus');
             }
         });
     });
