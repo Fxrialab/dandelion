@@ -22,8 +22,10 @@
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/general.js"></script>
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/addFriend.js"></script>
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/follow.js"></script>
+    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/like.js"></script>
     <script type="text/javascript">
         new FollowByElement('.follow-button');
+        new LikeByElement('.likeLink');
     </script>
     <!--Supports for video embed task-->
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.oembed.min.js"></script>

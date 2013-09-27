@@ -4,6 +4,7 @@ $comments           = F3::get('comments');
 $numberOfComments   = F3::get('numberOfComments');
 $currentUser        = F3::get('currentUser');
 $otherUser          = F3::get('otherUser');
+$listStatus         = F3::get('listStatus');
 $statusFollow       = F3::get('statusFollow');
 $statusFriendship   = F3::get('statusFriendShip');
 $postActor          = F3::get('postActor');
@@ -126,9 +127,14 @@ if($statusFriendship =='friend' || $currentUserID ==$otherUserID)
                         </div>
                         <div class="bottomWrapper">
                             <ul class="swMsgControl">
-                                <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $postID;?>">Comment </a></li>
+                                <li class="link"><a class="likeLink" id="likeLinkID-<?php echo $postID; ?>" name="likeStatus-<?php echo $likeStatus[$lastStatus];?>"></a></li>
+                                <form class="likeHidden" id="likeHiddenID-<?php echo $postID; ?>">
+                                    <input type="hidden" name="id" value="<?php echo substr($otherUserID, strpos($otherUserID, ':') + 1); ?>">
+                                    <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
+                                </form>
+                                <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $postID;?>">- Comment </a></li>
                                 <?php
-                                if ($currentUserID != $otherUserID || $listStatus[$i]->data->followStt )
+                                if ($currentUserID != $otherUserID || $listStatus[$i]->data->numberFollow )
                                 {
                                     if($listStatus[$i]->data->actor != $currentUserID)
                                     {

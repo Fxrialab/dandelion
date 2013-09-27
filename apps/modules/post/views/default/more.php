@@ -15,6 +15,7 @@ if ($activities)
     $activityID = $activities['activityID'];
     $key        = $activities['key'];
     $numberComment  = $activities['numberComments'];
+    $likeStatus     = $activities['likeStatus'];
     $statusFollow   = $activities['statusFollow'];
     $userComment    = $activities['userComment'];
     $rpStatusID = str_replace(":", "_", $statusID);
@@ -108,6 +109,11 @@ if ($activities)
         </div>
         <div class="bottomWrapper">
             <ul class="swMsgControl">
+                <li class="link"><a class="likeMoreStatus" id="likeLinkID-<?php echo $rpStatusID; ?>" name="likeStatus-<?php echo $likeStatus[$statusID] ;?>"></a></li>
+                <form class="likeHidden" id="likeHiddenID-<?php echo $rpStatusID; ?>">
+                    <input type="hidden" name="id" value="<?php echo substr($actor, strpos($actor, ':') + 1); ?>">
+                    <input type="hidden" name="statusID" value="<?php echo $rpStatusID; ?>">
+                </form>
                 <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $rpStatusID;?>">Comment </a></li>
                 <?php
                 if(($status_owner != $currentUserID) && ($status_actor != $currentUserID)) {

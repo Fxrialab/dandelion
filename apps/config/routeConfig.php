@@ -29,8 +29,11 @@ class RouteConfig
         'sentFriendRequest_POST'=> "friendController",
         'acceptFriendship_POST' => "friendController",
         'unAcceptFriendship_POST'   => "friendController",
-        /* Route config for request follow */
-        'sentFollowing_POST'    => "followController",
+        /* Route config for follow */
+        'like_POST'             => "likeController",
+        'unlike_POST'           => "likeController",
+        /* Route config for follow */
+        'follow_POST'           => "followController",
         'unFollow_POST'         => "followController",
         /* Route config for notification */
         'notify_POST'           => "notifyController,homeController",

@@ -301,8 +301,7 @@
 }
 
 .swStreamStory .storyContent .bottomWrapper{
-    height:10px;
-    /*width:500px;*/
+    width:500px;
 }
 
 .swMsgControl{
@@ -331,6 +330,7 @@
 
 ul.swMsgControl {
     margin-top: -10px;
+    width: 180px;
 }
 
 .swMsgControl .link {

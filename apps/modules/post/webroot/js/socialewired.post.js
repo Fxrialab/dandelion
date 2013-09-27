@@ -45,6 +45,7 @@ $(function() {
                     $('#status').css('height','40px');
                     $('#status').css('min-height','40px');
                     $('#status').css('max-height','40px');
+                    new LikeByElement('.likePostStatus');
                 }
             });
         }
@@ -160,6 +161,7 @@ $(function() {
             cache: false,
             success: function(html){
                 $("#swStreamStories").append(html);
+                new LikeByElement('.likeMorePostStatus');
                 new FollowByElement('.followMorePostStatus');
             }
         });

@@ -61,8 +61,8 @@ class PostController extends AppController {
                     $comments[($status->recordID)]        = $this->Comment->findByCondition("post = ? LIMIT 4 ORDER BY published DESC", array($status->recordID));
                     $numberOfComments[($status->recordID)]= $this->Comment->count("post = ?", array($status->recordID));
                     //get status follow
-                    $getStatusFollow[($status->recordID)] = $this->Follow->findOne("userA = ? AND follow = ? AND filterFollow = 'post' AND ID = ?", array($currentUser->recordID,'following',$status->recordID));
-                    $statusFollow[($status->recordID)]    = ($getStatusFollow[($status->recordID)] == null) ? 'null' : $getStatusFollow[($status->recordID)]->data->follow;
+                    $likeStatus[($status->recordID)]    = $this->getLikeStatus($status->recordID, $currentUser->recordID);
+                    $statusFollow[($status->recordID)]  = $this->getFollowStatus($status->recordID, $currentUser->recordID);
                     //get info user actor
                     $postActor[($status->data->actor)]    = $this->User->load($status->data->actor);
                     if ($comments[($status->recordID)])
@@ -80,6 +80,7 @@ class PostController extends AppController {
                 F3::set("listStatus", $statusRC);
                 F3::set("comments", $comments);
                 F3::set("numberOfComments", $numberOfComments);
+                F3::set("likeStatus", $likeStatus);
                 F3::set("statusFollow", $statusFollow);
                 F3::set("postActor", $postActor);
                 F3::set("commentActor",$commentActor);
@@ -154,11 +155,12 @@ class PostController extends AppController {
                 /*'taggedType'    => $taggedType,*/
                 'actorName'     => $this->getCurrentUserName(),
                 /*'lastTwoComment'=> '',*/
+                'numberLike'    => '0',
                 'numberComment' => '0',
                 'published'     => $published,
-                'shared'        => '0',
+                'numberShared'  => '0',
                 'contentShare'  => '',
-                'followStt'     => '0',
+                'numberFollow'  => '0',
                 'mainStatus'    => 'none',
             );
 
@@ -284,9 +286,9 @@ class PostController extends AppController {
                     $comments[($status->recordID)] = $this->Comment->findByCondition("post = ? ORDER BY published ASC LIMIT 4", array($status->recordID));
                     $numberOfComments[($status->recordID)] = $this->Comment->count("post = ?", array($status->recordID));
                     //get status follow
-                    $getStatusFollow[($status->recordID)] = $this->Follow->findOne("userA = ? AND follow = ? AND filterFollow = 'post' AND ID = ?", array($currentUser->recordID,'following',$status->recordID));
-                    $statusFollow[($status->recordID)]    = ($getStatusFollow[($status->recordID)] == null) ? 'null' : $getStatusFollow[($status->recordID)]->data->follow;
-                    $postActor[($status->data->actor)]    = $this->User->load($status->data->actor);
+                    $likeStatus[($status->recordID)]    = $this->getLikeStatus($status->recordID, $currentUser->recordID);
+                    $statusFollow[($status->recordID)]  = $this->getFollowStatus($status->recordID, $currentUser->recordID);
+                    $postActor[($status->data->actor)]  = $this->User->load($status->data->actor);
                     if ($comments[($status->recordID)])
                     {
                         $pos = (count($comments[($status->recordID)]) < 4 ? count($comments[($status->recordID)]) : 4);
@@ -301,6 +303,7 @@ class PostController extends AppController {
                 F3::set("listStatus", $statusRC);
                 F3::set("comments", $comments);
                 F3::set("numberOfComments", $numberOfComments);
+                F3::set("likeStatus", $likeStatus);
                 F3::set("statusFollow", $statusFollow);
                 F3::set("postActor", $postActor);
                 F3::set("commentActor",$commentActor);
@@ -393,7 +396,7 @@ class PostController extends AppController {
             $rid = F3::get("POST.rid");
             $content = F3::get("POST.status");
             $old_status = $this->Status->findOne("@rid = ?",array($rid));
-            $old_status->data->shared = $old_status->data->shared +1;
+            $old_status->data->numberShared = $old_status->data->numberShared +1;
             $this->Status->update($rid,$old_status);
             $postEntry = array(
                 'owner'         => $this->getCurrentUser()->recordID,
@@ -401,12 +404,13 @@ class PostController extends AppController {
                 'content'       => $old_status->data->content,
                 'tagged'        => $old_status->data->tagged,
                 /*'taggedType'    => $old_status->data->taggedType,*/
-                'actorName'      => $old_status->data->actorName,
+                'actorName'     => $old_status->data->actorName,
+                'numberLike'    => '0',
                 'numberComment' => $old_status->data->numberComment,
                 'published'     => $published,
                 'contentShare'  => $content,
-                'shared'        => '',
-                'followStt'     => '0',
+                'numberShared'  => '0',
+                'numberFollow'  => '0',
                 'mainStatus'    =>$rid,
             );
 

@@ -1,7 +1,7 @@
 <?php
 class HomePost extends AppController
 {
-    protected $uses = array ("User", "Follow", "Status", "Comment");
+    protected $uses = array ("User", "Follow", "Status", "Comment", "Like");
 
     public function __construct() {
         parent::__construct();
@@ -23,9 +23,9 @@ class HomePost extends AppController
                     $userRC = $this->User->findOne("@rid = ?",array($statusRC->data->owner));
                 $commentOfStatusRC[$statusID]   = $this->Comment->findByCondition("post = ? LIMIT 4 ORDER BY published DESC", array($statusID));
                 $numberCommentInStatusRC[$statusID] = $this->Comment->count("post = ?", array($statusID));
-                $followRC[$statusID]            = $this->Follow->findOne("userA = ? AND userB = ? AND filterFollow = 'post' AND ID = ?", array($currentUser->recordID, $entry->data->actor, $statusID));
-                //var_dump($followRC);
-                $statusFollow[$statusID]        = ($followRC[$statusID]) ? $followRC[$statusID]->data->follow : 'null';
+
+                $likeStatus[$statusID]          = $this->getLikeStatus($statusID, $currentUser->recordID);
+                $followStatus[$statusID]        = $this->getFollowStatus($statusID, $currentUser->recordID);
 
                 if ($commentOfStatusRC[$statusID])
                 {
@@ -45,7 +45,8 @@ class HomePost extends AppController
                     'activityID'    => $activityID,
                     'comment'       => $commentOfStatusRC,
                     'numberComments'=> $numberCommentInStatusRC,
-                    'statusFollow'  => $statusFollow,
+                    'likeStatus'    => $likeStatus,
+                    'statusFollow'  => $followStatus,
                     'actions'       => $statusRC,
                     'actor'         => $statusRC->data->actor,
                     'statusID'      => $statusID,

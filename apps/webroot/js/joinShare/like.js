@@ -1,34 +1,40 @@
-function FollowByElement($element)
+/**
+ * Created by fxrialab team
+ * Author: Uchiha
+ * Date: 9/25/13 - 5:01 PM
+ * Project: userwired Network - Version: 1.0
+ */
+function LikeByElement($element)
 {
     $(document).ready(function(){
-        var Follow      = 'Follow';
-        var UnFollow    = 'UnFollow';
+        var Like      = 'Like';
+        var UnLike    = 'Unlike';
 
         $($element).each(function()
         {
-            var getStatusFollow = $(this).attr('name').replace('getStatus-', '');
+            var getLikeStatus = $(this).attr('name').replace('likeStatus-', '');
             $(this).data("state", {pressed: false});
-            if (getStatusFollow == 'following')
+            if (getLikeStatus == 'like')
             {
-                $(this).html(UnFollow);
+                $(this).html(UnLike);
                 $(this).data("state", {pressed: true});
             }
-            if (getStatusFollow == 'null')
+            if (getLikeStatus == 'null')
             {
-                $(this).html(Follow);
+                $(this).html(Like);
                 $(this).data("state", {pressed: false});
             }
 
             $(this).live('click', function()
             {
-                var getID = $(this).attr('id').replace('followID-', '');
+                var getID = $(this).attr('id').replace('likeLinkID-', '');
                 if ($(this).data("state").pressed)
                 {
-                    $(this).html(Follow);
+                    $(this).html(Like);
                     $.ajax({
                         type: 'POST',
-                        url: '/unFollow',
-                        data: $('#FollowID-'+getID).serialize(),
+                        url: '/unlike',
+                        data: $('#likeHiddenID-'+getID).serialize(),
                         cache: false,
                         success: function(){
 
@@ -36,11 +42,11 @@ function FollowByElement($element)
                     });
                     $(this).data("state", {pressed: false});
                 }else {
-                    $(this).html(UnFollow);
+                    $(this).html(UnLike);
                     $.ajax({
                         type: 'POST',
-                        url: '/follow',
-                        data: $('#FollowID-'+getID).serialize(),
+                        url: '/like',
+                        data: $('#likeHiddenID-'+getID).serialize(),
                         cache: false,
                         success: function(){
                             console.log(this);

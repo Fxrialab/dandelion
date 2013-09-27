@@ -10,6 +10,7 @@ $comments       = F3::get('comment');
 $UserName       = F3::get('currentUser');
 $postID         = str_replace(":", "_", $status->recordID);
 $userFriend     = F3::get('userFriend');
+$likeStatus     = F3::get('likeStatus');
 $statusFollow   = F3::get('statusFollow');
 ?>
 <script type="text/javascript" src="<?php echo F3::get('STATIC_MOD'); ?>post/webroot/js/socialewired.post.js"></script>
@@ -68,6 +69,11 @@ $statusFollow   = F3::get('statusFollow');
                         </div>
                         <div class="bottomWrapper">
                             <ul class="swMsgControl">
+                                <li class="link"><a class="likeLink" id="likeLinkID-<?php echo $postID; ?>" name="likeStatus-<?php echo $likeStatus[$statusID] ;?>"></a></li>
+                                <form class="likeHidden" id="likeHiddenID-<?php echo $postID; ?>">
+                                    <input type="hidden" name="id" value="<?php echo substr($status->data ->actor, strpos($status->data ->actor, ':') + 1); ?>">
+                                    <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
+                                </form>
                                 <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $postID;?>">Comment </a></li>
                                 <?php
                                 if(($status->data->owner != $UserName->recordID) && ($status->data->actor != $UserName->recordID)) {

@@ -10,7 +10,7 @@ include_once(CONFIG.'amqConfig.php');
 
 class AppController extends Controller
 {
-    protected $uses     = array("User", "Friendship", "Sessions", "Follow", "Activity", "Edge");
+    protected $uses     = array("User", "Friendship", "Sessions", "Follow", "Activity", "Like");
     protected $helpers  = array("Amqp");
 
     protected $layout   = '';
@@ -139,6 +139,20 @@ class AppController extends Controller
     {
         return $this->Friendship->findByCondition("userA = ? AND relationship = 'friend' AND status = 'ok'", array($actor));
     }
+    //will group two below func after check all case
+    public function getLikeStatus($statusID, $userA)
+    {
+        $likeRC[$statusID]              = $this->Like->findOne("userA = ? AND ID = ?", array($userA, $statusID));
+        $likeStatus[$statusID]          = ($likeRC[$statusID]) ? $likeRC[$statusID]->data->isLike : 'null';
+        return $likeStatus[$statusID];
+    }
+
+    public function getFollowStatus($statusID, $userA)
+    {
+        $getStatusFollow[$statusID] = $this->Follow->findOne("userA = ? AND follow = 'following' AND filterFollow = 'post' AND ID = ?", array($userA, $statusID));
+        $statusFollow[$statusID]    = ($getStatusFollow[$statusID]) ? $getStatusFollow[$statusID]->data->follow : 'null';
+        return $statusFollow[$statusID];
+    }
 
     // **********************************
     // Track activity
@@ -190,7 +204,7 @@ class AppController extends Controller
                             );
                             $activity_id = $this->Activity->create($activity);
                             try {
-                                echo "track activity if check friend null <br />";
+                                //echo "track activity if check friend null <br />";
                                 $content = '1'.$activity_id; // 1 is home .
                                 $this->sendMessageRab($actor->recordID,$content);
                             } catch(Exception $e) {}
@@ -210,7 +224,7 @@ class AppController extends Controller
                         );
                         $activity_id = $this->Activity->create($activity);
                         try{
-                            echo "track activity if check activity friend null <br />";
+                           // echo "track activity if check activity friend null <br />";
                             $content = '1'.$activity_id; // 1 is home .
                             $this->sendMessageRab($friends[$i]->data->userB,$content);
                         } catch(Exception $e){}
@@ -243,7 +257,7 @@ class AppController extends Controller
                 $activity_id =$this->Activity ->create($userStatus);
                 /* Send message to RabbitMQ server */
                 try{
-                    echo "track comment if check activity null <br />";
+                    //echo "track comment if check activity null <br />";
                     $content = '2'.$activity_id.'-'.$statusID;
                     $this->sendMessageRab($owner,$content); // 2 la comment
                 } catch(Exception $e){}

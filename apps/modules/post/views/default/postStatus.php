@@ -66,7 +66,12 @@ $friendName         = ucfirst($friendProfileInfo->data->firstName)." ".ucfirst($
         </div>
         <div class="bottomWrapper">
             <ul class="swMsgControl">
-                <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $statusID;?>">Comment </a></li>
+                <li class="link"><a class="likePostStatus" id="likeLinkID-<?php echo $statusID; ?>" name="likeStatus-null"></a></li>
+                <form class="likeHidden" id="likeHiddenID-<?php echo $statusID; ?>">
+                    <input type="hidden" name="id" value="<?php echo substr($currentUserID, strpos($currentUserID, ':') + 1); ?>">
+                    <input type="hidden" name="statusID" value="<?php echo $statusID; ?>">
+                </form>
+                <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $statusID;?>">- Comment </a></li>
 <!--                <li class="link"><a href="">- Share</a></li>-->
             </ul>
         </div>

@@ -8,7 +8,7 @@
 
 class FollowController extends AppController
 {
-    protected $uses     = array("Follow");
+    protected $uses     = array("Follow", "Status");
     protected $helpers  = array();
 
     public function __construct()
@@ -16,14 +16,13 @@ class FollowController extends AppController
         parent::__construct();
     }
 
-    public function sentFollowing()
+    public function follow()
     {
         $getIDUser  = F3::GET("POST.id");
         $userA      = $this->getCurrentUser()->recordID;
         $userB      = $this->User->getClusterID().':'.$getIDUser;
         //filter follow status, qa, photo and all
         $statusID   = F3::GET("POST.statusID");
-        echo $statusID;
         $qaID       = F3::GET("POST.qaID");
         $photoID    = F3::GET("POST.photoID");
         $userID     = $userB;
@@ -33,15 +32,22 @@ class FollowController extends AppController
         //prepare data
         if ($statusID && $userID && !$existStatusFollowingRC)
         {
+            $statusID = str_replace('_', ':', $statusID);
             $data = array(
                 'userA'         => $userA,
                 'follow'        => 'following',
                 'filterFollow'  => 'post',
-                'ID'            => str_replace('_', ':', $statusID),
+                'ID'            => $statusID,
                 'userB'         => $userB,
                 'published'     => $published
             );
             $this->Follow->create($data);
+            //update number follow to status
+            $statusRC = $this->Status->findOne('@rid = ?',array('#'.$statusID));
+            $updateNumFollow = array(
+                'numberFollow'  => $statusRC->data->numberFollow + 1,
+            );
+            $this->Status->updateByCondition($updateNumFollow, "@rid = ?", array("#".$statusID));
             //track activity
             $this->trackActivity($this->getCurrentUser(), 'HomePost', str_replace('_', ':', $statusID), $published);
         }
@@ -92,16 +98,23 @@ class FollowController extends AppController
     {
         $getIDUser  = F3::GET("POST.id");
         $userA      = $this->getCurrentUser()->recordID;
-        $userB      = $this->User->getClusterID().':'.$getIDUser;;
-        echo $userB;
+        $userB      = $this->User->getClusterID().':'.$getIDUser;
         //filter follow status, qa, photo and all
         $statusID   = F3::GET("POST.statusID");
         $qaID       = F3::GET("POST.qaID");
         $photoID    = F3::GET("POST.photoID");
         $userID     = $userB;
         //find id of record then delete record
-        if($statusID && $userID) {
-            $this->Follow->deleteByCondition("userA = ? AND userB = ? AND ID = ?", array($userA, $userB, str_replace('_', ':', $statusID)));
+        if($statusID && $userID)
+        {
+            $statusID = str_replace('_', ':', $statusID);
+            $this->Follow->deleteByCondition("userA = ? AND userB = ? AND ID = ?", array($userA, $userB, $statusID));
+            //update number follow in status
+            $statusRC = $this->Status->findOne('@rid = ?',array('#'.$statusID));
+            $updateNumFollow = array(
+                'numberFollow'  => $statusRC->data->numberFollow - 1,
+            );
+            $this->Status->updateByCondition($updateNumFollow, "@rid = ?", array("#".$statusID));
         }
         if($qaID && $userID) {
             $this->Follow->deleteByCondition("userA = ? AND userB = ? AND ID = ?", array($userA, $userB, str_replace('_', ':', $qaID)));

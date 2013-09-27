@@ -2,6 +2,7 @@
 $rand               = rand(100,100000);
 $currentUser        = F3::get('currentUser');
 $userProfileInfo    = F3::get('userProfileInfo');
+$likeStatus         = F3::get('likeStatus');
 $listStatus         = F3::get('listStatus');
 $comments           = F3::get('comments');
 $numberOfComments   = F3::get('numberOfComments');
@@ -76,14 +77,19 @@ if($listStatus)
             </div>
             <div class="bottomWrapper">
                 <ul class="swMsgControl">
-                    <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $postID;?>">Comment -</a></li>
+                    <li class="link"><a class="likeMorePostStatus" id="likeLinkID-<?php echo $postID; ?>" name="likeStatus-<?php echo $likeStatus[$lastStatus];?>"></a></li>
+                    <form class="likeHidden" id="likeHiddenID-<?php echo $postID; ?>">
+                        <input type="hidden" name="id" value="<?php echo substr($userProfileID, strpos($userProfileID, ':') + 1); ?>">
+                        <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
+                    </form>
+                    <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $postID;?>">- Comment -</a></li>
                     <li class="link"><a href="">Share -</a></li>
                     <?php
-                        if ($currentUserID != $listStatus[$i]->data->actor || $listStatus[$i]->data->followStt)
+                        if ($currentUserID != $listStatus[$i]->data->actor || $listStatus[$i]->data->numberFollow)
                         {
                             if($listStatus[$i]->data->actor != $currentUserID)
                             {       ?>
-                                <li class="link"><a class="followMorePostStatus" id="followID-<?php echo $postID; ?>" name="getStatus-<?php echo $statusFollow[$lastStatus] ;?>"></a></li>
+                                <li class="link"><a class="followMorePostStatus" id="followID-<?php echo $postID; ?>" name="getStatus-<?php echo $statusFollow[$lastStatus];?>"></a></li>
                                 <form class="followBtn" id="FollowID-<?php echo $postID; ?>">
                                     <input type="hidden" name="id" value="<?php echo substr($userProfileID, strpos($userProfileID, ':') + 1); ?>">
                                     <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
