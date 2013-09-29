@@ -22,6 +22,7 @@ if ($activities)
     $status_username= $status->data->actorName;
     $status_tagged  = $status->data->tagged;
     $status_content = $status->data->content;
+    $numberLikes    = $status->data->numberLike;
     $status_contentShare    = $status->data->contentShare;
     $status_published       = $status->data->published;
     //var_dump($otherUser);
@@ -124,7 +125,26 @@ if ($activities)
         <div class="comment-wrapper" id="showComment-<?php echo $rpStatusID; ?>">
             <?php
             $records = $comment[$statusID];
-
+            if ($numberLikes > 0)
+            {
+                if ($likeStatus[$statusID] == 'null')
+                {
+                ?>
+                    <div class="likeSentenceView" id="likeSentence-<?php echo $rpStatusID;?>"><a><?php echo $numberLikes; ?></a> like this</div>
+                <?php
+                }else {
+                    if ($numberLikes == 1)
+                    {
+                        ?>
+                        <div class="likeSentenceView" id="likeSentence-<?php echo $rpStatusID;?>">You like this</div>
+                    <?php
+                    }else {
+                        ?>
+                        <div class="likeSentenceView" id="likeSentence-<?php echo $rpStatusID;?>"><span>You and </span><a><?php echo $numberLikes - 1; ?></a> like this</div>
+                    <?php
+                    }
+                }
+            }
             if ($numberComment[$statusID] > 4) { ?>
                 <div class="view-more-comments" id="<?php echo $rpStatusID;?>">View all <?php echo $numberComment[$statusID];?> comments</div>
                 <span class="hiddenSpan"><?php echo $numberComment[$statusID];?></span>

@@ -371,6 +371,14 @@ button.follow-button {
     margin-top: 10px;
 }
 
+.likeSentenceView {
+    margin: 1px 50px;
+    font-weight: bold;
+    background:#e9fbd3;
+    color: #666;
+    padding: 6px;
+}
+
 .view-more-comments {
     margin: 1px 50px;
     font-weight: bold;

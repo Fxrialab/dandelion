@@ -4,7 +4,7 @@ $comments           = F3::get('comments');
 $numberOfComments   = F3::get('numberOfComments');
 $currentUser        = F3::get('currentUser');
 $otherUser          = F3::get('otherUser');
-$listStatus         = F3::get('listStatus');
+$likeStatus         = F3::get('likeStatus');
 $statusFollow       = F3::get('statusFollow');
 $statusFriendship   = F3::get('statusFriendShip');
 $postActor          = F3::get('postActor');
@@ -157,10 +157,29 @@ if($statusFriendship =='friend' || $currentUserID ==$otherUserID)
                                 ?>
                             </ul>
                         </div>
-                        <div class="comment-wrapper">
+                        <div class="comment-wrapper" id="showComment-<?php echo $postID; ?>">
                             <?php
                             $records = $comments[$listStatus[$i]->recordID];
-
+                            if ($listStatus[$i]->data->numberLike > 0)
+                            {
+                                if ($likeStatus[$lastStatus] == 'null')
+                                {
+                                    ?>
+                                    <div class="likeSentenceView" id="likeSentence-<?php echo $postID;?>"><a><?php echo $listStatus[$i]->data->numberLike; ?></a> like this</div>
+                                <?php
+                                }else {
+                                    if ($listStatus[$i]->data->numberLike == 1)
+                                    {
+                                        ?>
+                                        <div class="likeSentenceView" id="likeSentence-<?php echo $postID;?>">You like this</div>
+                                    <?php
+                                    }else {
+                                        ?>
+                                        <div class="likeSentenceView" id="likeSentence-<?php echo $postID;?>"><span>You and </span><a><?php echo $listStatus[$i]->data->numberLike - 1; ?></a> like this</div>
+                                    <?php
+                                    }
+                                }
+                            }
                             if ($numberOfComments[$listStatus[$i]->recordID] > 4) { ?>
                                 <div class="view-more-comments" id="<?php echo $postID;?>">View all <?php echo $numberOfComments[$listStatus[$i]->recordID];?> comments</div>
                                 <span class="hiddenSpan"><?php echo $numberOfComments[$listStatus[$i]->recordID];?></span>

@@ -37,7 +37,14 @@ function LikeByElement($element)
                         data: $('#likeHiddenID-'+getID).serialize(),
                         cache: false,
                         success: function(){
-
+                            var otherLike = $('#likeSentence-'+getID+' a').length;
+                            console.log('otherLike: ', otherLike);
+                            if (otherLike)
+                            {
+                                $('#likeSentence-'+getID+' span').remove();
+                            }else {
+                                $('#likeSentence-'+getID).detach();
+                            }
                         }
                     });
                     $(this).data("state", {pressed: false});
@@ -49,7 +56,14 @@ function LikeByElement($element)
                         data: $('#likeHiddenID-'+getID).serialize(),
                         cache: false,
                         success: function(){
-                            console.log(this);
+                            var likeSentence = $('#likeSentence-'+getID).length;
+                            console.log('likeSentence: ', likeSentence);
+                            if (likeSentence)
+                            {
+                                $("<span>You and </span>").prependTo("#likeSentence-"+getID);
+                            }else {
+                                $("#showComment-"+getID).append("<div class='likeSentenceView' id='likeSentence-"+getID+"'>You like this</div>");
+                            }
                         }
                     });
                     $(this).data("state", {pressed: true});
