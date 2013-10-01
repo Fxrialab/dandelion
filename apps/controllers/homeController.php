@@ -210,7 +210,8 @@ class HomeController extends AppController
                 'error'     => ''
             );
             $searchText = F3::get("POST.data");
-            $command    = "current.or(_().filter{it.getProperty('firstName').matches('".$searchText.".*')},_().filter{it.getProperty('lastName').matches('".$searchText.".*')})";
+            $command = $this->getSearchCommand(array('firstName', 'lastName'), $searchText);
+            //echo $command."<br />";
             $result     = $this->User->searchByGremlin($command);
             if ($result)
             {
@@ -218,11 +219,11 @@ class HomeController extends AppController
                 {
                     $infoFoundPeople[$people] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$people));
                     $data['results'][] = array(
-                        'recordID' => str_replace(':', '_', $people),
+                        'recordID'  => str_replace(':', '_', $people),
                         'firstName' => ucfirst($infoFoundPeople[$people][0]->firstName),
-                        'lastName' => ucfirst($infoFoundPeople[$people][0]->lastName),
-                        'username' => $infoFoundPeople[$people][0]->username,
-                        'profilePic' => $infoFoundPeople[$people][0]->profilePic,
+                        'lastName'  => ucfirst($infoFoundPeople[$people][0]->lastName),
+                        'username'  => $infoFoundPeople[$people][0]->username,
+                        'profilePic'=> $infoFoundPeople[$people][0]->profilePic,
                     );
                 }
                 $data['success'] = true;

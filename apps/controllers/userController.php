@@ -30,6 +30,8 @@ class UserController extends AppController
                 if(isset($data['regCheckbox']))
                 {
                     // prepare birthday data
+                    $data['firstName']  = strtolower($data['firstName']);
+                    $data['lastName']   = strtolower($data['lastName']);
                     $data['birthday']   = date("F-d-Y", mktime(0,0,0,$data['birthdayMonth'],$data['birthdayDay'],$data['birthdayYear']));
                     unset($data['birthdayDay']);
                     unset($data['birthdayMonth']);

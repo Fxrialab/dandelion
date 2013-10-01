@@ -454,4 +454,15 @@ class AppController extends Controller
                 break;
         }
     }
+
+    public function getSearchCommand($properties, $searchText)
+    {
+        $command = "current.or(";
+        for ($i = 0; $i < count($properties); $i++)
+        {
+            $command = $command."_().filter{it.getProperty('".$properties[$i]."').matches('".strtolower($searchText).".*')},";
+        }
+        $command = $command.")";
+        return $command;
+    }
 }
