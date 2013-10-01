@@ -30,7 +30,7 @@ class HomeController extends AppController
         {
             $this->layout = 'default';
             // get activities
-            $activitiesRC = $this->Activity->findByCondition("owner = ? AND type = ? ORDER BY published DESC LIMIT 10", array($this->getCurrentUser()->recordID,"post"));
+            $activitiesRC = $this->Activity->findByCondition("owner = ? AND type = ? ORDER BY published DESC LIMIT 4", array($this->getCurrentUser()->recordID,"post"));
 
             if ($activitiesRC)
             {
@@ -200,11 +200,37 @@ class HomeController extends AppController
         }
     }
 
-    public function reloadJS()
+    public function search()
     {
         if ($this->isLogin())
         {
-            $this->render('elements/loadedJS.php', 'default');
+            $data = array(
+                'results'   => array(),
+                'success'   => false,
+                'error'     => ''
+            );
+            $searchText = F3::get("POST.data");
+            $command    = "current.or(_().filter{it.getProperty('firstName').matches('".$searchText.".*')},_().filter{it.getProperty('lastName').matches('".$searchText.".*')})";
+            $result     = $this->User->searchByGremlin($command);
+            if ($result)
+            {
+                foreach ($result as $people)
+                {
+                    $infoFoundPeople[$people] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$people));
+                    $data['results'][] = array(
+                        'recordID' => str_replace(':', '_', $people),
+                        'firstName' => ucfirst($infoFoundPeople[$people][0]->firstName),
+                        'lastName' => ucfirst($infoFoundPeople[$people][0]->lastName),
+                        'username' => $infoFoundPeople[$people][0]->username,
+                        'profilePic' => $infoFoundPeople[$people][0]->profilePic,
+                    );
+                }
+                $data['success'] = true;
+            }else {
+                $data['error'] = "Your search did not return any results";
+            }
+            header("Content-Type: application/json; charset=UTF-8");
+            echo json_encode((object)$data);
         }
     }
 }

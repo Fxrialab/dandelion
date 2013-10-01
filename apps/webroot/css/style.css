@@ -3281,3 +3281,62 @@ a.favoriteLinks {
 .uiAddFriend {
     margin-top: 10px;
 }
+
+/* Search feature */
+.loading {
+    /* Image is free and loads of alternatives can be generated from ajaxload, http://ajaxload.info/! */
+    background-image: url('../images/loading.gif');
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#resultsHolder {
+    width: 345px;
+    position: absolute;
+    z-index: 1001;
+    background-color: #90a967;
+}
+
+#resultsList {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    border: 1px solid #DFE9D1;
+}
+
+#resultsList li {
+    line-height: 20px;
+    border-bottom: solid 1px #CCC;
+    padding: 5px;
+    padding-left: 10px;
+    color: #333;
+    cursor: pointer;
+}
+
+#resultsList li:hover {
+    color: whitesmoke;
+    cursor: pointer;
+    background-color: #50504B;
+}
+
+#resultsList li:last-child {
+    border: none;
+}
+
+#resultsList .no-results {
+    text-align: center;
+    font-size: 14px;
+    color: white;
+}
+
+.imgFindPeople {
+    margin-right: 10px;
+}
+
+.infoPeople {
+    color: whitesmoke;
+}
+
+.infoPeople:hover {
+    text-decoration: none;
+}

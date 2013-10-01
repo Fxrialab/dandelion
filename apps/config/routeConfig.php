@@ -41,6 +41,8 @@ class RouteConfig
         /* Route config for load suggest element */
         'pull_GET'              => "homeController",
         'loadSuggest_POST'      => "homeController",
+        /* Route config for search*/
+        'search_POST'           => "homeController",
     );
 
     public $modules = array(

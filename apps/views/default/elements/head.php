@@ -19,6 +19,7 @@
     <!--Supports by social network libs-->
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/inputToggle.js"></script>
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/pretty.js"></script>
+    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/search.js"></script>
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/general.js"></script>
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/addFriend.js"></script>
     <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/follow.js"></script>

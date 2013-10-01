@@ -138,6 +138,7 @@ class AppModel {
         //echo $sql."<br />";
         $queryResult    = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
         $stringResult   = $this->getResultString($queryResult[0]->content);
+        //echo $stringResult;
         /*if ($tempArray)
             $result     = $this->getContentGremlin($stringResult, $tempArray);
         else*/
@@ -240,6 +241,48 @@ class AppModel {
                 }
             }
         }
+        return $arrayResult;
+    }
+
+    public function searchByGremlin($command)
+    {
+        $sql = "SELECT GREMLIN( '".$command."' ) FROM ".$this->_className;
+        //echo $sql."<br />";
+        $queryResult    = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
+        $stringResult   = $this->getString($queryResult);
+        //var_dump($stringResult);
+        $result     = $this->getContentResult($stringResult);
+        return $result;
+    }
+
+    public function getString($var)
+    {
+        $toFind = "GREMLIN";
+        $array = array();
+        for ($i=0; $i <count($var); $i++)
+        {
+            $pos[$i]    = strpos($var[$i]->content, $toFind) + strlen($toFind);
+            $start[$i]  = (int)$pos[$i];
+            $result[$i] = substr($var[$i]->content, $start[$i] + 1, strlen($var[$i]->content) - $start[$i]);
+            array_push($array, $result[$i]);
+        }
+        return $array;
+    }
+
+    public function getContentResult($resultGremlin)
+    {
+        $toSecondFind = '[#';
+        $arrayResult = array();
+        for ($i=0; $i <count($resultGremlin); $i++)
+        {
+            $pos2[$i] = strpos($resultGremlin[$i],$toSecondFind);
+            if ($pos2[$i])
+            {
+                $replace[$i] = str_replace(array('v[#', ']'), '', $resultGremlin[$i]);
+                array_push($arrayResult, $replace[$i]);
+            }
+        }
+
         return $arrayResult;
     }
 

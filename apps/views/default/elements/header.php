@@ -85,14 +85,16 @@ $currentUserName        = ucfirst($currentUser->data->firstName)." ".ucfirst($cu
                         <div class="searchHead">
                             <div class="wrap">
                                 <div class="innerWrap">
-									<span class="searchInput textInput">
-                                        <span>
-                                            <input type="text" class="inputtext DOMControl_placeholder"
-                                                maxlength="100" name="search" id="search" value="Search"
-                                                title="Search" onclick="" />
-											<button type="submit" title="Search" onclick=""></button>
-									    </span>
-									</span>
+									<div class="searchInput textInput">
+                                        <input type="text" class="inputtext DOMControl_placeholder"
+                                            maxlength="100" name="search" id="searchText" placeholder="Search"
+                                            title="Search" onclick="" autocomplete="off" />
+                                        <button type="submit" title="Search" id="searchBtn" onclick=""></button>
+									</div>
+                                    <div id='resultsHolder'>
+                                        <ul id='resultsList'>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -301,9 +303,20 @@ $currentUserName        = ucfirst($currentUser->data->firstName)." ".ucfirst($cu
         $('#notifyContainer').hide();
         $('#navMsg').removeClass('notifyAction');
         $('#navMsg').addClass('notifyDefault');
+        //with search popUp
+        var existSearchPopUp = $('#resultsList li').length;
+        if (existSearchPopUp > 0)
+        {
+            $('#resultsList').css('display', 'none');
+        }else {
+            $('#resultsList').css('display', 'block');
+        }
     });
 
     $('#notifyContainer').click(function(e){
+        e.stopPropagation();
+    });
+    $('#resultsHolder').click(function(e){
         e.stopPropagation();
     });
 </script>
