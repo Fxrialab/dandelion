@@ -43,6 +43,7 @@ class RouteConfig
         'loadSuggest_POST'      => "homeController",
         /* Route config for search*/
         'search_POST'           => "homeController",
+        'moreSearch_GET'        => "homeController",
     );
 
     public $modules = array(

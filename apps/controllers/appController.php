@@ -460,7 +460,7 @@ class AppController extends Controller
         $command = "current.or(";
         for ($i = 0; $i < count($properties); $i++)
         {
-            $command = $command."_().filter{it.getProperty('".$properties[$i]."').matches('".strtolower($searchText).".*')},";
+            $command = $command."_().filter{it.getProperty('".$properties[$i]."').contains('".strtolower($searchText)."')},";
         }
         $command = $command.")";
         return $command;

@@ -204,26 +204,26 @@ class HomeController extends AppController
     {
         if ($this->isLogin())
         {
+            $searchText = F3::get("POST.data");
+
             $data = array(
                 'results'   => array(),
                 'success'   => false,
                 'error'     => ''
             );
-            $searchText = F3::get("POST.data");
-            $command = $this->getSearchCommand(array('firstName', 'lastName'), $searchText);
-            //echo $command."<br />";
+            $command = $this->getSearchCommand(array('firstName', 'lastName', 'fullName'), $searchText);
             $result     = $this->User->searchByGremlin($command);
             if ($result)
             {
                 foreach ($result as $people)
                 {
-                    $infoFoundPeople[$people] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$people));
+                    $infoOfSearchFound[$people] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$people));
                     $data['results'][] = array(
                         'recordID'  => str_replace(':', '_', $people),
-                        'firstName' => ucfirst($infoFoundPeople[$people][0]->firstName),
-                        'lastName'  => ucfirst($infoFoundPeople[$people][0]->lastName),
-                        'username'  => $infoFoundPeople[$people][0]->username,
-                        'profilePic'=> $infoFoundPeople[$people][0]->profilePic,
+                        'firstName' => ucfirst($infoOfSearchFound[$people][0]->firstName),
+                        'lastName'  => ucfirst($infoOfSearchFound[$people][0]->lastName),
+                        'username'  => $infoOfSearchFound[$people][0]->username,
+                        'profilePic'=> $infoOfSearchFound[$people][0]->profilePic,
                     );
                 }
                 $data['success'] = true;
@@ -232,6 +232,30 @@ class HomeController extends AppController
             }
             header("Content-Type: application/json; charset=UTF-8");
             echo json_encode((object)$data);
+        }
+    }
+
+    public function moreSearch()
+    {
+        if ($this->isLogin())
+        {
+            $this->layout   = 'default';
+
+            $searchText     = F3::get("GET.search");
+            $command        = $this->getSearchCommand(array('firstName', 'lastName', 'fullName'), $searchText);
+            $resultSearch   = $this->User->searchByGremlin($command);
+            if ($resultSearch)
+            {
+                foreach ($resultSearch as $people)
+                {
+                    $infoOfSearchFound[$people] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$people));
+                }
+                F3::set('resultSearch', $resultSearch);
+                F3::set('infoOfSearchFound', $infoOfSearchFound);
+            }
+            F3::set('currentUser', $this->getCurrentUser());
+            F3::set('otherUser', $this->getCurrentUser());
+            $this->render('user/searchResult.php', 'default');
         }
     }
 }
