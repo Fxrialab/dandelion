@@ -7,103 +7,6 @@ class PhotoController extends AppController {
         "navigation" => 5
     );
 
-    public function index()
-    {
-        $this->layout = "default";
-        $this->render("photo/index.php",'normal');
-    }
-    /*public function viewAlbum($viewPath) {
-        if ($this->isLogin()) {
-
-            $getAlbum_id    = F3::get("GET.id");
-            $album_id       = str_replace("_", ":", $getAlbum_id);
-
-            //echo $album_id;
-            if ($this->isEnoughPermissionToAccess($album_id)) {
-                $this->layout = "default";
-                F3::set('username', ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName));
-                $photos = $this->Photo->find("album  = ?", array($album_id));
-
-                F3::set('album_id', $getAlbum_id);
-                F3::set("photos", $photos);
-                $this->render($viewPath."index.php",'modules');
-            }
-        }
-
-    }*/
-
-    public function viewAlbum()
-    {
-        if ($this->isLogin())
-        {
-            $this->layout   =   "default";
-            $getAlbum_id    = F3::get("GET.id");
-            $album_id       = str_replace("_", ":", $getAlbum_id);
-            if ($album_id)
-            {
-                F3::set('username', ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName));
-                $photos         = $this->Photo->findByCondition("album  = ?", array($album_id));
-                $currentUser    =   $this->getCurrentUser();
-                F3::set('album_id', $getAlbum_id);
-                F3::set("photos", $photos);
-                F3::set('currentUser', $currentUser);
-                F3::set('otherUser', $currentUser);
-            }
-            $this->render(Register::getPathModule('photo').'index.php','modules');
-        }
-
-    }
-
-
-    public function uploadPhoto()
-    {
-        switch ($_SERVER['REQUEST_METHOD'])
-        {
-            case 'OPTIONS':
-                break;
-            case 'HEAD':
-            case 'GET':
-                $this->UploadHelper->get();
-                break;
-            case 'POST':
-                if (isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE') {
-                    $this->UploadHelper->delete();
-                } else {
-                    $uploadRequestData = json_decode($this->UploadHelper->post());
-                    $data = $uploadRequestData[0];
-                    // @todo: research about F3 bugs here, F3::get("REQUEST") don't work?
-                    $album_id = ($_REQUEST["album_id"]) ? str_replace("_", ":",  $_REQUEST["album_id"]) : "";
-                    $description = F3::get('description') ?  F3::get('description') : "";
-/*                    $description    =   F3::get("POST.descriptionPhoto");*/
-                    //mo ta rieng cho tung anh
-
-                    $published = time();
-                   $url = $data->url;
-                    echo($url);
-                    $entry = array(
-                        'owner' => $this->getCurrentUser()->recordID,
-                        'album' => $album_id,
-                        'url' => $data->url,
-                        'thumbnail_url' => $data->thumbnail_url,
-                        'description' => $description,
-                        'numberComment' => '0',
-                        'published' => $published
-                    );
-                    $Photo = $this->Photo->create($entry);
-                    F3::set('photo',$Photo);
-                    F3::set('description',$description);
-                    //track activity
-                    $this->trackActivity($this->getCurrentUser(), 'HomePhoto', $Photo, $published);
-                }
-                break;
-            case 'DELETE':
-                $this->UploadHelper->delete();
-                break;
-            default:
-                header('HTTP/1.1 405 Method Not Allowed');
-        }
-    }
-
     // @todo: ask client for album page
     public function myPhoto($viewPath)
     {
@@ -122,9 +25,7 @@ class PhotoController extends AppController {
             else
                 $currentProfileID       = $this->getCurrentUser()->recordID;
             F3::set('username', ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName));
-            $pageNum = F3::get('GET.pageNum');
-            if (empty($pageNum))
-                $pageNum = 1;
+
             $requestProfileID = F3::get('GET.id');
             $profileID = ($requestProfileID == NULL) ? $this->getCurrentUser()->recordID : $this->User->getClusterID() . ":" .$requestProfileID;
             $nameProfile        = $this->User->findOne('@rid = ?',array('#'.$profileID));
@@ -158,7 +59,195 @@ class PhotoController extends AppController {
             }
             F3::set('albums', $albums);
             F3::set('photos',$photos);
-            $this->render($viewPath."album.php",'modules');
+            $this->render($viewPath."myPhoto.php",'modules');
+        }
+    }
+
+    public function viewAlbum()
+    {
+        if ($this->isLogin())
+        {
+            $this->layout   = "default";
+            $getAlbumID     = F3::get("GET.id");
+            $albumID        = str_replace("_", ":", $getAlbumID);
+            if ($albumID)
+            {
+                F3::set('username', ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName));
+                $photos         = $this->Photo->findByCondition("album  = ?", array($albumID));
+                $currentUser    =   $this->getCurrentUser();
+                F3::set('albumID', $getAlbumID);
+                F3::set("photos", $photos);
+                F3::set('currentUser', $currentUser);
+                F3::set('otherUser', $currentUser);
+            }
+            $this->render(Register::getPathModule('photo').'album.php','modules');
+        }
+    }
+
+
+    public function loadingPhoto()
+    {
+        $output_dir = UPLOAD."test/";
+        $data = array(
+            'results'   => array(),
+            'success'   => false,
+            'error'     => ''
+        );
+
+        if(isset($_FILES["myfile"]))
+        {
+            $currentUser    = $this->getCurrentUser();
+            $data['success']= true;
+            $data['error']  = $_FILES["myfile"]["error"];
+
+            if(!is_array($_FILES["myfile"]['name'])) //single file
+            {
+                echo "single file";
+                $fileName   = $_FILES["myfile"]["name"];
+                $path       = $output_dir. $fileName;
+                move_uploaded_file($_FILES["myfile"]["tmp_name"],$path);
+                //echo "<br> Error: ".$_FILES["myfile"]["error"];
+
+                $entry = array(
+                    'actor'         => $currentUser->recordID,
+                    'album'         => '',
+                    'url'           => UPLOAD_URL."test/".$fileName,
+                    'thumbnail_url' => '',
+                    'description'   => '',
+                    'numberComment' => '0',
+                    'statusUpload'  => 'uploading',
+                    'published'     => ''
+                );
+                $photoRC = $this->Photo->create($entry);
+                //get recordID of each photo for pass other info
+                $infoPhotoRC    = $this->Photo->findOne("actor = ? AND statusUpload = 'uploading'", array($currentUser->recordID));
+                $data['results'][]  = array(
+                    'photoID'   => str_replace(':', '_', $infoPhotoRC->recordID),
+                    'fileName'  => $infoPhotoRC->data->fileName,
+                    'url'       => $infoPhotoRC->data->url,
+                );
+            }
+            else
+            {
+                $fileCount = count($_FILES["myfile"]['name']);
+                for($i=0; $i < $fileCount; $i++)
+                {
+                    $fileName = $_FILES["myfile"]["name"][$i];
+                    move_uploaded_file($_FILES["myfile"]["tmp_name"][$i],$output_dir.$fileName );
+
+                    $entry = array(
+                        'actor'         => $currentUser->recordID,
+                        'album'         => '',
+                        'fileName'      => $fileName,
+                        'url'           => UPLOAD_URL."test/".$fileName,
+                        'thumbnail_url' => '',
+                        'description'   => '',
+                        'numberComment' => '0',
+                        'statusUpload'  => 'uploading',
+                        'published'     => ''
+                    );
+                    $photoRC = $this->Photo->create($entry);
+                    //get recordID of each photo for pass other info
+                    $infoPhotoRC    = $this->Photo->findByCondition("actor = ? AND statusUpload = 'uploading'", array($currentUser->recordID));
+                    foreach ($infoPhotoRC as $infoPhoto)
+                    {
+                        $data['results'][]  = array(
+                            'photoID'   => str_replace(':', '_', $infoPhoto->recordID),
+                            'fileName'  => $infoPhoto->data->fileName,
+                            'url'       => $infoPhoto->data->url,
+                        );
+                    }
+                }
+
+            }
+            //var_dump($ret);
+            header("Content-Type: application/json; charset=UTF-8");
+            $jsonData = json_encode((object)$data);
+            echo $jsonData;
+            if ($jsonData)
+            {
+                $updateEntry    = array(
+                    'statusUpload'  => 'uploader',
+                );
+                $this->Photo->updateByCondition($updateEntry, "actor = ? AND statusUpload = 'uploading'", array($currentUser->recordID));
+            }
+        }
+    }
+
+    public function uploadPhoto()
+    {
+        if ($this->isLogin())
+        {
+            $output_dir = UPLOAD."test/";
+            $qualityCB  = F3::get('POST.stage');
+            $data       = F3::get('POST.data');
+            $albumID    = F3::get('POST.albumID');
+            $albumID    = ($albumID == 'none') ? $albumID : str_replace('_',':', $albumID);
+            $published  = time();
+            if ($qualityCB == 'checked')
+            {
+                if ($data)
+                {
+                    foreach ($data as $photo)
+                    {
+                        $photoID    = str_replace('_', ':',$photo['photoID']);
+                        $description= $photo['description'];
+                        $updateEntry = array(
+                            'album'         => $albumID,
+                            'description'   => $description,
+                            'published'     => $published
+                        );
+                        $this->Photo->updateByCondition($updateEntry, "@rid = ?", array('#'.$photoID));
+                        $photoRC    = $this->Photo->findOne("@rid = ?", array('#'.$photoID));
+                        $filePath   = $output_dir.$photoRC->data->fileName;
+                        //check size of image
+                        list($width, $height) = getimagesize($filePath);
+                        if ($width > 960 || $height > 960)
+                            $this->resizeImage($filePath, 960, $filePath);
+                    }
+                }
+            }else {
+                if ($data)
+                {
+                    foreach ($data as $photo)
+                    {
+                        $photoID    = str_replace('_', ':',$photo['photoID']);
+                        $description= $photo['description'];
+                        $updateEntry = array(
+                            'album'         => $albumID,
+                            'description'   => $description,
+                            'published'     => $published
+                        );
+                        $this->Photo->updateByCondition($updateEntry, "@rid = ?", array('#'.$photoID));
+                        $photoRC    = $this->Photo->findOne("@rid = ?", array('#'.$photoID));
+                        $filePath   = $output_dir.$photoRC->data->fileName;
+                        //check size of image
+                        list($width, $height) = getimagesize($filePath);
+                        if ($width > 960 || $height > 960)
+                            $this->resizeImage($filePath, 960, $filePath);
+                        $this->compressImage($filePath,$filePath,80);
+                    }
+                }
+            }
+        }
+    }
+
+    public function removePhoto()
+    {
+        if ($this->isLogin())
+        {
+            $photoID = F3::get('POST.photoID');
+
+            if ($photoID && !is_array($photoID))
+            {
+                $this->Photo->deleteByCondition("@rid = ?", array('#'.str_replace('_',':',$photoID)));
+                //@todo: remove file in out put dir
+            }else {
+                foreach ($photoID as $id)
+                {
+                    $this->Photo->deleteByCondition("@rid = ?", array('#'.str_replace('_',':',$id)));
+                }
+            }
         }
     }
 

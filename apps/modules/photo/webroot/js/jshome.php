@@ -1,1 +1,2 @@
-<script type="text/javascript" src="<?php echo F3::get('STATIC_MOD'); ?>photo/webroot/js/socialewired.postpt.js"></script>
+<script type="text/javascript" src="<?php echo F3::get('STATIC_MOD'); ?>photo/webroot/js/photo.js"></script>
+<script type="text/javascript" src="<?php echo F3::get('STATIC_MOD'); ?>photo/webroot/js/jquery.uploadfile.min.js"></script>

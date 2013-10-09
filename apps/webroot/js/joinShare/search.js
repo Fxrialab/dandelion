@@ -26,6 +26,7 @@ $(document).ready(function()
                     $('#resultsList').empty();
                     if (data.success)
                     {
+                        console.log(data);
                         //Display the results
                         if(data.results.length > 0)
                         {

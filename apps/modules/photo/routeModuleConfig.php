@@ -9,7 +9,9 @@
 class RouteModuleConfig
 {
     public $route = array(
+        'loadingPhoto_POST'     => "PhotoController",
         'uploadPhoto_POST'      => "PhotoController",
+        'removePhoto_POST'      => "PhotoController",
         'deletePhoto_POST'      => "PhotoController",
         'createAlbum_POST'      => "PhotoController",
         'myAlbum_GET'           => "PhotoController",

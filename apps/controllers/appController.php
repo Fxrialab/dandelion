@@ -465,4 +465,48 @@ class AppController extends Controller
         $command = $command.")";
         return $command;
     }
+
+    public function compressImage($source_url, $destination_url, $quality)
+    {
+        $info = getimagesize($source_url);
+
+        if ($info['mime'] == 'image/jpeg') $image = imagecreatefromjpeg($source_url);
+        elseif ($info['mime'] == 'image/gif') $image = imagecreatefromgif($source_url);
+        elseif ($info['mime'] == 'image/png') $image = imagecreatefrompng($source_url);
+
+        //save it
+        imagejpeg($image, $destination_url, $quality);
+
+        //return destination file url
+        return $destination_url;
+    }
+
+    public function resizeImage($sourceImgFile,$thumbSize=0,$desImgFile)
+    {
+        list($width,$height)    = getimagesize($sourceImgFile);
+        /* The width and the height of the image also the getimagesize retrieve other information as well   */
+        $imgRatio   = $width/$height;
+
+        if($imgRatio>1)
+        {
+            $newWidth   = $thumbSize;
+            $newHeight  = $thumbSize/$imgRatio;
+        } else {
+            $newHeight  = $thumbSize;
+            $newWidth   = $thumbSize*$imgRatio;
+        }
+
+        $thumb  = imagecreatetruecolor($newWidth,$newHeight); // Making a new true color image
+        $source = imagecreatefromjpeg($sourceImgFile); // Now it will create a new image from the source
+        imagecopyresampled($thumb,$source,0,0,0,0,$newWidth,$newHeight,$width,$height);  // Copy and resize the image
+        imagejpeg($thumb,$desImgFile,100);
+        /*
+        Out put of image
+        if the $savePath is null then it will display the image in the browser
+        */
+        imagedestroy($thumb);
+        /*
+            Destroy the image
+        */
+    }
 }
