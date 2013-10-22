@@ -24,24 +24,43 @@ class PhotoController extends AppController {
             }
             else
                 $currentProfileID       = $this->getCurrentUser()->recordID;
-            F3::set('username', ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName));
 
-            $requestProfileID = F3::get('GET.id');
-            $profileID = ($requestProfileID == NULL) ? $this->getCurrentUser()->recordID : $this->User->getClusterID() . ":" .$requestProfileID;
-            $nameProfile        = $this->User->findOne('@rid = ?',array('#'.$profileID));
             $currentUser        = $this->getCurrentUser();//user login
-            $statusFriendShip   = $this->Friendship->findOne('userA = ? AND userB = ?', array($currentUser->recordID, $nameProfile->recordID));
-            $status             = ($statusFriendShip == NULL) ? 'null' : $statusFriendShip->data->relationship;
             $currentProfileRC   = $this->User->load($currentProfileID);
-            F3::set('currentUser', $this->getCurrentUser());
-            F3::set('otherUser', $currentProfileRC);
-            F3::set('profileUser', ucfirst($nameProfile->data->firstName)." ".ucfirst($nameProfile->data->lastName));
-            F3::set('userID', $currentUser);
-            F3::set('friendID', $nameProfile);
-            F3::set('statusFriendShip', $status);
-            $albums     = $this->Album->findByCondition('owner = ? ORDER BY published DESC', array($profileID));
-            $photos     = $this->Photo->findByCondition('owner = ? AND album = ? ORDER BY published DESC', array($profileID, ""));
 
+            F3::set('currentUser', $currentUser);
+            F3::set('otherUser', $currentProfileRC);
+
+            $photos     = $this->Photo->findByCondition('actor = ? AND album = ? ORDER BY published DESC', array($currentProfileID, "none"));
+
+            F3::set('photos',$photos);
+            $this->render($viewPath."myPhoto.php",'modules');
+        }
+    }
+
+    public function myAlbum()
+    {
+        if($this->isLogin())
+        {
+            $this->layout       =   'default';
+            $requestCurrentProfile      = F3::get('GET.username');
+            if($requestCurrentProfile)
+            {
+                $currentProfileRC       = $this->User->findOne("username = ?", array($requestCurrentProfile));
+                if ($currentProfileRC)
+                    $currentProfileID   = $currentProfileRC->recordID;
+                else
+                    echo "page not found";
+            }
+            else
+                $currentProfileID       = $this->getCurrentUser()->recordID;
+            $currentUser        =   $this->getCurrentUser();
+            $currentProfileRC   = $this->User->load($currentProfileID);
+
+            F3::set('currentUser', $currentUser);
+            F3::set('otherUser', $currentProfileRC);
+
+            $albums             = $this->Album->findByCondition('owner = ? ORDER BY published DESC', array($currentProfileID));
             if($albums)
             {
                 foreach($albums as $getAlbums)
@@ -57,9 +76,9 @@ class PhotoController extends AppController {
 
                 F3::set('firstPhoto', $firstPhotoOfAlbum);
             }
-            F3::set('albums', $albums);
-            F3::set('photos',$photos);
-            $this->render($viewPath."myPhoto.php",'modules');
+            F3::set('album',$albums);
+
+            $this->render(Register::getPathModule('photo').'myAlbum.php','modules');
         }
     }
 
@@ -68,13 +87,14 @@ class PhotoController extends AppController {
         if ($this->isLogin())
         {
             $this->layout   = "default";
-            $getAlbumID     = F3::get("GET.id");
+
+            $currentUser    = $this->getCurrentUser();
+            $getAlbumID     = F3::get("GET.albumID");
             $albumID        = str_replace("_", ":", $getAlbumID);
             if ($albumID)
             {
-                F3::set('username', ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName));
-                $photos         = $this->Photo->findByCondition("album  = ?", array($albumID));
-                $currentUser    =   $this->getCurrentUser();
+                $photos     = $this->Photo->findByCondition("album  = ? AND actor = ?", array($albumID, $currentUser->recordID));
+
                 F3::set('albumID', $getAlbumID);
                 F3::set("photos", $photos);
                 F3::set('currentUser', $currentUser);
@@ -118,7 +138,7 @@ class PhotoController extends AppController {
                     'statusUpload'  => 'uploading',
                     'published'     => ''
                 );
-                $photoRC = $this->Photo->create($entry);
+                $this->Photo->create($entry);
                 //get recordID of each photo for pass other info
                 $infoPhotoRC    = $this->Photo->findOne("actor = ? AND statusUpload = 'uploading'", array($currentUser->recordID));
                 $data['results'][]  = array(
@@ -146,7 +166,7 @@ class PhotoController extends AppController {
                         'statusUpload'  => 'uploading',
                         'published'     => ''
                     );
-                    $photoRC = $this->Photo->create($entry);
+                    $this->Photo->create($entry);
                     //get recordID of each photo for pass other info
                     $infoPhotoRC    = $this->Photo->findByCondition("actor = ? AND statusUpload = 'uploading'", array($currentUser->recordID));
                     foreach ($infoPhotoRC as $infoPhoto)
@@ -160,7 +180,6 @@ class PhotoController extends AppController {
                 }
 
             }
-            //var_dump($ret);
             header("Content-Type: application/json; charset=UTF-8");
             $jsonData = json_encode((object)$data);
             echo $jsonData;
@@ -251,37 +270,6 @@ class PhotoController extends AppController {
         }
     }
 
-    public function myAlbum()
-    {
-        if($this->isLogin())
-        {
-            $this->layout       =   'default';
-            $requestProfileID   = F3::get('GET.id');
-            $profileID          = ($requestProfileID == NULL) ? $this->getCurrentUser()->recordID : $this->User->getClusterID() . ":" .$requestProfileID;
-            $currentUser        =   $this->getCurrentUser();
-            $albums             = $this->Album->findByCondition('owner = ? ORDER BY published DESC', array($profileID));
-            if($albums)
-            {
-                foreach($albums as $getAlbums)
-                {
-                    $firstPhotoOfAlbum[($getAlbums->recordID)]      = $this->Photo->findByCondition("album = ? LIMIT 1 ORDER BY published DESC", array($getAlbums->recordID));
-                    $numberPhotosOfAlbum[($getAlbums->recordID)]    = $this->Photo->findByCondition("album = ?", array($getAlbums->recordID));
-                    $numberPhotos       = ($numberPhotosOfAlbum[($getAlbums->recordID)]) ? count($numberPhotosOfAlbum[($getAlbums->recordID)]) : 0;
-                    $updateCountPhotos  = array(
-                        'count'         => $numberPhotos
-                    );
-                    $this->Album->updateByCondition($updateCountPhotos, "@rid = ?", array("#".$getAlbums->recordID));
-                }
-
-                F3::set('firstPhoto', $firstPhotoOfAlbum);
-            }
-            F3::set('album',$albums);
-            F3::set('currentUser', $currentUser);
-            F3::set('otherUser', $currentUser);
-            $this->render(Register::getPathModule('photo').'viewAlbum.php','modules');
-        }
-    }
-
     public function createAlbum()
     {
         // @todo: checck for duplicate album name, needed?
@@ -299,83 +287,77 @@ class PhotoController extends AppController {
                 'count'         => 0
             );
             $album          =   $this->Album->create($data);
-            echo $album;
+            //echo $album;
         }
     }
 
-    public function viewPhoto(){
-        if ($this->isLogin()) {
+    public function viewPhoto()
+    {
+        if ($this->isLogin())
+        {
             $this->layout   = 'default';
-            $clientAlbumID  =   "";
-            F3::set('username', ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName));
 
-            $photoID        = $this->Photo->getClusterID() . ':' . F3::get('GET.photoID');
-            $albumID        = $this->Photo->getClusterID() . ':' . F3::get("GET.albumID");
-            if(F3::get('GET.albumID') != '')
+            $getPhotoID     = F3::get('GET.photoID');
+            $currentUser    = $this->getCurrentUser();
+            //$photoID        = $this->Photo->getClusterID() . ':' . F3::get('GET.photoID');
+            //$albumID        = $this->Photo->getClusterID() . ':' . F3::get("GET.albumID");
+            if($getPhotoID != '')
             {
-                $album          = $this->Photo->findByCondition('@rid= ? ', array($albumID));
+                $photoID    = $this->Photo->getClusterID().':'.$getPhotoID;
+                $photoRC    = $this->Photo->findOne('@rid= ? ', array('#'.$photoID));
+                //var_dump($photoRC);
+                $albumID    = $photoRC->data->album;
+                $clientAlbumID  = str_replace(':','_',$albumID);
 
-                for($i=0;$i<count($album);$i++)
+                $listPhotos = $this->Photo->findByCondition('album = ? AND actor = ?', array($albumID, $currentUser->recordID));
+                //var_dump($listPhotos);
+
+                F3::set("numberPhoto", count($listPhotos));
+
+                $preparedPhotosData = array();
+                $preloadUrls = array();
+                $comments = array();
+                //var_dump($listPhotos);
+                foreach ($listPhotos as $key=>$photo)
                 {
-                    $id = $album[$i]->data->album;
+                    //echo $photo->recordID."<br />";
+                    $id =    substr($photo->recordID,strpos($photo->recordID,':')+1);
+                    //echo $getPhotoID."<br />";
+                    if($getPhotoID == $id)
+                    {
+                        F3::set('key',$key);
+                    }
                 }
-                $clientAlbumID  =    str_replace(':','_',$id);
-            }
-            $getAlbumID       = F3::get('GET.albumID');
-            $check          = F3::get('GET.photoID');
-            if($check != '') {
-               $photos         =$this->Photo->findByCondition('album = ?', array(''));
-                //@todo  check khi co nhieu user dang anh, chi view anh cua user current
-            }else{
-                $photos       =$this->Photo->findByCondition('album = ? ',array($id));
-            }
-            $view                = ($getAlbumID == NULL) ? $check: $getAlbumID;
-            foreach($photos as $key=>$photo)
-            {
-                $id =    substr($photo->recordID,strpos($photo->recordID,':')+1);
-                if($view == $id)
+
+                if ($listPhotos)
                 {
-                    F3::set('key',$key);
+                    for ($i =  0; $i < count($listPhotos); $i++)
+                    {
+                        $id = $listPhotos[$i]->recordID;
+                        array_push($preloadUrls, $listPhotos[$i]->data->url);
+                        array_push($preparedPhotosData, $this->Photo->export($listPhotos[$i]));
+                        $comments[$id] = $this->Comment->findByCondition("post = ?", array($id));//load all comment co id = get photo
+                    }
                 }
-            }
-            F3::set("numberPhoto", count($photos));
-
-            $preparedPhotosData = array();
-            $preloadUrls = array();
-            $comments = array();
-
-            if ($photos)
-            {
-                for ($i =  0; $i < count($photos); $i++)
+                foreach($listPhotos as $photo)
                 {
-                    $id = $photos[$i]->recordID;
-                    array_push($preloadUrls, $photos[$i]->data->url);
-                    array_push($preparedPhotosData, $this->Photo->export($photos[$i]));
-                    $comments[$id] = $this->Comment->findByCondition("post = ?", array($id));//load all comment co id = get photo
+                    $commentsOfPhoto[$photo->recordID]  = $this->Comment->findByCondition("post = ?", array($photo->recordID));
+                    $infoActorUser[$photo->data->actor] = $this->User->findOne("@rid = ?", array($photo->data->actor));
                 }
+                F3::set("photos", $listPhotos);
+                F3::set("infoActorPhotoUser", $infoActorUser);
+                //F3::set("itemPhoto",$photoID);
+                F3::set("commentsOfPhoto", $commentsOfPhoto);
+                F3::set("photosJson", json_encode($preparedPhotosData));
+                F3::set("album_id", $clientAlbumID);
+                F3::set("urlsJson", json_encode($preloadUrls));
+                F3::set("commentsJson", json_encode($comments));
+                F3::set('currentUser', $currentUser);
+                F3::set('otherUser', $currentUser);
+                $this->render(Register::getPathModule('photo').'viewPhoto.php','modules');
             }
-            foreach($photos as $getPhotoID)
-            {
-                $commentsOfPhoto[$getPhotoID->recordID] = $this->Comment->findByCondition("post = ?", array($getPhotoID->recordID));
-
-            }
-            $currentUser       =   $this->getCurrentUser();
-            F3::set("photos", $photos);
-            F3::set("itemPhoto",$photoID);
-            F3::set("commentsOfPhoto", $commentsOfPhoto);
-            F3::set("photosJson", json_encode($preparedPhotosData));
-            F3::set("album_id", $clientAlbumID);
-            F3::set("urlsJson", json_encode($preloadUrls));
-            F3::set("commentsJson", json_encode($comments));
-            F3::set('currentUser', $currentUser);
-            F3::set('otherUser', $currentUser);
-            $this->render(Register::getPathModule('photo').'viewPhoto.php','modules');
-
         }
     }
-
-
-
 
     public function addDescription()
     {

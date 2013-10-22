@@ -95,7 +95,7 @@
                             action = $('.autoloadModuleElement > div:nth-child('+i+')').attr('class');
                             actionArrays.push(action);
                         }
-                        console.log(actionArrays);
+                        //console.log(actionArrays);
                         $.ajax({
                             type: "POST",
                             url: "/loadSuggest",

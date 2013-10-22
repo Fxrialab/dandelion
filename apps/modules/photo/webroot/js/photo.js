@@ -21,7 +21,15 @@ $(function() {
     $("#icon-menu").click(function(){
         $('#lightUpload').hide();
         $('#fade').hide();
+    });
+    $('.pt-photo-wrapper').hover(function(){
+        $(this).children('.wrapperHoverDelete').show();
+        $(this).children('.wrapperHoverLike').show();
     }) ;
+    $('.pt-photo-wrapper').mouseleave(function(){
+        $(this).children('.wrapperHoverDelete').hide();
+        $(this).children('.wrapperHoverLike').hide();
+    });
 });
 
 $(document).ready(function()
@@ -40,7 +48,7 @@ $(document).ready(function()
                 $('#displayPhotos').append("<form class='photoDataItems' id='photoItems-"+ this.photoID +"'>" +
                     "<div class='photoWrap'>" +
                     "<div class='loadedPhoto' id='photo"+ this.photoID +"'>" +
-                    "<div class='wrapperHoverDelete deleteImg removeImg' title='Remove' id='removePhoto"+ this.photoID +"'></div>" +
+                    "<div class='wrapperHoverDelete removeImg' title='Remove' id='removePhoto"+ this.photoID +"'></div>" +
                     "<img src='"+ this.url +"' title='"+ this.fileName +"'/>" +
                     "</div> " +
                     "<div class='writeSomething'>" +
@@ -117,7 +125,7 @@ $(function(){
                 if (albumID == 'none')
                     window.location.replace('/content/photo/myPhoto');
                 else
-                    window.location.replace('/content/photo/viewAlbum?id='+albumID);
+                    window.location.replace('/content/photo/viewAlbum?albumID='+albumID);
             }
         });
     });
@@ -146,6 +154,7 @@ $(function(){
             });
         }
     });
+    //create an album
     $(".createAlbumButton").click(function() {
         if($('.titleAlbum').val() !='') {
             $.ajax({
@@ -156,7 +165,7 @@ $(function(){
                 success:function(html)
                 {
                     var album   = html.replace(':','_');
-                    window.location.replace('/content/photo/viewAlbum?id='+album);
+                    window.location.replace('/content/photo/viewAlbum?albumID='+album);
                 }
             });
             $('#lightBox').css('display', 'none');
@@ -169,6 +178,239 @@ $(function(){
             return false;
         }
     });
+    $('.closeMsgErrorAlbum').live('click', function() {
+        $('.msgCheckAlbum').hide();
+        $(".titleAlbum").css('border', '1px solid #799456');
+    });
+});
+//need debugger
+function addPhotoIDToElement(ClassAttribute, Attribute, nameElement){
+    var getPhotoID  = photos[photoIndex].recordID;
+    var photoID     = getPhotoID.replace(':','_');
+    ClassAttribute.attr(Attribute, nameElement+photoID);
+}
+
+function addPhotoIDToHTML() {
+    addPhotoIDToElement($('.commentBtnphoto'), 'id', 'stream-');
+    addPhotoIDToElement($('.swCommentBoxphoto'), 'id', 'commentBoxphoto-');
+    addPhotoIDToElement($('.swFormCommentphoto'), 'id', 'formCommentphoto-');
+    addPhotoIDToElement($('.photoID'), 'value', '');
+    addPhotoIDToElement($('.swBoxCommmentphoto'), 'id', 'commentTextphoto-');
+    addPhotoIDToElement($('.swSubmitCommentphoto'), 'id', 'submitCommentphoto-');
+    addPhotoIDToElement($('.descriptionID'), 'value', '');
+}
+
+
+$(function() {
+    /*var getNumberPhotos  = $('#numberPhoto').attr('value');
+     if(getNumberPhotos > 2){*/
+    /*$('.nextPrevious').hide();*/
+    $('#images-container').mouseover(function(){
+        $('.nextPrevious ').show();
+    });
+    $('#images-container').mouseout(function(){
+        $('.nextPrevious').hide();
+    });
+    $('.nextPrevious').mouseover(function(){
+        $(this).show();
+    });
+    // }
+    $("#next-photo").live("click", function(){
+        console.log('next',photoIndex);
+        currentPhotoID = photos[photoIndex].recordID.replace(':','_');
+        $("." + currentPhotoID).css("display", "none");
+        $("#" + currentPhotoID).css("display", "none");
+        $(".description-" + currentPhotoID).css("display", "none");
+        photoIndex = getNextPhotoIndex(photoIndex, countPhotos);
+        photoID = photos[photoIndex].recordID.replace(':','_');
+        $("." + photoID).css("display", "block");
+        $("#" + photoID).css("display", "block");
+
+
+        var getNumberComments = $('.' + photoID).size();
+        if(getNumberComments) {
+            var numCommentHide = getNumberComments - 4;
+            $("." + photoID+":lt("+numCommentHide+")").css("display", "none");
+        }
+
+        if($('#checkAppendTo').hasClass(photoID)) {
+            $('#checkAppendTo').css("display", "block");
+            $(".description-" + photoID).css("display", "none");
+        }else {
+            $(".description-" + photoID).css("display", "block");
+        }
+
+        $('.viewMoreComments').live('click', function(){
+            $(this).css("display", "none");
+            $("." + currentPhotoID).css("display", "none");
+            $("." + photoID).css("display", "block");
+            console.log(photoID);
+        });
+        //add photoID
+        addPhotoIDToHTML();
+        current = $(".photo-selected");
+        next = current.next(".photo-unselected");
+
+        if (next.length == 0)
+        {
+            next = $("#images-container .photo-unselected").first();
+        }
+        //console.log(next);
+
+        next.attr("class", "photo-selected");
+        current.attr("class", "photo-unselected");
+
+        currentContentPhoto = $(".visiblePhotoWrap");
+        nextContentPhoto = currentContentPhoto.next(".invisiblePhotoWrap");
+
+        if (nextContentPhoto.length == 0)
+        {
+            nextContentPhoto = $("#containerViewPhoto .invisiblePhotoWrap").first();
+        }
+        //console.log(next);
+
+        nextContentPhoto.attr("class", "visiblePhotoWrap");
+        currentContentPhoto.attr("class", "invisiblePhotoWrap");
+        //$(".dtDescription").html(photos[photoIndex].description);
+
+    });
+
+    // prev
+    $("#previous-photo").live("click", function(){
+        console.log('prev',photoIndex);
+        var check  = $('#checkAppendTo').val();
+
+        currentPhotoID = photos[photoIndex].recordID.replace(':','_');
+        $("." + currentPhotoID).css("display", "none");
+        $("#" + currentPhotoID).css("display", "none");
+        $(".description-" + currentPhotoID).css("display", "none");
+        photoIndex = getPreviousPhotoIndex(photoIndex, countPhotos);
+        photoID = photos[photoIndex].recordID.replace(':','_');
+        $("." + photoID).css("display", "block");
+        $("#" + photoID).css("display", "block");
+
+        var getNumberComments = $('.' + photoID).size();
+        if(getNumberComments) {
+            var numCommentHide = getNumberComments - 4;
+            $("." + photoID+":lt("+numCommentHide+")").css("display", "none");
+        }
+
+        if($('#checkAppendTo').hasClass(photoID)) {
+            $('#checkAppendTo').css("display", "block");
+            $(".description-" + photoID).css("display", "none");
+        }else {
+            $(".description-" + photoID).css("display", "block");
+        }
+
+        $('.viewMoreComments').click(function(){
+            $(this).css("display", "none");
+            $("." + currentPhotoID).css("display", "none");
+            $("." + photoID).css("display", "block");
+            console.log(photoID);
+        });
+        //add photoID
+        addPhotoIDToHTML();
+        //config photo selected after click previous btn
+        current = $(".photo-selected");
+
+        previous = current.prev(".photo-unselected");
+
+        if (previous.length == 0)
+        {
+            previous = $("#images-container .photo-unselected").last();
+        }
+
+        previous.attr("class", "photo-selected");
+        current.attr("class", "photo-unselected");
+        //config view content photo after click previous btn
+        currentContentPhoto = $(".visiblePhotoWrap");
+
+        previousContentPhoto = currentContentPhoto.prev(".invisiblePhotoWrap");
+
+        if (previousContentPhoto.length == 0)
+        {
+            previousContentPhoto = $("#containerViewPhoto .invisiblePhotoWrap").last();
+        }
+
+        previousContentPhoto.attr("class", "visiblePhotoWrap");
+        currentContentPhoto.attr("class", "invisiblePhotoWrap");
+        //$(".dtDescription").html(photos[photoIndex].description);
+    });
+
 });
 
+(function($) {
+    $.fn.preload = function(images,photoIndex) {
+
+        for (var i = 0; i < images.length; i++)
+        {
+            // DOM for faster creating img tag
+            var image       = document.createElement('img');
+            image.className = "photo-unselected";
+            image.id        = photoIndex[i].recordID.replace(':','_');
+            image.src       = images[i];
+
+            //$(image).css("display", "none");
+            this.append(image);
+        }
+    }
+})( jQuery );
+
+
+function getNextPhotoIndex(currentIndex, countPhotos)
+{
+    return ((currentIndex + 1) % countPhotos);
+}
+
+function getPreviousPhotoIndex(currentIndex, countPhotos)
+{
+    return ((currentIndex - 1 + countPhotos) % countPhotos);
+}
+
+$(document).ready(function() {
+    $('.album').hover(function(){
+    });
+    //add photoID to html
+    addPhotoIDToHTML();
+    $('.BoxDescription').hide();
+    currentPhotoID      = photos[photoIndex].recordID.replace(':','_');
+    console.log('currentPhotoID', photoIndex);
+    $("." + currentPhotoID).css("display", "block");
+
+    var getNumberComments = $("." + currentPhotoID).size();
+    if(getNumberComments) {
+        var numCommentHide = getNumberComments - 4;
+        $("." + currentPhotoID+":lt("+numCommentHide+")").hide();
+    }
+    console.log('curPhotoIndex', photoIndex);
+    $(".description-" + currentPhotoID).css("display", "block");
+    nextPhotoIDIndex    = getNextPhotoIndex(photoIndex, countPhotos);
+    nextPhotoID         = photos[nextPhotoIDIndex].recordID.replace(':','_');
+    console.log('nextPhotoIDIndex', nextPhotoIDIndex);
+    $("#" + nextPhotoID).css("display", "none");
+    $(".description-" + nextPhotoID).css("display", "none");
+
+    prevPhotoIDIndex    = getPreviousPhotoIndex(photoIndex, countPhotos);
+    prevPhotoID         = photos[prevPhotoIDIndex].recordID.replace(':','_');
+    //$("." + prevPhotoID).css("display", "none");
+    $("#" + prevPhotoID).css("display", "none");
+    $(".description-" + prevPhotoID).css("display", "none");
+
+    $('.viewMoreComments').click(function(){
+        $(this).css("display", "none");
+        $("." + currentPhotoID).css("display", "block");
+    });
+    $('.dtDescription').click(function(){
+        $('.BoxDescription').fadeIn();
+    });
+    $('.cancelDescription').live('click', function(){
+        $('.BoxDescription').fadeOut();
+    });
+    // preload others
+    if (typeof(urls) != 'undefined') {
+        console.log('urls', urls);
+        //urls.shift();
+        $("#images-container").preload(urls, photos);
+    }
+});
 

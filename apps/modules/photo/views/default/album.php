@@ -5,6 +5,7 @@ foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome){
     }
 }
 $albumID    = F3::get('albumID');
+$photos     = F3::get("photos");
 ?>
 <div class="photoContainer">
     <div class="wrapperTitlePhoto">
@@ -45,4 +46,37 @@ $albumID    = F3::get('albumID');
         </div>
     </div>
     <div id="fadeUpload"></div>
+    <div class="album-wrapper">
+        <?php
+        if($photos)
+        {
+            for ($i = 0; $i < count($photos); $i++)
+            {
+                ?>
+                <div class="photo-entry" id="<?php echo str_replace(':','_',$photos[$i]->recordID);?>">
+                    <div class="pt-photo-wrapper">
+                        <a href="/content/photo/viewPhoto?photoID=<?php echo substr($photos[$i]->recordID, strpos($photos[$i]->recordID, ':') + 1);?>">
+                            <?php /*echo substr($album_id, strpos($album_id, '_') + 1);*/?>
+                            <div class="pt-fake-wrapper">
+                                <img class="ab" src="<?php echo $photos[$i]->data->url;?>"/>
+                            </div>
+                        </a>
+                        <div class="wrapperHoverDelete">
+                            <a class="Del" title="Delete" name="<?php echo $photos[$i]->recordID;?>"><img class="deleteImg" src="<?php echo F3::get('STATIC_MOD'); ?>photo/webroot/images/icon-delete.jpg"/></a>
+                        </div>
+                        <div class="wrapperHoverLike">
+                            <div class="descriptionImg"><p>Untitled Album</p></div>
+                            <div class="count">
+                                <img src="<?php echo F3::get('STATIC_MOD');?>photo/webroot/images/icon-like.png" />
+                                <img src="<?php echo F3::get('STATIC_MOD');?>photo/webroot/images/icon-comment.png" />
+                                <p class="countComment"><?php echo $photos[$i]->data->numberComment;?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php
+            }
+        } // end for
+        ?>
+    </div>
 </div>

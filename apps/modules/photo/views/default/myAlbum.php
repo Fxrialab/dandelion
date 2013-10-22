@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 10/4/13 - 10:21 AM
- * Project: userwired Network - Version: 1.0
- */
-foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome)
-{
+foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome){
     if(file_exists($jshome)){
         require_once ($jshome);
     }
 }
-$photos     = F3::get('photos');
+$entries    = F3::get('album');
+$firstPhoto = F3::get('firstPhoto');
 ?>
 <div class="photoContainer">
     <div class="wrapperTitlePhoto">
@@ -79,36 +73,68 @@ $photos     = F3::get('photos');
     <div id="fadeUpload"></div>
     <div class="photo-wrapper">
         <?php
-        if($photos)
-        {
-            for ($i = 0; $i < count($photos); $i++)
-            {
+        if($entries) {
+            for ($i = 0; $i < count($entries); $i++) {
                 ?>
-                <div class="photo-entry" id="<?php echo str_replace(':','_',$photos[$i]->recordID);?>">
-                    <div class="pt-photo-wrapper">
-                        <a class="bac" href="/content/photo/viewPhoto?photoID=<?php echo substr($photos[$i]->recordID, strpos($photos[$i]->recordID, ':') + 1);?>">
-                            <img max-width="150" max-height="150" class="ab" src="<?php echo $photos[$i]->data->url;?>"/>
-                        </a>
-                        <div class="wrapperHoverDelete">
-                            <a class="Del" title="Delete" name="<?php echo $photos[$i]->recordID;?>">
-                                <img class="deleteImg" src="<?php echo F3::get('STATIC_MOD'); ?>photo/webroot/images/icon-delete.jpg"/>
+                <div class="photos_albums" id="<?php echo str_replace(':','_',$entries[$i]->recordID);?>">
+                    <?php
+                    if(isset($entries[$i]->data->cover) && ($entries[$i]->data->count) == 0) {//album
+                        ?>
+                        <div class="pt-album-wrapper">
+                            <a href="/content/photo/viewAlbum?albumID=<?php echo str_replace(':', '_', $entries[$i]->recordID);?>">
+                                <img max-width="150" max-height="150" class="pt" src="<?php echo $entries[$i]->data->cover; ?>"/>
                             </a>
                         </div>
-                        <div class="wrapperHoverLike">
-                            <div class="descriptionImg">
-                                <p>Timeline Photos</p>
-                            </div>
-                            <div class="count">
-                                <img src="<?php echo F3::get('STATIC_MOD');?>photo/webroot/images/icon-like.png" />
-                                <img src="<?php echo F3::get('STATIC_MOD');?>photo/webroot/images/icon-comment.png" />
-                                <p class="countComment"><?php echo $photos[$i]->data->numberComment;?></p>
-                            </div>
+                        <?php
+                    } elseif(isset($entries[$i]->data->count) != 0) {
+                        ?>
+                        <div class="pt-album-wrapper">
+                            <input id="idAlbum" type="hidden" value="<?php echo str_replace(':','_',$entries[$i]->recordID); ?>" />
+                            <a href="/content/photo/viewAlbum?albumID=<?php echo str_replace(':','_',$entries[$i]->recordID);?>">
+                                <img class="pt" src="
+                            <?php foreach ($firstPhoto[($entries[$i]->recordID)] as $Photo) {
+                                    echo $Photo->data->url;
+                                } ?>
+                            "/>
+                            </a>
                         </div>
+                        <?php
+                    }
+                    ?>
+                    <div class="photo-title">
+                        <?php
+                        if (isset($entries[$i]->data->name))
+                        {
+                            ?>
+                            <span><?php echo $entries[$i]->data->name; ?></span>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                    <div class="desAlbum">
+                        <?php
+                        if (isset($entries[$i]->data->description))
+                        {
+                            ?>
+                            <span><?php echo $entries[$i]->data->description; ?></span>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                    <div class="photo-description">
+                        <?php
+                        if (isset($entries[$i]->data->count))
+                        {
+                            ?>
+                            <span class="photo-quanitiy"><?php echo $entries[$i]->data->count; ?> photo(s)</span>
+                            <?php
+                        }
+                        ?>
                     </div>
                 </div>
-            <?php
+                <?php
             }
-        }
+        }// end for
         ?>
     </div>
 </div>
