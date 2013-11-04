@@ -184,13 +184,13 @@ $(function(){
     });
 });
 //need debugger
-function addPhotoIDToElement(ClassAttribute, Attribute, nameElement){
+/*function addPhotoIDToElement(ClassAttribute, Attribute, nameElement){
     var getPhotoID  = photos[photoIndex].recordID;
     var photoID     = getPhotoID.replace(':','_');
     ClassAttribute.attr(Attribute, nameElement+photoID);
-}
+}*/
 
-function addPhotoIDToHTML() {
+/*function addPhotoIDToHTML() {
     addPhotoIDToElement($('.commentBtnphoto'), 'id', 'stream-');
     addPhotoIDToElement($('.swCommentBoxphoto'), 'id', 'commentBoxphoto-');
     addPhotoIDToElement($('.swFormCommentphoto'), 'id', 'formCommentphoto-');
@@ -198,13 +198,10 @@ function addPhotoIDToHTML() {
     addPhotoIDToElement($('.swBoxCommmentphoto'), 'id', 'commentTextphoto-');
     addPhotoIDToElement($('.swSubmitCommentphoto'), 'id', 'submitCommentphoto-');
     addPhotoIDToElement($('.descriptionID'), 'value', '');
-}
+}*/
 
 
 $(function() {
-    /*var getNumberPhotos  = $('#numberPhoto').attr('value');
-     if(getNumberPhotos > 2){*/
-    /*$('.nextPrevious').hide();*/
     $('#images-container').mouseover(function(){
         $('.nextPrevious ').show();
     });
@@ -214,31 +211,33 @@ $(function() {
     $('.nextPrevious').mouseover(function(){
         $(this).show();
     });
-    // }
-    $("#next-photo").live("click", function(){
-        console.log('next',photoIndex);
+    $('.nextPrevious').mouseout(function(){
+        $(this).hide();
+    });
+    $("#next-photo").live("click", function()
+    {
+        //before click next
         currentPhotoID = photos[photoIndex].recordID.replace(':','_');
         $("." + currentPhotoID).css("display", "none");
         $("#" + currentPhotoID).css("display", "none");
         $(".description-" + currentPhotoID).css("display", "none");
+        //after click next
         photoIndex = getNextPhotoIndex(photoIndex, countPhotos);
         photoID = photos[photoIndex].recordID.replace(':','_');
         $("." + photoID).css("display", "block");
         $("#" + photoID).css("display", "block");
+        $(".description-" + photoID).css("display", "block");
+        //show add box description if exist add description
+        $('.description-'+photoID).click(function (){
+            $('.BoxDescription-'+photoID).css('display', 'block');
+        });
+        addDescription(photoID);
+        $('.cancelDescription').click(function() {
+            $('.BoxDescription-'+photoID).css('display', 'none');
+        });
 
-
-        var getNumberComments = $('.' + photoID).size();
-        if(getNumberComments) {
-            var numCommentHide = getNumberComments - 4;
-            $("." + photoID+":lt("+numCommentHide+")").css("display", "none");
-        }
-
-        if($('#checkAppendTo').hasClass(photoID)) {
-            $('#checkAppendTo').css("display", "block");
-            $(".description-" + photoID).css("display", "none");
-        }else {
-            $(".description-" + photoID).css("display", "block");
-        }
+        console.log('currentPhotoID',currentPhotoID);
+        console.log('prevPhotoID',photoID);
 
         $('.viewMoreComments').live('click', function(){
             $(this).css("display", "none");
@@ -247,60 +246,52 @@ $(function() {
             console.log(photoID);
         });
         //add photoID
-        addPhotoIDToHTML();
+        //addPhotoIDToHTML();
+        //config photo selected after click next btn
         current = $(".photo-selected");
         next = current.next(".photo-unselected");
-
         if (next.length == 0)
         {
             next = $("#images-container .photo-unselected").first();
         }
-        //console.log(next);
-
         next.attr("class", "photo-selected");
         current.attr("class", "photo-unselected");
-
+        //config view content photo after click next btn
         currentContentPhoto = $(".visiblePhotoWrap");
         nextContentPhoto = currentContentPhoto.next(".invisiblePhotoWrap");
-
         if (nextContentPhoto.length == 0)
         {
             nextContentPhoto = $("#containerViewPhoto .invisiblePhotoWrap").first();
         }
-        //console.log(next);
-
         nextContentPhoto.attr("class", "visiblePhotoWrap");
         currentContentPhoto.attr("class", "invisiblePhotoWrap");
-        //$(".dtDescription").html(photos[photoIndex].description);
-
     });
 
     // prev
-    $("#previous-photo").live("click", function(){
-        console.log('prev',photoIndex);
-        var check  = $('#checkAppendTo').val();
-
+    $("#previous-photo").live("click", function()
+    {
+        //before click prev
         currentPhotoID = photos[photoIndex].recordID.replace(':','_');
         $("." + currentPhotoID).css("display", "none");
         $("#" + currentPhotoID).css("display", "none");
         $(".description-" + currentPhotoID).css("display", "none");
+        //after click prev
         photoIndex = getPreviousPhotoIndex(photoIndex, countPhotos);
         photoID = photos[photoIndex].recordID.replace(':','_');
         $("." + photoID).css("display", "block");
         $("#" + photoID).css("display", "block");
+        $(".description-" + photoID).css("display", "block");
+        //show add box description if exist add descriptions
+        $('.description-'+photoID).click(function (){
+            $('.BoxDescription-'+photoID).css('display', 'block');
+        });
+        addDescription(photoID);
+        $('.cancelDescription').click(function() {
+            $('.BoxDescription-'+photoID).css('display', 'none');
+        });
 
-        var getNumberComments = $('.' + photoID).size();
-        if(getNumberComments) {
-            var numCommentHide = getNumberComments - 4;
-            $("." + photoID+":lt("+numCommentHide+")").css("display", "none");
-        }
-
-        if($('#checkAppendTo').hasClass(photoID)) {
-            $('#checkAppendTo').css("display", "block");
-            $(".description-" + photoID).css("display", "none");
-        }else {
-            $(".description-" + photoID).css("display", "block");
-        }
+        console.log('currentPhotoID',currentPhotoID);
+        console.log('prevPhotoID',photoID);
 
         $('.viewMoreComments').click(function(){
             $(this).css("display", "none");
@@ -309,29 +300,23 @@ $(function() {
             console.log(photoID);
         });
         //add photoID
-        addPhotoIDToHTML();
+        //addPhotoIDToHTML();
         //config photo selected after click previous btn
         current = $(".photo-selected");
-
         previous = current.prev(".photo-unselected");
-
         if (previous.length == 0)
         {
             previous = $("#images-container .photo-unselected").last();
         }
-
         previous.attr("class", "photo-selected");
         current.attr("class", "photo-unselected");
         //config view content photo after click previous btn
         currentContentPhoto = $(".visiblePhotoWrap");
-
         previousContentPhoto = currentContentPhoto.prev(".invisiblePhotoWrap");
-
         if (previousContentPhoto.length == 0)
         {
             previousContentPhoto = $("#containerViewPhoto .invisiblePhotoWrap").last();
         }
-
         previousContentPhoto.attr("class", "visiblePhotoWrap");
         currentContentPhoto.attr("class", "invisiblePhotoWrap");
         //$(".dtDescription").html(photos[photoIndex].description);
@@ -367,50 +352,86 @@ function getPreviousPhotoIndex(currentIndex, countPhotos)
     return ((currentIndex - 1 + countPhotos) % countPhotos);
 }
 
-$(document).ready(function() {
-    $('.album').hover(function(){
+function addDescription(photoID)
+{
+    $('.saveDescription-'+photoID).click(function() {
+        var textDes = $('.textDes'+photoID).val();
+        $.ajax({
+            type: 'POST',
+            url: '/content/photo/addDescription',
+            data: {description: textDes, photoID: photoID},
+            cache: false,
+            success: function(){
+                $('.BoxDescription-'+photoID).css('display', 'none');
+                $('.description-'+photoID).detach();
+                $('.descriptionVP').append("<span class='description-"+photoID+"'>"+textDes+"</span>");
+            }
+        });
     });
-    //add photoID to html
-    addPhotoIDToHTML();
-    $('.BoxDescription').hide();
-    currentPhotoID      = photos[photoIndex].recordID.replace(':','_');
-    console.log('currentPhotoID', photoIndex);
-    $("." + currentPhotoID).css("display", "block");
+}
 
-    var getNumberComments = $("." + currentPhotoID).size();
-    if(getNumberComments) {
-        var numCommentHide = getNumberComments - 4;
-        $("." + currentPhotoID+":lt("+numCommentHide+")").hide();
-    }
-    console.log('curPhotoIndex', photoIndex);
-    $(".description-" + currentPhotoID).css("display", "block");
-    nextPhotoIDIndex    = getNextPhotoIndex(photoIndex, countPhotos);
-    nextPhotoID         = photos[nextPhotoIDIndex].recordID.replace(':','_');
-    console.log('nextPhotoIDIndex', nextPhotoIDIndex);
-    $("#" + nextPhotoID).css("display", "none");
-    $(".description-" + nextPhotoID).css("display", "none");
+// post a comment
+$(function() {
+    $(".swSubmitCommentPhoto").each(function() {
+        var getId = $(this).attr('id').replace('submitCommentPhoto-','');
+        $(this).live("click", function(e)
+        {
+            e.preventDefault();
 
-    prevPhotoIDIndex    = getPreviousPhotoIndex(photoIndex, countPhotos);
-    prevPhotoID         = photos[prevPhotoIDIndex].recordID.replace(':','_');
-    //$("." + prevPhotoID).css("display", "none");
-    $("#" + prevPhotoID).css("display", "none");
-    $(".description-" + prevPhotoID).css("display", "none");
+            var comment = $("#commentTextPhoto-"+getId).val();
+            if(comment=='')
+            {
+                return false;
+            }
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "/content/photo/postComment",
+                    data: $('#formCommentPhoto-'+getId).serialize(),
+                    cache: false,
+                    success: function(html){
+                        $("#showComment-"+getId).append(html);
+                        $("#commentTextPhoto-"+getId).val('');
+                    }
+                });
+            }
+            return false;
+        });
+    });
 
-    $('.viewMoreComments').click(function(){
-        $(this).css("display", "none");
-        $("." + currentPhotoID).css("display", "block");
+    //show comment box when click to comment link
+    $(".commentBtnPhoto").each(function(){
+        var getId = $(this).attr('id').replace('stream-','');
+        //var Id = getId.replace(':','_');
+        $(this).live("click",function(e){
+                e.preventDefault();
+                console.log('ddd', getId);
+
+                $('#commentBoxPhoto-'+getId).fadeIn("slow");
+                $('#commentTextPhoto-'+getId).focus();
+            }
+        );
     });
-    $('.dtDescription').click(function(){
-        $('.BoxDescription').fadeIn();
+    //view more comment photos
+    $(".view-more-commentPhoto").live("click", function(e){
+        e.preventDefault();
+
+        // get first comment published
+        published   = $(e.target.parentElement).children(".swCommentPostedPhoto:first").find(".swTimeComment").attr("title");
+        statusID    = e.target.id;
+        $.ajax({
+            type: "POST",
+            url: "/content/photo/morePhotoComment",
+            data: { published:published, statusID:statusID},
+            cache: false,
+            success: function(html){
+                //console.log(e.target.parentElement);
+                $('.view-more-commentPhoto').css('display', 'none');
+                //e.target.parentElement.prepend(html);
+                $(e.target).after(html);
+            }
+        });
     });
-    $('.cancelDescription').live('click', function(){
-        $('.BoxDescription').fadeOut();
-    });
-    // preload others
-    if (typeof(urls) != 'undefined') {
-        console.log('urls', urls);
-        //urls.shift();
-        $("#images-container").preload(urls, photos);
-    }
 });
 

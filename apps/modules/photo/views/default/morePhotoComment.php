@@ -2,22 +2,17 @@
 $records    = F3::get('comments');
 $commentActor= F3::get('commentActor');
 
-if (count($records) > 50)
-{ ?>
-<?php
-} // end if (count($records) > 50)
-
 if (!empty($records))
 {
     $pos    = (count($records) < 50 ? count($records) : 50);
     // render comments
     for($j  = $pos - 1; $j >=0; $j--)
     {
+        $user = $commentActor[$records[$j]->data->actor];
         ?>
-    <div class="swCommentPosted">
+    <div class="swCommentPostedPhoto">
         <div class="swImg">
-            <?php foreach($commentActor as $photo)?>
-            <img class="swCommentImg" src="<?php echo $photo->data->profilePic; ?>" />
+            <img class="swCommentImg" src="<?php echo $user->data->profilePic; ?>" />
         </div>
         <div>
             <?php

@@ -365,7 +365,7 @@
 .rowInfoPhoto {
     float: left;
     width: 418px;
-    margin: 20px 0px;
+    margin: 20px 0px 0px;
 }
 
 .dtDescription {
@@ -384,14 +384,7 @@
     margin-bottom: 5px;
 }
 
-.saveDescription {
-    cursor: pointer;
-    background-color: #88A861;
-    color: #ffffff;
-    border: none;
-}
-
-.cancelDescription {
+.cancelDescription, .saveDescription {
     cursor: pointer;
     background-color: #88A861;
     color: #ffffff;
@@ -460,15 +453,14 @@
     border-top: 1px solid white;
 }
 
-.view-more-comments {
-margin: 1px 50px;
+.view-more-commentPhoto {
     font-weight: bold;
     background:#e9fbd3;
     color: #666;
     padding: 6px;
 }
-.view-more-comments:hover {
-text-decoration: underline;
+.view-more-commentPhoto:hover {
+    text-decoration: underline;
     cursor: pointer;
 }
 
@@ -552,13 +544,11 @@ label.swPostedCommment {
 
 .swCommentBoxphoto{
     float: left;
-    margin: 1px 50px;
     z-index:999;
     position:relative;
     background:#e9fbd3;
     display:none;
     padding: 5px;
-    width: 440px;
 }
 
 .swCommentBoxphoto div.swImg{
@@ -1039,4 +1029,47 @@ label.swPostedCommment {
 
 .visiblePhotoWrap {
     display: block;
+}
+
+.swCommentPostedPhoto {
+    margin: 1px 0px;
+    padding: 5px;
+    z-index:999;
+    position:relative;
+    background:#E5EDD9;
+}
+
+.swCommentPostedPhoto a{
+    color:#1078b4;
+    font-weight:bold;
+    margin-left:5px;
+    margin-top: 2px;
+
+}
+
+.swCommentPostedPhoto div.swImg{
+    float:left;
+    margin-right: 5px;
+}
+
+.swCommentPostedPhoto div label{
+    display:block;
+    position:relative;
+}
+
+.swCommentPostedPhoto .swCommentImg{
+    float:left;
+    width:25px;
+    height:25px;
+}
+
+.swCommentPostedPhoto .swTimeComment{
+    margin-left:0px;
+    font-size:8.5px;
+    color:#88A861;
+    margin-top: 10px;
+}
+
+.fixedClear {
+    padding: 0px 22px 0px 0px;
 }

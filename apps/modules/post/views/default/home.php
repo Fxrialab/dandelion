@@ -123,6 +123,7 @@ if ($activities)
             </ul>
         </div>
         <div class="comment-wrapper" id="showComment-<?php echo $rpStatusID; ?>">
+            <div class="tempLike-<?php echo $rpStatusID; ?>"></div>
             <?php
             $records = $comment[$statusID];
             if ($numberLikes > 0)

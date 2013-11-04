@@ -62,7 +62,7 @@ function LikeByElement($element)
                             {
                                 $("<span>You and </span>").prependTo("#likeSentence-"+getID);
                             }else {
-                                $("#showComment-"+getID).append("<div class='likeSentenceView' id='likeSentence-"+getID+"'>You like this</div>");
+                                $(".tempLike-"+getID).append("<div class='likeSentenceView' id='likeSentence-"+getID+"'>You like this</div>");
                             }
                         }
                     });

@@ -9,7 +9,7 @@ foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome)
 <script type="text/javascript">
     $(document).ready(function(){
         $('#greenBar').removeClass('fix_elem');
-        $('body').css('overflow','hidden');
+        //$('body').css('overflow','hidden');
     });
 </script>
 <div id="fadea"></div>
@@ -18,13 +18,16 @@ foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome)
     $photosJson         = F3::get("photosJson");
     $numberPhotos       = F3::get('numberPhoto');
     $album_id           = F3::get("album_id");
-    //$commentsJson        = F3::get("commentsJson");
+
     $urlsJson           = F3::get("urlsJson");
-    //$comments            = F3::get("commentsOfPhoto");
+    $comments           = F3::get("commentsOfPhoto");
+    $commentActor       = F3::get("commentActor");
     $photos             = F3::get("photos");
     //$itemPhoto           = F3::get("itemPhoto");
     $key                = F3::get('key');
     $infoActorPhotoUser = F3::get('infoActorPhotoUser');
+    $currentUser        = F3::get('currentUser');
+
     ?>
 
     <script>
@@ -33,9 +36,28 @@ foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome)
         var urls        = <?php echo $urlsJson ?>;
         var photoIndex  = <?php echo $key ?>;//@todo vi tri thu may trong bang photo
         var countPhotos = photos.length;
-        console.log('count', countPhotos);
+        //console.log('count', countPhotos);
         //photoIndex lay key cua $getAlbum dk so cuoi cung recordID= get url albumID
         //@todo: add check null for "urls" (in js)
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            currentPhotoID = photos[photoIndex].recordID.replace(':','_');
+            //show box add description if current photo exist add description
+            $('.description-'+currentPhotoID).click(function() {
+                $('.BoxDescription-'+currentPhotoID).css('display', 'block');
+            });
+            addDescription(currentPhotoID);
+            $('.cancelDescription').click(function() {
+                $('.BoxDescription-'+currentPhotoID).css('display', 'none');
+            });
+
+            // preload others
+            if (typeof(urls) != 'undefined') {
+                $("#images-container").preload(urls, photos);
+            }
+        });
     </script>
 
     <div id="containerViewPhoto">
@@ -76,13 +98,12 @@ foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome)
 
         </script>
         <?php
-        if($photos )
-        {
+        if($photos ){
             for($i=0; $i < count($photos); $i ++)
             {
                 $description = $photos[$i]->data->description;
+                $numberComments = $photos[$i]->data->numberComment;
                 $photoID     = str_replace(':', '_', $photos[$i]->recordID);
-                //var_dump($infoActorPhotoUser);
                 $actorPhotoName = ucfirst($infoActorPhotoUser[$photos[$i]->data->actor]->data->firstName)." ".ucfirst($infoActorPhotoUser[$photos[$i]->data->actor]->data->lastName);
                 $profilePicActorPhoto = $infoActorPhotoUser[$photos[$i]->data->actor]->data->profilePic;
                 //echo $profilePicActorPhoto;
@@ -102,53 +123,84 @@ foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome)
                             if($description != '')
                             {
                                 ?>
-                                <span class="description-<?php echo $photoID; ?>" style="display: none;"><?php echo $description; ?></span>
+                                <span class="description-<?php echo $photoID; ?>"><?php echo $description; ?></span>
                             <?php
                             }
                             else
                             {
                                 ?>
-                                <a class="dtDescription description-<?php echo $photoID; ?>" style="display: none;">Add Description</a>
+                                <a class="dtDescription description-<?php echo $photoID; ?>">Add Description</a>
+                                <div class="BoxDescription-<?php echo $photoID;?>" style="display: none">
+                                    <form id="descriptionPhoto<?php echo $photoID;?>">
+                                        <textarea name="contentDescription" rows="" cols="" class="contentDescription textDes<?php echo $photoID;?>" placeholder="Add description for photo"></textarea>
+                                        <a class="saveDescription saveDescription-<?php echo $photoID;?>">Save</a>
+                                        <a class="cancelDescription">Cancel</a>
+                                    </form>
+                                </div>
                             <?php
                             }
                             ?>
                         </div>
-                        <div class="BoxDescription">
-                            <form id="descriptionPhoto">
-                                <textarea name="contentDescription" rows="" cols="" class="contentDescription" placeholder="Add description for photo">
 
-                                </textarea>
-                                <input type="hidden" id="getPhotoID" class="descriptionID" value="" name="photoID">
-                                <input type="submit" class="saveDescription" value="Save">
-                                <a class="cancelDescription">Cancel</a>
-                            </form>
-                        </div>
                         <div class="bottomWrapper">
-                            <ul class="swMsgControl" style="margin-top: 0px;">
-                                <li class="link"><a href="" class="commentBtnphoto" id="stream">Comment -</a></li>
-                                <li class="link"><a href="">Share</a></li>
-                                <!--
-                        <div style="float: left;">
-                            <p class="btnFollow">
-                            <form class="followBtn" id="FollowID-">
-                                <input type="hidden" name="id" value="">
-                                <input type="hidden" name="statusID" value="">
-                                <input type="hidden" id="getURL" name="getURL" value="<?php echo F3::get('STATIC'); ?>">
-                                <button class='follow-button' id="followID-1" name="getStatus-"  type="submit" ></button>
-                            </form>
-                            </p>
-                        </div>    -->
+                            <ul class="swMsgControl">
+                                <li class="link"><a class="likeLink" id="likeLinkID-<?php echo $photoID; ?>" name="likeStatus-null"></a></li>
+                                <form class="likeHidden" id="likeHiddenID-<?php echo $photoID; ?>">
+                                    <input type="hidden" name="id" value="">
+                                    <input type="hidden" name="statusID" value="<?php echo $photoID; ?>">
+                                </form>
+                                <li class="link"><a href="" class="commentBtnPhoto" id="stream-<?php echo $photoID; ?>">- Comment </a></li>
+                                <li class="link"><a class="shareStatus" onclick="ShareStatus('')">- Share -</a></li>
+                                <li class="link"><a class="follow-button" id="followID-" name="getStatus-null"></a></li>
+                                <form class="followBtn" id="FollowID-">
+                                    <input type="hidden" name="id" value="">
+                                    <input type="hidden" name="statusID" value="">
+                                </form>
                             </ul>
                         </div>
-                    </div>
-                    <div class="swCommentBoxphoto" id="commentBoxphoto" style="float: left; margin: 0">
-                        <div class="swImg">
-                            <img class="swCommentImg" src="<?php echo F3::get('STATIC'); ?>upload/noimage.jpg" />
+                        <div class="comment-wrapper fixedClear" id="showComment-<?php echo $photoID; ?>">
+                        <?php
+                        $records = $comments[$photos[$i]->recordID];
+                        if ($numberComments > 4) { ?>
+                        <div class="view-more-commentPhoto" id="<?php echo $photoID;?>">View all <?php echo $numberComments;?> comments</div>
+                        <span class="hiddenSpan"><?php echo $numberComments;?></span>
+                        <?php } ?>
+                        <?php
+                        if (!empty($records)) {
+                            $pos = (count($records) < 4 ? count($records) : 4);
+                            for($j = $pos - 1; $j >= 0; $j--)
+                            {
+                                $user = $commentActor[$comments[$photos[$i]->recordID][$j]->data->actor];
+
+                                ?>
+                                <div class="swCommentPostedPhoto">
+                                    <div class="swImg">
+                                        <img width="30" height="30" src="<?php echo $user->data->profilePic; ?>" />
+                                    </div>
+                                    <div class="commentContentPhoto">
+                                        <?php
+                                        $actorID =  substr( $records[$j]->data->actor, strpos($records[$j]->data->actor, ":") + 1);
+                                        ?>
+                                        <a class="userComment" href="/profile?id=<?php echo $actorID;?>"><?php echo $records[$j]->data->actor_name?></a>
+                                        <label class="swPostedCommment">
+                                            <div><?php echo $records[$j]->data->content; ?></div>
+
+                                        </label>
+                                        <label class="swTimeComment" title="<?php echo $records[$j]->data->published; ?>">via web</label>
+                                    </div>
+                                </div>
+                            <?php }
+                        }?>
                         </div>
-                        <form class="swFormCommentphoto" id="formCommentphoto">
-                            <input name="postID" class="photoID" type="hidden" value="" />
-                            <textarea class="swBoxCommmentphoto" name="comment" id="commentTextphoto" style="width:290px;"></textarea>
-                            <input class="swSubmitCommentphoto" id="submitCommentphoto" type="submit" value="Comment" />
+                    </div>
+                    <div class="swCommentBoxphoto" id="commentBoxPhoto-<?php echo $photoID; ?>" style="float: left; margin: 0">
+                        <div class="swImg">
+                            <img class="swCommentImg" src="<?php echo $currentUser->data->profilePic; ?>" />
+                        </div>
+                        <form class="swFormCommentphoto" id="formCommentPhoto-<?php echo $photoID; ?>">
+                            <input name="photoID" class="photoID<?php echo $photoID; ?>" type="hidden" value="<?php echo $photoID; ?>" />
+                            <textarea class="swBoxCommmentphoto" name="comment" id="commentTextPhoto-<?php echo $photoID; ?>" style="width:272px;"></textarea>
+                            <input class="swSubmitCommentPhoto" id="submitCommentPhoto-<?php echo $photoID; ?>" type="submit" value="Comment" />
                         </form>
                     </div>
                 </div>

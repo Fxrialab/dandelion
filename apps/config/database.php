@@ -9,7 +9,7 @@ define('HOST', 'localhost');
 define('USER', 'admin');
 define('PORT', '2424');
 define('PASSWORD', 'admin');
-define('DATABASE', 'userwired');
+define('DATABASE', 'dandelion');
 define('TIMEOUT', 10);
 
 ?>

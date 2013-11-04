@@ -272,7 +272,6 @@ class PhotoController extends AppController {
 
     public function createAlbum()
     {
-        // @todo: checck for duplicate album name, needed?
         if ($this->isLogin())
         {
             $name           = F3::get("POST.titleAlbum");
@@ -286,8 +285,7 @@ class PhotoController extends AppController {
                 'cover'         => F3::get("STATIC") . "images/no-image.jpg",
                 'count'         => 0
             );
-            $album          =   $this->Album->create($data);
-            //echo $album;
+            $this->Album->create($data);
         }
     }
 
@@ -299,8 +297,7 @@ class PhotoController extends AppController {
 
             $getPhotoID     = F3::get('GET.photoID');
             $currentUser    = $this->getCurrentUser();
-            //$photoID        = $this->Photo->getClusterID() . ':' . F3::get('GET.photoID');
-            //$albumID        = $this->Photo->getClusterID() . ':' . F3::get("GET.albumID");
+
             if($getPhotoID != '')
             {
                 $photoID    = $this->Photo->getClusterID().':'.$getPhotoID;
@@ -328,30 +325,37 @@ class PhotoController extends AppController {
                         F3::set('key',$key);
                     }
                 }
-
+                //var_dump($listPhotos);
                 if ($listPhotos)
                 {
                     for ($i =  0; $i < count($listPhotos); $i++)
                     {
-                        $id = $listPhotos[$i]->recordID;
                         array_push($preloadUrls, $listPhotos[$i]->data->url);
                         array_push($preparedPhotosData, $this->Photo->export($listPhotos[$i]));
-                        $comments[$id] = $this->Comment->findByCondition("post = ?", array($id));//load all comment co id = get photo
                     }
                 }
                 foreach($listPhotos as $photo)
                 {
-                    $commentsOfPhoto[$photo->recordID]  = $this->Comment->findByCondition("post = ?", array($photo->recordID));
+                    $commentsOfPhoto[$photo->recordID]  = $this->Comment->findByCondition("post = ? ORDER BY published DESC", array($photo->recordID));
                     $infoActorUser[$photo->data->actor] = $this->User->findOne("@rid = ?", array($photo->data->actor));
+                    //var_dump($commentsOfPhoto[$photo->recordID]);
+                    if ($commentsOfPhoto[($photo->recordID)])
+                    {
+                        $pos = (count($commentsOfPhoto[($photo->recordID)]) < 4 ? count($commentsOfPhoto[($photo->recordID)]) : 4);
+                        for($j = $pos - 1; $j >= 0; $j--)
+                        {
+                            $commentActor[$commentsOfPhoto[($photo->recordID)][$j]->data->actor] = $this->User->load($commentsOfPhoto[($photo->recordID)][$j]->data->actor);
+                            //var_dump($commentActor);
+                        }
+                        F3::set("commentActor", $commentActor);
+                    }
                 }
                 F3::set("photos", $listPhotos);
                 F3::set("infoActorPhotoUser", $infoActorUser);
-                //F3::set("itemPhoto",$photoID);
                 F3::set("commentsOfPhoto", $commentsOfPhoto);
                 F3::set("photosJson", json_encode($preparedPhotosData));
                 F3::set("album_id", $clientAlbumID);
                 F3::set("urlsJson", json_encode($preloadUrls));
-                F3::set("commentsJson", json_encode($comments));
                 F3::set('currentUser', $currentUser);
                 F3::set('otherUser', $currentUser);
                 $this->render(Register::getPathModule('photo').'viewPhoto.php','modules');
@@ -361,34 +365,38 @@ class PhotoController extends AppController {
 
     public function addDescription()
     {
-        $description    = F3::get('POST.contentDescription');
-        $getPhotoID     = F3::get('POST.photoID');
-        $photoID        = str_replace('_', ':', $getPhotoID);
+        if ($this->isLogin())
+        {
+            $description    = F3::get('POST.description');
+            $getPhotoID     = F3::get('POST.photoID');
+            $photoID        = str_replace('_', ':', $getPhotoID);
 
-        $updateDescription = array('description'   => $description);
-        $this->Photo->updateByCondition($updateDescription, "@rid = ?", array("#".$photoID));
+            $updateDescription = array('description'   => $description);
+            $this->Photo->updateByCondition($updateDescription, "@rid = ?", array("#".$photoID));
+        }
     }
 
-    public function commentPhoto()
+    public function postComment()
     {
         if ($this->isLogin())
         {
-            $currentUser= $this->getCurrentUser();
-            $postID     = str_replace("_", ":", F3::get('POST.postID'));
-            $actorName  = $this->getCurrentUser()->data->firstName." ".$this->getCurrentUser()->data->lastName;
-            $published  = time();
-            $find       = $this->Comment->findByCondition("actor = ? AND post = ?", array($this->getCurrentUser()->recordID, $postID));
-            if($find)
+            $currentUser    = $this->getCurrentUser();
+            $photoID        = str_replace("_", ":", F3::get('POST.photoID'));
+            $textComment    = F3::get('POST.comment');
+            $actorName      = $this->getCurrentUserName();
+            $published      = time();
+            $existCommentRC = $this->Comment->findByCondition("actor = ? AND post = ?", array($currentUser->recordID, $photoID));
+            if($existCommentRC)
             {
                 $commentEntryCase1  = array(
-                    "actor"         => $this->getCurrentUser()->recordID,
+                    "actor"         => $currentUser->recordID,
                     "actor_name"    => $actorName,
-                    "content"       => F3::get('POST.comment'),
-                    "post"          => $postID,
+                    "content"       => $textComment,
+                    "post"          => $photoID,
                     "status_post"   => "later",
-                    "published"     => $published
+                    "published"     => $published,
+                    "tagged"        => "none"
                 );
-
                 $comment1           = $this->Comment->create($commentEntryCase1);
                 $commentID          = $comment1;
             }
@@ -397,29 +405,30 @@ class PhotoController extends AppController {
                 $commentEntryCase2  = array(
                     "actor"         => $this->getCurrentUser()->recordID,
                     "actor_name"    => $actorName,
-                    "content"       => F3::get('POST.comment'),
-                    "post"          => $postID,
+                    "content"       => $textComment,
+                    "post"          => $photoID,
                     "status_post"   => "first",
-                    "published"     => $published
+                    "published"     => $published,
+                    "tagged"        => "none"
                 );
 
                 $comment            = $this->Comment->create($commentEntryCase2);
                 $commentID          = $comment;
             }
             /*Update number comment */
-            $status_update          = $this->Photo->findOne('@rid = ?',array('#'.$postID));
+            $status_update          = $this->Photo->findOne('@rid = ?',array('#'.$photoID));
             $dataCountNumberComment = array('numberComment'     => $status_update->data->numberComment +1);
-            $this->Photo->updateByCondition($dataCountNumberComment, "@rid = ?", array("#".$postID));
+            $this->Photo->updateByCondition($dataCountNumberComment, "@rid = ?", array("#".$photoID));
             // track activity
-            $userPostID             = $this->Photo->findOne("@rid = ?",array($postID));
-            $this->trackComment($this->getCurrentUser(), "photo".$commentID, $commentID,$postID,$userPostID->data->owner, $published);
-            F3::set('authorName', $this->getCurrentUser()->data->firstName." ".$this->getCurrentUser()->data->lastName);
+            $userPostID             = $this->Photo->findOne("@rid = ?",array($photoID));
+            $this->trackComment($currentUser, "photo".$commentID, $commentID, $photoID, $userPostID->data->actor, $published);
+
+            F3::set('actorName', $actorName);
             F3::set('published', $published);
-            F3::set('content', F3::get('POST.comment'));
+            F3::set('content', $textComment);
             F3::set('authorId', $this->getCurrentUser()->recordID);
-            F3::set('postID', $postID);
+            F3::set('postID', $photoID);
             F3::set('currentUser',$currentUser);
-            $check = F3::get('POST.check');
             $this->renderModule('comment','photo');
         }
     }
@@ -452,6 +461,7 @@ class PhotoController extends AppController {
             }
         }
     }
+
     public function deletePhoto()
     {
         if($this->isLogin())
@@ -467,18 +477,14 @@ class PhotoController extends AppController {
 
     public function morePhotoComment()
     {
-        if ($this->isLogin()) {
-            $requestProfileID = F3::get('POST.id');
-
-            $profileID = ($requestProfileID == NULL) ? $this->getCurrentUser()->recordID : $requestProfileID;
+        if ($this->isLogin())
+        {
+            $profileID = $this->getCurrentUser()->recordID;
             $published = F3::get('POST.published');
             $statusID = str_replace("_", ":",  F3::get('POST.statusID'));
-            //because layout for public photo different with status. Must render to view photo show more comment
-            $ClusterIDPhoto = $this->Photo->getClusterID();
-            $checkPhoto = str_replace(substr($statusID, strpos($statusID, ':')), '', $statusID);
+
             if ($profileID) {
                 $comments = $this->Comment->findByCondition("post = ? and published < ? LIMIT 50 ORDER BY published DESC", array($statusID, $published));
-                $numberOfRemainingComments = $this->Comment->count("post = ? and published < ?", array($statusID, $published));
                 if ($comments)
                 {
                     $pos = (count($comments) < 50 ? count($comments) : 50);
@@ -491,35 +497,7 @@ class PhotoController extends AppController {
                 }
                 F3::set("commentActor",$commentActor);
                 F3::set("comments", $comments);
-                F3::set('nameClassElement', F3::get('POST.nameClass'));
-                if (count($comments) >= $numberOfRemainingComments) {
-                    if($ClusterIDPhoto == $checkPhoto) {
-                         $this->renderModule('morePhotoComment','photo');
-                    }else {
-                        //echo F3::render("activity/ajax_more_comment.php");
-                        $this->renderModule('morePhotoComment','photo');
-                        //  $this->renderAction('ajax_more_comment','post'); in old source
-                    }
-
-                    F3::set("id", F3::get('POST.statusID'));
-                    if($ClusterIDPhoto == $checkPhoto) {
-                        $this->renderModule('morePhotoComment','photo');
-                    }else {
-                        //echo F3::render("activity/ajax_no_more_comment.php");
-                        $this->renderModule('morePhotoComment','photo');
-                        // $this->renderAction('ajax_more_comment','post'); in old source
-                    }
-                }
-                else
-                {
-                    if($ClusterIDPhoto == $checkPhoto) {
-                        //echo F3::render("photo/ajax_more_comment.php");
-                    }else {
-                        // echo F3::render("activity/ajax_more_comment.php");
-                        $this->renderModule('morePhotoComment','photo');
-                        // $this->renderAction('ajax_more_comment','post'); in old source
-                    }
-                }
+                $this->renderModule('morePhotoComment','photo');
             }
         }
     }

@@ -75,6 +75,7 @@ $friendName         = ucfirst($friendProfileInfo->data->firstName)." ".ucfirst($
 <!--                <li class="link"><a href="">- Share</a></li>-->
             </ul>
         </div>
+        <div class="tempLike-<?php echo $statusID; ?>"></div>
         <div class="swCommentBox" id="commentBox-<?php echo $statusID?>">
             <div class="swImg">
                 <img src="<?php echo F3::get('BASE_URL'); ?><?php echo $currentUser->data->profilePic; ?>" />

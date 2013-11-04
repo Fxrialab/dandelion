@@ -50,7 +50,7 @@ class RouteConfig
         /* Route config for modules */
         'myPost_post'           => "postController,homePost",
         'myQA_qanda'            => "qandaController,homeQA",
-        'myPhoto_photo'         => "photoController",
+        'myPhoto_photo'         => "photoController,homePhoto",
     );
 }
 

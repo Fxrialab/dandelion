@@ -109,21 +109,6 @@ if($statusFriendship =='friend' || $currentUserID ==$otherUserID)
                             <h6 class="swTimeStatus" title="<?php echo $listStatus[$i]->data->published; ?>">
                                 <span> via web</span>
                             </h6>
-
-                            <!--                                --><?php //if(!empty($listStatus[$i]->data->tagged)) {
-//                                if($listStatus[$i]->data->taggedType == "image") {?>
-                            <!--                                    <h6>-->
-                            <!--                                        <div class="taggedImageStatus"><img src="--><?php //echo F3::get('STATIC'); ?><!--upload/--><?php //echo $listStatus[$i]->data->tagged; ?><!--" /></div>-->
-                            <!--                                    </h6>-->
-                            <!--                                    --><?php //}
-//                                else if ($listStatus[$i]->data->taggedType == "video") { ?>
-                            <!--                                    <h6>-->
-                            <!--                                        <div class="taggedVideoStatus" style=" margin-top:5px; padding-top:5px; border-top:1px dashed #ccc;">-->
-                            <!--                                            --><?php //echo $listStatus[$i]->data->tagged; ?>
-                            <!--                                        </div>-->
-                            <!--                                    </h6>-->
-                            <!--                                    --><?php //}
-//                            }?>
                         </div>
                         <div class="bottomWrapper">
                             <ul class="swMsgControl">
@@ -158,6 +143,7 @@ if($statusFriendship =='friend' || $currentUserID ==$otherUserID)
                             </ul>
                         </div>
                         <div class="comment-wrapper" id="showComment-<?php echo $postID; ?>">
+                            <div class="tempLike-<?php echo $postID; ?>"></div>
                             <?php
                             $records = $comments[$listStatus[$i]->recordID];
                             if ($listStatus[$i]->data->numberLike > 0)
@@ -220,7 +206,7 @@ if($statusFriendship =='friend' || $currentUserID ==$otherUserID)
                         </div>
                         <div class="swCommentBox" id="commentBox-<?php echo $postID?>">
                             <div class="swImg">
-                                <img src="<?php echo F3::get('BASE_URL'); ?><?php echo $currentUser->data->profilePic; ?>" />
+                                <img src="<?php echo $currentUser->data->profilePic; ?>" />
                             </div>
                             <form class="swFormComment" id="formComment-<?php echo $postID?>">
                                 <input name="postID" class='postID' id="postID<?php echo $postID?>" type="hidden" value="<?php echo $postID?>" />

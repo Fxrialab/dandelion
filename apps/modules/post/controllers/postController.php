@@ -194,7 +194,6 @@ class PostController extends AppController {
             $postID         = str_replace("_", ":", F3::get('POST.postID'));
             $actorName      = $this->getCurrentUserName();
             $published      = time();
-            //@todo: fix here
             $existCommentRC = $this->Comment->findByCondition("actor = ? AND post = ?", array($currentUser->recordID, $postID));
             //prepare data
             $content    = F3::get('POST.comment');
@@ -221,8 +220,6 @@ class PostController extends AppController {
                 );
 
                 $commentRC  = $this->Comment->create($commentEntryCase1);
-                /*$this->Post->createEdge('#'.$commentRC, '#'.$postID);
-                $this->Post->createEdge('#'.$currentUser->recordID, '#'.$commentRC);*/
                 $commentID  = $commentRC;
             }else {
                 $commentEntryCase2 = array(
@@ -235,8 +232,6 @@ class PostController extends AppController {
                     "tagged"        => $tagged
                 );
                 $commentRC  = $this->Comment->create($commentEntryCase2);
-                /*$this->Post->createEdge('#'.$commentRC, '#'.$postID);
-                $this->Post->createEdge('#'.$currentUser->recordID, '#'.$commentRC);*/
                 $commentID  = $commentRC;
             }
             /* Update number comment */
