@@ -134,6 +134,7 @@ class PhotoController extends AppController {
                     'url'           => UPLOAD_URL."test/".$fileName,
                     'thumbnail_url' => '',
                     'description'   => '',
+                    'numberLike'    => '0',
                     'numberComment' => '0',
                     'statusUpload'  => 'uploading',
                     'published'     => ''
@@ -162,6 +163,7 @@ class PhotoController extends AppController {
                         'url'           => UPLOAD_URL."test/".$fileName,
                         'thumbnail_url' => '',
                         'description'   => '',
+                        'numberLike'    => '0',
                         'numberComment' => '0',
                         'statusUpload'  => 'uploading',
                         'published'     => ''
@@ -186,7 +188,7 @@ class PhotoController extends AppController {
             if ($jsonData)
             {
                 $updateEntry    = array(
-                    'statusUpload'  => 'uploader',
+                    'statusUpload'  => 'uploaded',
                 );
                 $this->Photo->updateByCondition($updateEntry, "actor = ? AND statusUpload = 'uploading'", array($currentUser->recordID));
             }
@@ -285,7 +287,9 @@ class PhotoController extends AppController {
                 'cover'         => F3::get("STATIC") . "images/no-image.jpg",
                 'count'         => 0
             );
-            $this->Album->create($data);
+            $album = $this->Album->create($data);
+            //for render to album
+            echo $album;
         }
     }
 
@@ -338,6 +342,9 @@ class PhotoController extends AppController {
                 {
                     $commentsOfPhoto[$photo->recordID]  = $this->Comment->findByCondition("post = ? ORDER BY published DESC", array($photo->recordID));
                     $infoActorUser[$photo->data->actor] = $this->User->findOne("@rid = ?", array($photo->data->actor));
+                    //get status
+                    $likeStatus[($photo->recordID)]     = $this->getLikeStatus($photo->recordID, $currentUser->recordID);
+                    $statusFollow[($photo->recordID)]   = $this->getFollowStatus($photo->recordID, $currentUser->recordID);
                     //var_dump($commentsOfPhoto[$photo->recordID]);
                     if ($commentsOfPhoto[($photo->recordID)])
                     {
@@ -353,6 +360,8 @@ class PhotoController extends AppController {
                 F3::set("photos", $listPhotos);
                 F3::set("infoActorPhotoUser", $infoActorUser);
                 F3::set("commentsOfPhoto", $commentsOfPhoto);
+                F3::set("likeStatus", $likeStatus);
+                F3::set("statusFollow", $statusFollow);
                 F3::set("photosJson", json_encode($preparedPhotosData));
                 F3::set("album_id", $clientAlbumID);
                 F3::set("urlsJson", json_encode($preloadUrls));
@@ -499,6 +508,19 @@ class PhotoController extends AppController {
                 F3::set("comments", $comments);
                 $this->renderModule('morePhotoComment','photo');
             }
+        }
+    }
+
+    public function sharePhoto()
+    {
+        if($this->isLogin())
+        {
+            $photoID = F3::get('POST.photoID');
+            $content_stt = $this->Photo->findOne("@rid = ?",array($photoID));
+            $getAvatar = $this->User->findOne(" @rid = ? ",array($content_stt->data->actor));
+            F3::set('content_stt',$content_stt);
+            F3::set('getAvatar',$getAvatar);
+            $this->renderModule('sharePhoto','photo');
         }
     }
 }

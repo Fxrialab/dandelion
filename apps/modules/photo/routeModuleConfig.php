@@ -20,5 +20,6 @@ class RouteModuleConfig
         'addDescription_POST'   => "PhotoController",
         'morePhotoComment_POST' => "PhotoController",
         'postComment_POST'      => "PhotoController",
+        'sharePhoto_POST'       => "PhotoController"
     );
 }

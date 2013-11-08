@@ -27,7 +27,8 @@ foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome)
     $key                = F3::get('key');
     $infoActorPhotoUser = F3::get('infoActorPhotoUser');
     $currentUser        = F3::get('currentUser');
-
+    $likeStatus         = F3::get('likeStatus');
+    $statusFollow       = F3::get('statusFollow');
     ?>
 
     <script>
@@ -144,55 +145,78 @@ foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome)
 
                         <div class="bottomWrapper">
                             <ul class="swMsgControl">
-                                <li class="link"><a class="likeLink" id="likeLinkID-<?php echo $photoID; ?>" name="likeStatus-null"></a></li>
+                                <li class="link"><a class="likeLink" id="likeLinkID-<?php echo $photoID; ?>" name="likeStatus-<?php echo $likeStatus[$photos[$i]->recordID]; ?>"></a></li>
                                 <form class="likeHidden" id="likeHiddenID-<?php echo $photoID; ?>">
-                                    <input type="hidden" name="id" value="">
-                                    <input type="hidden" name="statusID" value="<?php echo $photoID; ?>">
+                                    <input type="hidden" name="id" value="<?php echo substr($currentUser->recordID, strpos($currentUser->recordID, ':') + 1); ?>">
+                                    <input type="hidden" name="photoID" value="<?php echo $photoID; ?>">
                                 </form>
                                 <li class="link"><a href="" class="commentBtnPhoto" id="stream-<?php echo $photoID; ?>">- Comment </a></li>
-                                <li class="link"><a class="shareStatus" onclick="ShareStatus('')">- Share -</a></li>
-                                <li class="link"><a class="follow-button" id="followID-" name="getStatus-null"></a></li>
-                                <form class="followBtn" id="FollowID-">
-                                    <input type="hidden" name="id" value="">
-                                    <input type="hidden" name="statusID" value="">
+                                <li class="link"><a class="shareStatus" onclick="SharePhoto('<?php echo $photos[$i]->recordID; ?>')">- Share -</a></li>
+                                <li class="link"><a class="follow-button" id="followID-<?php echo $photoID; ?>" name="getStatus-<?php echo $statusFollow[$photos[$i]->recordID]; ?>"></a></li>
+                                <form class="followBtn" id="FollowID-<?php echo $photoID; ?>">
+                                    <input type="hidden" name="id" value="<?php echo substr($currentUser->recordID, strpos($currentUser->recordID, ':') + 1); ?>">
+                                    <input type="hidden" name="statusID" value="<?php echo $photoID; ?>">
                                 </form>
                             </ul>
                         </div>
                         <div class="comment-wrapper fixedClear" id="showComment-<?php echo $photoID; ?>">
+                            <div class="tempLike-<?php echo $photoID; ?>"></div>
                         <?php
-                        $records = $comments[$photos[$i]->recordID];
-                        if ($numberComments > 4) { ?>
-                        <div class="view-more-commentPhoto" id="<?php echo $photoID;?>">View all <?php echo $numberComments;?> comments</div>
-                        <span class="hiddenSpan"><?php echo $numberComments;?></span>
-                        <?php } ?>
-                        <?php
-                        if (!empty($records)) {
-                            $pos = (count($records) < 4 ? count($records) : 4);
-                            for($j = $pos - 1; $j >= 0; $j--)
+                            if ($photos[$i]->data->numberLike > 0)
                             {
-                                $user = $commentActor[$comments[$photos[$i]->recordID][$j]->data->actor];
-
-                                ?>
-                                <div class="swCommentPostedPhoto">
-                                    <div class="swImg">
-                                        <img width="30" height="30" src="<?php echo $user->data->profilePic; ?>" />
-                                    </div>
-                                    <div class="commentContentPhoto">
-                                        <?php
-                                        $actorID =  substr( $records[$j]->data->actor, strpos($records[$j]->data->actor, ":") + 1);
+                                if ($likeStatus[$photos[$i]->recordID] == 'null')
+                                {
+                                    ?>
+                                    <div class="likeSentenceView" id="likeSentence-<?php echo $photoID;?>"><a><?php echo $photos[$i]->data->numberLike; ?></a> like this</div>
+                                <?php
+                                }else {
+                                    if ($photos[$i]->data->numberLike == 1)
+                                    {
                                         ?>
-                                        <a class="userComment" href="/profile?id=<?php echo $actorID;?>"><?php echo $records[$j]->data->actor_name?></a>
-                                        <label class="swPostedCommment">
-                                            <div><?php echo $records[$j]->data->content; ?></div>
+                                        <div class="likeSentenceView" id="likeSentence-<?php echo $photoID;?>">You like this</div>
+                                    <?php
+                                    }else {
+                                        ?>
+                                        <div class="likeSentenceView" id="likeSentence-<?php echo $photoID;?>"><span>You and </span><a><?php echo $photos[$i]->data->numberLike - 1; ?></a> like this</div>
+                                    <?php
+                                    }
+                                }
+                            }
+                            $records = $comments[$photos[$i]->recordID];
+                            if ($numberComments > 4) { ?>
+                            <div class="view-more-commentPhoto" id="<?php echo $photoID;?>">View all <?php echo $numberComments;?> comments</div>
+                            <span class="hiddenSpan"><?php echo $numberComments;?></span>
+                            <?php } ?>
+                            <?php
+                            if (!empty($records)) {
+                                $pos = (count($records) < 4 ? count($records) : 4);
+                                for($j = $pos - 1; $j >= 0; $j--)
+                                {
+                                    $user = $commentActor[$comments[$photos[$i]->recordID][$j]->data->actor];
 
-                                        </label>
-                                        <label class="swTimeComment" title="<?php echo $records[$j]->data->published; ?>">via web</label>
+                                    ?>
+                                    <div class="swCommentPostedPhoto">
+                                        <div class="swImg">
+                                            <img width="30" height="30" src="<?php echo $user->data->profilePic; ?>" />
+                                        </div>
+                                        <div class="commentContentPhoto">
+                                            <?php
+                                            $actorID =  substr( $records[$j]->data->actor, strpos($records[$j]->data->actor, ":") + 1);
+                                            ?>
+                                            <a class="userComment" href="/profile?id=<?php echo $actorID;?>"><?php echo $records[$j]->data->actor_name?></a>
+                                            <label class="swPostedCommment">
+                                                <div><?php echo $records[$j]->data->content; ?></div>
+
+                                            </label>
+                                            <label class="swTimeComment" title="<?php echo $records[$j]->data->published; ?>">via web</label>
+                                        </div>
                                     </div>
-                                </div>
-                            <?php }
-                        }?>
+                                <?php
+                                }
+                            }
+                            ?>
+                            </div>
                         </div>
-                    </div>
                     <div class="swCommentBoxphoto" id="commentBoxPhoto-<?php echo $photoID; ?>" style="float: left; margin: 0">
                         <div class="swImg">
                             <img class="swCommentImg" src="<?php echo $currentUser->data->profilePic; ?>" />
@@ -210,3 +234,4 @@ foreach(glob(MODULES.'photo/webroot/js/jshome.php') as $jshome)
         ?>
         </div>
 </div>
+<div id="sharePhoto" title="Dialog"></div>

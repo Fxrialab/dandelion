@@ -370,6 +370,20 @@ function addDescription(photoID)
     });
 }
 
+function SharePhoto(photoID)
+{
+    $('#sharePhoto').dialog();
+    $.ajax({
+        async: true,
+        type: 'POST',
+        url: '/content/photo/sharePhoto',
+        data: {photoID :photoID},
+        complete: function(request) {
+            $('#sharePhoto').html(request.responseText);
+        }
+    });
+}
+
 // post a comment
 $(function() {
     $(".swSubmitCommentPhoto").each(function() {

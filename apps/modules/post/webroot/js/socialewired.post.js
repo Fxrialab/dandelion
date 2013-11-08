@@ -12,7 +12,7 @@ function ShareStatus(status_id){
             $('#shareStatus').html(request.responseText);
         },
         url: '/content/post/shareStatus',
-        data: 'status_id=' + status_id
+        data: {status_id: status_id}
     });
 }
 // post status
