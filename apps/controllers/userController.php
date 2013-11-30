@@ -19,30 +19,33 @@ class UserController extends AppController
     {
         $this->layout = 'index';
         //get and prepare data for sign up
-        $data = F3::get('POST');
-        if (isset($data['email']))
+        $data = $this->f3->get('POST');
+
+        if (isset($data['emailSignUp']))
         {
             //check email field has existed in DB
-            $isUsedEmail = $this->User->findOne("email = ?", array($data["email"]));
+            $isUsedEmail = $this->User->findOne("email = ?", array($data["emailSignUp"]));
             //data is alright, create new user then send confirmation code to email
             if ($this->ValidateHelper->validation($data, $isUsedEmail, false) == '')
             {
+                /*if (isset($data['regCheckbox']))
+                    echo "ok";
+                else
+                    echo "fail";*/
                 if(isset($data['regCheckbox']))
                 {
                     // prepare birthday data
                     $data['firstName']  = strtolower($data['firstName']);
                     $data['lastName']   = strtolower($data['lastName']);
+                    $data['email']      = $data['emailSignUp'];
+                    // encrypt password
+                    $data['password']   = $this->EncryptionHelper->HashPassword($data["pwSignUp"]);
                     $data['fullName']   = strtolower($data['firstName'])." ".strtolower($data['lastName']);
                     $data['birthday']   = date("F-d-Y", mktime(0,0,0,$data['birthdayMonth'],$data['birthdayDay'],$data['birthdayYear']));
-                    unset($data['birthdayDay']);
-                    unset($data['birthdayMonth']);
-                    unset($data['birthdayYear']);
                     // set username for friends can view your profile using the link
-                    $data['username'] = substr($data["email"], 0, strpos($data["email"], '@'));
+                    $data['username'] = substr($data["emailSignUp"], 0, strpos($data["emailSignUp"], '@'));
                     // set default avatar
                     $data['profilePic'] = ($data['sex'] == 1) ? IMAGES."avatarWomenDefault.jpg" : IMAGES."avatarMenDefault.jpg";
-                    // encrypt password
-                    $data['password']   = $this->EncryptionHelper->HashPassword($data["password"]);
                     // set signUp status
                     $data['status']     = 'pending';
                     $data['role']       = 'user';
@@ -54,21 +57,24 @@ class UserController extends AppController
                     // valid in 24 hours
                     $confirmationCodeValidUntil = $this->TimeHelper->getTommorrow();
                     $data['confirmationCodeValidUntil'] = $confirmationCodeValidUntil;
-
+                    //unset some data dont need
+                    unset($data['emailSignUp']);
+                    unset($data['pwSignUp']);
+                    unset($data['birthdayDay']);
+                    unset($data['birthdayMonth']);
+                    unset($data['birthdayYear']);
                     // exclude form submit button and checkbox from data and create a new user
-                    //$userID = $this->User->createRecord($data, 'submitForm,regCheckbox');
-                    $this->User->create($data, 'submitForm,regCheckbox');
+                    $this->User->create($data, 'smSignUp,regCheckbox');
                     $this->EmailHelper->sendConfirmationEmail($data['email'],$confirmationCode);
-
-                    F3::set('MsgSignUp','You are registered success. Please check mail and confirm !');
-                    $this->render('user/signUp.php', 'default');
+                    $this->f3->set('MsgSignUp','You are registered success. Please check mail and confirm !');
+                    $this->render('user/index.php', 'default');
                 }else {
-                    F3::set('MsgSignUp','Please agree to the Terms and Privacy Policy');
-                    $this->render('user/signUp.php', 'default');
+                    $this->f3->set('MsgSignUp','Please agree to the Terms and Privacy Policy');
+                    $this->render('user/index.php', 'default');
                 }
             }else {
-                F3::set('MsgSignUp', $this->ValidateHelper->validation($data,$isUsedEmail, false));
-                $this->render('user/signUp.php', 'default');
+                $this->f3->set('MsgSignUp', $this->ValidateHelper->validation($data,$isUsedEmail, false));
+                $this->render('user/index.php', 'default');
             }
         }
     }
@@ -77,13 +83,14 @@ class UserController extends AppController
     {
         //Set layout default
         $this->layout       = 'index';
-        $request            = F3::get('GET');
+        $request            = $this->f3->get('GET');
+        //var_dump($request);
         $email              = $request['email'];
         $confirmationCode   = $request['confirmationCode'];
         if ($email && $confirmationCode)
         {
             $user           = $this->User->findOne('email = ?', array($email));
-            if ($user->data->confirmationCode != '')
+            if ($user->data->confirmationCode != 'none')
             {
                 if (($user->data->confirmationCode == $confirmationCode) &&
                     (time() <= $user->data->confirmationCodeValidUntil))
@@ -101,36 +108,35 @@ class UserController extends AppController
                         'requestFriend' => 0,
                         'message'       => 0
                     );
-                    $notify = $this->Notify->create($notify);
-                    echo $notify."<br />";
-                    //$this->Edge->createEdge('#'.$user->recordID, '#'.$notify);
-                    F3::set('MsgConfirm','Thank you confirm email. Now, you can login !') ;
+                    $this->Notify->create($notify);
+                    $this->f3->set('MsgSignIn','Thank you confirm email. Now, you can login !') ;
+                    $this->render('user/index.php','default');
                 }else {
-                    F3::set('MsgConfirm','The confirmation code or email are incorrect. Please, try check mail again !');
+                    $this->f3->set('MsgSignIn','The confirmation code or email are incorrect. Please, try check mail again !');
+                    $this->render('user/index.php','default');
                 }
             }
-            $this->render('user/confirmEmail.php','default');
         }
     }
 
     public function login()
     {
         $this->layout   = 'index';
-        $request        = F3::get('POST');
+        $request        = $this->f3->get('POST');
         if (!empty($request))
         {
-            $email      = $request['email'];
-            $password   = $request['password'];
+            $email      = $request['emailLogIn'];
+            $password   = $request['pwLogIn'];
             $existUser  = $this->User->findOne("email = ? AND role = ?", array($email,'user'));
-
+            //var_dump($existUser);
             if (!empty($existUser))
             {
                 if ($this->EncryptionHelper->CheckPassword($password, $existUser->data->password)) {
                     //Check status of user. If status='pending' must enter confirm code
                     if($existUser->data->status == 'pending')
                     {
-                        F3::set('MsgSignIn','We have sent an confirmation email to you. Please check the email and confirm your email with us !');
-                        $this->render('user/signUp.php', 'default');
+                        $this->f3->set('MsgSignIn','We have sent an confirmation email to you. Please check the email and confirm your email with us !');
+                        $this->render('user/index.php', 'default');
                     }else {
                         if (isset($request['persistent'])==true)
                         {
@@ -140,8 +146,8 @@ class UserController extends AppController
                             setcookie('email', $email, time()-3600);
                             setcookie('password', $password , time()-3600);
                         }
-                        F3::clear('SESSION');
-                        F3::set('SESSION.loggedUser', $existUser);
+                        $this->f3->clear('SESSION');
+                        $this->f3->set('SESSION.loggedUser', $existUser);
                         // start initial sessions.
                         $sessionID          = rand(1000,10000000);
                         $macAddress         = $this->getMacAddress();
@@ -194,13 +200,15 @@ class UserController extends AppController
 
                     }
                 }else {
-                    F3::set('MsgSignIn','Your password is incorrect');
-                    $this->render('user/signUp.php', 'default');
+                    $this->f3->set('MsgSignIn','Your password is incorrect');
+                    $this->render('user/index.php', 'default');
                 }
             }else {
-                F3::set('MsgSignIn','Your email is not exist. Please sign up !');
-                $this->render('user/signUp.php', 'default');
+                $this->f3->set('MsgSignIn','Your email is not exist. Please sign up !');
+                $this->render('user/index.php', 'default');
             }
+        }else {
+            $this->render('user/index.php', 'default');
         }
     }
 
@@ -277,16 +285,16 @@ class UserController extends AppController
     {
         $this->layout   = 'index';
 
-        $email          = F3::get('POST.email');
+        $email          = $this->f3->get('POST.email');
         if ($email)
         {
             $isUsedEmail = $this->User->findOne("email = ?", array($email));
             if ($this->ValidateHelper->validation($email , $isUsedEmail, true) == '')
             {
-                F3::set('user',$isUsedEmail);
+                $this->f3->set('user',$isUsedEmail);
                 $this->render('user/resetPassword.php', 'default');
             }else {
-                F3::set('MsgValidate',$this->ValidateHelper->validation($email, $isUsedEmail, true));
+                $this->f3->set('MsgValidate',$this->ValidateHelper->validation($email, $isUsedEmail, true));
                 $this->render('user/forgotPassword.php', 'default');
             }
         }else

@@ -7,7 +7,6 @@
  */
 require_once (CONTROLLERS . "appController.php");
 require_once (CONTROLLERS . "elementController.php");
-
 /*F3::route('GET /min',
     function() {
         Web::minify($_GET['base'],explode(',',$_GET['files']));
@@ -31,7 +30,7 @@ if ($params_full)
         $routes         = $routeConfig->default;
         if ($param == '')
         {
-            echo 'index page <br />';
+            //echo 'index page <br />';
             foreach($routes as $key=>$value)
             {
                 $params     = substr($key, 0, strpos($key, '_'));
@@ -47,7 +46,7 @@ if ($params_full)
                             include($controllerFiles);
                     }
                     $function = 'index';
-                    F3::route($method." /".$params,
+                    $f3->route($method." /".$params,
                         array(new $controllers[0], $function)
                     );
                 }
@@ -90,7 +89,7 @@ if ($params_full)
                                 if (file_exists($moduleFile))
                                 {
                                     require_once $moduleFile;
-                                    F3::route('GET|POST /content/*',
+                                    $f3->route('GET|POST /content/*',
                                         array(new ModuleController, $function)
                                     );
                                 }
@@ -146,7 +145,7 @@ if ($params_full)
                         }
                         // Set route
                         $function = $params;
-                        F3::route($method." /".$params,
+                        $f3->route($method." /".$params,
                             array(new $controllers[0], $function)
                         );
                     }

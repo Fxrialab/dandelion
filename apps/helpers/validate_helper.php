@@ -30,7 +30,7 @@ class ValidateHelper {
             $message = 'You have to fill in all fields.';
         }else {
             // validate email
-            if (is_array($data) && !$this->isEmail($data['email']))
+            if (is_array($data) && !$this->isEmail($data['emailSignUp']))
                 $message = 'Incorrectly formatted email.';
             if (!is_array($data) && !$this->isEmail($data))
                 $message = 'Incorrectly formatted email.';

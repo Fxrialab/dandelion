@@ -1,38 +1,47 @@
-<?php
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 8/2/13 - 2:20 PM
- * Project: joinShare Network - Version: 1.0
- */
-?>
-<div class="loginBlock" id="forgot">
-    <div class="wrapperForgot">
-        <h1 class="findYour">Find your account?</h1>
-        <div class="dr"><span></span></div>
-        <form id="email_form_box" action="/forgotPassword" method="post">
-            <div class="loginForm">
-                <p class="thisform">This form help you return your password. Please, enter your email, and send request</p>
-                <div class="control-group">
-                    <div class="input-prepend">
-                        <span class="add-on"><img src="<?php echo F3::get("STATIC");?>images/email.gif" /></span>
-                        <input style="width:250px;" name='email' id="email" onkeyup="HideMessage();">
-                    </div>
-                    <div class="message">
-                        <span id="email_error"></span>
-                    </div>
+<div class="column-group">
+    <div class="large-80 medium-100 small-100 push-center lineStroke overflowStyle">
+        <div class="column-group">
+            <div class="large-65 push-center fixMarginBottom-5">
+                <a id="uiLogInLink" class="uiTabNav linkColor-9aa9c8 fontSize-18" name="uiLogInBox">Log In</a>
+                <div class="quickLogInBox">
+
                 </div>
-                <div class="dr drbottom"><span></span></div>
-                <div class="controls">
-                    <div class="row-fluid">
-                        <p class="cannot">I can not identify my account </p>
-                        <div class="btn_send">
-                            <input id="sendRequest" class="sendrequest" type="submit" value="Send request" />
-                            <a class="cancelAction" title="Close" href="/">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="column-group">
+    <div class="large-60 medium-100 small-100 push-center">
+        <div class="column-group">
+            <div class="uiForgotPWBox">
+                <div class="boxTitle">
+                    Find your account?
+                </div>
+                <div class="boxContent forgotPwContent">
+                    <div class="forgotContainer">
+                        <span>This form help you return your password. Please, enter your email then click send request</span>
+                        <form class="ink-form top-space">
+                            <fieldset class="column-group horizontal-gutters">
+                                <div class="control-group large-100 medium-100 small-100">
+                                    <div class="column-group horizontal-gutters">
+                                        <label for="email" class="large-20 medium-20 small-10 content-right">Email</label>
+                                        <div class="control large-60 medium-80 small-90 prepend-symbol">
+                                        <span>
+                                            <input type="text" id="email">
+                                            <i class="icon-envelope-alt"></i>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                        <div class="footerBox column-group">
+                            <a class="uiMediumButton white large-20 push-right" href="">Send Request</a>
+                            <a class="uiMediumButton white large-20 push-right" href="">Cancel</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>

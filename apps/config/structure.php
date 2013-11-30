@@ -8,8 +8,8 @@
 // source code structure
 // base
 define ('DS', '/');
-define ('BASE_URL', 'http://joinshare.local/');
-define ('DOCUMENT_ROOT', 'E:\WebDesign\Projects\joinshare' . DS);
+define ('BASE_URL', 'http://dandelion.local/');
+define ('DOCUMENT_ROOT', 'E:\WebDesign\Projects\dandelion' . DS);
 define ('F3', DOCUMENT_ROOT . 'lib' . DS);
 define ('CONFIG', DOCUMENT_ROOT . 'apps' . DS . 'config' . DS);
 
@@ -27,8 +27,8 @@ define ('LAYOUTS', 'layouts' . DS);
 define ('EMAILS', 'emails'. DS);
 
 // static
-define ('WEBROOT', BASE_URL . 'apps' . DS . 'webroot' . DS);
-define ('IMAGES', WEBROOT . DS . 'images' . DS);
+define ('WEBROOT', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS . 'webroot' . DS);
+define ('IMAGES', WEBROOT . 'images' . DS);
 define ('JS', WEBROOT . 'js' . DS);
 define ('CSS', WEBROOT  . 'css' . DS);
 define ('UPLOAD', DOCUMENT_ROOT . 'apps' . DS . 'webroot' . DS. 'upload' . DS);
@@ -45,4 +45,5 @@ define ('AMQCONFIG', DOCUMENT_ROOT. 'vendors' . DS . 'php-amqplib' . DS. 'vendor
 define ('MODULES', DOCUMENT_ROOT. 'apps' . DS . 'modules' . DS);
 define ('ROOT_MOD', BASE_URL . 'apps' . DS . 'modules' . DS);
 
+define ('CACHE_TIME', 3600);
 ?>

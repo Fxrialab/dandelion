@@ -1,30 +1,28 @@
-<?php
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 8/1/13 - 9:11 AM
- * Project: joinShare Network - Version: 1.0
- */
-?>
-<div class="footer clear">
-    <div class="clearfix footerContainer">
-        <div class="mrl float">
-            <div class="copyright"><span>SocialeWired.com &copy; 2012</span></div>
-        </div>
-        <div class="navigation texture">
-            <a href="">Feedback</a>
-            |
-            <a href="">Contact Us</a>
-            |
-            <a href="">Advertise</a>
-            |
-            <a href="">About</a>
-            |
-            <a href="">Term</a>
-            |
-            <a href="">Privacy</a>
-            |
-            <a href="">Help</a>
+<div id="footerWrapper">
+    <div class="ink-grid uiRelatedInfo">
+        <div class="column-group">
+            <div class="large-80 medium-100 small-100 push-center">
+                <div class="large-40 medium-80 small-100 uiCopyRightDiv">
+                    <span class="">Copyright &copy; 2013 Dandelion</span>
+                </div>
+                <div class="large-50 medium-100 small-100 push-right">
+                    <nav class="ink-navigation">
+                        <ul class="menu horizontal">
+                            <li><a href="">Feedback</a></li>
+                            <li class="lineSpace">|</li>
+                            <li><a href="">Contact Us</a></li>
+                            <li class="lineSpace">|</li>
+                            <li><a href="">About</a></li>
+                            <li class="lineSpace">|</li>
+                            <li><a href="">Term</a></li>
+                            <li class="lineSpace">|</li>
+                            <li><a href="">Privacy Policy</a></li>
+                            <li class="lineSpace">|</li>
+                            <li><a href="">Help</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
     </div>
 </div>

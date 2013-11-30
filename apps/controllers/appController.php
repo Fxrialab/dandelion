@@ -42,8 +42,8 @@ class AppController extends Controller
         if (isset($_COOKIE['email']) && isset($_COOKIE['password']))
         {
             $user   =   $this->User->findOne('email = ?',array($_COOKIE['email']));
-            F3::clear('SESSION');
-            F3::set('SESSION.loggedUser', $user);
+            $this->f3->clear('SESSION');
+            $this->f3->set('SESSION.loggedUser', $user);
             return true;
         }
         //cookie ok

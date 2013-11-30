@@ -8,11 +8,15 @@
 require_once dirname(__DIR__) . "/config/structure.php";
 
 class Controller {
+    protected $f3;
     protected $uses = array("");
     protected $helpers = array("");
 
     public function __construct()
     {
+        $f3 = Base::instance();
+
+        $this->f3=$f3;
         $this->_mergeVars(array("uses", "helpers"));
         $this->loadHelpers();
         $this->loadModels();
@@ -76,9 +80,11 @@ class Controller {
     {
         if ($this->layout != '')
         {
+            //echo "is layout";
             require_once(UI . LAYOUTS . $this->layout . '.php');
         }else {
-            echo F3::render($page);
+            echo "none";
+            echo View::instance()->render($page);
         }
     }
 

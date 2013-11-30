@@ -21,7 +21,7 @@ class HomeController extends AppController
         if ($this->isLogin())
             header("Location:/home");
         else
-            $this->render('user/signUp.php', 'default');
+            $this->render('user/index.php', 'default');
     }
 
     public function home()

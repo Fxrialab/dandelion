@@ -7,7 +7,7 @@
  */
 require_once(CONFIG . 'moduleConfig.php');
 
-class Register extends Base
+class Register
 {
     static private $modulesMap;
     static public function getAllModule(){
