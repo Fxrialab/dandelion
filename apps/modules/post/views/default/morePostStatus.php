@@ -1,14 +1,14 @@
 <?php
 $rand               = rand(100,100000);
-$currentUser        = F3::get('currentUser');
-$userProfileInfo    = F3::get('userProfileInfo');
-$likeStatus         = F3::get('likeStatus');
-$listStatus         = F3::get('listStatus');
-$comments           = F3::get('comments');
-$numberOfComments   = F3::get('numberOfComments');
-$statusFollow       = F3::get('statusFollow');
-$postActor          = F3::get('postActor');
-$commentActor       = F3::get('commentActor');
+$currentUser        = $this->f3->get('currentUser');
+$userProfileInfo    = $this->f3->get('userProfileInfo');
+$likeStatus         = $this->f3->get('likeStatus');
+$listStatus         = $this->f3->get('listStatus');
+$comments           = $this->f3->get('comments');
+$numberOfComments   = $this->f3->get('numberOfComments');
+$statusFollow       = $this->f3->get('statusFollow');
+$postActor          = $this->f3->get('postActor');
+$commentActor       = $this->f3->get('commentActor');
 $currentUserID      = $currentUser->recordID;
 $userProfileID      = $userProfileInfo->recordID;
 $userNameProfile    = ucfirst($userProfileInfo->data->firstName)." ".ucfirst($userProfileInfo->data->lastName);
@@ -21,146 +21,137 @@ if($listStatus)
     $postID = str_replace( ":" , "_", $listStatus[$i]->recordID);
     $actorProfile = $postActor[$listStatus[$i]->data->actor];
     ?>
-    <li class="swStreamStory">
-        <div class="storyContent">
-            <a class="swStoryImage">
-                <img src="<?php echo F3::get('BASE_URL'); ?><?php echo $actorProfile->data->profilePic; ?>" />
-            </a>
-            <div class="mainWrapper">
-                <h6 class="swStreamCaption">
-                    <div class="actorName">
+        <div class="uiBoxPostItem">
+            <div class="uiBoxPostContainer column-group">
+                <div class="large-10 uiActorPicCol">
+                    <a href=""><img src="<?php echo $actorProfile->data->profilePic; ?>"></a>
+                </div>
+                <div class="large-85 uiPostContent">
+                    <div class="articleActorName fixMarginBottom-5">
                         <?php
                         if($listStatus[$i]->data->owner != $listStatus[$i]->data->actor)
                         {
                             if($currentUserID != $listStatus[$i]->data ->owner)
-                            {       ?>
-                                <a href="#"><?php echo $listStatus[$i]->data->actorName;?></a>  was posted in wall of <a href=""> <?php echo $userNameProfile; ?> </a>
+                            {
+                            ?>
+                                <a href="" class="timeLineLink"><?php echo $listStatus[$i]->data->actorName;?></a>  was posted in wall of <a href="" class="timeLineLink"> <?php echo $userNameProfile; ?> </a>
                             <?php
                             }else { ?>
-                                <a href="#"><?php echo $listStatus[$i]->data->actorName;?></a>  was posted in your wall
+                                <a href="" class="timeLineLink"><?php echo $listStatus[$i]->data->actorName;?></a>  was posted in your wall
                             <?php
                             }
                         }else { ?>
-                            <a href=""><?php echo $listStatus[$i]->data->actorName;?></a>
+                            <a href="" class="timeLineLink"><?php echo $listStatus[$i]->data->actorName;?></a>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                    <div class="articleContentWrapper">
+                        <?php
+                        if(!$listStatus[$i]->data->contentShare)
+                        {
+                            if($listStatus[$i]->data->tagged =='none')
+                            {?>
+                                <div class="textPostContainer fixMarginBottom-5">
+                                    <span class="textPost"><?php echo $listStatus[$i]->data->content; ?></span>
+                                </div>
+                            <?php
+                            } else {  ?>
+                                <div class="textPostContainer fixMarginBottom-5">
+                                    <span class="textPost">
+                                        <?php echo substr($listStatus[$i]->data->content,0,strpos($listStatus[$i]->data->content,'_linkWith_')); ?>
+                                        <a href="<?php echo $listStatus[$i]->data->tagged; ?>"><?php echo $listStatus[$i]->data->tagged; ?></a>
+                                        <?php echo substr($listStatus[$i]->data->content,strpos($listStatus[$i]->data->content,'_linkWith_')+10); ?>
+                                        <a href="<?php echo $listStatus[$i]->data->tagged; ?>" class="oembed5"> </a>
+                                    </span>
+                                </div>
+                            <?php
+                            }
+                        } else { ?>
+                            <div class="textPostContainer fixMarginBottom-5">
+                                <span class="textPost"><?php echo $listStatus[$i]->data->contentShare; ?></span>
+                                <span class="textPost"><?php echo $listStatus[$i]->data->content; ?></span>
+                            </div>
                         <?php
                         } ?>
                     </div>
-                </h6>
-                <h6 class="swStreamMsg">
-                    <?php
-                    if(!$listStatus[$i]->data->contentShare)
-                    {
-                        if($listStatus[$i]->data->tagged =='none')
-                        {?>
-                            <span class="msgBody"><?php echo $listStatus[$i]->data->content; ?></span>
-                        <?php
-                        }else {  ?>
-                            <span class="msgBody">
-                                <div><?php echo substr($listStatus[$i]->data->content,0,strpos($listStatus[$i]->data->content,'_linkWith_')); ?>
-                                    <a href="<?php echo $listStatus[$i]->data->tagged; ?>"><?php echo $listStatus[$i]->data->tagged; ?></a>
-                                    <?php echo substr($listStatus[$i]->data->content,strpos($listStatus[$i]->data->content,'_linkWith_')+10); ?>
-                                    <a href="<?php echo $listStatus[$i]->data->tagged; ?>" class="oembed<?php echo $rand ?>"> </a>
-                                </div>
-                            </span>
-                        <?php
-                        }
-                    }else { ?>
-                        <span class="msgBody"><?php echo $listStatus[$i]->data->contentShare; ?></span>
-                        <span class="msgBodyShare"><?php echo $listStatus[$i]->data->content; ?></span>
-                    <?php
-                    } ?>
-                </h6>
-                <h6 class="swTimeStatus" title="<?php echo $listStatus[$i]->data->published; ?>">
-                    <span> via web</span>
-                </h6>
-
-            </div>
-            <div class="bottomWrapper">
-                <ul class="swMsgControl">
-                    <li class="link"><a class="likeMorePostStatus" id="likeLinkID-<?php echo $postID; ?>" name="likeStatus-<?php echo $likeStatus[$lastStatus];?>"></a></li>
-                    <form class="likeHidden" id="likeHiddenID-<?php echo $postID; ?>">
-                        <input type="hidden" name="id" value="<?php echo substr($userProfileID, strpos($userProfileID, ':') + 1); ?>">
-                        <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
-                    </form>
-                    <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $postID;?>">- Comment -</a></li>
-                    <li class="link"><a href="">Share -</a></li>
-                    <?php
-                        if ($currentUserID != $listStatus[$i]->data->actor || $listStatus[$i]->data->numberFollow)
-                        {
-                            if($listStatus[$i]->data->actor != $currentUserID)
-                            {       ?>
-                                <li class="link"><a class="followMorePostStatus" id="followID-<?php echo $postID; ?>" name="getStatus-<?php echo $statusFollow[$lastStatus];?>"></a></li>
-                                <form class="followBtn" id="FollowID-<?php echo $postID; ?>">
-                                    <input type="hidden" name="id" value="<?php echo substr($userProfileID, strpos($userProfileID, ':') + 1); ?>">
-                                    <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
-                                </form>
-                                <?php
-                            }
-                        }
-                    ?>
-
-                </ul>
-            </div>
-            <div class="comment-wrapper">
-            <?php
-                $records = $comments[$listStatus[$i]->recordID];
-                if ($numberOfComments[$listStatus[$i]->recordID] > 4)
-                { ?>
-                    <div class="view-more-comments" id="<?php echo $postID;?>">View all <?php echo $numberOfComments[$listStatus[$i]->recordID];?> comments</div>
-                    <span class="hiddenSpan"><?php echo $numberOfComments[$listStatus[$i]->recordID];?></span>
-                <?php
-                }
-                if (!empty($records))
-                {
-                    $pos = (count($records) < 4 ? count($records) : 4);
-                    for($j = $pos - 1; $j >= 0; $j--)
-                    {
-                        $user = $commentActor[$comments[$listStatus[$i]->recordID][$j]->data->actor];
-                    ?>
-                    <div class="swCommentPosted">
-                        <div class="swImg">
-                            <img class="swCommentImg" src="<?php echo F3::get('BASE_URL'); ?><?php echo $user->data->profilePic; ?>" />
+                    <div class="articleSelectOption">
+                        <div class="articleActions">
+                            <nav class="ink-navigation">
+                                <ul class="menu horizontal">
+                                    <!--Like Segments-->
+                                    <li>
+                                        <a class="likeMorePostStatus" id="likeLinkID-<?php echo $postID; ?>" name="likeStatus-<?php echo $likeStatus[$lastStatus];?>" title="Like post"></a>
+                                        <form class="likeHidden" id="likeHiddenID-<?php echo $postID; ?>">
+                                            <input type="hidden" name="id" value="<?php echo substr($userProfileID, strpos($userProfileID, ':') + 1); ?>">
+                                            <input type="hidden" name="statusID" value="<?php echo $postID; ?>">
+                                        </form>
+                                    </li>
+                                    <li class="gapArticleActions">.</li>
+                                    <!--Comment Segments-->
+                                    <li>
+                                        <a href="#" class="commentBtn" id="stream-<?php echo $postID;?>" title="Comment to post">Comment</a>
+                                    </li>
+                                    <li class="gapArticleActions">.</li>
+                                    <!--Share Segments-->
+                                    <li ><a href="#" title="Share"><i></i>Share</a></li>
+                                    <li class="gapArticleActions">.</li>
+                                    <!--Follow post Segments-->
+                                    <li><a href="#" title="Follow"><i></i>Follow Post</a></li>
+                                    <li class="gapArticleActions">.</li>
+                                    <li class="streamPostTime"><a href="" class="linkColor-999999 swTimeStatus" title="" name="<?php echo $listStatus[$i]->data->published; ?>"></a></li>
+                                    <!----article post counter---->
+                                    <li class="rightFix">
+                                <span>
+                                    <a href="#" class="likeCounter gapArticleActions" title="Like"><i class="statusCounterIcon-like"></i>6</a>
+                                    <a href="#" class="commentCounter gapArticleActions" title="Comment"><i class="statusCounterIcon-comment"></i>20</a>
+                                    <a href="#" class="shareCounter gapArticleActions" title="Share"><i class="statusCounterIcon-share"></i>3</a>
+                                    <a href="#" class="followPostCounter gapArticleActions" title="Follow Post"><i class="statusCounterIcon-followPost"></i>11</a>
+                                </span>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
-                        <div>
-                            <?php
-                                $actorID =  substr( $records[$j]->data->actor, strpos($records[$j]->data->actor, ":") + 1);
-                                ?>
-                            <a href="/profile?id=<?php echo $actorID;?>"><?php echo $records[$j]->data->actor_name?></a>
-                            <label class="swPostedCommment">
-                                <?php
-                                if($records[$j]->data->tagged =='none')
-                                {?>
-                                <div><?php echo $records[$j]->data->content; ?></div>
-                                <?php
-                                } else {  ?>
-                                <div>
-                                    <?php echo substr($records[$j]->data->content,0,strpos($records[$j]->data->content,'_linkWith_')); ?>
-                                    <a href="<?php echo $records[$j]->data->tagged; ?>"><?php echo $records[$j]->data->tagged; ?></a>
-                                    <?php echo substr($records[$j]->data->content,strpos($records[$j]->data->content,'_linkWith_')+10); ?>
-                                    <a href="<?php echo $records[$j]->data->tagged; ?>" class="oembed<?php echo $rand ?>"> </a>
+                        <div class="postActionWrapper uiBox-PopUp boxLikeTopLeftArrow tempLike-<?php echo $postID; ?>">
+                            <!--<div class="whoShareThisPost verGapBox">
+                                <span><i class="statusCounterIcon-share"></i><a href="">3 Shares</a></span>
+                            </div>
+                            <div class="whoCommentThisPost verGapBox">
+                                <span><i class="statusCounterIcon-comment"></i><a href="">View all 20 comments</a></span>
+                            </div>-->
+                            <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $postID;?>">
+                                <div class="large-10 uiActorCommentPicCol">
+                                    <a href=""><img src="<?php echo $currentUser->data->profilePic; ?>"></a>
                                 </div>
-                                <?php
-                                } ?>
-                            </label>
-                            <label class="swTimeComment" title="<?php echo $records[$j]->data->published; ?>">via web</label>
+                                <div class="large-90 uiTextCommentArea">
+                                    <form class="ink-form">
+                                        <fieldset>
+                                            <div class="control-group">
+                                                <div class="control">
+                                                    <textarea class="taPostComment" spellcheck="false" placeholder="Write a comment..."></textarea>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-            <?php }
-            }?>
-            </div>
-            <div class="swCommentBox" id="commentBox-<?php echo $postID?>">
-                <div class="swImg">
-                    <img class="swCommentImg" src="<?php echo F3::get('BASE_URL'); ?><?php echo $currentUser->data->profilePic; ?>" />
                 </div>
-                <form class="swFormComment" id="formComment-<?php echo $postID?>">
-                    <input name="postID" type="hidden" value="<?php echo $postID?>" />
-                    <textarea class="swBoxCommment" name="comment" id="commentText-<?php echo $postID;?>"></textarea>
-                    <input class="swSubmitComment" id="submitComment-<?php echo $postID?>" type="submit" value="Comment" />
-                </form>
+                <div class="large-5 uiPostOption">
+                    <a href="" class="postOption" data-action=".optionPopUp"><i class="optionIcon-articlePost"></i></a>
+                    <div class="uiPostOptionPopUpOver uiBox-PopUp topRightArrow" data-target=".optionPopUp">
+                        <nav class="ink-navigation">
+                            <ul class="menu vertical">
+                                <li><a class="test" href="#">Report this post</a></li>
+                                <li><a href="#">Option 1</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
             </div>
         </div>
-    </li>
-        <?php
+    <?php
     }
 }
 ?>

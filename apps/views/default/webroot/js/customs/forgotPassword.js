@@ -1,11 +1,3 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: Administrator
- * Date: 7/8/13
- * Time: 9:09 PM
- * To change this template use File | Settings | File Templates.
- */
-
 $(document).ready(function(){
     $('#sendRequest').click(function(e) {
         e.preventDefault();
@@ -35,8 +27,4 @@ function CheckEmail(){
         return message_error;
     }
     return message_error;
-}
-
-function HideMessage(){
-    $('#email_error').hide();
 }

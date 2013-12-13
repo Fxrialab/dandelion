@@ -1,108 +1,82 @@
-<?php
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 8/2/13 - 11:01 PM
- * Project: joinShare Network - Version: 1.0
- */
-$user   =   F3::get('user');
-?>
-<div class="loginBlock" id="forgot">
-    <div class="wrapperForgot">
-        <h1 class="findYour">Reset your password</h1>
-        <div style="margin-bottom: 10px;" class="dr"><span></span></div>
-        <form id="email_form_box" action="/resetPassword" method="post">
-            <div class="loginForm">
-                <div class="control-group">
-                    <div class="wrapper-reset">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <td class="reset_left" style="border-right: 1px solid #e8ebf3;">
-                                    <div class="">
-                                        <strong class="reset_someshow">You want to change your password somehow ?</strong>
-                                    </div>
-                                    <table class="reset_width">
-                                        <tbody>
-                                        <tr>
-                                            <td valign="top" class="">
-                                                <div class="reset_top">
-                                                    <input type="radio" name="recover_method" value="send_email" checked="1" class="label_radio" id="u_0_0">
-                                                    <label for="">
-                                                        <div class="">
-                                                            <img class="add-on" style="margin-right: 10px;" src="<?php echo F3::get("STATIC");?>images/email.gif" alt="" width="16" height="16">
-                                                            <div class="">
-                                                                <div>
-                                                                    <strong class="format_reset">Please send a password reset link to my email</strong><br />
-                                                                    <div class="reset_format_child">
-                                                                        <strong class="format_reset_child"><?php echo $user->data->email; ?></strong>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <!--<tr>
-                                            <td valign="top" class="">
-                                                <div class="reset_top">
-                                                    <input type="radio" id="recover_openid" name="recover_method" value="recover_openid"  class="label_radio">
-                                                    <label for="">
-                                                        <div class="">
-                                                            <img class="add-on" style="margin-right: 10px;" src="<?php /*echo F3::get("STATIC");*/?>images/google.png" alt="" width="16" height="16">
-                                                            <div class="">
-                                                                <div>
-                                                                    <strong class="format_reset">Use my Google account </strong><br />
-                                                                    <div class="reset_format_child">
-                                                                        <strong class="format_reset_child">Sign in to Google ( if you have not already) to quickly reset your password.</strong>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        </tr>-->
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td class="reset_left" style="padding-left: 13px;">
-                                    <div class="">
-                                        <div>
-                                            <div>
-                                                <img class="img" src="<?php echo $user->data->profilePic; ?>" alt="" width="80" height="80">
-                                            </div>
-                                            <div>
-                                                <input name="email" type="hidden" value="<?php echo $user->data->email; ?>" />
-                                            </div>
-                                            <div>
-                                                <div class="wrapper_username"><?php echo ucfirst($user->data->firstName).' '.ucfirst($user->data->lastName);?></div>
-                                            </div>
-                                        </div>
-                                        <div class="wrapper_reset_link">
-                                            <a href="#" class="reset_link">
-                                                Not you?
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="dr drbottom"><span></span></div>
-                <div class="controls">
-                    <div class="row-fluid">
-                        <p class="cannot"><a href="#" class="reset_link">No longer accessible anymore?</a></p>
-                        <div class="btn_send">
-                            <input id="reset_next" class="sendrequest" type="submit" value="Next" />
-                            <a href="#" class="cancelAction" title="Back">Cancel</a>
+<div class="column-group">
+    <div class="large-80 medium-100 small-100 push-center lineStroke overflowStyle">
+        <div class="column-group">
+            <div class="large-65 push-center fixMarginBottom-5">
+                <a id="uiLogInLink" class="uiTabNav linkColor-9aa9c8 fontSize-18" name="uiLogInBox">Log In</a>
+                <div class="quickLogInBox" id="uiLogInBox">
+                    <form class="ink-form fixMarginTop-10" method="post" action="/login" id="fmLogIn">
+                        <div class="column-group fixMarginBottom-5">
+                            <div class="large-40">
+                                <input type="text" class="fixWidth220" placeholder="Your Email" name="emailLogIn" id="emailLogIn">
+                            </div>
+                            <div class="large-40">
+                                <input type="password" class="fixWidth220" placeholder="Your Password" name="pwLogIn" id="pwLogIn">
+                            </div>
+                            <div class="large-20">
+                                <input type="submit" class="uiMediumButton orange" id="smLogIn" name="smLogIn" value="Log In">
+                            </div>
                         </div>
+                        <div class="column-group">
+                            <div class="large-40">
+                                <input id="cbRememberMe" class="cbRememberMe" type="checkbox" name="persistent" value="1">
+                                <label for="cbRememberMe" class="linkColor-9aa9c8">Remember Me</label>
+                            </div>
+                            <div class="large-40">
+                                <a class="linkColor-9aa9c8" href="/forgotPassword">Forgot Password</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="column-group">
+    <div class="large-60 medium-100 small-100 push-center">
+        <div class="column-group">
+            <div class="uiForgotPWBox">
+                <div class="boxTitle">
+                    Reset Your Password
+                </div>
+                <div class="boxContent forgotPwContent">
+                    <div class="forgotContainer">
+                        <form action="/resetPassword" method="post" class="ink-form">
+                            <div class="title content-center">
+                                <span>This form help you authentication your account. Then send a code to mail for confirmation</span>
+                            </div>
+                            <div class="column-group large-100">
+                                <div class="large-70 leftColBox">
+                                    <fieldset>
+                                        <div class="control-group">
+                                            <p class="label">How would you like to reset your password?</p>
+                                            <ul class="control unstyled">
+                                                <li>
+                                                    <input type="radio" id="rb1" checked="1">
+                                                    <label class="fixMargin" for="rb1">Please send a password reset link to my email <?php echo $user->data->email;?></label>
+                                                </li>
+                                            </ul>
+                                            <input name="email" type="hidden" value="<?php echo $user->data->email;?>" />
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="large-30 rightColBox">
+                                    <div class="imgSearch">
+                                        <img src="<?php echo $user->data->profilePic;?>">
+                                    </div>
+                                    <div class="infoSearch">
+                                        <p class="timeLineLink fixColor-0069d6"><?php echo $profileName;?></p>
+                                        <span><a href="/forgotPassword">Not Me?</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footerBox column-group">
+                                <input type="submit" class="uiMediumButton white large-20 push-right" value="Continue">
+                                <a class="uiMediumButton white large-20 push-right" href="/">Cancel</a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>

@@ -59,7 +59,7 @@ function prettyDate(time){
 if ( typeof jQuery != "undefined" )
 	jQuery.fn.prettyDate = function(){
 		return this.each(function(){
-			var date = prettyDate(this.title);
+			var date = prettyDate(this.name);
 			if ( date )
 				jQuery(this).text( date );
 		});
@@ -69,14 +69,14 @@ if ( typeof jQuery != "undefined" )
 function updateTime() 
 {
 	$(".swTimeStatus").each(function (index, domEle) {		
-		if (domEle.title != "") {
-			var date = prettyDate(domEle.title);				
+		if (domEle.name != "") {
+			var date = prettyDate(domEle.name);
 			domEle.innerHTML = date;				
 		}			
 	});
 	$(".swTimeComment").each(function (index, domEle) {			
-		if (domEle.title != "") {
-			var date = prettyDate(domEle.title);
+		if (domEle.name != "") {
+			var date = prettyDate(domEle.name);
 			domEle.innerHTML = date;
 		}			
 	});

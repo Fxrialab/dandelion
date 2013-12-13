@@ -175,11 +175,9 @@ class AppController extends Controller
                 'published' => $published
             );
             // create activity for currentUser
-            $activityRC = $this->Activity->create($activity);
-            //$this->Edge->createEdge('#'.$actorID, '#'.$activityRC);
+            $this->Activity->create($activity);
             $friends = $this->getFriendsStt($actor->recordID);
-            //var_dump($findUserBOfFollow);
-            //var_dump($friends);
+
             // dupicate activities for followers
             if (!empty($friends) && !$checkActivity)
             {
@@ -202,12 +200,8 @@ class AppController extends Controller
                                 'idObject'  => $object,
                                 'published' => $published
                             );
-                            $activity_id = $this->Activity->create($activity);
-                            try {
-                                //echo "track activity if check friend null <br />";
-                                $content = '1'.$activity_id; // 1 is home .
-                                $this->sendMessageRab($actor->recordID,$content);
-                            } catch(Exception $e) {}
+                            $this->Activity->create($activity);
+
                         }
                     }
                     // prepare activity for each followers
@@ -222,12 +216,8 @@ class AppController extends Controller
                             'idObject'  => $object,
                             'published' => $published
                         );
-                        $activity_id = $this->Activity->create($activity);
-                        try{
-                           // echo "track activity if check activity friend null <br />";
-                            $content = '1'.$activity_id; // 1 is home .
-                            $this->sendMessageRab($friends[$i]->data->userB,$content);
-                        } catch(Exception $e){}
+                        $this->Activity->create($activity);
+
                     }
                 }
             }
@@ -418,21 +408,21 @@ class AppController extends Controller
                     $infoRequestUser[$randYourFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$randYourFriend));
                     $neighborRequestUser[$randYourFriend] = $this->User->sqlGremlin("current.in", "@rid = ?", array('#'.$randYourFriend));
                     $mutualFriends[$randYourFriend] = array_intersect($neighborCurrentUser, $neighborRequestUser[$randYourFriend]);
-
+                    $this->f3->set('numMutualFriends', $mutualFriends);
                     if ($mutualFriends[$randYourFriend])
                     {
                         foreach ($mutualFriends[$randYourFriend] as $mutualFriend)
                         {
                             $infoMutualFriend[$mutualFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
                         }
-                        F3::set('numMutualFriends', $mutualFriends);
-                        F3::set('infoMutualFriend', $infoMutualFriend);
+
+                        $this->f3->set('infoMutualFriend', $infoMutualFriend);
                     }
-                    F3::set('infoRequestUser', $infoRequestUser);
+                    $this->f3->set('infoRequestUser', $infoRequestUser);
                 }
-                F3::set('requestUserArrays', $requestUserArrays);
-                F3::set('randomKeys', $randomKeys);
-                F3::set('neighborCurrentUser', $neighborCurrentUser);
+                $this->f3->set('requestUserArrays', $requestUserArrays);
+                $this->f3->set('randomKeys', $randomKeys);
+                $this->f3->set('neighborCurrentUser', $neighborCurrentUser);
             }
             $this->render("elements/friendRequestElement.php",'default');
         }

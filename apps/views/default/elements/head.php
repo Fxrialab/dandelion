@@ -1,50 +1,70 @@
-<?php
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 8/3/13 - 3:08 PM
- * Project: joinShare Network - Version: 1.0
- */
-?>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo F3::get('ENCODING');?>"/>
-    <title><?php echo F3::get('SITE');?></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $this->f3->get('ENCODING'); ?>" />
+    <title><?php echo $this->f3->get('site1'); ?></title>
+    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>reset.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>main.css" type="text/css" />
+    <!--[if IE 7 ]>
+    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink-ie7.css" type="text/css" media="screen"
+          title="no title">
+    <![endif]-->
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/holder.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink.min.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink-ui.min.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/autoload.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery.autosize.min.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/blocksit.min.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery.timers-1.2.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery.oembed.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/pretty.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/search.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/addFriend.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/follow.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/like.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/general.js"></script>
 
-    <link rel="stylesheet" href="<?php echo F3::get('STATIC'); ?>css/reset.css" type="text/css" />
-    <link rel="stylesheet" href="<?php echo F3::get('STATIC'); ?>css/style.css" type="text/css" />
-    <!-- Supports by jquery libs-->
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.min.js"></script>
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.autoSize-min.js"></script>
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.timers-1.0.0.js"></script>
-    <!--Supports by social network libs-->
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/inputToggle.js"></script>
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/pretty.js"></script>
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/search.js"></script>
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/general.js"></script>
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/addFriend.js"></script>
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/follow.js"></script>
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/joinShare/like.js"></script>
     <script type="text/javascript">
-        new FollowByElement('.follow-button');
-        new LikeByElement('.likeLink');
+        $(document).ready(function(){
+            $('.taPostStatus').autosize();
+            $('.taPostComment').autosize();
+            //target show popUp
+            new showPopUpOver('a.postOption', '.uiPostOptionPopUpOver');
+            new showPopUpOver('a.settingOption', '.uiSettingOptionPopUpOver');
+            new showPopUpOver('a.quickPostStatusNav', '.uiQuickPostStatusPopUpOver');
+            new showPopUpOver('a.showRequestFriends', '.uiFriendRequestsPopUpOver');
+            new showPopUpOver('a.showMessages', '.uiMessagesPopUpOver');
+            new showPopUpOver('a.showNotifications', '.uiNotificationsPopUpOver');
+            $(document).click(function(){
+                $('.uiPostOptionPopUpOver').hide();
+                $('.uiSettingOptionPopUpOver').hide();
+                $('.uiFriendRequestsPopUpOver').hide();
+                $('.uiMessagesPopUpOver').hide();
+                $('.uiNotificationsPopUpOver').hide();
+            });
+            $('.cancelPostStatusNavBtn').click(function(){
+                $('.uiQuickPostStatusPopUpOver').hide();
+                return false;
+            });
+            new LikeByElement('.likeSegments');
+        });
+
+        //layout photo like pinterest
+        $(window).load( function() {
+            $('.uiPhotoPinCol').BlocksIt({
+                numOfCol: 3,
+                offsetX: -5,
+                offsetY: 5
+            });
+        });
+
+        function showPopUpOver($click, $popUpOver) {
+            $($click).click(function (){
+                $($popUpOver).show();
+                return false;
+            });
+        }
     </script>
-    <!--Supports for video embed task-->
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.oembed.min.js"></script>
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/jquery.oembed.js"></script>
-    <!--Supports for display dialog when share status-->
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/fanc/jquery-ui-1.8.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="<?php echo F3::get('STATIC'); ?>js/fanc/jquery-ui-1.8.css"/>
-    <link type="text/css" rel="stylesheet" href="<?php echo F3::get('STATIC'); ?>js/fanc/jquery.ui.theme.css"/>
-    <!--Association with amq-->
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/mq.js" ></script>
-    <script type="text/javascript" src="<?php echo F3::get('STATIC'); ?>js/swfobject.js" ></script>
-    <?php
-    //@TODO: check load css for each module
-    foreach (glob(MODULES."*/webroot/css/*.css") as $cssPath){
-        $cssFile= explode('modules',$cssPath,2);
-        $cssMod = substr($cssFile[1],1); ?>
-        <link type="text/css" rel="stylesheet" href="<?php echo F3::get('STATIC_MOD').$cssMod; ?>"/>
-    <?php }   ?>
     <script type="text/javascript">
         $(".autoloadModuleElement").ready(function()
         {
@@ -70,7 +90,7 @@
                         cache: false,
                         success: function(html){
                             $(".autoloadModuleElement").html(html);
-                            new IsActionsForSuggest();
+                            //new IsActionsForSuggest();
                         }
                     })
                 }
@@ -103,7 +123,7 @@
                             cache: false,
                             success: function(html){
                                 $(".autoloadModuleElement").html(html);
-                                new IsActionsForSuggest();
+                                //new IsActionsForSuggest();
                             }
                         })
                     }

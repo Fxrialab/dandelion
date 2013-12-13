@@ -39,7 +39,7 @@ class ValidateHelper {
             if ($isUsedEmail && !$needed)
                 $message = 'Used email.';
             if (!$isUsedEmail && $needed)
-                $message = 'Email not exist.';
+                $message = 'Email is not exist. Please try again with other information.';
         }
         return $message;
     }

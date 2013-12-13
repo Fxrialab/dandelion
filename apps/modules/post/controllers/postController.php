@@ -16,9 +16,9 @@ class PostController extends AppController {
     {
         if ($this->isLogin())
         {
-            $this->layout = 'default';
+            $this->layout = 'timeline';
 
-            $requestCurrentProfile   = F3::get('GET.username');
+            $requestCurrentProfile   = $this->f3->get('GET.username');
             if($requestCurrentProfile)
             {
                 $currentProfileRC   = $this->User->findOne("username = ?", array($requestCurrentProfile));
@@ -31,19 +31,19 @@ class PostController extends AppController {
                 }
             }else
                 $currentProfileID   = $this->getCurrentUser()->recordID;
-            F3::set('SESSION.userProfileID',$currentProfileID);
+            $this->f3->set('SESSION.userProfileID',$currentProfileID);
             $currentProfileRC   = $this->User->load($currentProfileID);
             $currentUser        = $this->getCurrentUser();
             //get status friendship
             $statusFriendShipRC = $this->Friendship->findOne('userA = ? AND userB = ?', array($currentUser->recordID, $currentProfileRC->recordID));
             $statusFriendship   = ($statusFriendShipRC == NULL) ? 'null' : $statusFriendShipRC->data->relationship;
             //set
-            F3::set('currentUser', $currentUser);
-            F3::set('otherUser', $currentProfileRC);
+            $this->f3->set('currentUser', $currentUser);
+            $this->f3->set('otherUser', $currentProfileRC);
 
-            F3::set('statusFriendShip', $statusFriendship);
+            $this->f3->set('statusFriendShip', $statusFriendship);
             //set ID for postWrap.php
-            F3::set("currentProfileID", $currentProfileID);
+            $this->f3->set("currentProfileID", $currentProfileID);
             // get id status of user was following.
             $getFollowRC    = $this->Follow->findOne('userA = ?  and filterFollow = ?  ',array($currentProfileID,'post'));
             /* if exist status following. Get status following and get status of this user.*/
@@ -77,13 +77,13 @@ class PostController extends AppController {
                     }
                 }
 
-                F3::set("listStatus", $statusRC);
-                F3::set("comments", $comments);
-                F3::set("numberOfComments", $numberOfComments);
-                F3::set("likeStatus", $likeStatus);
-                F3::set("statusFollow", $statusFollow);
-                F3::set("postActor", $postActor);
-                F3::set("commentActor",$commentActor);
+                $this->f3->set("listStatus", $statusRC);
+                $this->f3->set("comments", $comments);
+                $this->f3->set("numberOfComments", $numberOfComments);
+                $this->f3->set("likeStatus", $likeStatus);
+                $this->f3->set("statusFollow", $statusFollow);
+                $this->f3->set("postActor", $postActor);
+                $this->f3->set("commentActor",$commentActor);
             }
             $this->render($viewPath.'myPost.php','modules');
         }else {
@@ -132,11 +132,11 @@ class PostController extends AppController {
         {
             $published          = time();
             $currentUser        = $this->getCurrentUser();
-            $friendProfileID    = F3::get('SESSION.userProfileID');
-            $taggedElement      = F3::get("POST.fullURL");
+            $friendProfileID    = $this->f3->get('SESSION.userProfileID');
+            $taggedElement      = $this->f3->get("POST.fullURL");
             //@TODO: check type of tagged later
             //$taggedType         = F3::get("POST.taggedType");
-            $content            = F3::get("POST.status");
+            $content            = $this->f3->get("POST.status");
 
             if($taggedElement != 'none')
             {
@@ -148,7 +148,7 @@ class PostController extends AppController {
             }
             // prepare data
             $postEntry = array(
-                'owner'         => F3::get("POST.profileID"),
+                'owner'         => $this->f3->get("POST.profileID"),
                 'actor'         => $currentUser->recordID,
                 'content'       => $content,
                 'tagged'        => $taggedElement,
@@ -166,21 +166,19 @@ class PostController extends AppController {
 
             // save
             $status = $this->Status->create($postEntry);
-            //$this->Post->createEdge('#'.$status,'#'.$currentUser->recordID);
-            F3::set('statusID',$status);
+            $this->f3->set('statusID',$status);
             // track activity
             $this->trackActivity($currentUser, 'HomePost', $status, $published);
 
-            F3::set('content', $content);
+            $this->f3->set('content', $content);
             //F3::set('taggedType', $taggedType);
-            F3::set('tagged', $taggedElement);
-            F3::set('currentUser', $currentUser);
-            F3::set('published', $published);
+            $this->f3->set('tagged', $taggedElement);
+            $this->f3->set('currentUser', $currentUser);
+            $this->f3->set('published', $published);
             if($friendProfileID){
-                //@TODO: assign to Loc: check lai su dung friendProfileInfo de lay ID thay vi phai set them cho friendProfileID
-                F3::set('friendProfileID', $friendProfileID);
+                $this->f3->set('friendProfileID', $friendProfileID);
                 $friendProfileInfoRC = $this->User->load($friendProfileID);
-                F3::set('friendProfileInfo',$friendProfileInfoRC);
+                $this->f3->set('friendProfileInfo',$friendProfileInfoRC);
             }
             $this->renderModule('postStatus','post');
         }
@@ -263,11 +261,11 @@ class PostController extends AppController {
         if ($this->isLogin())
         {
             $currentUser    = $this->getCurrentUser();
-            $userProfileID  = F3::get('SESSION.userProfileID');
-            $published      = F3::get('POST.published');
+            $userProfileID  = $this->f3->get('SESSION.userProfileID');
+            $published      = $this->f3->get('POST.published');
             $userProfileRC  = $this->User->load($userProfileID);
-            F3::set('currentUser', $currentUser);
-            F3::set('userProfileInfo', $userProfileRC);
+            $this->f3->set('currentUser', $currentUser);
+            $this->f3->set('userProfileInfo', $userProfileRC);
             if($currentUser->recordID == $userProfileID)
             {
                 $statusRC   = $this->Status->findByCondition("owner = ? and published < ? LIMIT 5 ORDER BY published DESC", array($currentUser->recordID, $published));
@@ -295,13 +293,13 @@ class PostController extends AppController {
                         $commentActor = null;
                     }
                 }
-                F3::set("listStatus", $statusRC);
-                F3::set("comments", $comments);
-                F3::set("numberOfComments", $numberOfComments);
-                F3::set("likeStatus", $likeStatus);
-                F3::set("statusFollow", $statusFollow);
-                F3::set("postActor", $postActor);
-                F3::set("commentActor",$commentActor);
+                $this->f3->set("listStatus", $statusRC);
+                $this->f3->set("comments", $comments);
+                $this->f3->set("numberOfComments", $numberOfComments);
+                $this->f3->set("likeStatus", $likeStatus);
+                $this->f3->set("statusFollow", $statusFollow);
+                $this->f3->set("postActor", $postActor);
+                $this->f3->set("commentActor",$commentActor);
 
                 $this->renderModule('morePostStatus','post');
             }else {

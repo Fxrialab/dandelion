@@ -53,6 +53,11 @@ body {
     line-height: 14px;
 }
 
+#msgOther, #msgValidate {
+    margin: 10px 50px;
+    padding: 1em 2em;
+}
+
 .uiBirthday div select, .uiGender div select, .uiLanguage div select {
     padding: 6.5px 6.5px 6.5px 2px;
 }
@@ -67,12 +72,16 @@ body {
     border: 1px solid;
 }
 
+.quickLogInBox {
+    display: none;
+}
+
 .msgConfirmBox {
     height: 350px;
 }
 
 .uiForgotPWBox {
-    margin: 50px 30px;
+    margin: 20px 30px;
 }
 
 .forgotPwContent {
@@ -82,6 +91,52 @@ body {
 .forgotContainer {
     font-size: 14px;
     padding: 20px 10px;
+}
+
+.quickLogInBox input.fixWidth220 {
+    padding: 4px 5px;
+    font-size: 13px;
+}
+
+#uiLogInLink, #uiSignUpLink {
+    cursor: pointer;
+}
+
+.leftColBox {
+    border-right: 1px solid #ccc;
+    padding: 10px;
+    margin: 20px 0;
+}
+
+.forgotContainer .ink-form .control-group input[type="radio"] + label, .ink-form .control-group input[type="checkbox"] + label {
+    float: none;
+    line-height: normal;
+}
+
+.rightColBox {
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.imgSearch img {
+    width: 60px;
+    height: 60px;
+}
+
+.leftCol {
+    padding: 10px;
+}
+
+.rightCol {
+    padding: 0 10px;
+}
+
+.infoSearch {
+    margin-top: 10px;
+}
+
+.infoSearch span {
+    font-size: 11px;
 }
 /*--CSS linkColor Style--*/
 .linkColor-9aa9c8 {
@@ -208,6 +263,10 @@ body {
 
 .fixWidth300 {
     width: 300px;
+}
+
+.fixWidth220 {
+    width: 220px;
 }
 
 #uiSearch input {
@@ -662,6 +721,7 @@ body {
 }
 
 .profileInfoDiv {
+    padding-left: 5px;
     line-height: 15px;
     text-align: left;
 }
@@ -933,6 +993,12 @@ body {
     padding: 10px 0 10px 10px;
 }
 
+.uiMoreView {
+    border: 1px solid #E9E9E9;
+    background-color: #efefef;
+    padding: 10px;
+}
+
 .uiActorPicCol img {
     width: 50px;
     height: 50px;
@@ -943,8 +1009,7 @@ body {
 }
 
 .articleContentWrapper {
-   /* background-color: #e5e5e5;*/
-    padding: 0 0 10px;
+    padding: 0 0 5px;
 }
 
 .textPost {
@@ -974,8 +1039,20 @@ body {
     padding: 0 2px;
 }
 
-.whoLikeThisPost {
+.articleActions li a {
+    cursor: pointer;
+}
+
+.postActionWrapper {
     margin-top: 10px;
+    border-top: 1px solid #E4E4E4 !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    display: none;
+}
+
+.whoLikeThisPost {
     padding: 5px;
     font-size: 11px;
     background-color: #eaeaea !important;
@@ -997,14 +1074,21 @@ body {
     margin-right: 3px;
 }
 
-.whoShareThisPost, .whoCommentThisPost, .eachCommentItem, .uiStreamCommentBox {
+.whoShareThisPost, .whoCommentThisPost, .eachCommentItem {
+    background-color: #eaeaea;
+    padding: 5px;
+    font-size: 11px;
+}
+
+.uiStreamCommentBox {
+    display: none;
     background-color: #eaeaea;
     padding: 5px;
     font-size: 11px;
 }
 
 .verGapBox {
-    margin-top: 1px;
+    margin-bottom: 1px;
 }
 
 .uiActorCommentPicCol img {
@@ -1207,6 +1291,11 @@ body {
 
 .uiProfilePicTimeLine:hover > div.editProfilePic {
     display: block;
+}
+
+.uiProfilePic img {
+    width: 50px;
+    height: 50px;
 }
 
 .profilePic {

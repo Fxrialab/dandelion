@@ -28,7 +28,8 @@ class HomeController extends AppController
     {
         if ($this->isLogin())
         {
-            $this->layout = 'default';
+            $this->layout = 'home';
+            //var_dump($_SESSION['loggedUser']->recordID);
             // get activities
             $activitiesRC = $this->Activity->findByCondition("owner = ? AND type = ? ORDER BY published DESC LIMIT 4", array($this->getCurrentUser()->recordID,"post"));
 
@@ -45,18 +46,27 @@ class HomeController extends AppController
                         {
                             $home = $obj->postInHome($activity,$key);
                             array_push($homes,$home);
-                            F3::set('homes',$homes);
+                            $this->f3->set('activities',$homes);
                         }
                     }
                 }
             }
+            //load js file of all modules existed
+            $js     = glob(MODULES.'*/webroot/js/*.js');
+            $loadJS = array();
+            foreach ($js as $jsFile)
+            {
+                $jsMod = substr($jsFile, strpos($jsFile, 'app'));
+                array_push($loadJS, BASE_URL.$jsMod);
+            }
             //set currentUser and otherUser for check in profile element and header
-            F3::set('currentUser', $this->getCurrentUser());
-            F3::set('otherUser', $this->getCurrentUser());
-            F3::set('currentProfileID', $this->getCurrentUser()->recordID);
-
-            F3::set('SESSION.userProfileID', $this->getCurrentUser()->recordID);
-            $this->render('user/home.php','default');
+            $this->f3->set('currentUser', $this->getCurrentUser());
+            $this->f3->set('otherUser', $this->getCurrentUser());
+            $this->f3->set('existActivities', $activitiesRC);
+            $this->f3->set('js', $loadJS);
+            $this->f3->set('currentProfileID', $this->getCurrentUser()->recordID);
+            $this->f3->set('SESSION.userProfileID', $this->getCurrentUser()->recordID);
+            $this->render('user/home.php', 'default');
         }else {
             header("Location: /");
         }
@@ -177,9 +187,9 @@ class HomeController extends AppController
                     //var_dump($suggestAction);
                 }
                 //check if suggest by friend request is null. Will not return to load element
-                F3::set('actionIDArrays', $actionIDArrays);
-                F3::set('randomKeys', $randomKeys);
-                F3::set('listActions', $suggestAction);
+                $this->f3->set('actionIDArrays', $actionIDArrays);
+                $this->f3->set('randomKeys', $randomKeys);
+                $this->f3->set('listActions', $suggestAction);
                 $this->render('elements/loadedSuggestElement.php','default');
             }
         }
@@ -189,7 +199,7 @@ class HomeController extends AppController
     {
         if ($this->isLogin())
         {
-            $actionArrays = F3::get('POST.actionsName');
+            $actionArrays = $this->f3->get('POST.actionsName');
             if ($actionArrays)
             {
                 foreach ($actionArrays as $action)

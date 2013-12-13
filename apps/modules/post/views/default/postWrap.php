@@ -1,8 +1,5 @@
 <?php
 $rand = rand(100,100000);
-$currentProfileID = F3::get('currentProfileID');
-
-//$currentProfileID   = $currentProfile->recordID;
 ?>
 <script>
     function isValidURL(url){
@@ -33,20 +30,20 @@ $currentProfileID = F3::get('currentProfileID');
                     urlFirst = text.substr(urlHttp,urlSpace);
                     if(isValidURL(urlFirst)){
                         fullURL = url = urlFirst;
-                        url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed<?php echo $rand ?>">$2</a></div>');
-                        url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed<?php echo $rand ?> ">$2</a></div>');
+                        url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
+                        url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
                     }
                 } else {
                     if(isValidURL(urlString)){
                         fullURL = url = urlString;
-                        url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed<?php echo $rand ?>">$2</a></div>');
-                        url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed<?php echo $rand ?>">$2</a></div>');
+                        url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
+                        url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
                     }
                 }
             }
             $('#tagElements').css('display', 'block');
             $('#tagElements').empty().html(url);
-            $(".oembed<?php echo $rand ?>").oembed(null,
+            $(".oembed<?php echo $rand; ?>").oembed(null,
                 {
                     embedMethod: "append",
                     maxWidth: 1024,
@@ -60,61 +57,41 @@ $currentProfileID = F3::get('currentProfileID');
     });
 
 </script>
-<div id="pagelet_composer" class="clearfix">
-    <div class="swTitle">Sociale Live</div>
-    <form id="swComposerMsgBox" name="postStatusForm" method="post" action="">
-        <input name="profileID" id="profileID" type="hidden" value="<?php echo $currentProfileID;?>">
-        <div class="swComposerMsgBox">
-            <div class="top">
-                <a href="" class="swTagClear">x</a>
-            </div>
-            <div class="content">
-                <table border="none" cellpadding="0" cellspacing="0">
-                    <td>
-                        <div class="inputContainer">
-                            <div class="wrap">
-                                <div class="innerWrap">
-                                    <textarea name="status" id="status" cols="30" rows="10" class="textInput" title="Your status?"></textarea>
-
-                                </div>
-                            </div>
+<div class="uiBoxPostAction">
+    <div class="uiPostTopNav column-group">
+        <nav class="ink-navigation">
+            <ul class="menu horizontal">
+                <li><a href="#"><img src="<?php echo IMAGES; ?>status.png"> Status</a></li>
+                <li class="lineGap">|</li>
+                <li><a href="#"><img src="<?php echo IMAGES; ?>photo.png"> Photo</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="uiPostArea column-group">
+        <div class="uiPostStatusArea">
+            <form class="ink-form">
+                <fieldset>
+                    <div class="control-group">
+                        <div class="uiBox-PopUp topLeftArrow control">
+                            <textarea class="taPostStatus" id="status" name="status" spellcheck="false" placeholder="What's on your mind?"></textarea>
                         </div>
-                    </td>
-                </table>
-            </div>
-            <div class="bottom">
-                <ul>
-                    <li>
-                        <span href="" class="swTagPhoto"></span>
-                    </li>
-                    <!--<li>
-                        <span href="" class="swTagVideo"></span>
-                    </li>
-                    <li>
-                        <span href="" class="swTagLink"></span>
-                    </li>-->
-                </ul>
-            </div>
-            <div id="tagElements" class="notag">
-                <!-- tag Image, Video, Link here -->
-            </div>
-            <div class="getValue">
-
-            </div>
+                        <div id="tagElements" class="notag">
+                            <!-- tag Image, Video, Link here -->
+                        </div>
+                    </div>
+                    <div class="uiPostOption control-group">
+                        <nav class="ink-navigation">
+                            <ul class="menu horizontal">
+                                <li><a href="#" title="Choose a file to upload"><img src="<?php echo IMAGES; ?>uploadPhotoIcon.png"></a></li>
+                                <li class="lineGapPostOption">|</li>
+                                <li><a href="#" title="Paste a video link"><img src="<?php echo IMAGES; ?>uploadVideoIcon.png"></a></li>
+                                <li class="fixRightFloat"><a id="submitStatus" class="uiMediumButton blue">Post</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </fieldset>
+            </form>
         </div>
-        <div class="clear"></div>
-        <div class="swComposerTagControl">
-            <div class="left">
-            <span class="peopleTags">
-                <span class="tag">Social Club <a href="" class="btnClear">x</a></span>
-                <span class="tag">O Friends <a href="" class="btnClear">x</a></span>
-                
-            </span>
-            </div>
-            <div class="right">
-                <span class="moreTag">Category</span>
-                <input type="submit" id="submitStatus" name="submitStatus" class="swShareButton" value="Share">
-            </div>
-        </div>
-    </form>
+        <div class="uiPostPhotoArea"></div>
+    </div>
 </div>

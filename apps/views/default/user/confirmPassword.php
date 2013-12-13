@@ -1,81 +1,67 @@
-<?php
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 8/2/13 - 11:15 PM
- * Project: joinShare Network - Version: 1.0
- */
-$email=F3::get('email');
-?>
-<div class="loginBlock" id="forgot">
-    <div class="wrapperForgot">
-        <h1 class="findYour">Check your email</h1>
-        <div class="dr"><span></span></div>
-        <form id="confirm_form_box" action="/confirmPassword" method="post">
-            <div class="loginForm">
-                <p class="thisform">Check email - we have sent you an email containing the confirmation code of six digits. Enter the code below to reset your password.</p>
-                <div class="control-group" style="margin-left: -30px;">
-                    <div class="input-prepend">
-                        <div class="wrapper_input">
-                            <input style="background-color: rgb(240, 231, 231); width:104px; font-size: 30px;color: #777;" name="confirmCode" id="confirm" onkeyup="HideMessage();">
-                            <div class="titleConfirm">
-                                <lable class="title_confirm">We have sent you the code to:</lable>
-                                <lable class="title_confirm confirm_child"><?php echo $email; ?></lable>
+<div class="column-group">
+    <div class="large-80 medium-100 small-100 push-center lineStroke overflowStyle">
+        <div class="column-group">
+            <div class="large-65 push-center fixMarginBottom-5">
+                <a id="uiLogInLink" class="uiTabNav linkColor-9aa9c8 fontSize-18" name="uiLogInBox">Log In</a>
+                <div class="quickLogInBox" id="uiLogInBox">
+                    <form class="ink-form fixMarginTop-10" method="post" action="/login" id="fmLogIn">
+                        <div class="column-group fixMarginBottom-5">
+                            <div class="large-40">
+                                <input type="text" class="fixWidth220" placeholder="Your Email" name="emailLogIn" id="emailLogIn">
+                            </div>
+                            <div class="large-40">
+                                <input type="password" class="fixWidth220" placeholder="Your Password" name="pwLogIn" id="pwLogIn">
+                            </div>
+                            <div class="large-20">
+                                <input type="submit" class="uiMediumButton orange" id="smLogIn" name="smLogIn" value="Log In">
                             </div>
                         </div>
-                        <div class="wrapper_input">
-                            <div class="wrapper_error" style="margin-top: -9px;margin-left: 0px;">
-                                <span id="email_error"></span>
+                        <div class="column-group">
+                            <div class="large-40">
+                                <input id="cbRememberMe" class="cbRememberMe" type="checkbox" name="persistent" value="1">
+                                <label for="cbRememberMe" class="linkColor-9aa9c8">Remember Me</label>
+                            </div>
+                            <div class="large-40">
+                                <a class="linkColor-9aa9c8" href="/forgotPassword">Forgot Password</a>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-                <div class="dr drbottom"><span></span></div>
-                <div class="controls">
-                    <div class="row-fluid">
-                        <div class="btn_send">
-                            <input id="confirm_password" class="sendrequest" type="submit" value="Cofirm" />
-                            <a href="/" class="cancelAction" title="Back">Cancel</a>
-                        </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="column-group">
+    <div class="large-60 medium-100 small-100 push-center">
+        <div class="column-group">
+            <div class="uiForgotPWBox">
+                <div class="boxTitle">
+                    Confirmation Code
+                </div>
+                <div class="boxContent forgotPwContent">
+                    <div class="forgotContainer">
+                        <form action="/confirmPassword" method="post" class="ink-form" id="fmConfirmCode">
+                            <div class="title content-center">
+                                <span>We have sent you an email containing the confirmation code of six digits. Enter the code below to reset your password.</span>
+                            </div>
+                            <div class="column-group large-100">
+                                <div class="large-30 leftColBox">
+                                    <div class="content-right">
+                                        <input type="text" size="6" name="confirmCode" id="confirm">
+                                    </div>
+                                </div>
+                                <div class="large-70 rightColBox">
+                                    <p class="label">We have sent you the code to: <strong><?php echo $email;?></strong></p>
+                                </div>
+                            </div>
+                            <div class="footerBox column-group">
+                                <input id="confirmCode" type="submit" class="uiMediumButton white large-20 push-right" value="Confirm">
+                                <a class="uiMediumButton white large-20 push-right" href="/">Cancel</a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('#confirm_password').click(function(e) {
-            e.preventDefault();
-            var err_message_singup = CheckConfirm();
-            if(err_message_singup != ""){
-                $('#email_error').html(message_error);
-                $('#email_error').show();
-                $('#email_error').css("height","auto");
-            }
-            else{
-                $('#confirm_form_box').submit();
-            }
-        });
-    });
-
-    function CheckConfirm(){
-        message_error   =   "";
-        var confirm     = $('#confirm').val();
-        if(confirm=="")
-        {
-            message_error   = "Must not empty.";
-            return message_error;
-        }
-        if(confirm.length   <   6   ||    confirm.length  >   6)
-        {
-            message_error   =   "length 6 in case";
-            return message_error;
-        }
-        return message_error;
-    }
-
-    function HideMessage(){
-        $('#email_error').hide();
-    }
-</script>

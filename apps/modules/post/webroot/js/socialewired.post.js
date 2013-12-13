@@ -3,7 +3,7 @@
  * Include: post status js
  */
 
-function ShareStatus(status_id){
+/*function ShareStatus(status_id){
     $('#shareStatus').dialog();
     $.ajax({
         async: true,
@@ -14,7 +14,7 @@ function ShareStatus(status_id){
         url: '/content/post/shareStatus',
         data: {status_id: status_id}
     });
-}
+}*/
 // post status
 $(function() {
     $("#submitStatus").click(function(e) 
@@ -25,7 +25,6 @@ $(function() {
         var fullURL     = $("#fullURL").html();
         var taggedType  = $("#taggedType").val();
         var URL         = (fullURL == 'undefined') ? 'none' : fullURL;
-        console.log('fullURL: ', fullURL);
         if(status=='')
         {
             return false;
@@ -39,12 +38,8 @@ $(function() {
                 cache: false,
                 success: function(html){
                     $('#tagElements').css('display', 'none');
-                    $("ul#swStreamStories").prepend(html);
-                    $("ul#swStreamStories li:last").fadeIn("slow");
+                    $("#contentContainer").prepend(html);
                     $('#status').val('');
-                    $('#status').css('height','40px');
-                    $('#status').css('min-height','40px');
-                    $('#status').css('max-height','40px');
                     new LikeByElement('.likePostStatus');
                 }
             });
@@ -52,10 +47,11 @@ $(function() {
         return false;
     });
 
-    $("a.commentBtn").live("click",function(e){
+    $("body").on("click", "a.commentBtn",function(e){
             e.preventDefault();
             var getId = $(this).attr('id').replace('stream-','');
             var Id = getId.replace(':','_');
+            $('.postActionWrapper').fadeIn("slow");
             $('#commentBox-'+Id).fadeIn("slow");
             $('#commentText-'+Id).focus();
 
@@ -66,7 +62,7 @@ $(function() {
 });
 // post a comment
 $(function() {
-    $(".swSubmitComment").live("click", function(e) 
+    $("body").on("click", ".swSubmitComment", function(e)
     {
         e.preventDefault();
         var getId = $(this).attr('id').replace('submitComment-','');
@@ -153,21 +149,21 @@ $(function() {
     $(".morePost").click(function(e) 
     {
         e.preventDefault();
-        var published = $(".swTimeStatus:last").attr("title");
+        var published = $(".swTimeStatus:last").attr("name");
         $.ajax({
             type: "POST",
             url: "/content/post/morePostStatus",
             data: "published=" + published,
             cache: false,
             success: function(html){
-                $("#swStreamStories").append(html);
+                $("#contentContainer").append(html);
                 new LikeByElement('.likeMorePostStatus');
                 new FollowByElement('.followMorePostStatus');
             }
         });
     });
 
-    $(".view-more-comments").live("click", function(e){
+    $("body").on("click", ".view-more-comments", function(e){
     	e.preventDefault();
 
     	// get first comment published
@@ -192,38 +188,5 @@ $(function() {
         });
     });
     //view more comments for photo
-
-});
-
-$(function() {
-    $("#navMsg").click(function(e)
-    {
-        e.preventDefault();
-        if($('#notifyContainer').hasClass('toggleTargetClosed')){
-            $('#notifyContainer').removeClass('toggleTargetClosed');
-        }else{
-            $('#notifyContainer').addClass('toggleTargetClosed');
-            $('#navMsg').removeClass('notifyAction');
-            $('#navMsg').addClass('notifyDefault');
-        }
-        if($('#navMsg').hasClass('notifyDefault')) {
-            $('#navMsg').removeClass('notifyDefault');
-            $('#navMsg').addClass('notifyAction');
-        }
-    });
-    $("#navRequestFriend").click(function(e){
-        e.preventDefault();
-        if($('#notifyRequestFriend').hasClass('toggleTargetClosed')) {
-            $('#notifyRequestFriend').removeClass('toggleTargetClosed');
-        }else {
-            $('#notifyRequestFriend').addClass('toggleTargetClosed');
-            $('#navRequestFriend').removeClass('requestFriendAction');
-            $('#navRequestFriend').addClass('requestFriendDefault');
-        }
-        if($('#navRequestFriend').hasClass('requestFriendDefault')) {
-            $('#navRequestFriend').removeClass('requestFriendDefault');
-            $('#navRequestFriend').addClass('requestFriendAction');
-        }
-    });
 
 });

@@ -25,18 +25,21 @@ function LikeByElement($element)
                 $(this).data("state", {pressed: false});
             }
 
-            $(this).live('click', function()
+            $('body').on('click', $element, function()
             {
-                var getID = $(this).attr('id').replace('likeLinkID-', '');
-                if ($(this).data("state").pressed)
+                console.log('this', $element);
+                var getID = $($element).attr('id').replace('likeLinkID-', '');
+                if ($($element).data("state").pressed)
                 {
-                    $(this).html(Like);
+                    $($element).html(Like);
+                    console.log('come here');
                     $.ajax({
                         type: 'POST',
                         url: '/unlike',
                         data: $('#likeHiddenID-'+getID).serialize(),
                         cache: false,
                         success: function(){
+                            console.log('ok men');
                             var otherLike = $('#likeSentence-'+getID+' a').length;
                             console.log('otherLike: ', otherLike);
                             if (otherLike)
@@ -45,28 +48,32 @@ function LikeByElement($element)
                             }else {
                                 $('#likeSentence-'+getID).detach();
                             }
+                            $('.postActionWrapper').fadeOut("slow");
                         }
                     });
-                    $(this).data("state", {pressed: false});
+                    $($element).data("state", {pressed: false});
                 }else {
-                    $(this).html(UnLike);
+                    $($element).html(UnLike);
                     $.ajax({
                         type: 'POST',
                         url: '/like',
                         data: $('#likeHiddenID-'+getID).serialize(),
                         cache: false,
                         success: function(){
+                            $('.postActionWrapper').fadeIn("slow");
                             var likeSentence = $('#likeSentence-'+getID).length;
                             console.log('likeSentence: ', likeSentence);
                             if (likeSentence)
                             {
                                 $("<span>You and </span>").prependTo("#likeSentence-"+getID);
                             }else {
-                                $(".tempLike-"+getID).append("<div class='likeSentenceView' id='likeSentence-"+getID+"'>You like this</div>");
+                                $(".tempLike-"+getID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-"+getID+"'>"+
+                                    "<span><i class='statusCounterIcon-like'></i>You like this</span>"+
+                                    "</div>");
                             }
                         }
                     });
-                    $(this).data("state", {pressed: true});
+                    $($element).data("state", {pressed: true});
                 }
             });
         })

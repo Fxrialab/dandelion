@@ -13,9 +13,9 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink.min.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink-ui.min.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/autoload.js"></script>
-    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/signUp.js"></script>
-    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/forgotPassword.js"></script>
-    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/contact.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/validate.js"></script>
+    <!--<script type="text/javascript" src="<?php /*echo $this->f3->get('JS'); */?>customs/forgotPassword.js"></script>-->
+    <!--<script type="text/javascript" src="<?php /*echo $this->f3->get('JS'); */?>customs/contact.js"></script>-->
     <script type="text/javascript">
         $(document).ready(function() {
             $("a.uiTabNav").click(function () {
@@ -61,19 +61,22 @@
             });
         </script>
     <?php
-    /*}
-    $errorErrorEmail = F3::get('MsgValidate');
-    if ( $errorErrorEmail != '') {
-        */?><!--
+    }
+    $msgOther = $this->f3->get('MsgValidate');
+    if ($msgOther != '') {
+        ?>
         <script>
             $(document).ready(function(){
-                message_error = "<?php /*echo $errorErrorEmail; */?>";
-                $('#email_error').html(message_error);
-                $('#email_error').show();
-                $('#email_error').css("height","auto");
+                msgOther = "<?php echo $msgOther; ?>";
+                $('.title').append("<div class='ink-alert basic success' id='msgOther'>" +
+                    "<button class='ink-dismiss'>&times;</button>" +
+                    "<p>"+msgOther+"</p></div> ");
             });
         </script>
-    --><?php
+    <?php
     }
+    ?>
+    <?php $asd = $this->f3->get('user');
+    //var_dump($asd);
     ?>
 </head>

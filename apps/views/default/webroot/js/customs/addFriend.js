@@ -1,13 +1,13 @@
 $(function() {
     //add friend place profile area
     var AddFriend       = "Add Friend";
-    var FriendRequest   = "Friend Request";
+    var FriendRequest   = "Friend Request Sent";
     var getStatus       = $('#status_fr').attr('value');
     if(getStatus == 'request') {
         $('.addFriend').html(FriendRequest);
     }else {
         $('.addFriend').html(AddFriend);
-        $('.addFriend').live("click", function(){
+        $('body').on("click", '.addFriend', function(){
             $('.addFriend').html(FriendRequest);
             $.ajax({
                 type    : 'POST',
@@ -23,7 +23,7 @@ $(function() {
     }
 
     //accept friendship
-    $('#acceptFriend').live('click', function(){
+    $('body').on('click', '#acceptFriend', function(){
         //alert('clicked friend');
         var getPeopleID = $('#PeopleID').attr('value');
         $.ajax({
@@ -38,7 +38,7 @@ $(function() {
 
     });
     //unaccept friendship
-    $('#cancelFriend').live('click', function(){
+    $('body').on('click', '#cancelFriend', function(){
         var getPeopleID = $('#PeopleID').attr('value');
         //alert(getPeopleID);
         $.ajax({

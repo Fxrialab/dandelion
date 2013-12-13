@@ -45,7 +45,7 @@ class UserController extends AppController
                     // set username for friends can view your profile using the link
                     $data['username'] = substr($data["emailSignUp"], 0, strpos($data["emailSignUp"], '@'));
                     // set default avatar
-                    $data['profilePic'] = ($data['sex'] == 1) ? IMAGES."avatarWomenDefault.jpg" : IMAGES."avatarMenDefault.jpg";
+                    $data['profilePic'] = ($data['sex'] == 1) ? IMAGES."avatarWomenDefault.png" : IMAGES."avatarMenDefault.png";
                     // set signUp status
                     $data['status']     = 'pending';
                     $data['role']       = 'user';
@@ -215,7 +215,7 @@ class UserController extends AppController
     public function authentication()
     {
         $this->layout   = 'index';
-        $email          = F3::get("POST.email");
+        $email          = $this->f3->get("POST.email");
         if ($email)
         {
             $existEmail = $this->User->findOne("email = ?", array($email));
@@ -225,10 +225,10 @@ class UserController extends AppController
                 setcookie('codeConfirmUser', $code, time()+3600);
                 setcookie('email', $email, time()+3600);
                 $this->EmailHelper->sendCodeConfirmEmail($email, $code);
-                F3::set('email', $email);
+                $this->f3->set('email', $email);
                 $this->render("user/confirmCode.php",'default');
             }else {
-                F3::set('MsgValidate', $this->ValidateHelper->validation($email, $existEmail, true));
+                $this->f3->set('MsgValidate', $this->ValidateHelper->validation($email, $existEmail, true));
                 $this->render("user/authentication.php",'default');
             }
         }else
@@ -238,7 +238,7 @@ class UserController extends AppController
     public function confirmCode()
     {
         $this->layout   = 'index';
-        $codeAuthEmail  = F3::get('POST.codeAuthEmail');
+        $codeAuthEmail  = $this->f3->get('POST.codeAuthEmail');
         if($codeAuthEmail ==  $_COOKIE["codeConfirmUser"])
         {
             $email      = $_COOKIE["email"];
@@ -276,7 +276,8 @@ class UserController extends AppController
                 }
             }
         }else {
-            F3::set('MsgValidate','The code is incorrect. Please try again!');
+            $this->f3->set('email', $_COOKIE["email"]);
+            $this->f3->set('MsgValidate','The code is incorrect. Please try again!');
             $this->render('user/confirmCode.php', 'default');
         }
     }
@@ -291,6 +292,7 @@ class UserController extends AppController
             $isUsedEmail = $this->User->findOne("email = ?", array($email));
             if ($this->ValidateHelper->validation($email , $isUsedEmail, true) == '')
             {
+                $this->f3->set('profileName', ucfirst($isUsedEmail->data->firstName).' '.ucfirst($isUsedEmail->data->lastName));
                 $this->f3->set('user',$isUsedEmail);
                 $this->render('user/resetPassword.php', 'default');
             }else {
@@ -304,15 +306,15 @@ class UserController extends AppController
     public function resetPassword()
     {
         $this->layout   = 'index';
-        $email          = F3::get('POST.email');
+        $email          = $this->f3->get('POST.email');
         if($email)
         {
-            $codeConfirmPass= $this->StringHelper->generateRandomString(5);
+            $codeConfirmPass    = $this->StringHelper->generateRandomString(5);
             setcookie('codeConfirmPass',$codeConfirmPass,time()+3600);
             setcookie('email',$email,time()+3600);
             $this->EmailHelper->sendCodeConfirmPass($email, $codeConfirmPass);
         }
-        F3::set('email',$email);
+        $this->f3->set('email',$email);
         $this->render('user/confirmPassword.php','default');
     }
 
@@ -322,7 +324,7 @@ class UserController extends AppController
 
         $email          = $_COOKIE["email"];
         $codeConfirmPass= $_COOKIE["codeConfirmPass"];
-        $getCode        = F3::get('POST.confirmCode');
+        $getCode        = $this->f3->get('POST.confirmCode');
         if ($email && $codeConfirmPass && $getCode)
         {
             if($getCode == $codeConfirmPass)
@@ -330,7 +332,8 @@ class UserController extends AppController
                 setcookie('codeConfirmPass','',time()-3600);
                 $this->render('user/newPassword.php','default');
             }else {
-                F3::set('MsgValidate','The code is not correct!');
+                $this->f3->set('email',$email);
+                $this->f3->set('MsgValidate','The code is not correct!');
                 $this->render('user/confirmPassword.php','default');
             }
         }else
@@ -339,9 +342,11 @@ class UserController extends AppController
 
     public function newPassword()
     {
+        $this->layout   = 'index';
+
         $email  = $_COOKIE['email'];
-        $pWord  = F3::get('POST.password');
-        $rePW   = F3::get('POST.re_password');
+        $pWord  = $this->f3->get('POST.pWord');
+        $rePW   = $this->f3->get('POST.rePWord');
         if ($email && $pWord && $rePW)
         {
             if ($pWord == $rePW)
@@ -357,11 +362,11 @@ class UserController extends AppController
                     setcookie($email, '', time()-3600);
                     if ($user->data->status == 'pending')
                     {
-                        F3::set('MsgValidate', 'Reset password is success. However you still not confirm this account, we had sent an link confirmation email to you!');
+                        $this->f3->set('MsgValidate', 'Reset password is success. However you still not confirm this account, we had send an link confirmation email to you!');
                         $this->render('user/newPassword.php','default');
                     }else {
-                        F3::clear('SESSION');
-                        F3::set('SESSION.loggedUser', $user);
+                        $this->f3->clear('SESSION');
+                        $this->f3->set('SESSION.loggedUser', $user);
                         $email = $user->data->email;
                         // start initial sessions.
                         $sessionID          = rand(1000,10000000);
@@ -408,7 +413,7 @@ class UserController extends AppController
                     }
                 }
             }else {
-                F3::set('MsgValidate','Two password does not match!');
+                $this->f3->set('MsgValidate','Two password does not match!');
                 $this->render('user/newPassword.php','default');
             }
         }else
@@ -417,13 +422,13 @@ class UserController extends AppController
 
     public function logout()
     {
-        $currentUser    = F3::get('SESSION.loggedUser');
+        $currentUser    = $this->f3->get('SESSION.loggedUser');
         $currentSession = array(
             'timeEnd'=> time(),
             'status' => 'Disable',
         );
         $this->Sessions->updateByCondition($currentSession,'email = ? AND status = ?',array($currentUser->data->email, 'Active'));
-        F3::clear("SESSION");
+        $this->f3->clear("SESSION");
         setcookie('email','',time()-3600);
         setcookie('password','',time()-3600);
         header("Location:/");

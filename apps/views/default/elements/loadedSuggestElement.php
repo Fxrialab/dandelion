@@ -1,7 +1,7 @@
 <?php
-$actionIDArrays = F3::get('actionIDArrays');
+/*$actionIDArrays = F3::get('actionIDArrays');
 $randomKeys     = F3::get('randomKeys');
-$listActions    = F3::get('listActions');
+$listActions    = F3::get('listActions');*/
 
 foreach ($randomKeys as $key)
 {

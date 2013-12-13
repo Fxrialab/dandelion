@@ -19,12 +19,12 @@ class LikeController extends AppController
     {
         if ($this->isLogin())
         {
-            $getIDUser  = F3::get("POST.id");
+            $getIDUser  = $this->f3->get("POST.id");
             $userA      = $this->getCurrentUser()->recordID;
             $userB      = $this->User->getClusterID().':'.$getIDUser;
             //filter follow status, qa, photo and all
-            $statusID   = F3::get("POST.statusID");
-            $photoID    = F3::get("POST.photoID");
+            $statusID   = $this->f3->get("POST.statusID");
+            $photoID    = $this->f3->get("POST.photoID");
             $published  = time();
 
             $existStatusLikeRC = $this->Like->findOne("userA = ? AND ID = ?", array($userA, str_replace('_', ':', $statusID)));
@@ -72,34 +72,36 @@ class LikeController extends AppController
 
     public function unlike()
     {
-        $getIDUser  = F3::GET("POST.id");
-        $userA      = $this->getCurrentUser()->recordID;
-        $userB      = $this->User->getClusterID().':'.$getIDUser;
-        $statusID   = F3::GET("POST.statusID");
-        $photoID    = F3::GET("POST.photoID");
-
-        //find id of record then delete record
-        if($statusID && $userB)
+        if ($this->isLogin())
         {
-            $statusID = str_replace('_', ':', $statusID);
-            $this->Like->deleteByCondition("userA = ? AND userB = ? AND ID = ?", array($userA, $userB, $statusID));
-            //update number like to status
-            $statusRC = $this->Status->findOne('@rid = ?',array('#'.$statusID));
-            $updateNumLike = array(
-                'numberLike'  => $statusRC->data->numberLike - 1,
-            );
-            $this->Status->updateByCondition($updateNumLike, "@rid = ?", array("#".$statusID));
-        }
-        if($photoID && $userB)
-        {
-            $photoID = str_replace('_', ':', $photoID);
-            $this->Like->deleteByCondition("userA = ? AND userB = ? AND ID = ?", array($userA, $userB, $photoID));
-            //update number like to photo
-            $photoRC = $this->Photo->findOne('@rid = ?',array('#'.$photoID));
-            $updateNumLike = array(
-                'numberLike'  => $photoRC->data->numberLike - 1,
-            );
-            $this->Photo->updateByCondition($updateNumLike, "@rid = ?", array("#".$photoID));
+            $getIDUser  = $this->f3->get("POST.id");
+            $userA      = $this->getCurrentUser()->recordID;
+            $userB      = $this->User->getClusterID().':'.$getIDUser;
+            $statusID   = $this->f3->get("POST.statusID");
+            $photoID    = $this->f3->get("POST.photoID");
+            //find id of record then delete record
+            if($statusID && $userB)
+            {
+                $statusID = str_replace('_', ':', $statusID);
+                $this->Like->deleteByCondition("userA = ? AND userB = ? AND ID = ?", array($userA, $userB, $statusID));
+                //update number like to status
+                $statusRC = $this->Status->findOne('@rid = ?',array('#'.$statusID));
+                $updateNumLike = array(
+                    'numberLike'  => $statusRC->data->numberLike - 1,
+                );
+                $this->Status->updateByCondition($updateNumLike, "@rid = ?", array("#".$statusID));
+            }
+            if($photoID && $userB)
+            {
+                $photoID = str_replace('_', ':', $photoID);
+                $this->Like->deleteByCondition("userA = ? AND userB = ? AND ID = ?", array($userA, $userB, $photoID));
+                //update number like to photo
+                $photoRC = $this->Photo->findOne('@rid = ?',array('#'.$photoID));
+                $updateNumLike = array(
+                    'numberLike'  => $photoRC->data->numberLike - 1,
+                );
+                $this->Photo->updateByCondition($updateNumLike, "@rid = ?", array("#".$photoID));
+            }
         }
     }
 }

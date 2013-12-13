@@ -73,17 +73,15 @@ class Controller {
 
     public function getCurrentUser()
     {
-        return F3::get("SESSION.loggedUser");
+        return $this->f3->get("SESSION.loggedUser");
     }
 
     public function render($page,$type)
     {
         if ($this->layout != '')
         {
-            //echo "is layout";
             require_once(UI . LAYOUTS . $this->layout . '.php');
         }else {
-            echo "none";
             echo View::instance()->render($page);
         }
     }

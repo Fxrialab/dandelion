@@ -18,36 +18,39 @@ class FriendController extends AppController
 
     public function sentFriendRequest()
     {
-        $getID  = F3::get("POST.id");
-        $userA  = $this->getCurrentUser()->recordID;
-        $userB  = $this->User->getClusterID().':'.$getID;
-        //prepare data
-        $relationship   = array(
-            'userA'         => $userA,
-            'relationship'  => 'request',
-            'status'        => 'new',
-            'userB'         => $userB,
-            'published'     => time()
-        );
-        //save data
-        $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
-        //After friend request is sent. The friendRequests action will be create
-        $existFriendRequestAction   = $this->Actions->findOne("actionName = ?", array('Friend Requests'));
-        if (!$existFriendRequestAction)
+        if ($this->isLogin())
         {
-            $actionRC       = array(
-                'actionName'    => 'Friend Requests',
-                'actionElement' => 'friendRequests',
-                'isSearch'      => 'no',
-                'isSuggest'     => 'yes',
+            $getID  = $this->f3->get("POST.id");
+            $userA  = $this->getCurrentUser()->recordID;
+            $userB  = $this->User->getClusterID().':'.$getID;
+            //prepare data
+            $relationship   = array(
+                'userA'         => $userA,
+                'relationship'  => 'request',
+                'status'        => 'new',
+                'userB'         => $userB,
+                'published'     => time()
             );
-            $this->Actions->create($actionRC);
+            //save data
+            $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
+            //After friend request is sent. The friendRequests action will be create
+            $existFriendRequestAction   = $this->Actions->findOne("actionName = ?", array('Friend Requests'));
+            if (!$existFriendRequestAction)
+            {
+                $actionRC       = array(
+                    'actionName'    => 'Friend Requests',
+                    'actionElement' => 'friendRequests',
+                    'isSearch'      => 'no',
+                    'isSuggest'     => 'yes',
+                );
+                $this->Actions->create($actionRC);
+            }
         }
     }
 
     public function acceptFriendship()
     {
-        $getIdUserB = F3::GET("POST.id");
+        $getIdUserB = $this->f3->GET("POST.id");
         $userA      = $this->getCurrentUser()->recordID;
         $userB      = $this->User->getClusterID().':'.$getIdUserB;
         //update a record

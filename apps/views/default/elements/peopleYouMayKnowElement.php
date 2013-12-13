@@ -1,61 +1,27 @@
-<?php
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 9/11/13 - 2:53 PM
- * Project: UserWired Network - Version: 1.0
- */
-$yourFriendArrays   = F3::get('yourFriendArrays');
-$randomKeys         = F3::get('randomKeys');
-$yourFriends        = F3::get('yourFriend');
-$infoYourFriend     = F3::get('infoYourFriend');
-$mutualFriends      = F3::get('numMutualFriends');
-$infoMutualFriend   = F3::get('infoMutualFriend');
-if ($yourFriends && current($yourFriends) != '' && $yourFriendArrays && $infoMutualFriend)
-{
-    ?>
-    <div class="module peopleYouMayKnow">
-        <div class="moduleHeader"><a href="">People You May Know</a></div>
-        <div class="moduleContent">
-            <?php
-            foreach ($randomKeys as $key)
-            {
-                $randYourFriend         = $yourFriendArrays[$key];
-                $yourFriendID           = substr($randYourFriend, strpos($randYourFriend, ':') + 1);
-                $yourFriendName         = ucfirst($infoYourFriend[$randYourFriend][0]->firstName)." ".$infoYourFriend[$randYourFriend][0]->lastName;
-                $yourFriendProfilePic   = $infoYourFriend[$randYourFriend][0]->profilePic;
-                $numberMutualFriend     = count($mutualFriends[$randYourFriend]);
-                if ($mutualFriends[$randYourFriend] != null)
-                { ?>
-                    <div class="people clear" id="unit<?php echo $yourFriendID; ?>">
-                        <a href="" class="profilePic"><img src="<?php echo F3::get('BASE_URL'); ?><?php echo $yourFriendProfilePic; ?>" width="45" height="50" alt="" class="swTinyBoxImage" /></a>
-                        <div class="info">
-                            <a class="peopleName" href="/profile?id="><?php echo $yourFriendName; ?></a>
-                            <div class="peopleMutual">
-                                <a href="#"><?php echo $numberMutualFriend; ?> mutual friends</a>
-                            </div>
-                            <div class="uiAddFriend">
-                                <a class="addFriendSmallUI" id="<?php echo $yourFriendID; ?>" href="#">Add Friend</a>
-                            </div>
-                        </div>
-                    </div>
-                <?php
-                }
-                /*echo "info mutual friend: <br />";
-                foreach ($mutualFriends[$randYourFriend] as $friend)
-                {
-                    //var_dump($friend);
-                    echo $infoMutualFriend[$friend][0]->email."<br />";
-                }*/
-            }
-            ?>
-        </div>
-        <div class="clearfix moduleFooter"><a class="viewallc" href="">View all &raquo;</a></div>
+<div class="uiBoxPeopleYouMayKnow column-group">
+    <div class="boxTitle large-100">
+        People You May Know
     </div>
-<?php
-}
-?>
-
-
-
-
+    <div class="boxContent">
+        <div class="rowItemBox column-group">
+            <div class="profilePicDiv large-30">
+                <img src="<?php echo $this->f3->get('IMG'); ?>avar.jpg" width="50" height="50">
+            </div>
+            <div class="profileInfoDiv large-70">
+                <p><a class="timeLineLink large-100" href="">Tùy Tâm Sở Dục</a></p>
+                <span><a class="mutualLink large-100" href="">4 mutual friend</a></span>
+                <a href="" class="uiSmallButton orange linkHover-fffff"><i></i>Add friend</a>
+            </div>
+        </div>
+        <div class="rowItemBox column-group">
+            <div class="profilePicDiv large-30">
+                <img src="<?php echo $this->f3->get('IMG'); ?>avar.jpg" width="50" height="50">
+            </div>
+            <div class="profileInfoDiv large-70">
+                <p><a class="timeLineLink large-100" href="">Bất Khốc Tử Thần</a></p>
+                <span><a class="mutualLink large-100" href="">2 mutual friend</a></span>
+                <a href="" class="uiSmallButton orange linkHover-fffff"><i></i>Add friend</a>
+            </div>
+        </div>
+    </div>
+</div>

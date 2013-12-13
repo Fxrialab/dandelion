@@ -92,7 +92,7 @@ function Hover()
 }
 
 $(function(){
-    $('#cbQualityPhoto').live('click', function()
+    $('body').on('click', '#cbQualityPhoto', function()
     {
         var stageCB = $('#cbQualityPhoto').attr('value');
         if (stageCB == '')
@@ -105,7 +105,7 @@ $(function(){
         }
     });
     //agree upload photos
-    $('#uploadPhoto').live('click', function()
+    $('body').on('click', '#uploadPhoto', function()
     {
         var stageCB = $('#cbQualityPhoto').attr('value');
         var photos  = [];
@@ -130,7 +130,7 @@ $(function(){
         });
     });
     //Close or cancel upload on popUp
-    $('#cancelUpload').live('click', function(){
+    $('body').on('click', '#cancelUpload', function(){
         var existPhotoItems = $('.photoDataItems').length;
         if (existPhotoItems == 0)
         {
@@ -178,7 +178,7 @@ $(function(){
             return false;
         }
     });
-    $('.closeMsgErrorAlbum').live('click', function() {
+    $('body').on('click', '.closeMsgErrorAlbum', function() {
         $('.msgCheckAlbum').hide();
         $(".titleAlbum").css('border', '1px solid #799456');
     });
@@ -214,7 +214,7 @@ $(function() {
     $('.nextPrevious').mouseout(function(){
         $(this).hide();
     });
-    $("#next-photo").live("click", function()
+    $('body').on("click", "#next-photo", function()
     {
         //before click next
         currentPhotoID = photos[photoIndex].recordID.replace(':','_');
@@ -268,7 +268,7 @@ $(function() {
     });
 
     // prev
-    $("#previous-photo").live("click", function()
+    $('body').on("click", "#previous-photo", function()
     {
         //before click prev
         currentPhotoID = photos[photoIndex].recordID.replace(':','_');
@@ -428,7 +428,7 @@ $(function() {
         );
     });
     //view more comment photos
-    $(".view-more-commentPhoto").live("click", function(e){
+    $("body").on("click", ".view-more-commentPhoto", function(e){
         e.preventDefault();
 
         // get first comment published
