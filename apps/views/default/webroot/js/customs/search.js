@@ -6,7 +6,7 @@
  */
 $(document).ready(function()
 {
-    $('#searchText').keyup(function()
+    $('#search').keyup(function()
     {
         var searchText = $(this).val();
         //console.log('searchText:',searchText);

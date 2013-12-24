@@ -107,9 +107,9 @@ class HomeController extends AppController
     {
         if($this->isLogin())
         {
-            $published = F3::get('POST.published');
+            $published = $this->f3->get('POST.published');
             $activitiesRC = $this->Activity->findByCondition("owner = ? and published < ? LIMIT 5 ORDER BY published DESC", array($this->getCurrentUser()->recordID,$published));
-            F3::set('currentUser',$this->getCurrentUser());
+            $this->f3->set('currentUser',$this->getCurrentUser());
             if ($activitiesRC)
             {
                 $homes = array();
@@ -121,7 +121,7 @@ class HomeController extends AppController
                     {
                         $home = $obj->moreInHome($activity,$key);
                         array_push($homes,$home);
-                        F3::set('homes',$homes);
+                        $this->f3->set('activities',$homes);
                     }
                 }
                 $this->render('user/moreHome.php','default');
@@ -214,7 +214,7 @@ class HomeController extends AppController
     {
         if ($this->isLogin())
         {
-            $searchText = F3::get("POST.data");
+            $searchText = $this->f3->get("POST.data");
 
             $data = array(
                 'results'   => array(),
@@ -260,11 +260,11 @@ class HomeController extends AppController
                 {
                     $infoOfSearchFound[$people] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$people));
                 }
-                F3::set('resultSearch', $resultSearch);
-                F3::set('infoOfSearchFound', $infoOfSearchFound);
+                $this->f3->set('resultSearch', $resultSearch);
+                $this->f3->set('infoOfSearchFound', $infoOfSearchFound);
             }
-            F3::set('currentUser', $this->getCurrentUser());
-            F3::set('otherUser', $this->getCurrentUser());
+            $this->f3->set('currentUser', $this->getCurrentUser());
+            $this->f3->set('otherUser', $this->getCurrentUser());
             $this->render('user/searchResult.php', 'default');
         }
     }

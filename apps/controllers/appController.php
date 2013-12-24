@@ -121,20 +121,6 @@ class AppController extends Controller
         }
     }
 
-    public function sendMessageRab($userID,$object)
-    {
-        $exchange   = 'socialhub'.$userID;
-        $queue      = 'socialhub'.$userID;
-        $routingKey = 'socialhub'.$userID;
-
-        $conn = new \PhpAmqpLib\Connection\AMQPConnection(HOST_AMQ, PORT_AMQ, USER_AMQ, PASS_AMQ, VHOST_AMQ);
-        $ch = $conn->channel();
-        $ch->queue_bind($queue, $exchange,$routingKey);
-        $msg_body = "{\"value\":\"".$object."\"}";
-        $msg = new \PhpAmqpLib\Message\AMQPMessage($msg_body, array('priority' => '0', 'delivery_mode' => 1));
-        $ch->basic_publish($msg, $exchange,$routingKey);
-    }
-
     public function getFriendsStt($actor)
     {
         return $this->Friendship->findByCondition("userA = ? AND relationship = 'friend' AND status = 'ok'", array($actor));
@@ -230,7 +216,7 @@ class AppController extends Controller
         $findUser = $this->Comment->findByCondition("post = ?",array($statusID));
         $checkActivity       = $this->Activity->findByCondition("owner = ? AND object = ?", array($actor->recordID, $object));
         $findUserBOfFollow   = $this->Follow->findOne("userA = ? AND ID = ?", array($actor->recordID, $object));
-        $actorID = ($findUserBOfFollow) ? $findUserBOfFollow->data->userB : $actor->recordID;
+        //$actorID = ($findUserBOfFollow) ? $findUserBOfFollow->data->userB : $actor->recordID;
         if(!$checkActivity) {
             /* Insert in to Activity for user posted this status.*/
             if($owner != $actor->recordID){
@@ -244,13 +230,7 @@ class AppController extends Controller
                     'published' => $published
                 );
 
-                $activity_id =$this->Activity ->create($userStatus);
-                /* Send message to RabbitMQ server */
-                try{
-                    //echo "track comment if check activity null <br />";
-                    $content = '2'.$activity_id.'-'.$statusID;
-                    $this->sendMessageRab($owner,$content); // 2 la comment
-                } catch(Exception $e){}
+                $this->Activity ->create($userStatus);
             }
 
             $friends = $this->getFriendsStt($actor->recordID);
@@ -270,13 +250,7 @@ class AppController extends Controller
                                 'idObject'  =>$statusID,
                                 'published' => $published
                             );
-                            $activity_id =$this->Activity->create($activity);
-
-                            /* Send message to RabbitMQ server */
-                            try {
-                                $content =  '2'.$activity_id.'-'.$statusID;
-                                $this->sendMessageRab($actor->recordID,$content);
-                            } catch(Exception $e) {}
+                            $this->Activity->create($activity);
                         }
                     }
                 }
@@ -297,12 +271,7 @@ class AppController extends Controller
                                     'idObject'  =>$statusID,
                                     'published' => $published
                                 );
-                                $activity_id =$this->Activity ->create($userComment);
-                                /* Send message to RabbitMQ server */
-                                try{
-                                    $content = '2'.$activity_id.'-'.$statusID;
-                                    $this->sendMessageRab($userCmt->data->actor,$content);
-                                } catch(Exception $e){}
+                                $this->Activity ->create($userComment);
                             }
                         }
                     }
@@ -361,26 +330,24 @@ class AppController extends Controller
                     if (current($neighborCurrentUser) != '')
                     {
                         $mutualFriends[$randYourFriend] = array_intersect($neighborCurrentUser, $neighborFriends[$randYourFriend]);
-
+                        $this->f3->set('numMutualFriends', $mutualFriends);
                         if ($mutualFriends[$randYourFriend])
                         {
                             foreach ($mutualFriends[$randYourFriend] as $mutualFriend)
                             {
                                 $infoMutualFriend[$mutualFriend] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#'.$mutualFriend));
                             }
-                            F3::set('numMutualFriends', $mutualFriends);
-                            F3::set('infoMutualFriend', $infoMutualFriend);
+                            $this->f3->set('infoMutualFriend', $infoMutualFriend);
                         }
                     }
-                    F3::set('infoYourFriend', $infoYourFriend);
+                    $this->f3->set('infoYourFriend', $infoYourFriend);
                 }
             }
-            F3::set('yourFriendArrays', $yourFriendArrays);
-            F3::set('randomKeys', $randomKeys);
-            F3::set('yourFriend', $yourFriends);
+            $this->f3->set('yourFriendArrays', $yourFriendArrays);
+            $this->f3->set('randomKeys', $randomKeys);
+            $this->f3->set('yourFriends', $yourFriends);
+            $this->render("elements/peopleYouMayKnowElement.php",'default');
         }
-        $this->render("elements/peopleYouMayKnowElement.php",'default');
-
     }
 
     public function friendRequest()
@@ -390,6 +357,7 @@ class AppController extends Controller
         if ($neighborCurrentUser)
         {
             $requestUserArrays   = array();
+            //var_dump($neighborCurrentUser);
             if (current($neighborCurrentUser) != '')
             {
                 foreach ($neighborCurrentUser as $neighbor)
@@ -423,8 +391,10 @@ class AppController extends Controller
                 $this->f3->set('requestUserArrays', $requestUserArrays);
                 $this->f3->set('randomKeys', $randomKeys);
                 $this->f3->set('neighborCurrentUser', $neighborCurrentUser);
+
+                $this->render("elements/friendRequestElement.php",'default');
             }
-            $this->render("elements/friendRequestElement.php",'default');
+
         }
     }
 

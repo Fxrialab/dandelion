@@ -14,21 +14,29 @@ if($otherUserID != $currentUserID)
 ?>
     <div class="uiCoverTimeLineContainer">
         <div class="uiCoverTimeLine">
-            <a href=""><img src="<?php echo $this->f3->get('IMG');?>testImage.jpg"></a>
+            <div class="imageCoverTimeLine">
+                <a href=""><img src="<?php echo $this->f3->get('IMG');?>testImage.jpg"></a>
+            </div>
+            <div class="editCoverTimeLine">
+                <a href="" class="uiMediumButton"><i class="customIcon-editAvatar"></i>Change Cover</a>
+            </div>
         </div>
         <div class="uiTimeLineNav">
             <div class="uiProfilePicTimeLine">
                 <div class="profilePic">
                     <a href=""><img src="<?php echo $otherUser->data->profilePic; ?>"></a>
                 </div>
+                <div class="editProfilePic">
+                    <a href="" class="uiMediumButton"><i class="customIcon-editAvatar"></i>Edit Avatar</a>
+                </div>
             </div>
             <div class="timeLineMenuNav column-right">
                 <nav class="ink-navigation uiTimeLineHeadLine">
                     <ul class="menu horizontal">
-                        <li><a href="#">TimeLine</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Friends</a></li>
-                        <li><a href="#">Photos</a></li>
+                        <li><a href="/content/myPost">TimeLine</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/friends">Friends</a></li>
+                        <li><a href="/content/myPhoto">Photos</a></li>
                         <li><a href="#">More</a></li>
                     </ul>
                 </nav>
@@ -105,21 +113,29 @@ if($otherUserID != $currentUserID)
 ?>
     <div class="uiCoverTimeLineContainer">
         <div class="uiCoverTimeLine">
-            <a href=""><img src="<?php echo $this->f3->get('IMG');?>testImage.jpg"></a>
+            <div class="imageCoverTimeLine">
+                <a href=""><img src="<?php echo $this->f3->get('IMG');?>testImage.jpg"></a>
+            </div>
+            <div class="editCoverTimeLine">
+                <a href="" class="uiMediumButton"><i class="customIcon-editAvatar"></i>Change Cover</a>
+            </div>
         </div>
         <div class="uiTimeLineNav">
             <div class="uiProfilePicTimeLine">
                 <div class="profilePic">
                     <a href=""><img src="<?php echo $currentUser->data->profilePic;?>"></a>
                 </div>
+                <div class="editProfilePic">
+                    <a href="" class="uiMediumButton"><i class="customIcon-editAvatar"></i>Edit Avatar</a>
+                </div>
             </div>
             <div class="timeLineMenuNav column-right">
                 <nav class="ink-navigation uiTimeLineHeadLine">
                     <ul class="menu horizontal">
-                        <li><a href="#">TimeLine</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Friends</a></li>
-                        <li><a href="#">Photos</a></li>
+                        <li><a href="/content/myPost">TimeLine</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/friends">Friends</a></li>
+                        <li><a href="/content/myPhoto">Photos</a></li>
                         <li><a href="#">More</a></li>
                     </ul>
                 </nav>

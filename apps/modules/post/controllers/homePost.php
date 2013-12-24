@@ -21,7 +21,7 @@ class HomePost extends AppController
                     $userRC = $this->User->findOne("@rid = ?",array($statusRC->data->actor));
                 else
                     $userRC = $this->User->findOne("@rid = ?",array($statusRC->data->owner));
-                $commentOfStatusRC[$statusID]   = $this->Comment->findByCondition("post = ? LIMIT 4 ORDER BY published DESC", array($statusID));
+                $commentOfStatusRC[$statusID]   = $this->Comment->findByCondition("post = ? LIMIT 3 ORDER BY published DESC", array($statusID));
                 $numberCommentInStatusRC[$statusID] = $this->Comment->count("post = ?", array($statusID));
 
                 $likeStatus[$statusID]          = $this->getLikeStatus($statusID, $currentUser->recordID);
@@ -30,7 +30,7 @@ class HomePost extends AppController
                 if ($commentOfStatusRC[$statusID])
                 {
                     $comments = $commentOfStatusRC[$statusID];
-                    $pos = (count($comments) < 4 ? count($comments) : 4);
+                    $pos = (count($comments) < 3 ? count($comments) : 3);
                     for($j = $pos - 1; $j >= 0; $j--)
                     {
                         $userComment[$comments[$j]->data->actor] = $this->User->load($comments[$j]->data->actor);
@@ -75,8 +75,10 @@ class HomePost extends AppController
                     $userRC = $this->User->findOne("@rid = ?",array($statusRC->data->owner));
                 $commentsOfStatus[$statusID] = $this->Comment->findByCondition("post = ? LIMIT 4 ORDER BY published DESC", array($statusID));
                 $numberOfCommentsStatus[$statusID] = $this->Comment->count("post = ?", array($statusID));
-                $getStatusFollow[$statusID]  = $this->Follow->findOne("userA = ? AND userB = ? AND filterFollow = 'post' AND ID = ?", array($currentUser->recordID, $entry->data->actor, $statusID));
-                $statusFollow[$statusID]     = ($getStatusFollow[$statusID] == null) ? 'null' : $getStatusFollow[$statusID]->data->follow;
+
+                $likeStatus[$statusID]          = $this->getLikeStatus($statusID, $currentUser->recordID);
+                $statusFollow[$statusID]     = $this->getFollowStatus($statusID, $currentUser->recordID);
+
                 if ($commentsOfStatus[$statusID])
                 {
                     $comments = $commentsOfStatus[$statusID];
@@ -95,6 +97,7 @@ class HomePost extends AppController
                     "comment"       => $commentsOfStatus,
                     "numberComments"=> $numberOfCommentsStatus,
                     "statusFollow"  => $statusFollow,
+                    'likeStatus'    => $likeStatus,
                     "actions"       => $statusRC,
                     "actor"         => $statusRC->data->actor,
                     "statusID"      => $statusID,

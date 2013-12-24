@@ -50,49 +50,55 @@ class FriendController extends AppController
 
     public function acceptFriendship()
     {
-        $getIdUserB = $this->f3->GET("POST.id");
-        $userA      = $this->getCurrentUser()->recordID;
-        $userB      = $this->User->getClusterID().':'.$getIdUserB;
-        //update a record
-        $updateRecord   = array(
-            'relationship'  => 'friend',
-            'status'        => 'ok'
-        );
-        $this->Friendship->updateByCondition($updateRecord, "userA = ? AND userB = ?", array($userB, $userA));
-        //prepare data
-        $relationship   = array(
-            'userA'         => $userA,
-            'relationship'  => 'friend',
-            'status'        => 'ok',
-            'userB'         => $userB,
-            'published'     => time()
-        );
-        //save data
-        $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
-        //After friend is accept. The peopleYouMayKnow action will be create
-        $existPeopleYouMayKnowAction   = $this->Actions->findOne("actionName = ?", array('People You May Know'));
-        if (!$existPeopleYouMayKnowAction)
+        if ($this->isLogin())
         {
-            $actionRC       = array(
-                'actionName'    => 'People You May Know',
-                'actionElement' => 'peopleYouMayKnow',
-                'isSearch'      => 'yes',
-                'isSuggest'     => 'yes',
+            $getIdUserB = $this->f3->GET("POST.id");
+            $userA      = $this->getCurrentUser()->recordID;
+            $userB      = $this->User->getClusterID().':'.$getIdUserB;
+            //update a record
+            $updateRecord   = array(
+                'relationship'  => 'friend',
+                'status'        => 'ok'
             );
-            $this->Actions->create($actionRC);
+            $this->Friendship->updateByCondition($updateRecord, "userA = ? AND userB = ?", array($userB, $userA));
+            //prepare data
+            $relationship   = array(
+                'userA'         => $userA,
+                'relationship'  => 'friend',
+                'status'        => 'ok',
+                'userB'         => $userB,
+                'published'     => time()
+            );
+            //save data
+            $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
+            //After friend is accept. The peopleYouMayKnow action will be create
+            $existPeopleYouMayKnowAction   = $this->Actions->findOne("actionName = ?", array('People You May Know'));
+            if (!$existPeopleYouMayKnowAction)
+            {
+                $actionRC       = array(
+                    'actionName'    => 'People You May Know',
+                    'actionElement' => 'peopleYouMayKnow',
+                    'isSearch'      => 'yes',
+                    'isSuggest'     => 'yes',
+                );
+                $this->Actions->create($actionRC);
+            }
         }
     }
 
     public function unAcceptFriendship()
     {
-        $getIdUserB = F3::GET("POST.id");
-        $userA      = $this->getCurrentUser()->recordID;
-        $userB      = $this->User->getClusterID().':'.$getIdUserB;
-        //update a record
-        $updateRecord   = array(
-            'status'  => 'later'
-        );
-        $this->Friendship->updateByCondition($updateRecord, "userA = ? AND userB = ?", array($userB, $userA));
+        if ($this->isLogin())
+        {
+            $getIdUserB = $this->f3->GET("POST.id");
+            $userA      = $this->getCurrentUser()->recordID;
+            $userB      = $this->User->getClusterID().':'.$getIdUserB;
+            //update a record
+            $updateRecord   = array(
+                'status'  => 'later'
+            );
+            $this->Friendship->updateByCondition($updateRecord, "userA = ? AND userB = ?", array($userB, $userA));
+        }
     }
 }
 

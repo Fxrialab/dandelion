@@ -1,14 +1,8 @@
 <?php
-/*$requestUserArrays  = $this->f3->get('requestUserArrays');
-$randomKeys         = $this->f3->get('randomKeys');
-$neighborCurrentUser= $this->f3->get('neighborCurrentUser');
-$infoRequestUser    = $this->f3->get('infoRequestUser');
-$mutualFriends      = $this->f3->get('numMutualFriends');
-$infoMutualFriend   = $this->f3->get('infoMutualFriend');*/
-if ($neighborCurrentUser && current($neighborCurrentUser) != '' && $infoRequestUser)
+if ($neighborCurrentUser && current($neighborCurrentUser) != '')
 {
 ?>
-    <div class="uiBoxPeopleYouMayKnow column-group friendRequests">
+    <div class="uiBoxFriendRequests column-group friendRequests">
         <div class="boxTitle large-100">
             Friend Requests
         </div>
@@ -18,6 +12,7 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '' && $infoRequestU
             {
                 $randYourFriend         = $requestUserArrays[$key];
                 $friendRequestID        = substr($randYourFriend, strpos($randYourFriend, ':') + 1);
+                $requestProfile         = $infoRequestUser[$randYourFriend][0]->username;
                 $requestUserName        = ucfirst($infoRequestUser[$randYourFriend][0]->firstName)." ".$infoRequestUser[$randYourFriend][0]->lastName;
                 $requestUserProfilePic  = $infoRequestUser[$randYourFriend][0]->profilePic;
             ?>
@@ -26,7 +21,7 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '' && $infoRequestU
                         <img src="<?php echo $requestUserProfilePic; ?>" width="50" height="50">
                     </div>
                     <div class="profileInfoDiv large-70">
-                        <p class="timeLineName fixMarginBottom-5"><a class="timeLineLink large-100" href=""><?php echo $requestUserName; ?></a></p>
+                        <p class="timeLineName fixMarginBottom-5"><a class="timeLineLink large-100" href="/content/myPost?username=<?php echo $requestProfile;?>"><?php echo $requestUserName; ?></a></p>
                         <?php
                         if ($numMutualFriends[$randYourFriend] != null)
                         {

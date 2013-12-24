@@ -12,7 +12,7 @@ function prettyDate(time){
 		day_diff = Math.round(diff / 86400);
 
 	if(diff < 2) {		// 1 second
-		return "1 second ago";
+		return "a second ago";
 	}
 	if(diff < 60){		// diff is seconds
 		return Math.round(diff) +  " seconds ago";
@@ -86,11 +86,13 @@ $(document).ready(function(){
 	setInterval(function(){			
 		updateTime();			
 	}
-	, 7000);
-	$("#swComposerMsgBox").bind('ajaxComplete', function(){
-	    updateTime();  
-	});	
-});	
+	, numRand(5000, 20000));
+});
+function numRand($numLow, $numHigh)
+{
+    var adjustedHigh = (parseFloat($numHigh) - parseFloat($numLow)) + 1;
+    return Math.floor(Math.random()*adjustedHigh) + parseFloat($numLow);
+}
 
 
 	

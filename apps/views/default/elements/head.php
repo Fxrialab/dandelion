@@ -22,6 +22,10 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/addFriend.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/follow.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/like.js"></script>
+    <script type="text/javascript">
+        new LikeByElement('.likeSegments');
+        new FollowByElement('.followPostSegments');
+    </script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/general.js"></script>
 
     <script type="text/javascript">
@@ -41,12 +45,22 @@
                 $('.uiFriendRequestsPopUpOver').hide();
                 $('.uiMessagesPopUpOver').hide();
                 $('.uiNotificationsPopUpOver').hide();
+                var existSearchPopUp = $('#resultsList li').length;
+                if (existSearchPopUp > 0)
+                {
+                    $('#resultsList').css('display', 'none');
+                }else {
+                    $('#resultsList').css('display', 'block');
+                }
             });
             $('.cancelPostStatusNavBtn').click(function(){
                 $('.uiQuickPostStatusPopUpOver').hide();
                 return false;
             });
-            new LikeByElement('.likeSegments');
+
+            $('#resultsHolder').click(function(e){
+                e.stopPropagation();
+            });
         });
 
         //layout photo like pinterest
@@ -63,6 +77,14 @@
                 $($popUpOver).show();
                 return false;
             });
+        }
+        jQuery.fn.center = function () {
+            this.css("position","absolute");
+            this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) +
+                $(window).scrollTop()) + "px");
+            this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) +
+                $(window).scrollLeft()) + "px");
+            return this;
         }
     </script>
     <script type="text/javascript">
@@ -90,7 +112,10 @@
                         cache: false,
                         success: function(html){
                             $(".autoloadModuleElement").html(html);
-                            //new IsActionsForSuggest();
+                            var existFriendRequests = $('.uiBoxFriendRequests .rowItemBox').length;
+                            if (existFriendRequests < 1)
+                                $('.uiBoxFriendRequests').hide();
+                            new IsActionsForSuggest();
                         }
                     })
                 }
@@ -123,7 +148,10 @@
                             cache: false,
                             success: function(html){
                                 $(".autoloadModuleElement").html(html);
-                                //new IsActionsForSuggest();
+                                var existFriendRequests = $('.uiBoxFriendRequests .rowItemBox').length;
+                                if (existFriendRequests < 1)
+                                    $('.uiBoxFriendRequests').hide();
+                                new IsActionsForSuggest();
                             }
                         })
                     }

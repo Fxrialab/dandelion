@@ -1,6 +1,1 @@
-<script>
-	$(document).ready(function() {
-		$("#olderPostBtn").remove();
-	});
-</script>
-<div class="no-more-status ">No more activities to show</div>'
+<div class="noMoreStatus">No more status to show</div>

@@ -58,11 +58,11 @@ function IsActionsForSuggest()
     $(document).ready(function(){
         var friendRequest = 'Friend request sent';
         //for add friend of people you may know
-        $('.addFriendSmallUI').each(function()
+        $('.uiAddFriend').each(function()
         {
-            $(this).live('click', function()
+            $('body').on('click', '.uiAddFriend', function()
             {
-                var yourFriendID = $(this).attr('id');
+                var yourFriendID = $('.uiAddFriend').attr('id');
                 console.log(yourFriendID);
                 $(this).html(friendRequest);
                 $.ajax({
@@ -85,9 +85,9 @@ function IsActionsForSuggest()
         //for confirm friend of friend requests
         $('.confirmFriend').each(function()
         {
-            $(this).live('click', function()
+            $('body').on('click', '.confirmFriend', function()
             {
-                var friendRequestID = $(this).attr('id');
+                var friendRequestID = $('.confirmFriend').attr('id');
                 $.ajax({
                     type:   'POST',
                     url :   '/acceptFriendship',

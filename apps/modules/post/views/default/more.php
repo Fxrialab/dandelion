@@ -1,197 +1,288 @@
 <?php
-
-$activities     = F3::get('homeViews');
-$currentUser    = F3::get('currentUser');
-$rand           = rand(100,100000);
 $currentUserID  = $currentUser->recordID;
 
-if ($activities)
+if ($mod)
 {
-    $status     = $activities["actions"];
-    $otherUser  = $activities['otherUser'];
-    $actor      = $activities["actor"];
-    $statusID   = $activities['statusID'];
-    $comment    = $activities['comment'];
-    $activityID = $activities['activityID'];
-    $key        = $activities['key'];
-    $numberComment  = $activities['numberComments'];
-    $likeStatus     = $activities['likeStatus'];
-    $statusFollow   = $activities['statusFollow'];
-    $userComment    = $activities['userComment'];
-    $rpStatusID = str_replace(":", "_", $statusID);
+    $status     = $mod["actions"];
+    $otherUser  = $mod['otherUser'];
+    $actor      = $mod["actor"];
+    $statusID   = $mod['statusID'];
+    $comment    = $mod['comment'];
+    $activityID = $mod['activityID'];
+    $key        = $mod['key'];
+    $numberComment  = $mod['numberComments'];
+    $likeStatus     = $mod['likeStatus'];
+    $statusFollow   = $mod['statusFollow'];
+    $userComment    = $mod['userComment'];
+    $rpStatusID     = str_replace(":", "_", $statusID);
     $status_owner   = $status->data->owner;
     $status_actor   = $status->data->actor;
     $status_username= $status->data->actorName;
     $status_tagged  = $status->data->tagged;
     $status_content = $status->data->content;
+    $numberLikes    = $status->data->numberLike;
     $status_contentShare    = $status->data->contentShare;
     $status_published       = $status->data->published;
-
-    ?>
-
-<!--<script type="text/javascript">
-    $(document).ready(function(){
-        $(".oembed<?php /*echo $rand */?>").oembed(null,
-            {
-                embedMethod: "append",
-                maxWidth: 1024,
-                maxHeight: 768,
-                autoplay: false
-            });
-    })
-</script>-->
-<li class="swStreamStory">
-    <input type="hidden" class="currentHome<?php echo $key ?>" value="<?php echo $activityID; ?>" />
-    <div class="storyContent">
-        <a class="swStoryImage">
-            <?php
-            if($status_actor != $currentUserID)
-            {?>
-                <img src="<?php echo F3::get('BASE_URL'); ?><?php echo $otherUser->data->profilePic; ?>" />
-            <?php
-            }else { ?>
-                <img src="<?php echo F3::get('BASE_URL'); ?><?php echo $currentUser->data->profilePic; ?>" />
-            <?php }
-            ?>
-        </a>
-        <div class="mainWrapper">
-            <h6 class="swStreamCaption">
-                <div class="actorName">
+    $status_mainStatus      = str_replace(":", "_", $status->data->mainStatus);
+?>
+    <div class="uiBoxPostItem">
+        <div class="uiBoxPostContainer column-group">
+            <div class="large-10 uiActorPicCol">
+                <?php
+                if($status_actor != $currentUserID)
+                {?>
+                    <a href=""><img src="<?php echo $otherUser->data->profilePic; ?>"></a>
+                <?php
+                }else { ?>
+                    <a href=""><img src="<?php echo $currentUser->data->profilePic; ?>"></a>
+                <?php }
+                ?>
+            </div>
+            <div class="large-85 uiPostContent">
+                <div class="articleActorName fixMarginBottom-5">
                     <?php
                     if($status_owner != $status_actor)
                     {
+                        $otherUserName  = ucfirst($otherUser->data->firstName)." ".ucfirst($otherUser->data->lastName);
                         if(!$status_contentShare)
                         {
                             if($currentUserID != $status_owner)
                             {
-                                $otherUserName  = ucfirst($otherUser->data->firstName)." ".ucfirst($otherUser->data->lastName);
                                 ?>
-                                <a href=""><?php echo $status_username;?></a>  was posted in wall of <a href=""> <?php echo $otherUserName; ?> </a>
+                                <a href="" class="timeLineLink"><?php echo $status_username;?></a>  was posted in wall of <a href="" class="timeLineLink"> <?php echo $otherUserName; ?> </a>
                             <?php
                             }else { ?>
-                                <a href=""><?php echo $status_username;?></a>  was posted in your wall
+                                <a href="" class="timeLineLink"><?php echo $status_username;?></a>  was posted in your wall
                             <?php
                             }
                         } else{ ?>
-                            <a href=""><?php echo $otherUserName; ?> </a> was shared status of <a href=""><?php echo $status_username;?></a>
+                            <a href="" class="timeLineLink"><?php echo $otherUserName; ?> </a> was shared status of <a href=""><?php echo $status_username;?></a>
                         <?php
                         }
                     }else { ?>
-                        <a href=""><?php echo $status_username;?></a>
+                        <a href="" class="timeLineLink"><?php echo $status_username;?></a>
                     <?php
                     }
                     ?>
                 </div>
-            </h6>
-            <h6 class="swStreamMsg">
-                <?php if(!$status_contentShare){ ?>
-                <span class="msgBody">
-                    <?php  if($status_tagged =='none'){?>
-                    <span class="msgBody"><div><?php echo $status_content; ?></div></span>
-                    <?php } else {  ?>
-                    <span class="msgBody">
-                        <div>
-                            <?php echo substr($status_content,0,strpos($status_content,'_linkWith_')); ?>
-                            <a href="<?php echo $status_tagged; ?>"><?php echo $status_tagged; ?></a>
-                            <?php echo substr($status_content,strpos($status_content,'_linkWith_')+10); ?>
-                            <a href="<?php echo $status_tagged; ?>" class="oembed<?php echo $rand ?>"> </a>
-                        </div>
-                    </span>
-                </span>
-                <?php }} else { ?>
-                <span class="msgBody"><?php echo $status_contentShare; ?></span>
-                <span class="msgBodyShare"><?php echo $status_content; ?></span>
-                <?php } ?>
-            </h6>
-            <h6 class="swTimeStatus" title="<?php echo $status_published; ?>">
-                <span> via web</span>
-            </h6>
-        </div>
-        <div class="bottomWrapper">
-            <ul class="swMsgControl">
-                <li class="link"><a class="likeMoreStatus" id="likeLinkID-<?php echo $rpStatusID; ?>" name="likeStatus-<?php echo $likeStatus[$statusID] ;?>"></a></li>
-                <form class="likeHidden" id="likeHiddenID-<?php echo $rpStatusID; ?>">
-                    <input type="hidden" name="id" value="<?php echo substr($actor, strpos($actor, ':') + 1); ?>">
-                    <input type="hidden" name="statusID" value="<?php echo $rpStatusID; ?>">
-                </form>
-                <li class="link"><a href="" class="commentBtn" id="stream-<?php echo $rpStatusID;?>">Comment </a></li>
-                <?php
-                if(($status_owner != $currentUserID) && ($status_actor != $currentUserID)) {
-
-                    if($status_actor != $currentUserID) {       ?>
-                        <li class="link"><a class="shareStatus" onclick="ShareStatus('<?php echo $statusID; ?>')">- Share -</a></li>
-                        <li class="link"><a class="followMoreStatus" id="followID-<?php echo $rpStatusID; ?>" name="getStatus-<?php echo $statusFollow[$statusID] ;?>"></a></li>
-                        <form class="followBtn" id="FollowID-<?php echo $rpStatusID; ?>">
-                            <input type="hidden" name="id" value="<?php echo substr($actor, strpos($actor, ':') + 1); ?>">
-                            <input type="hidden" name="statusID" value="<?php echo $rpStatusID; ?>">
-                        </form>
+                <div class="articleContentWrapper">
+                    <?php
+                    if(!$status_contentShare || $status_contentShare == 'none')
+                    {
+                        if($status_tagged =='none')
+                        {?>
+                            <div class="textPostContainer fixMarginBottom-5">
+                                <span class="textPost"><?php echo $status_content; ?></span>
+                            </div>
                         <?php
-                    }}
-                ?>
-            </ul>
-        </div>
-        <div class="comment-wrapper">
-            <?php
-            $records = $comment[$statusID];
-
-            if ($numberComment[$statusID] > 4) { ?>
-                <div class="view-more-comments" id="<?php echo $rpStatusID;?>">View all <?php echo $numberComment[$statusID];?> comments</div>
-                <span class="hiddenSpan"><?php echo $numberComment[$statusID];?></span>
-                <?php } ?>
-
-            <?php
-            if (!empty($records)) {
-                $pos = (count($records) < 4 ? count($records) : 4);
-                for($j = $pos - 1; $j >= 0; $j--)
-                {
-                    $user = $userComment[$records[$j]->data->actor]
-                    ?>
-                    <div class="swCommentPosted">
-                        <div class="swImg">
-                            <img src="<?php echo F3::get('BASE_URL'); ?><?php echo $user->data->profilePic; ?>" />
+                        } else {  ?>
+                            <div class="textPostContainer fixMarginBottom-5">
+                                <span class="textPost">
+                                    <?php echo substr($status_content,0,strpos($status_content,'_linkWith_')); ?>
+                                    <a href="<?php echo $status_tagged; ?>"><?php echo $status_tagged; ?></a>
+                                    <a href="<?php echo $status_tagged; ?>" class="oembed5"> </a>
+                                </span>
+                            </div>
+                        <?php
+                        }
+                    } else { ?>
+                        <div class="textPostContainer fixMarginBottom-5">
+                            <span class="textPost"><?php echo $status_contentShare; ?></span>
+                            <div class="attachmentStatus">
+                                <span class="textPost"><?php echo $status_content; ?></span>
+                            </div>
                         </div>
-                        <div>
-                            <?php
-                            $actorID =  substr( $records[$j]->data->actor, strpos($records[$j]->data->actor, ":") + 1);
-                            ?>
-                            <a class="userComment" href="/profile?id=<?php echo $actorID;?>"><?php echo $records[$j]->data->actor_name?></a>
-                            <label class="swPostedCommment">
-                                <?php    if($records[$j]->data->tagged =='none'){?>
-                                <div><?php echo $records[$j]->data->content; ?></div>
-                                <?php } else {  ?>
-                                <div>
-                                    <?php echo substr($records[$j]->data->content,0,strpos($records[$j]->data->content,'_linkWith_')); ?>
-                                    <a href="<?php echo $records[$j]->data->tagged; ?>"><?php echo $records[$j]->data->tagged; ?></a>
-                                    <?php echo substr($records[$j]->data->content,strpos($records[$j]->data->content,'_linkWith_')+10); ?>
-                                    <a href="<?php echo $records[$j]->data->tagged; ?>" class="oembed<?php echo $rand ?>"> </a>
+                    <?php
+                    } ?>
+                </div>
+                <div class="articleSelectOption">
+                    <div class="articleActions">
+                        <nav class="ink-navigation">
+                            <ul class="menu horizontal">
+                                <!--Like Segments-->
+                                <li>
+                                    <a class="likeSegments" id="likeLinkID-<?php echo $rpStatusID; ?>" name="likeStatus-<?php echo $likeStatus[$statusID] ;?>" title="Like post"></a>
+                                    <form class="likeHidden" id="likeHiddenID-<?php echo $rpStatusID; ?>">
+                                        <input type="hidden" name="id" value="<?php echo substr($actor, strpos($actor, ':') + 1); ?>">
+                                        <input type="hidden" name="statusID" value="<?php echo $rpStatusID; ?>">
+                                    </form>
+                                </li>
+                                <li class="gapArticleActions">.</li>
+                                <!--Comment Segments-->
+                                <li>
+                                    <a href="#" class="commentBtn" id="stream-<?php echo $rpStatusID;?>" title="Comment to post">Comment</a>
+                                </li>
+                                <li class="gapArticleActions">.</li>
+                                <?php
+                                if($status_contentShare == 'none')
+                                {
+                                    ?>
+                                    <!--Share Segments-->
+                                    <li ><a class="shareStatus" onclick="ShareStatus('<?php echo $rpStatusID; ?>')" title="Share">Share</a></li>
+                                    <li class="gapArticleActions">.</li>
+                                <?php
+                                }else {
+                                    ?>
+                                    <!--Share Segments-->
+                                    <li ><a class="shareStatus" onclick="ShareStatus('<?php echo $status_mainStatus; ?>')" title="Share">Share</a></li>
+                                    <li class="gapArticleActions">.</li>
+                                <?php
+                                }
+                                ?>
+                                <?php
+                                if($status_actor != $currentUserID)
+                                {
+                                    ?>
+                                    <!--Follow post Segments-->
+                                    <li>
+                                        <a class="followPostSegments" id="followID-<?php echo $rpStatusID; ?>" name="getStatus-<?php echo $statusFollow[$statusID] ;?>" title="Follow"></a>
+                                        <form class="followBtn" id="fmFollow-<?php echo $rpStatusID; ?>">
+                                            <input type="hidden" name="id" value="<?php echo substr($actor, strpos($actor, ':') + 1); ?>">
+                                            <input type="hidden" name="statusID" value="<?php echo $rpStatusID; ?>">
+                                        </form>
+                                    </li>
+                                    <li class="gapArticleActions">.</li>
+                                <?php
+                                }
+                                ?>
+                                <li class="streamPostTime"><a href="" class="linkColor-999999 swTimeStatus" title="" name="<?php echo $status_published; ?>"></a></li>
+                                <!----article post counter---->
+                                <li class="rightFix">
+                                    <span>
+                                        <a href="#" class="likeCounter gapArticleActions" title="Like"><i class="statusCounterIcon-like"></i>6</a>
+                                        <a href="#" class="commentCounter gapArticleActions" title="Comment"><i class="statusCounterIcon-comment"></i>20</a>
+                                        <a href="#" class="shareCounter gapArticleActions" title="Share"><i class="statusCounterIcon-share"></i>3</a>
+                                        <a href="#" class="followPostCounter gapArticleActions" title="Follow Post"><i class="statusCounterIcon-followPost"></i>11</a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="postActionWrapper postItem-<?php echo $rpStatusID; ?> uiBox-PopUp boxLikeTopLeftArrow tempLike-<?php echo $rpStatusID; ?>">
+                        <?php
+                        //echo $numberLikes;
+                        $records = $comment[$statusID];
+                        if ($numberLikes > 0)
+                        {
+                            if ($likeStatus[$statusID] == 'null')
+                            {
+                                ?>
+                                <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID;?>">
+                                    <span><i class="statusCounterIcon-like"></i><a href=""><?php echo $numberLikes; ?></a> people like this.</span>
                                 </div>
-                                <?php } ?>
-                            </label>
-                            <label class="swTimeComment" title="<?php echo $records[$j]->data->published; ?>">via web</label>
+                            <?php
+                            }else {
+                                if ($numberLikes == 1)
+                                {
+                                    ?>
+                                    <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID;?>">
+                                        <span><i class="statusCounterIcon-like"></i>You like this</span>
+                                    </div>
+                                <?php
+                                }else {
+                                    ?>
+                                    <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID;?>">
+                                        <span><i class="statusCounterIcon-like"></i>You and <a href=""><?php echo $numberLikes - 1; ?></a> people like this</span>
+                                    </div>
+                                <?php
+                                }
+                            }
+                        }?>
+                        <!--<div class="whoShareThisPost verGapBox">
+                            <span><i class="statusCounterIcon-share"></i><a href="">3 Shares</a></span>
+                        </div>-->
+                        <?php
+                        if ($numberComment[$statusID] > 3)
+                        { ?>
+                            <div class="whoCommentThisPost verGapBox" id="<?php echo $rpStatusID;?>">
+                                <span><i class="statusCounterIcon-comment"></i><a class="viewAll" href="">View all <?php echo $numberComment[$statusID];?> comments</a></span>
+                                <span class="numberComments"><?php echo $numberComment[$statusID];?></span>
+                            </div>
+                        <?php
+                        }
+                        if (!empty($records))
+                        {
+                            ?>
+                            <div class="commentContentWrapper">
+                                <?php
+                                $pos = (count($records) < 3 ? count($records) : 3);
+                                for($j = $pos - 1; $j >= 0; $j--)
+                                {
+                                    $user = $userComment[$records[$j]->data->actor];
+                                    $actorComment = $records[$j]->data->actor_name;
+                                    $tagged = $records[$j]->data->tagged;
+                                    $content= $records[$j]->data->content;
+                                    $published = $records[$j]->data->published;
+                                    ?>
+                                    <div class="eachCommentItem verGapBox column-group">
+                                        <div class="large-10 uiActorCommentPicCol">
+                                            <a href=""><img src="<?php echo $user->data->profilePic; ?>"></a>
+                                        </div>
+                                        <div class="large-85 uiCommentContent">
+                                            <p>
+                                                <a class="timeLineCommentLink" href="/content/myPost?username=<?php //echo $actorComment; ?>"><?php echo $actorComment; ?></a>
+                                                <?php
+                                                if($tagged =='none')
+                                                {
+                                                    ?>
+                                                    <span class="textComment"><?php echo $content; ?></span>
+                                                <?php
+                                                } else {
+                                                    ?>
+                                                    <span class="textComment">
+                                                        <?php echo substr($content,0,strpos($content,'_linkWith_')); ?>
+                                                        <a href="<?php echo $tagged; ?>"><?php echo $tagged; ?></a>
+                                                        <?php echo substr($content,strpos($content,'_linkWith_')+10); ?>
+                                                        <a href="<?php echo $tagged; ?>" class="oembed5"> </a>
+                                                    </span>
+                                                <?php
+                                                }
+                                                ?>
+                                            </p>
+                                            <span><a class="linkColor-999999 swTimeComment" name="<?php echo $published; ?>"></a></span>
+                                        </div>
+                                    </div>
+                                <?php
+                                } // end for
+                                ?>
+                            </div>
+                        <?php
+                        }
+                        ?>
+                        <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID?>">
+                            <div class="large-10 uiActorCommentPicCol">
+                                <a href=""><img src="<?php echo $currentUser->data->profilePic; ?>"></a>
+                            </div>
+                            <div class="large-90 uiTextCommentArea">
+                                <form class="ink-form" id="fmComment-<?php echo $rpStatusID?>">
+                                    <fieldset>
+                                        <div class="control-group">
+                                            <div class="control">
+                                                <input name="postID" type="hidden" value="<?php echo $rpStatusID?>" />
+                                                <textarea name="comment" class="taPostComment submitComment" id="textComment-<?php echo $rpStatusID?>" spellcheck="false" placeholder="Write a comment..."></textarea>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                    <?php } // end for
-            } // end check empty?>
-        </div>
-        <div class="swCommentBox" id="commentBox-<?php echo $rpStatusID?>">
-            <div class="swImg">
-                <img src="<?php echo F3::get('BASE_URL'); ?><?php echo $currentUser->data->profilePic; ?>" />
+                </div>
             </div>
-            <form class="swFormComment" id="formComment-<?php echo $rpStatusID?>">
-                <input name="postID" type="hidden" value="<?php echo $rpStatusID?>" />
-                <textarea class="swBoxCommment" name="comment" id="commentText-<?php echo $rpStatusID;?>"></textarea>
-                <input class="swSubmitComment" id="submitComment-<?php echo $rpStatusID?>" type="submit" value="Comment" />
-            </form>
+            <div class="large-5 uiPostOption">
+                <a href="" class="postOption" data-action=".optionPopUp"><i class="optionIcon-articlePost"></i></a>
+                <div class="uiPostOptionPopUpOver uiBox-PopUp topRightArrow" data-target=".optionPopUp">
+                    <nav class="ink-navigation">
+                        <ul class="menu vertical">
+                            <li><a class="test" href="#">Report this post</a></li>
+                            <li><a href="#">Option 1</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
     </div>
-</li>
 <?php
-} // end check type for status
+}
 ?>
-
-
-
-
-
-
 

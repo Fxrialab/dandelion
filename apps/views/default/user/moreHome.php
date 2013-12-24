@@ -5,12 +5,11 @@
  * Date: 8/6/13 - 3:01 PM
  * Project: joinShare Network - Version: 1.0
  */
-$activities = F3::get('homes');
+
 if($activities){
     foreach($activities  as $mod){
-
+        //var_dump($mod);
         foreach(glob(MODULES.$mod['type'].'/views/default/more.php') as $views){
-            F3::set('homeViews',$mod);
             require $views;
         }
     }

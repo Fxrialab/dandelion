@@ -31,8 +31,8 @@ define ('WEBROOT', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS . 'webr
 define ('IMAGES', WEBROOT . 'images' . DS);
 define ('JS', WEBROOT . 'js' . DS);
 define ('CSS', WEBROOT  . 'css' . DS);
-define ('UPLOAD', DOCUMENT_ROOT . 'apps' . DS . 'webroot' . DS. 'upload' . DS);
-define ('UPLOAD_URL', BASE_URL . 'apps' . DS . 'webroot' . DS. 'upload' . DS);
+define ('UPLOAD', DOCUMENT_ROOT . 'apps' . DS . 'views' . DS . TEMPLATE . DS . 'webroot' . DS. 'upload' . DS);
+define ('UPLOAD_URL', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS . 'webroot' . DS. 'upload' . DS);
 
 // vendors
 define ('VENDORS', DOCUMENT_ROOT . 'vendors' . DS);

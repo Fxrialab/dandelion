@@ -12,7 +12,7 @@ class RouteConfig
         '_GET'                  => "homeController,userController",
         'signUp_POST'           => "userController",
         'login_POST'            => "userController",
-        'logout_POST'           => "userController",
+        'logout_GET'            => "userController",
         'confirm_GET'           => "userController",
         'authentication_GET|POST'   => "userController",
         'confirmCode_POST'      => "userController",

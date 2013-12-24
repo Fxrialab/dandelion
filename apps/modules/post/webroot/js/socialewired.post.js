@@ -2,19 +2,27 @@
  * jQuery for profile post page
  * Include: post status js
  */
-
-/*function ShareStatus(status_id){
-    $('#shareStatus').dialog();
+function ShareStatus(statusID){
+    $('#fade').show();
+    $('.uiShare').show();
+    $('.uiShare').center();
+    $('.notificationShare').center();
     $.ajax({
         async: true,
-        type: 'post',
+        type: 'POST',
+        beforeSend: function(){
+            $('.uiShare').addClass('loading');
+        },
         complete: function(request, json) {
-            $('#shareStatus').html(request.responseText);
+            $('.uiShare').removeClass('loading');
+            $('.uiShare').html(request.responseText);
         },
         url: '/content/post/shareStatus',
-        data: {status_id: status_id}
+        data: {statusID: statusID}
     });
-}*/
+}
+
+
 // post status
 $(function() {
     $("#submitStatus").click(function(e) 
@@ -41,6 +49,8 @@ $(function() {
                     $("#contentContainer").prepend(html);
                     $('#status').val('');
                     new LikeByElement('.likePostStatus');
+                    new FollowByElement('.followSegments');
+                    updateTime();
                 }
             });
         }
@@ -50,11 +60,9 @@ $(function() {
     $("body").on("click", "a.commentBtn",function(e){
             e.preventDefault();
             var getId = $(this).attr('id').replace('stream-','');
-            var Id = getId.replace(':','_');
-            $('.postActionWrapper').fadeIn("slow");
-            $('#commentBox-'+Id).fadeIn("slow");
-            $('#commentText-'+Id).focus();
-
+            $('.postItem-'+getId).fadeIn("slow");
+            $('#commentBox-'+getId).fadeIn("slow");
+            $('#textComment-'+getId).focus();
         }
     );
 
@@ -62,54 +70,53 @@ $(function() {
 });
 // post a comment
 $(function() {
-    $("body").on("click", ".swSubmitComment", function(e)
-    {
-        e.preventDefault();
-        var getId = $(this).attr('id').replace('submitComment-','');
-        var Id = getId.replace(":","_");
-        var comment = $("#commentText-"+Id).val();
-        if(comment=='')
+    $(".submitComment").bind('keypress',function(e){
+        var code = e.keyCode || e.which;
+        if(code == 13)
         {
-            return false;
-        }
-        else
-        {
-            var url, urlString, urlSpace, urlHttp, urlFirst,fullURL;
-            var text = $('#commentText-'+getId).val();
-            text = $('<span>'+text+'</span>').text(); //strip html
-            urlHttp = text.indexOf('http');
-            if(urlHttp >=0)
+            var statusID= $(this).attr('id').replace('textComment-','');
+            var comment = $("#textComment-"+statusID).val();
+            console.log('cm: ',comment);
+            if (comment == '')
             {
-                urlString = text.substr(urlHttp);
-                urlSpace = urlString.indexOf(" ");
-                if(urlSpace >=0)
+                return false;
+            }else {
+                var url, urlString, urlSpace, urlHttp, urlFirst,fullURL;
+                var text = $('#textComment-'+statusID).val();
+                text = $('<span>'+text+'</span>').text(); //strip html
+                urlHttp = text.indexOf('http');
+                if(urlHttp >=0)
                 {
-                    urlFirst = text.substr(urlHttp,urlSpace);
-                    if(isValidURL(urlFirst))
+                    urlString = text.substr(urlHttp);
+                    urlSpace = urlString.indexOf(" ");
+                    if(urlSpace >=0)
                     {
-                        fullURL = url = urlFirst;
-                    }
-                } else {
-                    if(isValidURL(urlString))
-                    {
-                        fullURL = url = urlString;
+                        urlFirst = text.substr(urlHttp,urlSpace);
+                        if(isValidURL(urlFirst))
+                        {
+                            fullURL = url = urlFirst;
+                        }
+                    } else {
+                        if(isValidURL(urlString))
+                        {
+                            fullURL = url = urlString;
+                        }
                     }
                 }
+                $('#fmComment-'+statusID).append("<input id='fullURL' name='fullURL' type='hidden' value="+ fullURL+ ">") ;
+                $.ajax({
+                    type: "POST",
+                    url: "/content/post/postComment",
+                    data: $('#fmComment-'+statusID).serialize(),
+                    cache: false,
+                    success: function(html){
+                        $("#commentBox-"+statusID).before(html);
+                        $("#textComment-"+statusID).val('');
+                    }
+                });
             }
-            $('#formComment-'+getId).append("<input id='fullURL' name='fullURL' style='display: none' value="+ fullURL+ ">") ;
-
-            $.ajax({
-                type: "POST",
-                url: "/content/post/postComment",
-                data: $('#formComment-'+Id).serialize(),
-                cache: false,
-                success: function(html){
-                    $("#commentBox-"+Id).before(html);
-                    $("#commentText-"+Id).val('');
-                }
-            });
         }
-        return false;
+        //return false;
     });
 });
 
@@ -146,44 +153,20 @@ $(function() {
 });
 // more status, comment
 $(function() {
-    $(".morePost").click(function(e) 
-    {
-        e.preventDefault();
-        var published = $(".swTimeStatus:last").attr("name");
-        $.ajax({
-            type: "POST",
-            url: "/content/post/morePostStatus",
-            data: "published=" + published,
-            cache: false,
-            success: function(html){
-                $("#contentContainer").append(html);
-                new LikeByElement('.likeMorePostStatus');
-                new FollowByElement('.followMorePostStatus');
-            }
-        });
-    });
-
-    $("body").on("click", ".view-more-comments", function(e){
+    $("body").on("click", ".whoCommentThisPost", function(e){
     	e.preventDefault();
-
+        var postID = $(this).attr('id');
     	// get first comment published
-    	published   = $(e.target.parentElement).children(".swCommentPosted:first").find(".swTimeComment").attr("title");
-    	statusID    = e.target.id;
-        nameClass   = $('#'+statusID).attr('class');
-        numberComment = $('.hiddenSpan').html();
-        numberCommentElement = ('#showComment-'+statusID+" swCommentPosted").size;
-        console.log("numberComment: ", numberComment);
-        console.log("numberCommentElement: ", numberCommentElement);
+    	published   = $('.postItem-'+postID+' .commentContentWrapper .eachCommentItem:first .uiCommentContent span .swTimeComment').attr("name");
+        console.log('status:', published);
     	$.ajax({
             type: "POST",
             url: "/content/post/morePostComment",
-            data: { published:published, statusID:statusID, nameClass:nameClass},
+            data: { published:published, statusID:postID},
             cache: false,
             success: function(html){
-            	//console.log(e.target.parentElement);
-                $('.view-more-comments').css('display', 'none');
-               //e.target.parentElement.prepend(html);
-               $(e.target).after(html);
+                $('.whoCommentThisPost').css('display', 'none');
+                $('.postItem-'+postID+' .commentContentWrapper').prepend(html);
             }
         });
     });

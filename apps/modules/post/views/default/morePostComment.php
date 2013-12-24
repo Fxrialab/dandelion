@@ -1,53 +1,53 @@
 <?php
 $rand           = rand(100,100000);
-$records        = F3::get('comments');
-$commentActor   = F3::get('commentActor');
+$records        = $this->f3->get('comments');
+$commentActor   = $this->f3->get('commentActor');
 
 if (!empty($records)) {
+?>
+<div class="commentContentWrapper">
+    <?php
 	$pos = (count($records) < 50 ? count($records) : 50);
 	// render comments
 	for($j = $pos - 1; $j >=0; $j--)
     {
         $user = $commentActor[$records[$j]->data->actor];
+        $actorComment = $records[$j]->data->actor_name;
+        $tagged = $records[$j]->data->tagged;
+        $content= $records[$j]->data->content;
+        $published = $records[$j]->data->published;
         ?>
-		<div class="swCommentPosted">
-			<div class="swImg">			
-				<img class="swCommentImg" src="<?php echo F3::get('BASE_URL'); ?><?php echo $user->data->profilePic; ?>" />
-			</div>
-			<div>
-				<?php								
-					$actorID =  substr( $records[$j]->data->actor, strpos($records[$j]->data->actor, ":") + 1);
-					?>
-				<a href="/profile?id=<?php echo $actorID;?>"><?php echo $records[$j]->data->actor_name?></a>
-                <label class="swPostedCommment">
-                    <?php    if($records[$j]->data->tagged =='none'){?>
-                    <div><?php echo $records[$j]->data->content; ?></div>
-                    <?php } else {  ?>
-                    <div>
-                        <?php echo substr($records[$j]->data->content,0,strpos($records[$j]->data->content,'_linkWith_')); ?>
-                        <a href="<?php echo $records[$j]->data->tagged; ?>"><?php echo $records[$j]->data->tagged; ?></a>
-                        <?php echo substr($records[$j]->data->content,strpos($records[$j]->data->content,'_linkWith_')+10); ?>
-                        <a href="<?php echo $records[$j]->data->tagged; ?>" class="oembed<?php echo $rand ?>"> </a>
-                    </div>
-                    <?php } ?>
-                </label>
-                            <label class="swTimeComment" title="<?php echo $records[$j]->data->published; ?>">via web</label>
-			</div>
-		</div>
-	<?php } // end for
-}// end  (!empty($records))?>
-
-<script type="text/javascript">
-    $(document).ready(function(){
-
-        var rand =  Math.random().toString();
-        var oembedChar = rand.substr(2);
-        $(".oembed"+ <?php echo $rand ?>).oembed(null,
-            {
-                embedMethod: "append",
-                maxWidth: 1024,
-                maxHeight: 768,
-                autoplay: false
-            });
-    })
-</script>
+        <div class="eachCommentItem verGapBox column-group">
+            <div class="large-10 uiActorCommentPicCol">
+                <a href=""><img src="<?php echo $user->data->profilePic; ?>"></a>
+            </div>
+            <div class="large-85 uiCommentContent">
+                <p>
+                    <a class="timeLineCommentLink" href="/content/myPost?username=<?php //echo $actorComment; ?>"><?php echo $actorComment; ?></a>
+                    <?php
+                    if($tagged =='none')
+                    {
+                        ?>
+                        <span class="textComment"><?php echo $content; ?></span>
+                    <?php
+                    } else {
+                        ?>
+                        <span class="textComment">
+                            <?php echo substr($content,0,strpos($content,'_linkWith_')); ?>
+                            <a href="<?php echo $tagged; ?>"><?php echo $tagged; ?></a>
+                            <?php echo substr($content,strpos($content,'_linkWith_')+10); ?>
+                            <a href="<?php echo $tagged; ?>" class="oembed5"> </a>
+                        </span>
+                    <?php
+                    }
+                    ?>
+                </p>
+                <span><a class="linkColor-999999 swTimeComment" name="<?php echo $published; ?>"></a></span>
+            </div>
+        </div>
+	<?php
+    }
+    ?>
+</div>
+<?php
+}?>

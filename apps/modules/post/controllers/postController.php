@@ -58,7 +58,7 @@ class PostController extends AppController {
             {
                 foreach ($statusRC as $status)
                 {
-                    $comments[($status->recordID)]        = $this->Comment->findByCondition("post = ? LIMIT 4 ORDER BY published DESC", array($status->recordID));
+                    $comments[($status->recordID)]        = $this->Comment->findByCondition("post = ? LIMIT 3 ORDER BY published DESC", array($status->recordID));
                     $numberOfComments[($status->recordID)]= $this->Comment->count("post = ?", array($status->recordID));
                     //get status follow
                     $likeStatus[($status->recordID)]    = $this->getLikeStatus($status->recordID, $currentUser->recordID);
@@ -67,13 +67,12 @@ class PostController extends AppController {
                     $postActor[($status->data->actor)]    = $this->User->load($status->data->actor);
                     if ($comments[($status->recordID)])
                     {
-                        $pos = (count($comments[($status->recordID)]) < 4 ? count($comments[($status->recordID)]) : 4);
+                        $pos = (count($comments[($status->recordID)]) < 3 ? count($comments[($status->recordID)]) : 3);
                         for($j = $pos - 1; $j >= 0; $j--)
                         {
                             $commentActor[$comments[($status->recordID)][$j]->data->actor] = $this->User->load($comments[($status->recordID)][$j]->data->actor);
                         }
-                    }else {
-                        $commentActor = null;
+                        $this->f3->set("commentActor",$commentActor);
                     }
                 }
 
@@ -83,7 +82,7 @@ class PostController extends AppController {
                 $this->f3->set("likeStatus", $likeStatus);
                 $this->f3->set("statusFollow", $statusFollow);
                 $this->f3->set("postActor", $postActor);
-                $this->f3->set("commentActor",$commentActor);
+
             }
             $this->render($viewPath.'myPost.php','modules');
         }else {
@@ -159,7 +158,7 @@ class PostController extends AppController {
                 'numberComment' => '0',
                 'published'     => $published,
                 'numberShared'  => '0',
-                'contentShare'  => '',
+                'contentShare'  => 'none',
                 'numberFollow'  => '0',
                 'mainStatus'    => 'none',
             );
@@ -189,13 +188,13 @@ class PostController extends AppController {
         if ($this->isLogin())
         {
             $currentUser    = $this->getCurrentUser();
-            $postID         = str_replace("_", ":", F3::get('POST.postID'));
+            $postID         = str_replace("_", ":", $this->f3->get('POST.postID'));
             $actorName      = $this->getCurrentUserName();
             $published      = time();
             $existCommentRC = $this->Comment->findByCondition("actor = ? AND post = ?", array($currentUser->recordID, $postID));
             //prepare data
-            $content    = F3::get('POST.comment');
-            $URL        = F3::get('POST.fullURL');
+            $content    = $this->f3->get('POST.comment');
+            $URL        = $this->f3->get('POST.fullURL');
             $tagged     = ($URL == 'undefined') ? 'none' : $URL;
             if($tagged != 'none')
             {
@@ -205,6 +204,7 @@ class PostController extends AppController {
                 $content2   = substr($content,$countChar + $countCharFirst);
                 $content    = $content1."_linkWith_". $content2;
             }
+            //target for count who comments to post on notification, will check later
             if($existCommentRC)
             {
                 $commentEntryCase1 = array(
@@ -244,11 +244,11 @@ class PostController extends AppController {
             $this->trackComment($currentUser, "post".$commentID, $commentID, $postID,$userPostID->data->actor, $published); //commentHoc SAVE Activity follow object is ID comment
 
             // data for ajax
-            F3::set('published', $published);
-            F3::set('content', $content);
-            F3::set('currentUser', $currentUser);
-            F3::set('postID', $postID);
-            F3::set('tagged',$tagged);
+            $this->f3->set('published', $published);
+            $this->f3->set('content', $content);
+            $this->f3->set('currentUser', $currentUser);
+            $this->f3->set('postID', $postID);
+            $this->f3->set('tagged',$tagged);
 
             $this->renderModule('postComment','post');
         }else {
@@ -312,19 +312,13 @@ class PostController extends AppController {
     //just implement
     public function morePostComment()
     {
-        if ($this->isLogin()) {
-            $requestProfileID = F3::get('POST.id');
-
-            $profileID = ($requestProfileID == NULL) ? $this->getCurrentUser()->recordID : $requestProfileID;
-            $published = F3::get('POST.published');
-            $statusID = str_replace("_", ":",  F3::get('POST.statusID'));
-            //because layout for public photo different with status. Must render to view photo show more comment
-            $ClusterIDPhoto = $this->Photo->getClusterID();
-            $checkPhoto = str_replace(substr($statusID, strpos($statusID, ':')), '', $statusID);
-
-            if ($profileID) {
+        if ($this->isLogin())
+        {
+            $published  = $this->f3->get('POST.published');
+            $statusID   = str_replace("_", ":", $this->f3->get('POST.statusID'));
+            if ($statusID)
+            {
                 $comments = $this->Comment->findByCondition("post = ? and published < ? LIMIT 50 ORDER BY published DESC", array($statusID, $published));
-                $numberOfRemainingComments = $this->Comment->count("post = ? and published < ?", array($statusID, $published));
                 if ($comments)
                 {
                     $pos = (count($comments) < 50 ? count($comments) : 50);
@@ -335,81 +329,54 @@ class PostController extends AppController {
                 }else {
                     $commentActor = null;
                 }
-                F3::set("commentActor",$commentActor);
-                F3::set("comments", $comments);
-                F3::set('nameClassElement', F3::get('POST.nameClass'));
-                if (count($comments) >= $numberOfRemainingComments) {
-                    if($ClusterIDPhoto == $checkPhoto) {
-                       // echo F3::render("photo/ajax_more_comment.php");
-                    }else {
-                        //echo F3::render("activity/ajax_more_comment.php");
-                        $this->renderModule('morePostComment','post');
-                        //  $this->renderAction('ajax_more_comment','post'); in old source
-                    }
-
-                    F3::set("id", F3::get('POST.statusID'));
-                    if($ClusterIDPhoto == $checkPhoto) {
-                        //echo F3::render("photo/ajax_no_more_comment.php");
-                    }else {
-                        //echo F3::render("activity/ajax_no_more_comment.php");
-                        $this->renderModule('morePostComment','post');
-                        // $this->renderAction('ajax_more_comment','post'); in old source
-                    }
-                }
-                else
-                {
-                    if($ClusterIDPhoto == $checkPhoto) {
-                        //echo F3::render("photo/ajax_more_comment.php");
-                    }else {
-                       // echo F3::render("activity/ajax_more_comment.php");
-                        $this->renderModule('morePostComment','post');
-                        // $this->renderAction('ajax_more_comment','post'); in old source
-                    }
-                }
+                $this->f3->set("commentActor",$commentActor);
+                $this->f3->set("comments", $comments);
+                $this->renderModule('morePostComment','post');
             }
         }
     }
     //just implement
     public function shareStatus()
     {
-        if($this->isLogin()){
-            $status_id = F3::get('POST.status_id');
-            $content_stt = $this->Status->findOne("@rid = ?",array($status_id));
-            $getAvatar = $this->User->findOne(" @rid = ? ",array($content_stt->data->owner));
-            F3::set('content_stt',$content_stt);
-            F3::set('getAvatar',$getAvatar);
+        if($this->isLogin())
+        {
+            $statusID = str_replace('_', ':', $this->f3->get('POST.statusID'));
+            $statusRC = $this->Status->findOne("@rid = ?",array($statusID));
+            $user = $this->User->findOne(" @rid = ? ",array($statusRC->data->owner));
+            $this->f3->set('status',$statusRC);
+            $this->f3->set('user',$user);
             $this->renderModule('shareStatus','post');
         }
     }
     //just implement
     public function insertStatus()
     {
-        if($this->isLogin()){
-            $published = time();
-            $rid = F3::get("POST.rid");
-            $content = F3::get("POST.status");
-            $old_status = $this->Status->findOne("@rid = ?",array($rid));
-            $old_status->data->numberShared = $old_status->data->numberShared +1;
-            $this->Status->update($rid,$old_status);
+        if($this->isLogin())
+        {
+            $published  = time();
+            $statusID   = str_replace('_', ':', $this->f3->get("POST.statusID"));
+            $txtShare   = $this->f3->get("POST.shareTxt");
+            $parentStatus = $this->Status->findOne("@rid = ?",array($statusID));
+            $parentStatus->data->numberShared = $parentStatus->data->numberShared +1;
+            $this->Status->update($statusID, $parentStatus);
             $postEntry = array(
                 'owner'         => $this->getCurrentUser()->recordID,
-                'actor'         => $old_status->data->owner,
-                'content'       => $old_status->data->content,
-                'tagged'        => $old_status->data->tagged,
+                'actor'         => $parentStatus->data->owner,
+                'content'       => $parentStatus->data->content,
+                'tagged'        => $parentStatus->data->tagged,
                 /*'taggedType'    => $old_status->data->taggedType,*/
-                'actorName'     => $old_status->data->actorName,
+                'actorName'     => $parentStatus->data->actorName,
                 'numberLike'    => '0',
-                'numberComment' => $old_status->data->numberComment,
+                'numberComment' => $parentStatus->data->numberComment,
                 'published'     => $published,
-                'contentShare'  => $content,
+                'contentShare'  => $txtShare,
                 'numberShared'  => '0',
                 'numberFollow'  => '0',
-                'mainStatus'    =>$rid,
+                'mainStatus'    => $statusID,
             );
 
             // save
             $status = $this->Status->create($postEntry);
-
             // track activity
             $this->trackActivity($this->getCurrentUser(), 'HomePost', $status, $published);
         }

@@ -2,7 +2,7 @@ function FollowByElement($element)
 {
     $(document).ready(function(){
         var Follow      = 'Follow';
-        var UnFollow    = 'UnFollow';
+        var UnFollow    = 'Unfollow';
 
         $($element).each(function()
         {
@@ -19,7 +19,7 @@ function FollowByElement($element)
                 $(this).data("state", {pressed: false});
             }
 
-            $(this).live('click', function()
+            $(this).click(function()
             {
                 var getID = $(this).attr('id').replace('followID-', '');
                 if ($(this).data("state").pressed)
@@ -28,7 +28,7 @@ function FollowByElement($element)
                     $.ajax({
                         type: 'POST',
                         url: '/unFollow',
-                        data: $('#FollowID-'+getID).serialize(),
+                        data: $('#fmFollow-'+getID).serialize(),
                         cache: false,
                         success: function(){
 
@@ -40,7 +40,7 @@ function FollowByElement($element)
                     $.ajax({
                         type: 'POST',
                         url: '/follow',
-                        data: $('#FollowID-'+getID).serialize(),
+                        data: $('#fmFollow-'+getID).serialize(),
                         cache: false,
                         success: function(){
                             console.log(this);

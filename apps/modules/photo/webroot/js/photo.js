@@ -1,27 +1,20 @@
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 10/4/13 - 10:50 AM
- * Project: userwired Network - Version: 1.0
- */
 $(function() {
-    $(".uploadAlbum").click(function() {
-        $('#lightBox').show();
+    $(".createAlbum").click(function() {
+        $('.uiCreateAlbum').show();
+        $('.uiCreateAlbum').center();
         $('#fade').show();
     });
     $("#closeLightBox").click(function() {
-        $('#lightBox').hide();
+        $('.uiCreateAlbum').hide();
         $('#fade').hide();
     });
     $(".uploadPhoto").click(function() {
         //console.log('clicked upload btn');
-        $('#lightUpload').show();
+        $('.uiLightUpload').show();
+        $('.uiLightUpload').center();
         $('#fade').show();
     });
-    $("#icon-menu").click(function(){
-        $('#lightUpload').hide();
-        $('#fade').hide();
-    });
+
     $('.pt-photo-wrapper').hover(function(){
         $(this).children('.wrapperHoverDelete').show();
         $(this).children('.wrapperHoverLike').show();
@@ -134,7 +127,7 @@ $(function(){
         var existPhotoItems = $('.photoDataItems').length;
         if (existPhotoItems == 0)
         {
-            $('#lightUpload').hide();
+            $('.uiLightUpload').hide();
             $('#fade').hide();
         }else {
             var photos  = [];

@@ -15,9 +15,13 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
             <div class="large-40 fixMarginTop-4" id="uiSearch">
                 <div class="control-group">
                     <div class="control large-100 append-button ink-form column-group">
-                        <div class="large-80"><input class="large-100" type="text" id="name"></div>
+                        <div class="large-80"><input class="large-100" type="text" id="search" name="search" autocomplete="off"></div>
                         <div class="large-10"><a href="" class=""><i class="topNavIcon2-search"></i></a></div>
                     </div>
+                </div>
+                <div id="resultsHolder">
+                    <ul id="resultsList">
+                    </ul>
                 </div>
             </div>
             <div class="large-15">
@@ -184,12 +188,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
                             <ul class="menu vertical">
                                 <li><a href="#">Account Setting</a></li>
                                 <li><a href="#">Privacy Setting</a></li>
-                                <li>
-                                    <form onsubmit="" action="/logout" method="post"
-                                          id="logout_form">
-                                        <input class="navSubmenu" type="submit" value="Log Out">
-                                    </form>
-                                </li>
+                                <li><a href="/logout">Log Out</a></li>
                             </ul>
                         </nav>
                     </div>

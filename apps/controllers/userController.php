@@ -422,15 +422,18 @@ class UserController extends AppController
 
     public function logout()
     {
-        $currentUser    = $this->f3->get('SESSION.loggedUser');
-        $currentSession = array(
-            'timeEnd'=> time(),
-            'status' => 'Disable',
-        );
-        $this->Sessions->updateByCondition($currentSession,'email = ? AND status = ?',array($currentUser->data->email, 'Active'));
-        $this->f3->clear("SESSION");
-        setcookie('email','',time()-3600);
-        setcookie('password','',time()-3600);
-        header("Location:/");
+        if ($this->isLogin())
+        {
+            $currentUser    = $this->f3->get('SESSION.loggedUser');
+            $currentSession = array(
+                'timeEnd'=> time(),
+                'status' => 'Disable',
+            );
+            $this->Sessions->updateByCondition($currentSession,'email = ? AND status = ?',array($currentUser->data->email, 'Active'));
+            $this->f3->clear("SESSION");
+            setcookie('email','',time()-3600);
+            setcookie('password','',time()-3600);
+            header("Location:/");
+        }
     }
 }
