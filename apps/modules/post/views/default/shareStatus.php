@@ -36,7 +36,7 @@ $statusID   = str_replace(':', '_', $status->recordID);
     });
 
 </script>
-<div class="uiContainerShare">
+<div class="uiContainerPopUp">
     <div class="titlePopUp large-100">
         <span>Share This Status</span>
     </div>

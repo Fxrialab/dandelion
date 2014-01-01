@@ -23,8 +23,9 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/follow.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/like.js"></script>
     <script type="text/javascript">
-        new LikeByElement('.likeSegments');
+        new LikePostByElement('.likeSegments');
         new FollowByElement('.followPostSegments');
+
     </script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/general.js"></script>
 
@@ -61,6 +62,15 @@
             $('#resultsHolder').click(function(e){
                 e.stopPropagation();
             });
+            /*$('.uiBoxPostContainer').each(function(){
+                var invisible = $('.postActionWrapper > div').length;
+                console.log('count: ',invisible);
+                if (invisible > 0)
+                {
+                    $('.uiStreamCommentBox').hide();
+                }
+            });*/
+
         });
 
         //layout photo like pinterest
@@ -80,10 +90,8 @@
         }
         jQuery.fn.center = function () {
             this.css("position","absolute");
-            this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) +
-                $(window).scrollTop()) + "px");
-            this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) +
-                $(window).scrollLeft()) + "px");
+            this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
+            this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
             return this;
         }
     </script>

@@ -16,7 +16,7 @@ class RouteModuleConfig
         'createAlbum_POST'      => "PhotoController",
         'myAlbum_GET'           => "PhotoController",
         'viewAlbum_GET'         => "PhotoController",
-        'viewPhoto_GET'         => "PhotoController",
+        'viewPhoto_POST'         => "PhotoController",
         'addDescription_POST'   => "PhotoController",
         'morePhotoComment_POST' => "PhotoController",
         'postComment_POST'      => "PhotoController",

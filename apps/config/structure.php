@@ -37,9 +37,9 @@ define ('UPLOAD_URL', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS . 'w
 // vendors
 define ('VENDORS', DOCUMENT_ROOT . 'vendors' . DS);
 define ('ORIENTDB', VENDORS . 'OrientDB' . DS);
-define ('AMQP', VENDORS . 'PhpAmqpLib' . DS);
+//define ('AMQP', VENDORS . 'PhpAmqpLib' . DS);
 define ('SYMFONY_LOADER', VENDORS . "Symfony/Component/ClassLoader" . DS);
-define ('AMQCONFIG', DOCUMENT_ROOT. 'vendors' . DS . 'php-amqplib' . DS. 'vendor'.DS);
+//define ('AMQCONFIG', DOCUMENT_ROOT. 'vendors' . DS . 'php-amqplib' . DS. 'vendor'.DS);
 
 // modules
 define ('MODULES', DOCUMENT_ROOT. 'apps' . DS . 'modules' . DS);

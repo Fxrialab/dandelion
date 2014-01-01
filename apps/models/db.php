@@ -8,9 +8,8 @@ function &getDBConnection()
 	static $db = null;
 
 	if(!is_object($db)){
-		$db = new OrientDB(HOST, PORT) or die('Failed to connect');	
+		$db = new OrientDB(HOST, PORT) or die('Failed to connect');
 	}
-	
 	return $db;
-}		
+}
 ?>

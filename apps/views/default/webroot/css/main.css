@@ -569,6 +569,12 @@ body {
     margin-right: 3px;
 }
 
+.photoNavIcon-unlike {
+    float: left;
+    background-position: -35px 0;
+    margin-right: 3px;
+}
+
 .photoNavIcon-like:hover {
     background-position: -35px 0;
 }
@@ -657,6 +663,21 @@ body {
     background-position: 0 0;
 }
 
+[class*="chatIcons-"] {
+    display: block;
+    background-image: url("../images/chatIcons.png");
+    background-repeat: no-repeat;
+    font: 0/0 serif;
+    text-shadow: none;
+    color: transparent;
+    width: 16px;
+    height: 16px;
+}
+
+.chatIcons-close {
+    background-position: -230px -10px;
+}
+
 .customIcon-edit {
     background-image: url("../images/edit.png");
     background-repeat: no-repeat;
@@ -675,6 +696,49 @@ body {
     height: 21px;
     display: inherit;
     margin-right: 3px;
+}
+
+.leftColPopUp:hover > div.uiPreviousArrow, .leftColPopUp:hover > div.uiNextArrow {
+    display: block;
+}
+
+.uiPreviousArrow {
+    display: none;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+}
+
+.uiNextArrow {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+}
+
+.uiPreviousArrow a, .uiNextArrow a {
+    padding: 0;
+    margin: 0;
+    border: none;
+
+}
+
+.leftArrowPopUp {
+    background-image: url("../images/prevArrow.png");
+    background-repeat: no-repeat;
+    color: transparent;
+    width: 54px;
+    height: 54px;
+    display: inherit;
+}
+
+.rightArrowPopUp {
+    background-image: url("../images/nextArrow.png");
+    background-repeat: no-repeat;
+    color: transparent;
+    width: 54px;
+    height: 54px;
+    display: inherit;
 }
 
 .uiBoxPeopleYouMayKnow, .uiBoxFriendRequests {
@@ -979,7 +1043,11 @@ body {
     float: right;
 }
 
-.uiQuickPostStatusPopUpOver .ink-form textarea.taPostStatus, .uiPostStatusArea .ink-form textarea.taPostStatus, .uiTextShare .ink-form textarea.taPostShare{
+.uiQuickPostStatusPopUpOver .ink-form textarea.taPostStatus, .uiPostStatusArea .ink-form textarea.taPostStatus, .uiTextShare .ink-form textarea.taPostShare, .uiAlbumContainer .ink-form textarea.taDescriptionAlbum {
+    box-shadow: none;
+}
+
+.uiAlbumContainer .ink-form input.titleAlbum {
     box-shadow: none;
 }
 
@@ -1020,6 +1088,7 @@ body {
     font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
     font-size: 13px;
     line-height: 15px;
+    word-wrap: break-word;
 }
 
 .attachmentStatus {
@@ -1036,6 +1105,7 @@ body {
     font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
     font-size: 11px;
     line-height: 13px;
+    word-wrap: break-word;
 }
 
 .articleActions .ink-navigation ul.menu.horizontal li a {
@@ -1085,10 +1155,15 @@ body {
     margin-right: 3px;
 }
 
-.whoShareThisPost, .whoCommentThisPost, .eachCommentItem {
+.whoShareThisPost, .whoCommentThisPost, .eachCommentItem, .whoCommentThisPhoto {
     background-color: #eaeaea;
     padding: 5px;
     font-size: 11px;
+}
+
+.whoCommentThisPhoto .statusCounterIcon-comment {
+    margin-top: 0;
+    margin-right: 5px;
 }
 
 .numberComments {
@@ -1559,6 +1634,10 @@ body {
     transition: all .2s ease;
 }
 
+.photoItems {
+    cursor: pointer;
+}
+
 .photoItems img {
     width: 100%;
 }
@@ -1583,7 +1662,7 @@ body {
 }
 
 .photoSelectOptions {
-    padding: 6px 0;
+    padding: 6px 0 0 0;
     border-top: 1px solid #ccc;
     margin-bottom: 6px;
 }
@@ -1785,7 +1864,7 @@ body {
     right: 16%;
 }
 /*photo mod temp*/
-#fade{
+#fade {
     display: none;
     position: fixed;
     top: 0%;
@@ -1798,6 +1877,21 @@ body {
     opacity:.20;
     filter: alpha(opacity=20);
 }
+
+#fadePhoto {
+    display: none;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: #7c7c7c;
+    z-index:1;
+    -moz-opacity: 0.2;
+    opacity:.6;
+    filter: alpha(opacity=20);
+}
+
 
 .uiLightUpload {
     width: 800px;
@@ -1965,6 +2059,71 @@ body {
     padding: 5px;
 }
 
+.uiPhotoView {
+    overflow: hidden;
+}
+
+
+.leftColPopUp {
+    background-color: #000;
+    height: 100%;
+    float: left;
+    min-height: 480px;
+    position: relative;
+}
+
+.containerPhoto {
+    /*height: 100%;
+    position: relative;
+    text-align: center;
+    width: 100%;
+    display: block;*/
+}
+
+.leftColPopUp .containerPhoto .photo-selected {
+    display: block;
+}
+
+.leftColPopUp .containerPhoto .photo-unselected {
+    display: none;
+}
+
+.containerPhoto img {
+    height: auto;
+    max-height: 100%;
+    max-width: 100%;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.rightColPopUp {
+    background-color: #fff;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    word-wrap: break-word;
+    vertical-align: middle;
+    min-height: 480px;
+    padding: 10px;
+    max-width: 250px;
+}
+
+.invisiblePhotoWrap {
+    display: none;
+}
+
+.visiblePhotoWrap {
+    display: block;
+}
+
+.viewPhotoInfo .actorNamePhotoInfo {
+    padding: 5px 0;
+}
+
+.uiClosePhotoPopUp {
+    float: right;
+    cursor: pointer;
+}
 /*End Temp*/
 .uiPopUp {
     display: none;
@@ -2033,3 +2192,9 @@ body {
     font-size: 13px;
 }
 
+.uiAlbumContainer {
+    padding: 0 20px;
+}
+
+.uiAlbumAlerts {
+}

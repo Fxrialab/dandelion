@@ -6,12 +6,11 @@
  * Project: UserWired Network - Version: beta
  */
 require_once("base.php");
-include_once(CONFIG.'amqConfig.php');
 
 class AppController extends Controller
 {
     protected $uses     = array("User", "Friendship", "Sessions", "Follow", "Activity", "Like");
-    protected $helpers  = array("Amqp");
+    protected $helpers  = array();
 
     protected $layout   = '';
     //protected $elements = null;
@@ -33,7 +32,7 @@ class AppController extends Controller
      */
     public function isLogin()
     {
-        $session = F3::get("SESSION");
+        $session = $this->f3->get("SESSION");
         if (isset($session["loggedUser"]))
         {
             return true;

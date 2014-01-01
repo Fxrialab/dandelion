@@ -32,8 +32,28 @@ class PhotoController extends AppController {
             $this->f3->set('otherUser', $currentProfileRC);
 
             $photos     = $this->Photo->findByCondition('actor = ? AND album = ? ORDER BY published DESC', array($currentProfileID, "none"));
+            if ($photos)
+            {
+                foreach ($photos as $photo)
+                {
+                    $commentsOfPhoto[$photo->recordID] = $this->Comment->findByCondition("post = ? ORDER BY published DESC", array($photo->recordID));
+                    $likeStatus[($photo->recordID)]    = $this->getLikeStatus($photo->recordID, $currentUser->recordID);
+                    if ($commentsOfPhoto[($photo->recordID)])
+                    {
+                        $pos = (count($commentsOfPhoto[($photo->recordID)]) < 2 ? count($commentsOfPhoto[($photo->recordID)]) : 2);
+                        for($j = $pos - 1; $j >= 0; $j--)
+                        {
+                            $commentActor[$commentsOfPhoto[($photo->recordID)][$j]->data->actor] = $this->User->load($commentsOfPhoto[($photo->recordID)][$j]->data->actor);
+                            //var_dump($commentActor);
+                        }
+                        $this->f3->set("commentActor", $commentActor);
+                    }
+                }
+            }
 
             $this->f3->set('photos',$photos);
+            $this->f3->set("likeStatus", $likeStatus);
+            $this->f3->set('comments',$commentsOfPhoto);
             $this->render($viewPath."myPhoto.php",'modules');
         }
     }
@@ -94,7 +114,25 @@ class PhotoController extends AppController {
             if ($albumID)
             {
                 $photos     = $this->Photo->findByCondition("album  = ? AND actor = ?", array($albumID, $currentUser->recordID));
+                if ($photos)
+                {
+                    foreach ($photos as $photo)
+                    {
+                        $commentsOfPhoto[$photo->recordID] = $this->Comment->findByCondition("post = ? ORDER BY published DESC", array($photo->recordID));
 
+                        if ($commentsOfPhoto[($photo->recordID)])
+                        {
+                            $pos = (count($commentsOfPhoto[($photo->recordID)]) < 4 ? count($commentsOfPhoto[($photo->recordID)]) : 4);
+                            for($j = $pos - 1; $j >= 0; $j--)
+                            {
+                                $commentActor[$commentsOfPhoto[($photo->recordID)][$j]->data->actor] = $this->User->load($commentsOfPhoto[($photo->recordID)][$j]->data->actor);
+                                //var_dump($commentActor);
+                            }
+                            $this->f3->set("commentActor", $commentActor);
+                        }
+                    }
+                    $this->f3->set('comments',$commentsOfPhoto);
+                }
                 $this->f3->set('albumID', $getAlbumID);
                 $this->f3->set("photos", $photos);
                 $this->f3->set('currentUser', $currentUser);
@@ -297,9 +335,8 @@ class PhotoController extends AppController {
     {
         if ($this->isLogin())
         {
-            $this->layout   = 'other';
 
-            $getPhotoID     = F3::get('GET.photoID');
+            $getPhotoID     = $this->f3->get('POST.photoID');
             $currentUser    = $this->getCurrentUser();
 
             if($getPhotoID != '')
@@ -313,7 +350,7 @@ class PhotoController extends AppController {
                 $listPhotos = $this->Photo->findByCondition('album = ? AND actor = ?', array($albumID, $currentUser->recordID));
                 //var_dump($listPhotos);
 
-                F3::set("numberPhoto", count($listPhotos));
+                $this->f3->set("numberPhoto", count($listPhotos));
 
                 $preparedPhotosData = array();
                 $preloadUrls = array();
@@ -326,7 +363,7 @@ class PhotoController extends AppController {
                     //echo $getPhotoID."<br />";
                     if($getPhotoID == $id)
                     {
-                        F3::set('key',$key);
+                        $this->f3->set('key',$key);
                     }
                 }
                 //var_dump($listPhotos);
@@ -354,20 +391,20 @@ class PhotoController extends AppController {
                             $commentActor[$commentsOfPhoto[($photo->recordID)][$j]->data->actor] = $this->User->load($commentsOfPhoto[($photo->recordID)][$j]->data->actor);
                             //var_dump($commentActor);
                         }
-                        F3::set("commentActor", $commentActor);
+                        $this->f3->set("commentActor", $commentActor);
                     }
                 }
-                F3::set("photos", $listPhotos);
-                F3::set("infoActorPhotoUser", $infoActorUser);
-                F3::set("commentsOfPhoto", $commentsOfPhoto);
-                F3::set("likeStatus", $likeStatus);
-                F3::set("statusFollow", $statusFollow);
-                F3::set("photosJson", json_encode($preparedPhotosData));
-                F3::set("album_id", $clientAlbumID);
-                F3::set("urlsJson", json_encode($preloadUrls));
-                F3::set('currentUser', $currentUser);
-                F3::set('otherUser', $currentUser);
-                $this->render(Register::getPathModule('photo').'viewPhoto.php','modules');
+                $this->f3->set("photos", $listPhotos);
+                $this->f3->set("infoActorPhotoUser", $infoActorUser);
+                $this->f3->set("commentsOfPhoto", $commentsOfPhoto);
+                $this->f3->set("likeStatus", $likeStatus);
+                $this->f3->set("statusFollow", $statusFollow);
+                $this->f3->set("photosJson", json_encode($preparedPhotosData));
+                $this->f3->set("album_id", $clientAlbumID);
+                $this->f3->set("urlsJson", json_encode($preloadUrls));
+                $this->f3->set('currentUser', $currentUser);
+                $this->f3->set('otherUser', $currentUser);
+                $this->renderModule('viewPhoto','photo');
             }
         }
     }
@@ -390,8 +427,8 @@ class PhotoController extends AppController {
         if ($this->isLogin())
         {
             $currentUser    = $this->getCurrentUser();
-            $photoID        = str_replace("_", ":", F3::get('POST.photoID'));
-            $textComment    = F3::get('POST.comment');
+            $photoID        = str_replace("_", ":", $this->f3->get('POST.postPhotoID'));
+            $textComment    = $this->f3->get('POST.comment');
             $actorName      = $this->getCurrentUserName();
             $published      = time();
             $existCommentRC = $this->Comment->findByCondition("actor = ? AND post = ?", array($currentUser->recordID, $photoID));
@@ -432,12 +469,10 @@ class PhotoController extends AppController {
             $userPostID             = $this->Photo->findOne("@rid = ?",array($photoID));
             $this->trackComment($currentUser, "photo".$commentID, $commentID, $photoID, $userPostID->data->actor, $published);
 
-            F3::set('actorName', $actorName);
-            F3::set('published', $published);
-            F3::set('content', $textComment);
-            F3::set('authorId', $this->getCurrentUser()->recordID);
-            F3::set('postID', $photoID);
-            F3::set('currentUser',$currentUser);
+            $this->f3->set('actorName', $actorName);
+            $this->f3->set('published', $published);
+            $this->f3->set('content', $textComment);
+            $this->f3->set('currentUser',$currentUser);
             $this->renderModule('comment','photo');
         }
     }
@@ -488,26 +523,24 @@ class PhotoController extends AppController {
     {
         if ($this->isLogin())
         {
-            $profileID = $this->getCurrentUser()->recordID;
-            $published = F3::get('POST.published');
-            $statusID = str_replace("_", ":",  F3::get('POST.statusID'));
+            $published = $this->f3->get('POST.published');
+            $photoID = str_replace("_", ":", $this->f3->get('POST.photoID'));
 
-            if ($profileID) {
-                $comments = $this->Comment->findByCondition("post = ? and published < ? LIMIT 50 ORDER BY published DESC", array($statusID, $published));
-                if ($comments)
+            $comments = $this->Comment->findByCondition("post = ? and published < ? LIMIT 50 ORDER BY published DESC", array($photoID, $published));
+            if ($comments)
+            {
+                $pos = (count($comments) < 50 ? count($comments) : 50);
+                for($j = $pos - 1; $j >= 0; $j--)
                 {
-                    $pos = (count($comments) < 50 ? count($comments) : 50);
-                    for($j = $pos - 1; $j >= 0; $j--)
-                    {
-                        $commentActor[$comments[$j]->data->actor] = $this->User->load($comments[$j]->data->actor);
-                    }
-                }else {
-                    $commentActor = null;
+                    $commentActor[$comments[$j]->data->actor] = $this->User->load($comments[$j]->data->actor);
                 }
-                F3::set("commentActor",$commentActor);
-                F3::set("comments", $comments);
-                $this->renderModule('morePhotoComment','photo');
+            }else {
+                $commentActor = null;
             }
+            $this->f3->set("commentActor",$commentActor);
+            $this->f3->set("comments", $comments);
+            $this->renderModule('morePhotoComment','photo');
+
         }
     }
 

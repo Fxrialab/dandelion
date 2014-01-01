@@ -1,19 +1,19 @@
 <?php
-$content    = F3::get('content');
-$published  = F3::get('published');
-$authorName = F3::get('actorName');
-$authorRID  = F3::get('authorId');
-$authorID   = substr( $authorRID, strpos($authorRID, ":") + 1);
-$photoID    = F3::get('postID');
-$currentUser= F3::get('currentUser');
+$content    = $this->f3->get('content');
+$published  = $this->f3->get('published');
+$authorName = $this->f3->get('actorName');
+$currentUser= $this->f3->get('currentUser');
+$username   = $currentUser->data->username;
 ?>
-<div class="swCommentPostedPhoto <?php echo str_replace(':', '_', $photoID) ?>" id="commentImagePost">
-    <div class="swImg">
-        <img class="swCommentImg" src="<?php echo $currentUser->data->profilePic;  ?>" />
+<div class="eachCommentItem verGapBox column-group">
+    <div class="large-20 uiActorCommentPicCol">
+        <a href=""><img src="<?php echo $currentUser->data->profilePic; ?>"></a>
     </div>
-    <div class="commentContentPhoto">
-        <a href="/profile?username=<?php echo $currentUser->data->username?>"><?php echo $authorName;?></a>
-        <label class="swPostedCommment"><?php echo $content; ?></label>
-        <label class="swTimeComment" title="<?php echo $published; ?>"></label>
+    <div class="large-80 uiCommentContent">
+        <p>
+            <a class="timeLineCommentLink" href="/content/myPost?username=<?php echo $username; ?>"><?php echo $authorName; ?></a>
+            <span class="textComment"><?php echo $content; ?></span>
+        </p>
+        <span><a class="linkColor-999999 swTimeComment" name="<?php echo $published; ?>"></a></span>
     </div>
 </div>

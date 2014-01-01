@@ -1,6 +1,7 @@
 <?php
 
 require_once('structure.php');
+require_once(MODELS.'installDB.php');
 $f3 = require(F3.'base.php');
 //not cache for development environment
 $f3->set('CACHE', FALSE);

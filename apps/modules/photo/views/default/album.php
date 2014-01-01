@@ -1,8 +1,11 @@
 <script type="text/javascript" src="<?php echo $this->f3->get('STATIC_MOD'); ?>photo/webroot/js/photo.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('STATIC_MOD'); ?>photo/webroot/js/jquery.uploadfile.min.js"></script>
 <?php
+$currentUser= $this->f3->get('currentUser');
 $albumID    = $this->f3->get('albumID');
 $photos     = $this->f3->get("photos");
+$comments   = $this->f3->get('comments');
+$commentActor   = $this->f3->get('commentActor');
 ?>
 <div class="uiMainColAbout">
     <div class="uiPhotoWrapper">
@@ -37,11 +40,19 @@ $photos     = $this->f3->get("photos");
                         for ($i = 0; $i < count($photos); $i++)
                         {
                             $photoID = substr($photos[$i]->recordID, strpos($photos[$i]->recordID, ':') + 1);
+                            $postPhotoID = str_replace(':', '_',$photos[$i]->recordID);
                             $photoURL= $photos[$i]->data->url;
+                            $description = $photos[$i]->data->description;
+                            $numberComments = $photos[$i]->data->numberComment;
                             ?>
                             <div class="pinItems">
                                 <div class="photoItems">
-                                    <a href="/content/photo/viewPhoto?photoID=<?php echo $photoID; ?>"><img src="<?php echo $photoURL; ?>"></a>
+                                    <a class="viewThisPhoto" id="<?php echo $photoID; ?>">
+                                        <img src="<?php echo $photoURL; ?>">
+                                    </a>
+                                </div>
+                                <div class="photoDescription">
+                                    <span><?php echo $description; ?></span>
                                 </div>
                                 <div class="photoSelectOptions column-group">
                                     <nav class="ink-navigation">
@@ -52,58 +63,70 @@ $photos     = $this->f3->get("photos");
                                         </ul>
                                     </nav>
                                 </div>
-                                <div class="whoLikeThisPost uiBox-PopUp boxLikeTopLeftArrow">
-                                    <span><a href="">Facebook</a>, <a href="">Google</a> and <a href="">4</a> people like this.</span>
-                                </div>
-                                <div class="whoShareThisPost verGapBox">
-                                    <span><a href="">3 Shares</a></span>
-                                </div>
-                                <div class="whoCommentThisPost verGapBox">
-                                    <span><a href="">View all 20 comments</a></span>
-                                </div>
-                                <div class="commentContentWrapper">
-                                    <div class="eachCommentItem verGapBox column-group">
-                                        <div class="large-20 uiActorCommentPicCol">
-                                            <a href=""><img src="../webroot/images/avar.jpg"></a>
+                                <div class="postActionWrapper uiBox-PopUp boxLikeTopLeftArrow photoItem-<?php echo $postPhotoID;?>">
+                                    <?php
+                                    if ($numberComments > 2)
+                                    {
+                                        ?>
+                                        <div class="whoCommentThisPhoto verGapBox" id="<?php echo $postPhotoID;?>">
+                                            <span><i class="statusCounterIcon-comment"></i><a class="viewAll" href="">View all <?php echo $numberComments;?> comments</a></span>
+                                            <span class="numberComments"><?php echo $numberComments;?></span>
                                         </div>
-                                        <div class="large-75 uiCommentContent">
-                                            <p>
-                                                <a class="timeLineCommentLink" href="">Google</a>
-                                                <span class="textComment">It's impossible not to love this guys!! Glory Glory Man United!!</span>
-                                            </p>
-                                            <span><a class="linkColor-999999" href="">20 minutes ago</a></span>
-                                        </div>
-                                    </div>
-                                    <div class="eachCommentItem verGapBox column-group">
-                                        <div class="large-20 uiActorCommentPicCol">
-                                            <a href=""><img src="../webroot/images/avar.jpg"></a>
-                                        </div>
-                                        <div class="large-75 uiCommentContent">
-                                            <p>
-                                                <a class="timeLineCommentLink" href="">Facebook</a>
-                                                <span class="textComment">It's awesome!</span>
-                                            </p>
-                                            <span><a class="linkColor-999999" href="">4 minutes ago</a></span>
-                                        </div>
-                                        <div class="large-5 uiCommentOption">
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="uiStreamCommentBox verGapBox column-group">
-                                    <div class="large-20 uiActorCommentPicCol">
-                                        <a href=""><img src="../webroot/images/avar.jpg"></a>
-                                    </div>
-                                    <div class="large-80 uiTextCommentArea">
-                                        <form class="ink-form">
-                                            <fieldset>
-                                                <div class="control-group">
-                                                    <div class="control">
-                                                        <textarea class="taPostComment" spellcheck="false" placeholder="Write a comment..."></textarea>
+                                    <?php
+                                    }
+                                    ?>
+                                    <?php
+                                    $records = $comments[$photos[$i]->recordID];
+                                    if (!empty($records))
+                                    {
+                                        ?>
+                                        <div class="commentContentWrapper">
+                                            <?php
+                                            $pos = (count($records) < 2 ? count($records) : 2);
+                                            for($j = $pos - 1; $j >= 0; $j--)
+                                            {
+                                                $user   = $commentActor[$comments[$photos[$i]->recordID][$j]->data->actor];
+                                                $actorComment = $comments[$photos[$i]->recordID][$j]->data->actor_name;
+                                                $content= $comments[$photos[$i]->recordID][$j]->data->content;
+                                                $published  = $comments[$photos[$i]->recordID][$j]->data->published;
+                                                ?>
+                                                <div class="eachCommentItem verGapBox column-group">
+                                                    <div class="large-20 uiActorCommentPicCol">
+                                                        <a href="/content/myPost?username=<?php echo $user->data->username; ?>">
+                                                            <img src="<?php echo $user->data->profilePic; ?>">
+                                                        </a>
+                                                    </div>
+                                                    <div class="large-80 uiCommentContent">
+                                                        <p>
+                                                            <a class="timeLineCommentLink" href="/content/myPost?username=<?php echo $user->data->username; ?>"><?php echo $actorComment; ?></a>
+                                                            <span class="textComment"><?php echo $content; ?></span>
+                                                        </p>
+                                                        <span><a class="linkColor-999999 swTimeComment" name="<?php echo $published; ?>"></a></span>
                                                     </div>
                                                 </div>
-                                            </fieldset>
-                                        </form>
+                                            <?php
+                                            } // end for
+                                            ?>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+                                    <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $postPhotoID?>">
+                                        <div class="large-20 uiActorCommentPicCol">
+                                            <a href=""><img src="<?php echo $currentUser->data->profilePic; ?>"></a>
+                                        </div>
+                                        <div class="large-80 uiTextCommentArea">
+                                            <form class="ink-form" id="fmPhotoComment-<?php echo $postPhotoID; ?>">
+                                                <fieldset>
+                                                    <div class="control-group">
+                                                        <div class="control">
+                                                            <input name="postPhotoID" type="hidden" value="<?php echo $postPhotoID?>" />
+                                                            <textarea name="comment" class="taPostComment postComment" id="photoComment-<?php echo $postPhotoID; ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -118,6 +141,7 @@ $photos     = $this->f3->get("photos");
 </div>
 <!--Other part-->
 <div id="fade" class="black_overlay"></div>
+<div id="fadePhoto" class="black_overlay"></div>
 <div class="uiLightUpload uiPopUp">
     <div class="containerPhotoPopUp">
         <div class="actionUpload">
@@ -140,3 +164,4 @@ $photos     = $this->f3->get("photos");
         <div id="status"></div>
     </div>
 </div>
+<div id="uiPhotoView" class="uiPopUp"></div>

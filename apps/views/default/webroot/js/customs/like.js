@@ -1,10 +1,4 @@
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 9/25/13 - 5:01 PM
- * Project: userwired Network - Version: 1.0
- */
-function LikeByElement($element)
+function LikePostByElement($element)
 {
     $(document).ready(function(){
         var Like      = 'Like';
@@ -14,7 +8,6 @@ function LikeByElement($element)
         {
             var getLikeStatus   = $(this).attr('name').replace('likeStatus-', '');
             var getPostID       = $(this).attr('id').replace('likeLinkID-', '');
-            var existElement    = $('.postItem-'+getPostID+' .whoLikeThisPost').length;
             $(this).data("state", {pressed: false});
             if (getLikeStatus == 'like')
             {
@@ -26,14 +19,6 @@ function LikeByElement($element)
                 $(this).html(Like);
                 $(this).data("state", {pressed: false});
             }
-            //console.log('asds ',existElement);
-            /*if (existElement)
-            {
-                $('.postItem-'+getPostID).css('display','block');
-                $('#commentBox-'+getPostID).css('display','block');
-            }else{
-                $('.postItem-'+getPostID).css('display','none');
-            }*/
 
             $(this).click(function()
             {
@@ -88,3 +73,98 @@ function LikeByElement($element)
         })
     });
 }
+
+function LikePhotoByElement($element)
+{
+    $($element).each(function(){
+        var getLikeStatus    = $(this).attr('title');
+        $(this).data("state", {pressed: false});
+        if (getLikeStatus == 'Like')
+        {
+            $(this).addClass('photoNavIcon-like');
+            $(this).data("state", {pressed: false});
+        }else {
+            $(this).addClass('photoNavIcon-unlike');
+            $(this).data("state", {pressed: true});
+        }
+        $(this).click(function(e)
+        {
+            e.preventDefault();
+            var getID = $(this).attr('id').replace('likePhoto-', '');
+            if ($(this).data("state").pressed)
+            {
+                $.ajax({
+                    type: 'POST',
+                    url: '/unlike',
+                    data: $('#likeHiddenID-'+getID).serialize(),
+                    cache: false,
+                    success: function(){
+                        var otherLike = $('#likeSentence-'+getID+' a').length;
+                        if (otherLike)
+                        {
+                            $('#likeSentence-'+getID+' span').remove();
+                        }else {
+                            $('#likeSentence-'+getID).detach();
+                        }
+                    }
+                });
+                $(this).removeClass('photoNavIcon-unlike');
+                $(this).addClass('photoNavIcon-like');
+                $(this).data("state", {pressed: false});
+            }else {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/like',
+                    data: $('#likeHiddenID-'+getID).serialize(),
+                    cache: false,
+                    success: function(){
+                        $('.photoItem-'+getID).fadeIn("slow");
+                        var likeSentence = $('#likeSentence-'+getID).length;
+                        if (likeSentence)
+                        {
+                            $("<span>You and </span>").prependTo("#likeSentence-"+getID);
+                        }else {
+                            $(".tempLike-"+getID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-"+getID+"'>"+
+                                "<span><i class='statusCounterIcon-like'></i>You like this</span>"+
+                                "</div>");
+                        }
+                    }
+                });
+                $(this).removeClass('photoNavIcon-like');
+                $(this).addClass('photoNavIcon-unlike');
+                $(this).data("state", {pressed: true});
+            }
+        });
+    });
+}
+
+/*
+// post a comment for photo
+function PostCommentOnPhoto($element)
+{
+    $($element).bind('keypress',function(e){
+        var code = e.keyCode || e.which;
+        if(code == 13)
+        {
+            var photoID = $(this).attr('id').replace('photoComment-','');
+            var comment = $("#photoComment-"+photoID).val();
+            if (comment == '')
+            {
+                return false;
+            }else {
+                $.ajax({
+                    type: "POST",
+                    url: "/content/photo/postComment",
+                    data: $('#fmPhotoComment-'+photoID).serialize(),
+                    cache: false,
+                    success: function(html){
+                        $("#commentBox-"+photoID).before(html);
+                        $("#photoComment-"+photoID).val('');
+                        updateTime();
+                    }
+                });
+            }
+        }
+    });
+}*/

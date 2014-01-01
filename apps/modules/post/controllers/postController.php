@@ -60,7 +60,7 @@ class PostController extends AppController {
                 {
                     $comments[($status->recordID)]        = $this->Comment->findByCondition("post = ? LIMIT 3 ORDER BY published DESC", array($status->recordID));
                     $numberOfComments[($status->recordID)]= $this->Comment->count("post = ?", array($status->recordID));
-                    //get status follow
+                    //get status follow, like
                     $likeStatus[($status->recordID)]    = $this->getLikeStatus($status->recordID, $currentUser->recordID);
                     $statusFollow[($status->recordID)]  = $this->getFollowStatus($status->recordID, $currentUser->recordID);
                     //get info user actor

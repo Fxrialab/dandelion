@@ -12,7 +12,7 @@ class AppModel {
     {
 		$this->_clusterID = $clusterID;
 		$this->_className = $className;
-		$this->_db =& getDBConnection();			
+		$this->_db = &getDBConnection();
 		$this->_config = $this->_db->DBOpen(DATABASE, USER, PASSWORD);
 		$this->loadHelpers();
 	}
@@ -30,7 +30,7 @@ class AppModel {
             }
         }
     }
-	
+
 	public function __destruct()
     {}
 
@@ -117,15 +117,6 @@ class AppModel {
      */
     public function sqlGremlin($command, $conditions=null, $values=null)
     {
-        /*$toFind = '.map';
-        $check = strpos($command, $toFind);
-        $tempArray = array();
-        if ($check)
-        {
-            $parentResult = $this->checkCommand($toFind, $command, $conditions, $values);
-            $tempArray = $parentResult;
-        }*/
-
         $sql = "SELECT GREMLIN( '".$command."' ) FROM ".$this->_className;
         if ($conditions && $values)
         {
@@ -138,11 +129,7 @@ class AppModel {
         //echo $sql."<br />";
         $queryResult    = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
         $stringResult   = $this->getResultString($queryResult[0]->content);
-        //echo $stringResult;
-        /*if ($tempArray)
-            $result     = $this->getContentGremlin($stringResult, $tempArray);
-        else*/
-            $result     = $this->getContentGremlin($stringResult);
+        $result         = $this->getContentGremlin($stringResult);
 
         return $result;
     }
@@ -289,6 +276,7 @@ class AppModel {
     //create new record in class with column field by key
 	public function create($data, $excludes='')
     {
+        //$this->createClass('sessions','V');
         if (is_string($excludes)) $excludes = explode(",",$excludes);
 
 		$record = new OrientDBRecord();

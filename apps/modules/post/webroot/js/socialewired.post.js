@@ -48,7 +48,7 @@ $(function() {
                     $('#tagElements').css('display', 'none');
                     $("#contentContainer").prepend(html);
                     $('#status').val('');
-                    new LikeByElement('.likePostStatus');
+                    new LikePostByElement('.likePostStatus');
                     new FollowByElement('.followSegments');
                     updateTime();
                 }
@@ -120,37 +120,6 @@ $(function() {
     });
 });
 
-// include video for status
-$(function() {
-    $(".swTagVideo").click(function(e) 
-    {
-        e.preventDefault();
-        $('.videoLinkContain').fadeIn("slow");
-    });
-});
-
-$(function() {
-    $("#submitVideoLink").click(function(e) 
-    {
-        e.preventDefault();
-        var link =  $('#videoLink').val();
-        
-        $.ajax({
-            type: "POST",
-            url: "/post/oembed",
-            data: {url: link},
-            cache: false,
-            success: function(html){                
-                $(".oembed").append(html);
-            }
-        });     
-        
-        $('.videoLinkContain').css('opacity','0');
-        $('#tagElements').removeClass('notag');
-        $('#tagElements').addClass('tagged');
-        $('#tagElements').append('<input type="hidden" id="taggedElement" name="taggedElement" value='+link+' /><input type="hidden" id="taggedType" name="taggedType" value="video"/><div class="oembed"></div>');
-    });
-});
 // more status, comment
 $(function() {
     $("body").on("click", ".whoCommentThisPost", function(e){
