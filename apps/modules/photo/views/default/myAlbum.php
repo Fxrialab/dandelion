@@ -93,7 +93,7 @@ $firstPhoto = $this->f3->get('firstPhoto');
     <div class="containerPhotoPopUp">
         <div class="actionUpload">
             <input name="album_id" id="albumID" value="none" type="hidden">
-            <div id="mulitplefileuploader">Select Files</div>
+            <div id="singleFile">Select Files</div>
             <div class="photoActionBtn">
                 <div class="qualityOption">
                     <input type="checkbox" id="cbQualityPhoto" class="uncheck" value="" name="qualityPhoto">
@@ -112,25 +112,34 @@ $firstPhoto = $this->f3->get('firstPhoto');
     </div>
 </div>
 <div class="uiCreateAlbum uiPopUp">
-    <div class="create-album-container">
-        <div class="headerLightBox">CREATE ALBUM</div>
-        <form id="albumInfo" method="post">
-            <div class="contentLightBox">
-                <div class="containerTitleAlbum">
-                    <input class="titleAlbum" type="text" name="titleAlbum" placeholder="Untitled Album" />
-                </div>
-                <div class="msgCheckAlbum" style="display: none;">
-                    <span class="msgErrorAlbum">Please enter information for title album.</span>
-                    <a class="closeMsgErrorAlbum">x</a>
-                </div>
-                <div class="containerDescriptionAlbum">
-                    <textarea class="descriptionAlbum" name="descriptionAlbum" placeholder="Description Album"></textarea>
-                </div>
+    <div class="uiContainerPopUp">
+        <div class="titlePopUp large-100">
+            <span>Create Album</span>
+        </div>
+        <div class="mainPopUp large-100">
+            <div class="uiAlbumContainer large-100">
+                <form class="ink-form" id="albumInfo">
+                    <fieldset>
+                        <div class="control-group">
+                            <label for="name">Album Name</label>
+                            <div class="control">
+                                <input type="text" name="titleAlbum" class="titleAlbum" autocomplete="off" placeholder="Untitled Album...">
+                            </div>
+                        </div>
+                        <div class="uiAlbumAlerts"></div>
+                        <div class="control-group">
+                            <label for="name">Description</label>
+                            <div class="control">
+                                <textarea name="descriptionAlbum" class="taDescriptionAlbum" spellcheck="false" placeholder="Write description for this album..."></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
             </div>
-            <div class="footerLightBox">
-                <input class="createAlbumButton" type="submit" value="Create" />
-                <a id="closeLightBox" title="Close">Cancel</a>
-            </div>
-        </form>
+        </div>
+        <div class="actionPopUp column-group push-right large-100">
+            <a class="uiMediumButton blue createAlbumButton">Create</a>
+            <a class="uiMediumButton white closeLightBox">Cancel</a>
+        </div>
     </div>
 </div>

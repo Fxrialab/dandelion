@@ -146,7 +146,7 @@ $commentActor   = $this->f3->get('commentActor');
     <div class="containerPhotoPopUp">
         <div class="actionUpload">
             <input name="album_id" id="albumID" value="<?php echo $albumID; ?>" type="hidden">
-            <div id="mulitplefileuploader">Select Files</div>
+            <div id="multiFiles">Select Files</div>
             <div class="photoActionBtn">
                 <div class="qualityOption">
                     <input type="checkbox" id="cbQualityPhoto" class="uncheck" value="" name="qualityPhoto">

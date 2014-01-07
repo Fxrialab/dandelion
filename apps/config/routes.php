@@ -131,6 +131,8 @@ if ($params_full)
                             $controllerFiles = CONTROLLERS.$controller.'.php';
                             if (file_exists($controllerFiles))
                                 include($controllerFiles);
+                            else
+                                $f3->reroute('/');
                             // load all modules in home page
                             if ($controller == 'homeController')
                             {

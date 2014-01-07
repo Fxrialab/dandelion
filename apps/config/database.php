@@ -1,15 +1,13 @@
 <?php
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 7/30/13 - 8:36 AM
- * Project: UserWired Network - Version: beta
- */
 define('HOST', 'localhost');
+define('ROOT', 'root');
+define('ROOT_PW', '40F17CA4648BD2C40E3F79128F53A1903B0A3B8FFF3E5404A3F67902B7448C4A');
 define('USER', 'admin');
-define('PORT', '2424');
 define('PASSWORD', 'admin');
+define('PORT', '2424');
 define('DATABASE', 'dandelion');
+define('ATTEMPT', 'installed');
+define('ALTER_CLASS', 'not');
 define('TIMEOUT', 10);
 
 ?>

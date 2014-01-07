@@ -10,7 +10,7 @@ class Actions extends AppModel
 {
     public function __construct()
     {
-        parent::__construct(16, 'actions');
+        parent::__construct(14, 'actions');
     }
 
     public function __destruct() {

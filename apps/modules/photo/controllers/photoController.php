@@ -49,11 +49,11 @@ class PhotoController extends AppController {
                         $this->f3->set("commentActor", $commentActor);
                     }
                 }
+                $this->f3->set('comments',$commentsOfPhoto);
+                $this->f3->set("likeStatus", $likeStatus);
             }
 
             $this->f3->set('photos',$photos);
-            $this->f3->set("likeStatus", $likeStatus);
-            $this->f3->set('comments',$commentsOfPhoto);
             $this->render($viewPath."myPhoto.php",'modules');
         }
     }
@@ -166,11 +166,11 @@ class PhotoController extends AppController {
                     $fileName   = $_FILES["myfile"]["name"];
                     $path       = $outPutDir. $fileName;
                     move_uploaded_file($_FILES["myfile"]["tmp_name"],$path);
-                    //echo "<br> Error: ".$_FILES["myfile"]["error"];
 
                     $entry = array(
                         'actor'         => $currentUser->recordID,
                         'album'         => '',
+                        'fileName'      => $fileName,
                         'url'           => UPLOAD_URL."test/".$fileName,
                         'thumbnail_url' => '',
                         'description'   => '',
@@ -182,6 +182,7 @@ class PhotoController extends AppController {
                     $this->Photo->create($entry);
                     //get recordID of each photo for pass other info
                     $infoPhotoRC    = $this->Photo->findOne("actor = ? AND statusUpload = 'uploading'", array($currentUser->recordID));
+
                     $data['results'][]  = array(
                         'photoID'   => str_replace(':', '_', $infoPhotoRC->recordID),
                         'fileName'  => $infoPhotoRC->data->fileName,

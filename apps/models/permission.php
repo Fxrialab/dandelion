@@ -9,7 +9,7 @@
 require_once ('app_model.php');
 class Permission extends AppModel {
     public function __construct() {
-        parent::__construct(22, 'permission');
+        parent::__construct(20, 'permission');
     }
 
     public function __destruct() {

@@ -18,6 +18,7 @@ class HomeController extends AppController
     public function index()
     {
         $this->layout = 'index';
+
         if ($this->isLogin())
             header("Location:/home");
         else

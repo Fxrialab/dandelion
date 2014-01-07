@@ -10,6 +10,8 @@ class RouteConfig
     //Notice: Put controller contain function is first
     public $default = array(
         '_GET'                  => "homeController,userController",
+        'install_GET'           => "installController",
+        'installDB_POST'        => "installController",
         'signUp_POST'           => "userController",
         'login_POST'            => "userController",
         'logout_GET'            => "userController",
@@ -53,5 +55,3 @@ class RouteConfig
         'myPhoto_photo'         => "photoController,homePhoto",
     );
 }
-
-//'home|GET'  => "homeController,userController,friendController,followController,notifyController,elementController",

@@ -1005,6 +1005,15 @@ body {
     padding: 5px 10px 0;
 }
 
+.uiMainContainer .ink-tabs .tabs-content {
+    padding-top: 1.5em;
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    margin-top: 0;
+    overflow: hidden;
+}
+
 .uiPostArea {
     padding: 0 20px;
 }
@@ -2197,4 +2206,9 @@ body {
 }
 
 .uiAlbumAlerts {
+}
+
+.uiCreateDB {
+    background-color: #ffffff;
+    padding: 30px 100px;
 }

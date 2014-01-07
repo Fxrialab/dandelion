@@ -19,12 +19,12 @@ $(function() {
 
 $(document).ready(function()
 {
-    var settings = {
+    var settingSingleFile = {
         url: "/content/photo/loadingPhoto",
         method: "POST",
         allowedTypes:"jpg,png,gif",
         fileName: "myfile",
-        multiple: true,
+        multiple: false,
         onSuccess:function(files,data,xhr)
         {
             $('.ajax-file-upload-statusbar').fadeOut('slow');
@@ -37,7 +37,7 @@ $(document).ready(function()
                     "<img src='"+ this.url +"' title='"+ this.fileName +"'/>" +
                     "</div> " +
                     "<div class='writeSomething'>" +
-                    "<textarea rows='4' id='someThingAboutPhoto-"+ this.photoID +"' placeholder='Write something about this photo'></textarea>" +
+                    "<textarea rows='4' id='someThingAboutPhoto-"+ this.photoID +"' spellcheck='false' placeholder='Write something about this photo'></textarea>" +
                     "</div>" +
                     "</div>" +
                     "</form>");
@@ -62,7 +62,51 @@ $(document).ready(function()
         $("#status").html("<font color='red'>Upload is Failed</font>");
         }
     };
-    $("#mulitplefileuploader").uploadFile(settings);
+    var settingMultiFiles = {
+        url: "/content/photo/loadingPhoto",
+        method: "POST",
+        allowedTypes:"jpg,png,gif",
+        fileName: "myfile",
+        multiple: true,
+        onSuccess:function(files,data,xhr)
+        {
+            $('.ajax-file-upload-statusbar').fadeOut('slow');
+            $.each(data.results, function(){
+                console.log(this.url);
+                $('#displayPhotos').append("<form class='photoDataItems' id='photoItems-"+ this.photoID +"'>" +
+                    "<div class='photoWrap'>" +
+                    "<div class='loadedPhoto' id='photo"+ this.photoID +"'>" +
+                    "<div class='wrapperHoverDelete removeImg' title='Remove' id='removePhoto"+ this.photoID +"'></div>" +
+                    "<img src='"+ this.url +"' title='"+ this.fileName +"'/>" +
+                    "</div> " +
+                    "<div class='writeSomething'>" +
+                    "<textarea rows='4' id='someThingAboutPhoto-"+ this.photoID +"' spellcheck='false' placeholder='Write something about this photo'></textarea>" +
+                    "</div>" +
+                    "</div>" +
+                    "</form>");
+                $('#removePhoto'+this.photoID).click(function(){
+                    var photoID = $(this).attr('id').replace('removePhoto','');
+                    console.log(photoID);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/content/photo/removePhoto',
+                        data: {photoID: photoID},
+                        cache: false,
+                        success: function(){
+                            $('#photoItems-'+photoID).detach();
+                        }
+                    });
+                });
+            });
+            new Hover();
+        },
+        onError: function(files,status,errMsg)
+        {
+            $("#status").html("<font color='red'>Upload is Failed</font>");
+        }
+    };
+    $("#singleFile").uploadFile(settingSingleFile);
+    $("#multiFiles").uploadFile(settingMultiFiles);
 });
 
 function Hover()

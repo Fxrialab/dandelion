@@ -51,22 +51,30 @@ class AppModel {
         return $this->_className;
     }
 
+
+
     /**
      * Create an class to OrientDB server
      * @type: V for vertex, E for edge or another superclass
      */
-    public function createClass($className, $type='')
+    public function createClass($type='')
     {
-        if ($className)
-        {
-            if ($type)
-                $sql = "Create class ".$className." extends ".$type;
-            else
-                $sql = "Create class ".$className;
-            $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
-        }else{
-            echo "Syntax error, please check.";
-        }
+        if ($type)
+            $sql = "Create class ".$this->_className." extends ".$type;
+        else
+            $sql = "Create class ".$this->_className;
+        $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
+    }
+
+    /**
+     * Alter class OrientDB server
+     * @supperClass: V for vertex, E for edge or another superclass
+     */
+    public function alterClass($superClass)
+    {
+
+        $sql = "Alter class ".$this->_className." SUPERCLASS ".$superClass;
+        $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
     }
 
     /**
@@ -106,7 +114,6 @@ class AppModel {
             }
             $sql = substr($sql, 0, -1);
         }
-        echo $sql;
         $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
         return $queryResult;
     }

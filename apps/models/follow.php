@@ -3,7 +3,7 @@ require_once('app_model.php');
 
 class Follow extends AppModel {
     public function __construct() {
-        parent::__construct('18','follow');
+        parent::__construct('16','follow');
     }
 
     public function __destruct() {

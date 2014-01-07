@@ -10,7 +10,7 @@ class Photo extends AppModel
 {
     public function __construct()
     {
-        parent::__construct(20, 'photo');
+        parent::__construct(18, 'photo');
     }
 
     public function __destruct() {
