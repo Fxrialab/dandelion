@@ -20,7 +20,8 @@ class InstallController extends AppController
             $this->f3->set('flag', '1');
             $this->render('user/install.php', 'default');
         }else {
-            //$this->f3->set('msgNotice', 'Fill database name');
+            $this->f3->set('msgNotice', 'Fill database name for create DB');
+			$this->f3->set('flag', '2');
             $this->render('user/install.php', 'default');
         }
 
