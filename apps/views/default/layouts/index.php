@@ -1,3 +1,10 @@
+<?php
+//check loaded page
+$time = microtime();
+$time = explode(" ", $time);
+$time = $time[1] + $time[0];
+$start = $time;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <?php $this->element('landingHead'); ?>
@@ -15,3 +22,12 @@
     </div>
 </body>
 </html>
+<?php
+$time = microtime();
+$time = explode(" ", $time);
+$time = $time[1] + $time[0];
+$finish = $time;
+$totaltime = ($finish - $start);
+printf ("Page Loaded in %f Seconds.", $totaltime);
+echo "<br />";
+?>

@@ -6,7 +6,7 @@ define('USER', 'admin');
 define('PASSWORD', 'admin');
 define('PORT', '2424');
 define('DATABASE', 'dandelion');
-define('ATTEMPT', 'installed');
+define('ATTEMPT', 'default');
 define('ALTER_CLASS', 'not');
 define('TIMEOUT', 10);
 

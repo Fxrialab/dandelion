@@ -1,10 +1,8 @@
 <?php
 require_once(MODELS.'db.php');
 
-class InstallController extends AppController
+class InstallController extends Controller
 {
-    //protected $uses     = array("User", "Notify", "Friendship", "Actions");
-
     public function __construct()
     {
         parent::__construct();
@@ -12,7 +10,7 @@ class InstallController extends AppController
 
     public function install()
     {
-        $this->layout = 'index';
+        $this->layout = 'install';
 
         if (ATTEMPT == 'installed')
         {
@@ -29,7 +27,7 @@ class InstallController extends AppController
 
     public function installDB()
     {
-        $this->layout = 'index';
+        $this->layout = 'install';
         $dbName = $this->f3->get('POST.dbName');
 
         if ($dbName)
@@ -48,7 +46,7 @@ class InstallController extends AppController
                     file_put_contents($databaseFile,str_replace('default', 'installed',file_get_contents($databaseFile)));
 
                 }
-                $orientDB->DBClose();
+                //$orientDB->DBClose();
 
                 $db = new OrientDB(HOST, PORT);
 
