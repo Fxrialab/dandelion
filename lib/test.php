@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2012 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -28,24 +28,22 @@ class Test {
 		$data=array();
 
 	/**
-		Return test results
-		@return array
+	*	Return test results
+	*	@return array
 	**/
 	function results() {
 		return $this->data;
 	}
 
 	/**
-		Evaluate condition and save test result
-		@return NULL
-		@param $cond bool
-		@param $text string
+	*	Evaluate condition and save test result
+	*	@return object
+	*	@param $cond bool
+	*	@param $text string
 	**/
 	function expect($cond,$text=NULL) {
 		$out=(bool)$cond;
-		if ($this->level==self::FLAG_True && $out ||
-			$this->level==self::FLAG_False && !$out ||
-			$this->level==self::FLAG_Both) {
+		if ($this->level==$out || $this->level==self::FLAG_Both) {
 			$data=array('status'=>$out,'text'=>$text,'source'=>NULL);
 			foreach (debug_backtrace() as $frame)
 				if (isset($frame['file'])) {
@@ -55,21 +53,22 @@ class Test {
 				}
 			$this->data[]=$data;
 		}
+		return $this;
 	}
 
 	/**
-		Push message to test results
-		@return NULL
-		@param $text string
+	*	Append message to test results
+	*	@return NULL
+	*	@param $text string
 	**/
 	function message($text) {
 		$this->expect(TRUE,$text);
 	}
 
 	/**
-		Class constructor
-		@return NULL
-		@param $level int
+	*	Class constructor
+	*	@return NULL
+	*	@param $level int
 	**/
 	function __construct($level=self::FLAG_Both) {
 		$this->level=$level;

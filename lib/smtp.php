@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2012 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -44,19 +44,19 @@ class SMTP extends Magic {
 		$log;
 
 	/**
-		Fix header
-		@return string
-		@param $key string
+	*	Fix header
+	*	@return string
+	*	@param $key string
 	**/
 	protected function fixheader($key) {
 		return str_replace(' ','-',
-			ucwords(preg_replace('/_-/',' ',strtolower($key))));
+			ucwords(preg_replace('/[_-]/',' ',strtolower($key))));
 	}
 
 	/**
-		Return TRUE if header exists
-		@return bool
-		@param $key
+	*	Return TRUE if header exists
+	*	@return bool
+	*	@param $key
 	**/
 	function exists($key) {
 		$key=$this->fixheader($key);
@@ -64,10 +64,10 @@ class SMTP extends Magic {
 	}
 
 	/**
-		Bind value to e-mail header
-		@return string
-		@param $key string
-		@param $val string
+	*	Bind value to e-mail header
+	*	@return string
+	*	@param $key string
+	*	@param $val string
 	**/
 	function set($key,$val) {
 		$key=$this->fixheader($key);
@@ -75,9 +75,9 @@ class SMTP extends Magic {
 	}
 
 	/**
-		Return value of e-mail header
-		@return string|NULL
-		@param $key string
+	*	Return value of e-mail header
+	*	@return string|NULL
+	*	@param $key string
 	**/
 	function get($key) {
 		$key=$this->fixheader($key);
@@ -85,9 +85,9 @@ class SMTP extends Magic {
 	}
 
 	/**
-		Remove header
-		@return NULL
-		@param $key string
+	*	Remove header
+	*	@return NULL
+	*	@param $key string
 	**/
 	function clear($key) {
 		$key=$this->fixheader($key);
@@ -95,20 +95,20 @@ class SMTP extends Magic {
 	}
 
 	/**
-		Return client-server conversation history
-		@return string
+	*	Return client-server conversation history
+	*	@return string
 	**/
 	function log() {
 		return str_replace("\n",PHP_EOL,$this->log);
 	}
 
 	/**
-		Send SMTP command and record server response
-		@return NULL
-		@param $cmd string
-		@param $log bool
+	*	Send SMTP command and record server response
+	*	@return NULL
+	*	@param $cmd string
+	*	@param $log bool
 	**/
-	protected function dialog($cmd=NULL,$log=FALSE) {
+	protected function dialog($cmd=NULL,$log=TRUE) {
 		$socket=&$this->socket;
 		if (!is_null($cmd))
 			fputs($socket,$cmd."\r\n");
@@ -126,9 +126,9 @@ class SMTP extends Magic {
 	}
 
 	/**
-		Add e-mail attachment
-		@return NULL
-		@param $file
+	*	Add e-mail attachment
+	*	@return NULL
+	*	@param $file
 	**/
 	function attach($file) {
 		if (!is_file($file))
@@ -137,11 +137,12 @@ class SMTP extends Magic {
 	}
 
 	/**
-		Transmit message
-		@return bool
-		@param $message string
+	*	Transmit message
+	*	@return bool
+	*	@param $message string
+	*	@param $log bool
 	**/
-	function send($message) {
+	function send($message,$log=TRUE) {
 		if ($this->scheme=='ssl' && !extension_loaded('openssl'))
 			return FALSE;
 		$fw=Base::instance();
@@ -152,20 +153,20 @@ class SMTP extends Magic {
 			return FALSE;
 		stream_set_blocking($socket,TRUE);
 		// Get server's initial response
-		$this->dialog();
+		$this->dialog(NULL,FALSE);
 		// Announce presence
-		$this->dialog('EHLO '.$fw->get('HOST'),TRUE);
+		$this->dialog('EHLO '.$fw->get('HOST'));
 		if (strtolower($this->scheme)=='tls') {
-			$this->dialog('STARTTLS',TRUE);
+			$this->dialog('STARTTLS');
 			stream_socket_enable_crypto(
 				$socket,TRUE,STREAM_CRYPTO_METHOD_TLS_CLIENT);
-			$this->dialog('EHLO '.$fw->get('HOST'),TRUE);
+			$this->dialog('EHLO '.$fw->get('HOST'));
 		}
 		if ($this->user && $this->pw) {
 			// Authenticate
-			$this->dialog('AUTH LOGIN',TRUE);
-			$this->dialog(base64_encode($this->user),TRUE);
-			$this->dialog(base64_encode($this->pw),TRUE);
+			$this->dialog('AUTH LOGIN');
+			$this->dialog(base64_encode($this->user));
+			$this->dialog(base64_encode($this->pw));
 		}
 		// Required headers
 		$reqd=array('From','To','Subject');
@@ -184,15 +185,15 @@ class SMTP extends Magic {
 			if (!in_array($key,$reqd))
 				$str.=$key.': '.$val.$eol;
 		// Start message dialog
-		$this->dialog('MAIL FROM: '.strstr($headers['From'],'<'),TRUE);
+		$this->dialog('MAIL FROM: '.strstr($headers['From'],'<'));
 		foreach ($fw->split($headers['To'].
 			(isset($headers['Cc'])?(';'.$headers['Cc']):'').
 			(isset($headers['Bcc'])?(';'.$headers['Bcc']):'')) as $dst)
-			$this->dialog('RCPT TO: '.strstr($dst,'<'),TRUE);
-		$this->dialog('DATA',TRUE);
+			$this->dialog('RCPT TO: '.strstr($dst,'<'));
+		$this->dialog('DATA');
 		if ($this->attachments) {
 			// Replace Content-Type
-			$hash=uniqid();
+			$hash=uniqid(NULL,TRUE);
 			$type=$headers['Content-Type'];
 			$headers['Content-Type']='multipart/mixed; '.
 				'boundary="'.$hash.'"';
@@ -221,7 +222,7 @@ class SMTP extends Magic {
 			$out.=$eol;
 			$out.='--'.$hash.'--'.$eol;
 			$out.='.';
-			$this->dialog($out,TRUE);
+			$this->dialog($out);
 		}
 		else {
 			// Send mail headers
@@ -233,21 +234,21 @@ class SMTP extends Magic {
 			$out.=$message.$eol;
 			$out.='.';
 			// Send message
-			$this->dialog($out,TRUE);
+			$this->dialog($out);
 		}
-		$this->dialog('QUIT',TRUE);
+		$this->dialog('QUIT');
 		if ($socket)
 			fclose($socket);
 		return TRUE;
 	}
 
 	/**
-		Instantiate class
-		@param $host string
-		@param $port int
-		@param $scheme string
-		@param $user string
-		@param $pw string
+	*	Instantiate class
+	*	@param $host string
+	*	@param $port int
+	*	@param $scheme string
+	*	@param $user string
+	*	@param $pw string
 	**/
 	function __construct($host,$port,$scheme,$user,$pw) {
 		$this->headers=array(
