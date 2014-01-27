@@ -7,9 +7,12 @@
  */
 // source code structure
 // base
-define ('DS', '/');
-define ('BASE_URL', 'http://dandelion.local/');
-define ('DOCUMENT_ROOT', 'E:\WebDesign\Projects\dandelion' . DS);
+$dir = dirname(__FILE__);
+$dirSource =  substr($dir, 0, strpos($dir, 'apps') - 1);
+
+define ('DS', '\\');
+define ('BASE_URL', 'http://dandelion.vnet/');
+define ('DOCUMENT_ROOT', $dirSource . DS);
 define ('F3', DOCUMENT_ROOT . 'lib' . DS);
 define ('CONFIG', DOCUMENT_ROOT . 'apps' . DS . 'config' . DS);
 

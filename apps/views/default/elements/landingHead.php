@@ -14,8 +14,6 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink-ui.min.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/autoload.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/validate.js"></script>
-    <!--<script type="text/javascript" src="<?php /*echo $this->f3->get('JS'); */?>customs/forgotPassword.js"></script>-->
-    <!--<script type="text/javascript" src="<?php /*echo $this->f3->get('JS'); */?>customs/contact.js"></script>-->
     <script type="text/javascript">
         $(document).ready(function() {
             $("a.uiTabNav").click(function () {

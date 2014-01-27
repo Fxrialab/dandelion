@@ -9,7 +9,7 @@ $f3->set('CACHE', FALSE);
 $f3->set('site1', 'Dandelion');
 $f3->set('site2', 'Welcome to Dandelion Network - Log In, Sign Up');
 // debug level
-$f3->set('DEBUG', 0);
+$f3->set('DEBUG', 3);
 // declare F3 structure
 $f3->set('UI', UI);
 //$f3->set('VIEWS', VIEWS);
