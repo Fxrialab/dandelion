@@ -3,7 +3,7 @@ $currentUserID  = $currentUser->recordID;
 if ($homeViews)
 {
     $status     = $homeViews["actions"];
-    $otherUsers = $homeViews['otherUser'];
+    //$otherUsers  = $homeViews['otherUser'];
     $actor      = $homeViews["actor"];
     $statusID   = $homeViews['statusID'];
     $comment    = $homeViews['comment'];
@@ -23,7 +23,7 @@ if ($homeViews)
     $status_contentShare    = $status->data->contentShare;
     $status_published       = $status->data->published;
     $status_mainStatus      = str_replace(":", "_", $status->data->mainStatus);
-    //var_dump($homeViews);
+    //var_dump($otherUser->data->email);
 ?>
     <div class="uiBoxPostItem">
         <div class="uiBoxPostContainer column-group">
@@ -31,7 +31,7 @@ if ($homeViews)
                 <?php
                 if($status_actor != $currentUserID)
                 {?>
-                    <a href=""><img src="<?php echo $otherUsers->data->profilePic; ?>"></a>
+                    <a href=""><img src="<?php echo $otherUser->data->profilePic; ?>"></a>
                 <?php
                 }else { ?>
                     <a href=""><img src="<?php echo $currentUser->data->profilePic; ?>"></a>
@@ -43,7 +43,7 @@ if ($homeViews)
                     <?php
                     if($status_owner != $status_actor)
                     {
-                        $otherUserName  = ucfirst($otherUsers->data->firstName)." ".ucfirst($otherUsers->data->lastName);
+                        $otherUserName  = ucfirst($otherUser->data->firstName)." ".ucfirst($otherUser->data->lastName);
                         if(!$status_contentShare)
                         {
                             if($currentUserID != $status_owner)
