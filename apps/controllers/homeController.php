@@ -30,6 +30,7 @@ class HomeController extends AppController
         if ($this->isLogin())
         {
             $this->layout = 'home';
+
             //var_dump($_SESSION['loggedUser']->recordID);
             // get activities
             $activitiesRC = $this->Activity->findByCondition("owner = ? AND type = ? ORDER BY published DESC LIMIT 4", array($this->getCurrentUser()->recordID,"post"));
@@ -72,8 +73,8 @@ class HomeController extends AppController
             header("Location: /");
         }
     }
-
-    public function homeAMQ()
+    //Dont use for now
+    /*public function homeAMQ()
     {
         if($this->isLogin())
         {
@@ -102,7 +103,7 @@ class HomeController extends AppController
         }else {
             header("Location: /");
         }
-    }
+    }*/
 
     public function morePostHome()
     {
@@ -172,6 +173,7 @@ class HomeController extends AppController
         {
             $listActionsForSuggest  = $this->Actions->findByCondition("isSuggest = ?", array('yes'));
             $actionIDArrays = array();
+            $actionElement  = array();
             if ($listActionsForSuggest)
             {
                 foreach ($listActionsForSuggest as $listAction)
@@ -180,17 +182,13 @@ class HomeController extends AppController
                 }
 
                 $randomKeys = $this->randomKeys($actionIDArrays, 'randomSuggestElement');
-                //var_dump($randomKeys);
                 foreach ($randomKeys as $key)
                 {
-                    //var_dump($actionIDArrays[$key]);
                     $suggestAction[$actionIDArrays[$key]] = $this->Actions->findByCondition("isSuggest = 'yes' AND @rid = ?", array('#'.$actionIDArrays[$key]));
-                    //var_dump($suggestAction);
+                    array_push($actionElement, $suggestAction[$actionIDArrays[$key]][0]->data->actionElement);
                 }
                 //check if suggest by friend request is null. Will not return to load element
-                $this->f3->set('actionIDArrays', $actionIDArrays);
-                $this->f3->set('randomKeys', $randomKeys);
-                $this->f3->set('listActions', $suggestAction);
+                $this->f3->set('actionElement', $actionElement);
                 $this->render('elements/loadedSuggestElement.php','default');
             }
         }

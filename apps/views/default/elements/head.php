@@ -123,6 +123,9 @@
                             var existFriendRequests = $('.uiBoxFriendRequests .rowItemBox').length;
                             if (existFriendRequests < 1)
                                 $('.uiBoxFriendRequests').hide();
+                            var existPeopleYMK = $('.uiBoxPeopleYouMayKnow .rowItemBox').length;
+                            if (existPeopleYMK < 1)
+                                $('.uiBoxPeopleYouMayKnow').hide();
                             new IsActionsForSuggest();
                         }
                     })
@@ -159,6 +162,9 @@
                                 var existFriendRequests = $('.uiBoxFriendRequests .rowItemBox').length;
                                 if (existFriendRequests < 1)
                                     $('.uiBoxFriendRequests').hide();
+                                var existPeopleYMK = $('.uiBoxPeopleYouMayKnow .rowItemBox').length;
+                                if (existPeopleYMK < 1)
+                                    $('.uiBoxPeopleYouMayKnow').hide();
                                 new IsActionsForSuggest();
                             }
                         })

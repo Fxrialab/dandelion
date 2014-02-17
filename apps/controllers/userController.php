@@ -92,8 +92,8 @@ class UserController extends AppController
             $user           = $this->User->findOne('email = ?', array($email));
             if ($user->data->confirmationCode != 'none')
             {
-                if (($user->data->confirmationCode == $confirmationCode) &&
-                    (time() <= $user->data->confirmationCodeValidUntil))
+                if (($user->data->confirmationCode == $confirmationCode) /*&&
+                    (time() <= $user->data->confirmationCodeValidUntil)*/)
                 {
                     // change status
                     $user->data->status = 'confirmed';

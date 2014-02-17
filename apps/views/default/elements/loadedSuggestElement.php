@@ -1,14 +1,9 @@
 <?php
-/*$actionIDArrays = F3::get('actionIDArrays');
-$randomKeys     = F3::get('randomKeys');
-$listActions    = F3::get('listActions');*/
-
-foreach ($randomKeys as $key)
+//var_dump($actionElement);
+foreach ($actionElement as $action)
 {
 ?>
-    <div class="<?php echo $listActions[$actionIDArrays[$key]][0]->data->actionElement; ?>">
-    </div>
+    <div class="<?php echo $action;?>"></div>
 <?php
 }
-
 ?>

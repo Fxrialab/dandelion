@@ -69,8 +69,10 @@ class PhotoController extends AppController {
                 $currentProfileRC       = $this->User->findOne("username = ?", array($requestCurrentProfile));
                 if ($currentProfileRC)
                     $currentProfileID   = $currentProfileRC->recordID;
-                else
+                else {
                     echo "page not found";
+                    exit;
+                }
             }
             else
                 $currentProfileID       = $this->getCurrentUser()->recordID;

@@ -53,14 +53,14 @@ class InstallController extends Controller
                 $db->DBOpen($dbName, USER, PASSWORD);
 
                 $sql = array(
-                    "create class user"                 => "user",
+                    "create class user extends V"       => "user",
                     "create class notify"               => "notify",
                     "create class sessions"             => "sessions",
                     "create class status"               => "status",
                     "create class comment"              => "comment",
                     "create class activity"             => "activity",
                     "create class actions"              => "actions",
-                    "create class friendship"           => "friendship",
+                    "create class friendship extends E" => "friendship",
                     "create class follow"               => "follow",
                     "create class album"                => "album",
                     "create class photo"                => "photo",

@@ -1,7 +1,7 @@
 <?php
 if ($neighborCurrentUser && current($neighborCurrentUser) != '')
 {
-?>
+    ?>
     <div class="uiBoxFriendRequests column-group friendRequests">
         <div class="boxTitle large-100">
             Friend Requests
@@ -15,7 +15,7 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '')
                 $requestProfile         = $infoRequestUser[$randYourFriend][0]->username;
                 $requestUserName        = ucfirst($infoRequestUser[$randYourFriend][0]->firstName)." ".$infoRequestUser[$randYourFriend][0]->lastName;
                 $requestUserProfilePic  = $infoRequestUser[$randYourFriend][0]->profilePic;
-            ?>
+                ?>
                 <div class="rowItemBox column-group" id="unit<?php echo $friendRequestID; ?>">
                     <div class="profilePicDiv large-30">
                         <img src="<?php echo $requestUserProfilePic; ?>" width="50" height="50">
@@ -26,7 +26,7 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '')
                         if ($numMutualFriends[$randYourFriend] != null)
                         {
                             $numberMutualFriend     = count($numMutualFriends[$randYourFriend]);
-                        ?>
+                            ?>
                             <span><a class="mutualLink large-100" href=""><?php echo $numberMutualFriend; ?> mutual friend</a></span>
                         <?php
                         }

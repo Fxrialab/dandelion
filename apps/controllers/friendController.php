@@ -34,7 +34,7 @@ class FriendController extends AppController
             //save data
             $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
             //After friend request is sent. The friendRequests action will be create
-            $existFriendRequestAction   = $this->Actions->findOne("actionName = ?", array('Friend Requests'));
+            $existFriendRequestAction   = $this->Actions->findOne("actionElement = ?", array('friendRequests'));
             if (!$existFriendRequestAction)
             {
                 $actionRC       = array(
@@ -72,7 +72,7 @@ class FriendController extends AppController
             //save data
             $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
             //After friend is accept. The peopleYouMayKnow action will be create
-            $existPeopleYouMayKnowAction   = $this->Actions->findOne("actionName = ?", array('People You May Know'));
+            $existPeopleYouMayKnowAction   = $this->Actions->findOne("actionElement = ?", array('peopleYouMayKnow'));
             if (!$existPeopleYouMayKnowAction)
             {
                 $actionRC       = array(
