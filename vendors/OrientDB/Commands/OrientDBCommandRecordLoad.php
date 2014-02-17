@@ -2,7 +2,7 @@
 
 /**
  * @author Anton Terekhov <anton@netmonsters.ru>
- * @copyright Copyright Anton Terekhov, NetMonsters LLC, 2011
+ * @copyright Copyright Anton Terekhov, NetMonsters LLC, 2011-2013
  * @license https://github.com/AntonTerekhov/OrientDB-PHP/blob/master/LICENSE
  * @link https://github.com/AntonTerekhov/OrientDB-PHP
  * @package OrientDB-PHP
@@ -71,7 +71,7 @@ class OrientDBCommandRecordLoad extends OrientDBCommandAbstract
         // Cache ignore - use cache
         $this->addByte(0);
         // Flag - Tombstone
-        if($this->parent->protocolVersion >= 13){
+        if ($this->parent->protocolVersion >= 13) {
             $this->addByte(0);
         }
     }

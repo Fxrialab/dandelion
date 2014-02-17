@@ -2,7 +2,7 @@
 
 /**
  * @author Anton Terekhov <anton@netmonsters.ru>
- * @copyright Copyright Anton Terekhov, NetMonsters LLC, 2011
+ * @copyright Copyright Anton Terekhov, NetMonsters LLC, 2011-2013
  * @license https://github.com/AntonTerekhov/OrientDB-PHP/blob/master/LICENSE
  * @link https://github.com/AntonTerekhov/OrientDB-PHP
  * @package OrientDB-PHP
@@ -75,7 +75,7 @@ class OrientDB
      * Client protocol version
      * @var int
      */
-    public $clientVersion = 13;
+    public $clientVersion = 15;
 
     /**
      * Server's protocol version.
@@ -116,7 +116,7 @@ class OrientDB
 
     const DRIVER_NAME = 'OrientDB-PHP';
 
-    const DRIVER_VERSION = 'beta-0.4.8';
+    const DRIVER_VERSION = 'beta-0.4.9';
 
     /**
      * Record type Bytes
@@ -259,8 +259,7 @@ class OrientDB
      */
     public function __destruct()
     {
-        if ($this->isDBOpen() &&
-                $this->socket->isValid()) {
+        if ($this->isDBOpen() && $this->socket->isValid()) {
             $this->DBClose();
         }
     }
@@ -295,7 +294,7 @@ class OrientDB
         $className = 'OrientDBCommand' . ucfirst($name);
         if (class_exists($className)) {
             /**
-             * @var OrientDBCommandAbstract
+             * @var $command OrientDBCommandAbstract
              */
             $command = new $className($this);
             $this->canExecute($command);
@@ -369,7 +368,7 @@ class OrientDB
     public function setProtocolVersion($version)
     {
         $this->protocolVersion = $version;
-        if ($this->protocolVersion != $this->clientVersion) {
+        if ($this->protocolVersion < $this->clientVersion) {
             throw new OrientDBException('Binary protocol is uncompatible with the Server connected: clientVersion=' . $this->clientVersion . ', serverVersion=' . $this->protocolVersion);
         }
     }
@@ -507,13 +506,13 @@ if (!function_exists('OrientDB_autoload')) {
             switch ($classToken) {
                 case 'Command':
                     $fileName = 'Commands/' . $className . '.php';
-                break;
+                    break;
                 case 'Type':
                     $fileName = 'OrientDBDataTypes.php';
-                break;
+                    break;
                 default:
                     $fileName = $className . '.php';
-                break;
+                    break;
             }
             $fullName = dirname(__FILE__) . '/' . $fileName;
             if (file_exists($fullName)) {

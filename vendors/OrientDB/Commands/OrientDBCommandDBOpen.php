@@ -2,7 +2,7 @@
 
 /**
  * @author Anton Terekhov <anton@netmonsters.ru>
- * @copyright Copyright Anton Terekhov, NetMonsters LLC, 2011
+ * @copyright Copyright Anton Terekhov, NetMonsters LLC, 2011-2013
  * @license https://github.com/AntonTerekhov/OrientDB-PHP/blob/master/LICENSE
  * @link https://github.com/AntonTerekhov/OrientDB-PHP
  * @package OrientDB-PHP
@@ -82,6 +82,8 @@ class OrientDBCommandDBOpen extends OrientDBCommandAbstract
         }
         $this->debugCommand('config_bytes');
         $config = $this->readBytes();
+        $this->debugCommand('orientdb-release-string');
+        $this->readString();
 
         return array(
             'clusters' => $clusters,
