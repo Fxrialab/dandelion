@@ -10,7 +10,7 @@ class Status extends AppModel
 {
     public function __construct()
     {
-        parent::__construct(11, 'status');
+        parent::__construct(14, 'status');
     }
 
     public function __destruct() {

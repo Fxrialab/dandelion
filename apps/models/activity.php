@@ -10,7 +10,7 @@ class Activity extends AppModel
 {
     public function __construct()
     {
-        parent::__construct(13, 'activity');
+        parent::__construct(16, 'activity');
     }
 
     public function __destruct() {

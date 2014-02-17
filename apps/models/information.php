@@ -9,7 +9,7 @@
 require_once ('app_model.php');
 class Information extends AppModel {
     public function __construct() {
-        parent::__construct(19, 'information');
+        parent::__construct(22, 'information');
     }
 
     public function __destruct() {

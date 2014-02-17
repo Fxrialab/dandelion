@@ -51,8 +51,6 @@ class AppModel {
         return $this->_className;
     }
 
-
-
     /**
      * Create an class to OrientDB server
      * @type: V for vertex, E for edge or another superclass
@@ -92,7 +90,7 @@ class AppModel {
                 $sql = $sql . ' ' . $key . " = " . "'" . $this->SecurityHelper->postIn($value) . "',";
         }
         $sql = substr($sql, 0, -1);
-        echo $sql;
+        //echo $sql;
         $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
 
         return $queryResult;
@@ -135,10 +133,27 @@ class AppModel {
         }
         //echo $sql."<br />";
         $queryResult    = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
+
         $stringResult   = $this->getResultString($queryResult[0]->content);
+
         $result         = $this->getContentGremlin($stringResult);
 
         return $result;
+    }
+
+    /**
+     * GREMLIN() console command line
+     *
+     */
+    public function retrieveVertex($vertexID, $param=null)
+    {
+        if ($param)
+            $command = "g.v('".$vertexID."').".$param;
+        else
+            $command = "g.v('".$vertexID."')";
+
+        $records = $this->_db->selectGremlin($command);
+        return $records;
     }
 
     /**
@@ -150,13 +165,6 @@ class AppModel {
         $parentCommand = substr($command,0, strlen($command) - strlen($find));
         $resultID = $this->sqlGremlin($parentCommand, $conditions, $values);
         return $resultID;
-    }
-
-    public function testGremlin()
-    {
-        $sql = "select gremlin('current') from user where username = 'naruto'";
-        $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
-        return $queryResult;
     }
 
     /**
@@ -191,8 +199,7 @@ class AppModel {
      */
     public function getContentGremlin($resultGremlin, $parentResult=null)
     {
-        //echo $resultGremlin."<br />";
-        $toFirstFind = '(com.tinkerpop.blueprints.impls.orient.OrientVertex|#';
+        $toFirstFind = 'com.tinkerpop.blueprints.impls.orient.OrientVertex|#';
         $pos1 =  strpos($resultGremlin,$toFirstFind);
         $arrayResult = array();
         if ($pos1)
@@ -204,31 +211,25 @@ class AppModel {
             $pos2 = strpos($resultGremlin,$toSecondFind);
             if ($pos2)
             {
-                $replace = str_replace(array('v[#', ']'), '', $resultGremlin);
+                $replace = str_replace(array('v(user)[#', ']'), '', $resultGremlin);
                 array_push($arrayResult, $replace);
             }else {
                 $toThirdFind = '}';
                 $pos3 = strpos($resultGremlin,$toThirdFind);
                 if ($pos3)
                 {
-                    /*if ($parentResult)
-                    {*/
-                        $startPos = strpos($resultGremlin, '[');
-                        $endPos = strpos($resultGremlin, ']');
-                        if (!$startPos && !$endPos)
-                        {
-                            $jsonString = '['.$resultGremlin.']';;
-                        }else {
-                            $jsonString = $resultGremlin;
-                        }
-                        //$replace = str_replace(array('"'), '', $jsonString);
-                        $obj = json_decode($jsonString);
-                        //var_dump($parentResult);
-                        //echo $jsonString;
-                        //var_dump($obj);
-                        $arrayResult = $obj;
-                        //$arrayResult = array_combine($parentResult, $obj);
-                    //}
+                    $startPos = strpos($resultGremlin, '[');
+                    $endPos = strpos($resultGremlin, ']');
+                    if (!$startPos && !$endPos)
+                    {
+                        $jsonString = '['.$resultGremlin.']';;
+                    }else {
+                        $jsonString = $resultGremlin;
+                    }
+
+                    $obj = json_decode($jsonString);
+
+                    $arrayResult = $obj;
                 }else {
                     $replace = str_replace(array('"', '[', ']'), '', $resultGremlin);
                     $arrayResult = explode(',', $replace);
@@ -241,11 +242,10 @@ class AppModel {
     public function searchByGremlin($command)
     {
         $sql = "SELECT GREMLIN( '".$command."' ) FROM ".$this->_className;
-        //echo $sql."<br />";
         $queryResult    = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
         $stringResult   = $this->getString($queryResult);
-        //var_dump($stringResult);
         $result     = $this->getContentResult($stringResult);
+
         return $result;
     }
 
@@ -272,7 +272,7 @@ class AppModel {
             $pos2[$i] = strpos($resultGremlin[$i],$toSecondFind);
             if ($pos2[$i])
             {
-                $replace[$i] = str_replace(array('v[#', ']'), '', $resultGremlin[$i]);
+                $replace[$i] = str_replace(array('v(user)[#', ']'), '', $resultGremlin[$i]);
                 array_push($arrayResult, $replace[$i]);
             }
         }
@@ -354,7 +354,7 @@ class AppModel {
 			$conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
 		}
 		//$conditionQuery
-		$sql =  "UPDATE " . $this->_className . " SET ";
+		$sql =  "UPDATE " . $this->_className . " SET";
 	
 		foreach ($data as $key=>$value) {
 			$sql = $sql . ' ' . $key . " = " . "'" . $this->SecurityHelper->postIn($value) . "',";

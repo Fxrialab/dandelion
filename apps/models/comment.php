@@ -10,7 +10,7 @@ class Comment extends AppModel
 {
     public function __construct()
     {
-        parent::__construct(12, 'comment');
+        parent::__construct(15, 'comment');
     }
 
     public function __destruct() {

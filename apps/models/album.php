@@ -10,7 +10,7 @@ class Album extends AppModel
 {
     public function __construct()
     {
-        parent::__construct(17, 'album');
+        parent::__construct(20, 'album');
     }
 
     public function __destruct() {
