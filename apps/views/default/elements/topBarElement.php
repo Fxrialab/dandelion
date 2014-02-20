@@ -7,7 +7,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
     <div class="column-group fixMarginTopBottom-10">
         <div class="large-80">
             <div class="large-20">
-                <a href=""><i class="topNavIcon1-logo"></i></a>
+                <a href="/"><i class="topNavIcon1-logo"></i></a>
             </div>
             <div class="large-5">
                 <a href="/"><i class="topNavIcon1-home"></i></a>
