@@ -2,7 +2,7 @@
 if ($yourFriends && current($yourFriends) != '' && $yourFriendArrays)
 {
     ?>
-    <div class="uiBoxPeopleYouMayKnow column-group friendRequests">
+    <div class="uiBoxPeopleYouMayKnow column-group peopleYouMayKnow">
         <div class="boxTitle large-100">
             People You May Know
         </div>

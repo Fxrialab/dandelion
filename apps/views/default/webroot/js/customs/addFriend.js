@@ -60,8 +60,9 @@ function IsActionsForSuggest()
         //for add friend of people you may know
         $('.uiAddFriend').each(function()
         {
-            $('body').on('click', '.uiAddFriend', function()
+            $('body').on('click', '.uiAddFriend', function(e)
             {
+                e.preventDefault();
                 var yourFriendID = $('.uiAddFriend').attr('id');
                 console.log(yourFriendID);
                 $(this).html(friendRequest);
@@ -72,12 +73,9 @@ function IsActionsForSuggest()
                     cache   : false,
                     success : function(){
                         $('#unit'+yourFriendID).fadeOut(1000);
-                        var length = $(".peopleYouMayKnow .moduleContent > div").length;
-                        console.log(length);
-                        if (length == 0)
-                        {
-                            $('.peopleYouMayKnow').hide();
-                        }
+                        var existPeopleYMK = $('.uiBoxPeopleYouMayKnow .rowItemBox').length;
+                        if (existPeopleYMK < 1)
+                            $('.uiBoxPeopleYouMayKnow').hide();
                     }
                 });
             })
@@ -85,8 +83,9 @@ function IsActionsForSuggest()
         //for confirm friend of friend requests
         $('.confirmFriend').each(function()
         {
-            $('body').on('click', '.confirmFriend', function()
+            $('body').on('click', '.confirmFriend', function(e)
             {
+                e.preventDefault();
                 var friendRequestID = $('.confirmFriend').attr('id');
                 $.ajax({
                     type:   'POST',
@@ -95,6 +94,9 @@ function IsActionsForSuggest()
                     cache:  false,
                     success: function(){
                         $('#unit'+friendRequestID).fadeOut(1000);
+                        var existFriendRequests = $('.uiBoxFriendRequests .rowItemBox').length;
+                        if (existFriendRequests < 1)
+                            $('.uiBoxFriendRequests').hide();
                     }
                 });
             })
