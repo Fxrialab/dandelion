@@ -416,17 +416,6 @@ class AppModel {
 		return $queryResult;
 	}
 
-    /*
-     * Function createLink($linkName,$linkType,$condition);
-     *  Where: $linkName : Tên liên kết sẽ được tạo trong class.
-     *         $linkType : Loại liên kết được tạo(Notice at http://fxrialab.net/dokuwiki/doku.php?id=projects:socialnetwork:graph-orientdb).
-     *         $condition : Điều kiện để tạo liên kết .
-     * Example : CREATE LINK comments TYPE LINKSET FROM comments.PostId To posts.Id INVERSE
-     *  Where : comments là tên liên kết giữa class comment và post.
-     *          LINKSET là loại liên kết (1-N) của 2 class comment và post.
-     *          comments.PostId To posts.Id là điều kiện để tạo liên kết.
-     * example:  CREATE LINK comments TYPE LINKSET FROM comments.!PostId To posts.Id INVERSE
-     * */
     public function createLink($linkName, $linkType, $desClass, $desProp)
     {
         $sql="CREATE LINK ".$linkName." TYPE ".$linkType." FROM ". $desClass." TO ".$desProp." INVERSE";

@@ -3,7 +3,7 @@ $currentUserID  = $currentUser->recordID;
 if ($homeViews)
 {
     $status     = $homeViews["actions"];
-    //$otherUsers  = $homeViews['otherUser'];
+    $otherUserProfilePic  = $homeViews['otherUser_profilePic'];
     $actor      = $homeViews["actor"];
     $statusID   = $homeViews['statusID'];
     $comment    = $homeViews['comment'];
@@ -12,7 +12,8 @@ if ($homeViews)
     $numberComment  = $homeViews['numberComments'];
     $likeStatus     = $homeViews['likeStatus'];
     $statusFollow   = $homeViews['statusFollow'];
-    $userComment    = $homeViews['userComment'];
+    $userCommentProfilePic    = $homeViews['userComment_profilePic'];
+    $cm_username    = $homeViews['userComment_username'];
     $rpStatusID = str_replace(":", "_", $statusID);
     $status_owner   = $status->data->owner;
     $status_actor   = $status->data->actor;
@@ -23,7 +24,6 @@ if ($homeViews)
     $status_contentShare    = $status->data->contentShare;
     $status_published       = $status->data->published;
     $status_mainStatus      = str_replace(":", "_", $status->data->mainStatus);
-    //var_dump($otherUser->data->email);
 ?>
     <div class="uiBoxPostItem">
         <div class="uiBoxPostContainer column-group">
@@ -31,7 +31,7 @@ if ($homeViews)
                 <?php
                 if($status_actor != $currentUserID)
                 {?>
-                    <a href=""><img src="<?php echo $otherUser->data->profilePic; ?>"></a>
+                    <a href=""><img src="<?php echo $otherUserProfilePic; ?>"></a>
                 <?php
                 }else { ?>
                     <a href=""><img src="<?php echo $currentUser->data->profilePic; ?>"></a>
@@ -208,7 +208,6 @@ if ($homeViews)
                             $pos = (count($records) < 3 ? count($records) : 3);
                             for($j = $pos - 1; $j >= 0; $j--)
                             {
-                                $user = $userComment[$records[$j]->data->actor];
                                 $actorComment = $records[$j]->data->actor_name;
                                 $tagged = $records[$j]->data->tagged;
                                 $content= $records[$j]->data->content;
@@ -216,11 +215,11 @@ if ($homeViews)
                             ?>
                                 <div class="eachCommentItem verGapBox column-group">
                                     <div class="large-10 uiActorCommentPicCol">
-                                        <a href=""><img src="<?php echo $user->data->profilePic; ?>"></a>
+                                        <a href=""><img src="<?php echo $userCommentProfilePic; ?>"></a>
                                     </div>
                                     <div class="large-85 uiCommentContent">
                                         <p>
-                                            <a class="timeLineCommentLink" href="/content/myPost?username=<?php //echo $actorComment; ?>"><?php echo $actorComment; ?></a>
+                                            <a class="timeLineCommentLink" href="/content/myPost?username=<?php echo $cm_username; ?>"><?php echo $actorComment; ?></a>
                                             <?php
                                             if($tagged =='none')
                                             {

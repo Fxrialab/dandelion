@@ -49,7 +49,8 @@ foreach($js as $jshome){
             <?php
             if($existActivities && $activities){
                 foreach($activities  as $homeViews){
-                    foreach(glob(MODULES.$homeViews['path'].'home.php') as $views){
+                    foreach(glob(MODULES.$homeViews['path'].'home.php') as $views)
+                    {
                         require $views;
                     }
                 }

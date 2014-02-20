@@ -34,11 +34,14 @@ class HomePost extends AppController
                     for($j = $pos - 1; $j >= 0; $j--)
                     {
                         $userComment[$comments[$j]->data->actor] = $this->User->load($comments[$j]->data->actor);
+                        $userComment_profilePic = $userComment[$comments[$j]->data->actor]->data->profilePic;
+                        $userComment_username   = $userComment[$comments[$j]->data->actor]->data->username;
                     }
                 }else {
-                    $userComment = null;
+                    $userComment_profilePic = null;
+                    $userComment_username = null;
                 }
-                //var_dump($userComment);
+
                 $entry = array(
                     'type'          => 'post',
                     'key'           => $key,
@@ -50,8 +53,9 @@ class HomePost extends AppController
                     'actions'       => $statusRC,
                     'actor'         => $statusRC->data->actor,
                     'statusID'      => $statusID,
-                    'otherUser'     => $userRC,
-                    'userComment'   => $userComment,
+                    'otherUser_profilePic'      => $userRC->data->profilePic,
+                    'userComment_profilePic'    => $userComment_profilePic,
+                    'userComment_username'      => $userComment_username,
                     'path'          => Register::getPathModule('post'),
                 );
             }
