@@ -436,4 +436,54 @@ class UserController extends AppController
             header("Location:/");
         }
     }
+
+    public function about()
+    {
+        if ($this->isLogin())
+        {
+            $this->layout = "other";
+
+            //set currentUser and otherUser for check in profile element and header
+            $this->f3->set('currentUser', $this->getCurrentUser());
+            $this->f3->set('otherUser', $this->getCurrentUser());
+            $this->render('user/about.php', 'default');
+        }
+    }
+
+    public function loadBasicInfo()
+    {
+        if ($this->isLogin())
+        {
+            $gender =  $this->f3->get('POST.gender');
+            $interest =  $this->f3->get('POST.interest');
+            $relation =  $this->f3->get('POST.relation');
+            $day    =  $this->f3->get('POST.day');
+            $month  =  $this->f3->get('POST.month');
+            $year   =  $this->f3->get('POST.year');
+
+            if ($gender && $interest && $relation && $day && $month && $year)
+            {
+                //set basic info to edit popUpOver
+                $this->f3->set('month', $month);
+                $this->f3->set('day', $day);
+                $this->f3->set('year', $year);
+                $this->f3->set('gender', $gender);
+                $this->f3->set('relation', $relation);
+                $this->f3->set('interest', $interest);
+
+                $this->render('user/editBasicInfo.php', 'default');
+            }
+
+        }
+    }
+
+    public function editBasicInfo()
+    {
+        if ($this->isLogin())
+        {
+            $month  = $this->f3->get('POST.change_Month');
+            $day    = $this->f3->get('POST.change_Day');
+            $year   = $this->f3->get('POST.change_Year');
+        }
+    }
 }

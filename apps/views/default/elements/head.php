@@ -19,6 +19,7 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery.oembed.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/pretty.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/search.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/dropDownStyle.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/addFriend.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/follow.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/like.js"></script>
@@ -93,7 +94,7 @@
             this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
             this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
             return this;
-        }
+        };
     </script>
     <script type="text/javascript">
         $(".autoloadModuleElement").ready(function()

@@ -46,6 +46,10 @@ class RouteConfig
         /* Route config for search*/
         'search_POST'           => "homeController",
         'moreSearch_GET'        => "homeController",
+        /* Route config for about page*/
+        'about_GET'             => "userController",
+        'loadBasicInfo_POST'    => "userController",
+        'editBasicInfo_POST'    => "userController",
     );
 
     public $modules = array(

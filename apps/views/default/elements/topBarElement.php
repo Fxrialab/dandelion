@@ -27,7 +27,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
             <div class="large-15">
                 <div class="large-30 content-center uiFriendRequests">
                     <a href="" class="showRequestFriends"><i class="topNavIcon1-requestFriends"></i></a>
-                    <!--<div class="uiFriendRequestsPopUpOver uiBox-PopUp topRightCenterArrow">
+                    <div class="uiFriendRequestsPopUpOver uiBox-PopUp topRightCenterArrow">
                         <div class="titleHeaderPopUpOver">
                             Friend Requests
                         </div>
@@ -38,7 +38,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
                                         <img src="../webroot/images/avar.jpg">
                                     </div>
                                     <div class="profileInfoDiv large-45">
-                                        <p><a class="timeLineLink large-100" href="">Tùy Tâm Sở Dục</a></p>
+                                        <p><a class="timeLineLink large-100" href="">User 01</a></p>
                                         <span><a class="mutualLink large-100" href="">4 mutual friend</a></span>
 
                                     </div>
@@ -52,7 +52,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
                                         <img src="../webroot/images/avar.jpg">
                                     </div>
                                     <div class="profileInfoDiv large-45">
-                                        <p><a class="timeLineLink large-100" href="">Phong Trung Chi Thần</a></p>
+                                        <p><a class="timeLineLink large-100" href="">User 02</a></p>
                                         <span><a class="mutualLink large-100" href="">2 mutual friend</a></span>
 
                                     </div>
@@ -66,7 +66,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
                         <div class="uiSeeAllItems">
                             <a href="" class="seeAllLink">See All</a>
                         </div>
-                    </div>-->
+                    </div>
                 </div>
                 <div class="large-30 content-center uiMessages">
                     <a href="" class="showMessages"><i class="topNavIcon1-messages"></i></a>
@@ -81,7 +81,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
                                         <img src="../webroot/images/avar.jpg">
                                     </div>
                                     <div class="profileInfoDiv large-80">
-                                        <p><a class="timeLineLink large-100" href="">Tùy Tâm Sở Dục</a></p>
+                                        <p><a class="timeLineLink large-100" href="">User 01</a></p>
                                         <span>hello guys</span>
                                         <p><a href="#" class="linkColor-999999" title="">37 minutes ago</a></p>
                                     </div>
@@ -91,7 +91,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
                                         <img src="../webroot/images/avar.jpg">
                                     </div>
                                     <div class="profileInfoDiv large-80">
-                                        <p><a class="timeLineLink large-100" href="">Phong Trung Chi Thần</a></p>
+                                        <p><a class="timeLineLink large-100" href="">User 03</a></p>
                                         <span>good morning</span>
                                         <p><a href="#" class="linkColor-999999" title="">37 minutes ago</a></p>
                                     </div>
@@ -117,7 +117,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
                                     </div>
                                     <div class="profileInfoDiv large-85">
                                         <p class="infoContent">
-                                            <b class="timeLineLink fixColor-0069d6">Uchiha Sasuke</b> likes your comment:
+                                            <b class="timeLineLink fixColor-0069d6">User 01</b> likes your comment:
                                             <span>"look good"</span>
                                         </p>
                                         <span class="timePosted"><a href="#" class="linkColor-999999" title="">37 minutes ago</a></span>
@@ -129,7 +129,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
                                     </div>
                                     <div class="profileInfoDiv large-85">
                                         <p class="infoContent">
-                                            <b class="timeLineLink fixColor-0069d6">Phong Trung Chi Thần</b> posted in
+                                            <b class="timeLineLink fixColor-0069d6">User 04</b> posted in
                                             <b class="timeLineLink fixColor-0069d6">Marketing Online</b>
                                         </p>
                                         <span class="timePosted">

@@ -274,7 +274,7 @@ if ($homeViews)
                     <nav class="ink-navigation">
                         <ul class="menu vertical">
                             <li><a class="test" href="#">Report this post</a></li>
-                            <li><a href="#">Option 1</a></li>
+                            <li><a href="#">Delete</a></li>
                         </ul>
                     </nav>
                 </div>

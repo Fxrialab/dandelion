@@ -11,7 +11,7 @@ $statusID   = str_replace(':', '_', $status->recordID);
         {
             e.preventDefault();
             var statusID = $(this).attr('id').replace('shareStatus-','');
-            var txt = $('#contentShare-'+statusID).val();
+            //var txt = $('#contentShare-'+statusID).val();
             $.ajax({
                 type: "POST",
                 url: "/content/post/insertStatus",
