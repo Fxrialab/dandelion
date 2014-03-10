@@ -4,6 +4,7 @@ if ($homeViews)
 {
     $status     = $homeViews["actions"];
     $otherUserProfilePic  = $homeViews['otherUser_profilePic'];
+    $otherUserUserName      = $homeViews['otherUser_username'];
     $actor      = $homeViews["actor"];
     $statusID   = $homeViews['statusID'];
     $comment    = $homeViews['comment'];
@@ -60,7 +61,7 @@ if ($homeViews)
                         <?php
                         }
                     }else { ?>
-                        <a href="" class="timeLineLink"><?php echo $status_username;?></a>
+                        <a href="/content/myPost?username=<?php echo $otherUserUserName;?>" class="timeLineLink"><?php echo $status_username;?></a>
                     <?php
                     }
                     ?>

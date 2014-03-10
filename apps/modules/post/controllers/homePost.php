@@ -54,6 +54,7 @@ class HomePost extends AppController
                     'actor'         => $statusRC->data->actor,
                     'statusID'      => $statusID,
                     'otherUser_profilePic'      => $userRC->data->profilePic,
+                    'otherUser_username'        => $userRC->data->username,
                     'userComment_profilePic'    => $userComment_profilePic,
                     'userComment_username'      => $userComment_username,
                     'path'          => Register::getPathModule('post'),
