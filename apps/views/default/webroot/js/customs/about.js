@@ -9,23 +9,49 @@ $(document).ready(function(){
         var gender      = $('.txtGender').html();
         var interest    = $('.txtInterest').html();
         var relation    = $('.txtRelation').html();
-        console.log('txtRelation', day);
+        var birthDayStatus  = $('#birthDateIcon').attr('class').replace(' icon-large', '').replace('icon-', '');
+        var birthYearStatus = $('#birthYearIcon').attr('class').replace(' icon-large', '').replace('icon-', '');
+        var genderStatus    = $('#genderIcon').attr('class').replace(' icon-large', '').replace('icon-', '');
+        var interestStatus  = $('#interestIcon').attr('class').replace(' icon-large', '').replace('icon-', '');
+        var relationStatus  = $('#relationIcon').attr('class').replace(' icon-large', '').replace('icon-', '');
+
+        console.log('txtRelation', birthDayStatus);
         $.ajax({
             async: true,
             type: 'POST',
             beforeSend: function(){
                 $('.uiBasicInfoEditPopUpOver').addClass('loading');
             },
+            url: '/loadBasicInfo',
+            data: {month:month, day:day, year:year, gender:gender, interest:interest, relation:relation,
+                birthDayStatus:birthDayStatus, birthYearStatus:birthYearStatus, genderStatus:genderStatus, interestStatus:interestStatus, relationStatus:relationStatus},
             complete: function(request, json) {
                 $('.uiBasicInfoEditPopUpOver').removeClass('loading');
                 $('.uiBasicInfoEditPopUpOver').html(request.responseText);
-            },
-            url: '/loadBasicInfo',
-            data: {month:month, day:day, year:year, gender:gender, interest:interest, relation:relation}
+            }
         });
         return false;
     });
+    //Education and Work
+    $('#eduWork').click(function (e){
+        e.preventDefault();
+        $('.uiEduWorkEditPopUpOver').show();
 
+        $.ajax({
+            async: true,
+            type: 'POST',
+            beforeSend: function(){
+                $('.uiEduWorkEditPopUpOver').addClass('loading');
+            },
+            url: '/loadEduWork',
+            data: {},
+            complete: function(request, json) {
+                $('.uiEduWorkEditPopUpOver').removeClass('loading');
+                $('.uiEduWorkEditPopUpOver').html(request.responseText);
+            }
+        });
+        return false;
+    });
 });
 
 function closePopUpOver($popUpOver) {

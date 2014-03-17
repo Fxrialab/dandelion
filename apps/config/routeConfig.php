@@ -50,6 +50,10 @@ class RouteConfig
         'about_GET'             => "userController",
         'loadBasicInfo_POST'    => "userController",
         'editBasicInfo_POST'    => "userController",
+        'loadEduWork_POST'      => "userController",
+        'addWork_POST'          => "userController",
+        'editEduWork_POST'      => "userController",
+        'searchWork_POST'       => "userController",
     );
 
     public $modules = array(

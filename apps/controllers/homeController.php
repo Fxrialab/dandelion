@@ -220,7 +220,7 @@ class HomeController extends AppController
                 'success'   => false,
                 'error'     => ''
             );
-            $command = $this->getSearchCommand(array('firstName', 'lastName', 'fullName'), $searchText);
+            $command    = $this->getSearchCommand(array('firstName', 'lastName', 'fullName'), $searchText);
             $result     = $this->User->searchByGremlin($command);
             if ($result)
             {

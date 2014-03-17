@@ -23,31 +23,31 @@
                         <div class="rowBoxItem column-group">
                             <div class="large-40 leftColBox">Birth Date</div>
                             <div class="large-50 rightColBox fixColor-111111 txtBirthDate">November 20</div>
-                            <div class="large-10"><i class="icon-globe icon-large"></i></div>
+                            <div class="large-10"><a href=""><i class="icon-globe icon-large" id="birthDateIcon"></i></a></div>
                         </div>
                         <div class="rowBoxItem column-group">
                             <div class="large-40 leftColBox">Birth Year</div>
                             <div class="large-50 rightColBox fixColor-111111 txtBirthYear">1990</div>
-                            <div class="large-10"><i class="icon-globe icon-large"></i></div>
+                            <div class="large-10"><a href=""><i class="icon-globe icon-large" id="birthYearIcon"></i></a></div>
                         </div>
                         <div class="rowBoxItem column-group">
                             <div class="large-40 leftColBox">Gender</div>
                             <div class="large-50 rightColBox fixColor-111111 txtGender">Male</div>
-                            <div class="large-10"><i class="icon-globe icon-large"></i></div>
+                            <div class="large-10"><a href=""><i class="icon-globe icon-large" id="genderIcon"></i></a></div>
                         </div>
                         <div class="rowBoxItem column-group">
                             <div class="large-40 leftColBox">Interested In</div>
                             <div class="large-50 rightColBox fixColor-111111 txtInterest">Women</div>
                             <div class="large-10">
                                 <span class="tooltip" data-tip-text="Only Me" data-tip-where="up" data-tip-color="blue">
-                                    <i class="icon-lock icon-large"></i>
+                                    <a href=""><i class="icon-lock icon-large" id="interestIcon"></i></a>
                                 </span>
                             </div>
                         </div>
                         <div class="rowBoxItem column-group">
                             <div class="large-40 leftColBox">Relationship Status</div>
                             <div class="large-50 rightColBox fixColor-111111 txtRelation">Single</div>
-                            <div class="large-10"><i class="icon-lock icon-large"></i></div>
+                            <div class="large-10"><a href=""><i class="icon-lock icon-large" id="relationIcon"></i></a></div>
                         </div>
                     </div>
                 </div>
@@ -109,14 +109,15 @@
                     <div class="boxItemTitle column-group">
                         <div class="leftBoxTitle large-80"><a href="">Work and Education</a></div>
                         <div class="rightBoxTitle large-20 content-right">
-                            <a class="uiMediumButton orange" href=""><i class="customIcon-edit"></i>Edit</a>
+                            <a class="uiMediumButton orange" id="eduWork" href=""><i class="customIcon-edit"></i>Edit</a>
+                            <div class="uiEduWorkEditPopUpOver uiBox-PopUp eduWorkArrow"></div>
                         </div>
                     </div>
                     <div class="boxItemBody">
                         <div class="rowBoxItem column-group">
                             <div class="large-20 leftColBox">
                                 <div class="smallPicDiv">
-                                    <a href=""><img src="../webroot/images/avar.jpg"></a>
+                                    <a href=""><img src=""></a>
                                 </div>
                             </div>
                             <div class="large-70 rightColBox fixColor-111111">
@@ -127,7 +128,7 @@
                         <div class="rowBoxItem column-group">
                             <div class="large-20 leftColBox">
                                 <div class="smallPicDiv">
-                                    <a href=""><img src="../webroot/images/avar.jpg"></a>
+                                    <a href=""><img src=""></a>
                                 </div>
                             </div>
                             <div class="large-70 rightColBox fixColor-111111">
@@ -138,7 +139,7 @@
                         <div class="rowBoxItem column-group">
                             <div class="large-20 leftColBox">
                                 <div class="smallPicDiv">
-                                    <a href=""><img src="../webroot/images/avar.jpg"></a>
+                                    <a href=""><img src=""></a>
                                 </div>
                             </div>
                             <div class="large-70 rightColBox fixColor-111111">
@@ -159,7 +160,7 @@
                         <div class="rowBoxItem column-group">
                             <div class="large-20 leftColBox">
                                 <div class="smallPicDiv">
-                                    <a href=""><img src="../webroot/images/avar.jpg"></a>
+                                    <a href=""><img src=""></a>
                                 </div>
                             </div>
                             <div class="large-70 rightColBox fixColor-111111">
@@ -170,7 +171,7 @@
                         <div class="rowBoxItem column-group">
                             <div class="large-20 leftColBox">
                                 <div class="smallPicDiv">
-                                    <a href=""><img src="../webroot/images/avar.jpg"></a>
+                                    <a href=""><img src=""></a>
                                 </div>
                             </div>
                             <div class="large-70 rightColBox fixColor-111111">

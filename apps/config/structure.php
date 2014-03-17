@@ -10,8 +10,8 @@
 $dir = dirname(__FILE__);
 $dirSource =  substr($dir, 0, strpos($dir, 'apps') - 1);
 
-define ('DS', '\\');
-define ('BASE_URL', 'http://dandelion.vnet/');
+define ('DS', '/');
+define ('BASE_URL', 'http://demo.dandelionet.org/');
 define ('DOCUMENT_ROOT', $dirSource . DS);
 define ('F3', DOCUMENT_ROOT . 'lib' . DS);
 define ('CONFIG', DOCUMENT_ROOT . 'apps' . DS . 'config' . DS);

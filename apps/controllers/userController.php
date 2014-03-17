@@ -7,7 +7,7 @@
  */
 class UserController extends AppController
 {
-    protected $uses     = array("User", "Notify", "Sessions", "Post");
+    protected $uses     = array("User", "Notify", "Sessions", "Post", "Information", "Permission", "Work");
     protected $helpers  = array("Encryption", "Validate", "Email", "String", "Time");
 
     public function __construct()
@@ -43,9 +43,9 @@ class UserController extends AppController
                     $data['fullName']   = strtolower($data['firstName'])." ".strtolower($data['lastName']);
                     $data['birthday']   = date("F-d-Y", mktime(0,0,0,$data['birthdayMonth'],$data['birthdayDay'],$data['birthdayYear']));
                     // set username for friends can view your profile using the link
-                    $data['username'] = substr($data["emailSignUp"], 0, strpos($data["emailSignUp"], '@'));
+                    $data['username']   = substr($data["emailSignUp"], 0, strpos($data["emailSignUp"], '@'));
                     // set default avatar
-                    $data['profilePic'] = ($data['sex'] == 1) ? IMAGES."avatarWomenDefault.png" : IMAGES."avatarMenDefault.png";
+                    $data['profilePic'] = ($data['sex'] == 'female') ? IMAGES."avatarWomenDefault.png" : IMAGES."avatarMenDefault.png";
                     // set signUp status
                     $data['status']     = 'pending';
                     $data['role']       = 'user';
@@ -57,14 +57,29 @@ class UserController extends AppController
                     // valid in 24 hours
                     $confirmationCodeValidUntil = $this->TimeHelper->getTommorrow();
                     $data['confirmationCodeValidUntil'] = $confirmationCodeValidUntil;
+
                     //unset some data dont need
+                    unset($data['sex']);
                     unset($data['emailSignUp']);
                     unset($data['pwSignUp']);
                     unset($data['birthdayDay']);
                     unset($data['birthdayMonth']);
                     unset($data['birthdayYear']);
                     // exclude form submit button and checkbox from data and create a new user
-                    $this->User->create($data, 'smSignUp,regCheckbox');
+                    $userRC = $this->User->create($data, 'smSignUp,regCheckbox');
+                    // add user info to class
+                    $infoData   = array(
+                        'user'      => $userRC,
+                        'gender'    => $this->f3->get('POST.sex')
+                    );
+                    $this->Information->create($infoData);
+                    // set default permission for user
+                    $permissionDefault   = array(
+                        'user'      => $userRC,
+                        'gender'    => 'globe'
+                    );
+                    $this->Permission->create($permissionDefault);
+                    // sent mail for confirmation account
                     $this->EmailHelper->sendConfirmationEmail($data['email'],$confirmationCode);
                     $this->f3->set('MsgSignUp','You are registered success. Please check mail and confirm !');
                     $this->render('user/index.php', 'default');
@@ -443,6 +458,8 @@ class UserController extends AppController
         {
             $this->layout = "other";
 
+
+
             //set currentUser and otherUser for check in profile element and header
             $this->f3->set('currentUser', $this->getCurrentUser());
             $this->f3->set('otherUser', $this->getCurrentUser());
@@ -460,8 +477,14 @@ class UserController extends AppController
             $day    =  $this->f3->get('POST.day');
             $month  =  $this->f3->get('POST.month');
             $year   =  $this->f3->get('POST.year');
+            $birthDayStatus   =  $this->f3->get('POST.birthDayStatus');
+            $birthYearStatus  =  $this->f3->get('POST.birthYearStatus');
+            $genderStatus     =  $this->f3->get('POST.genderStatus');
+            $interestStatus   =  $this->f3->get('POST.interestStatus');
+            $relationStatus   =  $this->f3->get('POST.relationStatus');
 
-            if ($gender && $interest && $relation && $day && $month && $year)
+            if ($gender && $interest && $relation && $day && $month && $year &&
+                $birthDayStatus && $birthYearStatus && $genderStatus && $interestStatus && $relationStatus)
             {
                 //set basic info to edit popUpOver
                 $this->f3->set('month', $month);
@@ -470,6 +493,11 @@ class UserController extends AppController
                 $this->f3->set('gender', $gender);
                 $this->f3->set('relation', $relation);
                 $this->f3->set('interest', $interest);
+                $this->f3->set('birthDayStatus', $birthDayStatus);
+                $this->f3->set('birthYearStatus', $birthYearStatus);
+                $this->f3->set('genderStatus', $genderStatus);
+                $this->f3->set('interestStatus', $interestStatus);
+                $this->f3->set('relationStatus', $relationStatus);
 
                 $this->render('user/editBasicInfo.php', 'default');
             }
@@ -481,9 +509,95 @@ class UserController extends AppController
     {
         if ($this->isLogin())
         {
-            $month  = $this->f3->get('POST.change_Month');
-            $day    = $this->f3->get('POST.change_Day');
-            $year   = $this->f3->get('POST.change_Year');
+            $currentUser    = $this->f3->get('SESSION.loggedUser');
+            $month          = $this->f3->get('POST.change_Month');
+            $day            = $this->f3->get('POST.change_Day');
+            $year           = $this->f3->get('POST.change_Year');
+            $birthday       = $month."-".$day."-".$year;
+
+            $updateUserClass = array(
+                'birthday'  => $birthday
+            );
+            $this->User->updateByCondition($updateUserClass,'email = ?',array($currentUser->data->email));
+
+            $gender         = $this->f3->get('POST.gender');
+            $interest       = $this->f3->get('POST.interest');
+            $relation       = $this->f3->get('POST.relation');
+
+            $updateInfoClass = array(
+                'gender'    => $gender,
+                'interest'  => ($interest)?$interest:'none',
+                'relation'  => ($relation)?$relation:'none',
+            );
+            $this->Information->updateByCondition($updateInfoClass,'user = ?',array($currentUser->recordID));
+        }
+    }
+
+    public function loadEduWork()
+    {
+        if ($this->isLogin())
+        {
+            $currentUser    = $this->f3->get('SESSION.loggedUser');
+            $work   = $this->f3->get('POST.work');
+
+            $findWorkID   = $this->Information->findOne('user = ?', array($currentUser->recordID));
+            //var_dump($findWorkID->data->work[0]);
+            foreach ($findWorkID->data->work as $workID)
+            {
+                $id = $workID->clusterID.":".$workID->recordPos;
+                $findWork[$id]   = $this->Work->sqlGremlin("current.map", "@rid = ?", array('#'.$workID));
+
+            }
+            //var_dump($findWork);
+            if ($work)
+            {
+                $workRC = array(
+                    'workName'  => $work,
+                    'work'      => str_replace(' ','',$work),
+                    'ofUser'    => $currentUser->recordID
+                );
+                $this->Work->create($workRC);
+                $this->Work->createLink('work', 'LINKSET', 'work.ofUser', 'information.user');
+
+            }
+            $this->f3->set('works', $findWorkID);
+            $this->f3->set('findWork', $findWork);
+            $this->render('user/editEduWork.php', 'default');
+        }
+    }
+
+    public function searchWork()
+    {
+        if ($this->isLogin())
+        {
+            $workIs = $this->f3->get('POST.workIs');
+            $data = array(
+                'results'   => array(),
+                'success'   => false,
+                'new'       => ''
+            );
+            $command    = $this->getSearchCommand(array('workName', 'work'), $workIs);
+            //echo $command;
+            $result     = $this->Work->searchByGremlin($command);
+
+            if ($result)
+            {
+                //var_dump($result);
+                foreach ($result as $work)
+                {
+                    $infoWork[$work]    = $this->Work->sqlGremlin("current.map", "@rid = ?", array('#'.$work));
+                    //var_dump($infoWork);
+                    $data['results'][] = array(
+                        'workName'  => ucfirst($infoWork[$work][0]->workName)
+                    );
+                }
+                $data['success'] = true;
+            }else {
+                $data['new'] = $workIs;
+            }
+            header("Content-Type: application/json; charset=UTF-8");
+            echo json_encode((object)$data);
+            //$this->render('user/editEduWork.php', 'default');
         }
     }
 }

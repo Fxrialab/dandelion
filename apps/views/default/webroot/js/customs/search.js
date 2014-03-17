@@ -64,5 +64,5 @@ $(document).ready(function()
         }else {
             $('#resultsList').empty();
         }
-    })
+    });
 });

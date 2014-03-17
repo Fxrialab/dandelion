@@ -107,8 +107,8 @@
                                 <div class="control large-40">
                                     <select id="genderSignUp" class="fixColor-a9b1c6 select required" name="sex">
                                         <option value>Gender</option>
-                                        <option value="1">Female</option>
-                                        <option value="2">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="male">Male</option>
                                     </select>
                                 </div>
                             </div>

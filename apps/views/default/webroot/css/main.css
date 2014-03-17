@@ -175,6 +175,10 @@ body {
     margin-bottom: 10px;
 }
 
+.fixMarginBottom-20 {
+    margin-bottom: 20px;
+}
+
 .fixMarginLeft-8 {
     margin-left: 8px;
 }
@@ -1307,6 +1311,75 @@ body {
     padding: 3px 0;
 }
 
+.uiEduWorkEditPopUpOver {
+    display: none;
+    position: absolute !important;
+    top: 35px;
+    left: -280px;
+    z-index: 1;
+    width: 350px;
+}
+
+.uiEduWorkEditPopUpOver .rowBoxItem {
+    padding: 0 15px;
+    margin: 10px 0 20px;
+}
+
+.uiEduWorkEditPopUpOver .ink-form input {
+    padding: 2px 4px;
+    width: 100%;
+    border-radius: 0;
+}
+
+#searchWork, #searchCollege, #searchHiSchool {
+    box-shadow: none;
+    font-size: 12px;
+}
+
+#workResults, .currentWork {
+    z-index: 2;
+    background-color: #90a967;
+}
+
+#workResults ul li.oldWork:hover {
+    background-color: #dee0e2;
+}
+
+#workList, #currentWorkList {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+#workList li {
+    cursor: pointer;
+    text-align: center;
+}
+
+.addJob {
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #D8DFEE;
+    text-align: left;
+}
+
+.workTitle, .workCurrentTitle {
+    padding-left: 5px;
+}
+
+.oldWork {
+    background-color: #f6f7f8;
+    color: #0069d6;
+    border: 1px solid #e4e4e4;
+    border-bottom: none;
+    margin: 0;
+    padding: 5px;
+}
+
+.actionArea {
+    margin-top: 10px;
+}
+
 .uiQuickPostStatusPopUpOver {
     display: none;
     width: 300px;
@@ -1865,6 +1938,20 @@ body {
     border-bottom-color: #E4E4E4;
     top: -23px;
     right: 53%;
+}
+
+.eduWorkArrow:after {
+    border-width: 10px;
+    border-bottom-color: #fff;
+    top: -20px;
+    right: 3.2%;
+}
+
+.eduWorkArrow:before {
+    border-width: 11px;
+    border-bottom-color: #E4E4E4;
+    top: -23px;
+    right: 3%;
 }
 
 .topRightCenterArrow:after {

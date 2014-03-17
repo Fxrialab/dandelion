@@ -18,6 +18,23 @@
                 }
             });
         });
+        var arr = ['#ddBirthDate span','#ddBirthYear span','#ddGender span','#ddInterest span','#ddRelationship span'];
+        loadStatus(arr);
+
+        function loadStatus($element){
+            for (var i=0;i < $element.length;i++)
+            {
+                var status = $($element[i]).html();
+                if (status == 'globe')
+                    $($element[i]).html("<i class='icon-globe icon-large'></i>");
+                else if(status == 'group')
+                    $($element[i]).html("<i class='icon-group icon-large'></i>");
+                else if(status == 'lock')
+                    $($element[i]).html("<i class='icon-lock icon-large'></i>");
+                else
+                    $($element[i]).html("Options");
+            }
+        }
     });
 </script>
 <div class="uiBasicInfoContainer">
@@ -42,14 +59,14 @@
                 </div>
             </div>
             <div class="large-15">
-                <div id="ddBirthDay" class="wrapper-dropdown-3" tabindex="1">
-                    <span>Options</span>
+                <div id="ddBirthDate" class="wrapper-dropdown-3" tabindex="1">
+                    <span><?php echo $birthDayStatus; ?></span>
                     <ul class="dropdown">
                         <li><a href="#"><i class="icon-globe icon-large"></i>Public</a></li>
                         <li><a href="#"><i class="icon-group icon-large"></i>Friends</a></li>
                         <li><a href="#"><i class="icon-lock icon-large"></i>Only Me</a></li>
                     </ul>
-                    <input type="hidden" name="ddBirthDay" value="">
+                    <input type="hidden" name="ddBirthDate" value="">
                 </div>
             </div>
         </div>
@@ -67,12 +84,13 @@
             </div>
             <div class="large-15">
                 <div id="ddBirthYear" class="wrapper-dropdown-3" tabindex="2">
-                    <span>Options</span>
+                    <span><?php echo $birthYearStatus; ?></span>
                     <ul class="dropdown">
                         <li><a href="#"><i class="icon-globe icon-large"></i>Public</a></li>
                         <li><a href="#"><i class="icon-group icon-large"></i>Friends</a></li>
                         <li><a href="#"><i class="icon-lock icon-large"></i>Only Me</a></li>
                     </ul>
+                    <input type="hidden" name="ddBirthYear" value="">
                 </div>
             </div>
         </div>
@@ -84,22 +102,22 @@
                     if ($gender == 'Male'){
                     ?>
                     <li>
-                        <input type="radio" id="rb1" name="gender" checked="checked" value="1">
+                        <input type="radio" id="rb1" name="gender" checked="checked" value="male">
                         <label for="rb1">Male</label>
                     </li>
                     <li>
-                        <input type="radio" id="rb1" name="gender" value="2">
+                        <input type="radio" id="rb1" name="gender" value="female">
                         <label for="rb1">Female</label>
                     </li>
                     <?php
                     }else {
                     ?>
                     <li>
-                        <input type="radio" id="rb1" name="gender" value="1">
+                        <input type="radio" id="rb1" name="gender" value="male">
                         <label for="rb1">Male</label>
                     </li>
                     <li>
-                        <input type="radio" id="rb1" name="gender" checked="checked" value="2">
+                        <input type="radio" id="rb1" name="gender" checked="checked" value="female">
                         <label for="rb1">Female</label>
                     </li>
                     <?php
@@ -109,12 +127,13 @@
             </div>
             <div class="large-15">
                 <div id="ddGender" class="wrapper-dropdown-3" tabindex="2">
-                    <span>Options</span>
+                    <span><?php echo $genderStatus; ?></span>
                     <ul class="dropdown">
                         <li><a href="#"><i class="icon-globe icon-large"></i>Public</a></li>
                         <li><a href="#"><i class="icon-group icon-large"></i>Friends</a></li>
                         <li><a href="#"><i class="icon-lock icon-large"></i>Only Me</a></li>
                     </ul>
+                    <input type="hidden" name="ddGender" value="">
                 </div>
             </div>
         </div>
@@ -126,33 +145,33 @@
                     if ($interest == 'Men'){
                     ?>
                     <li>
-                        <input type="checkbox" id="rb1" checked="">
+                        <input type="checkbox" id="rb1" name="interest" checked="" value="men">
                         <label for="rb1">Men</label>
                     </li>
                     <li>
-                        <input type="checkbox" id="rb1">
+                        <input type="checkbox" id="rb1" name="interest" value="women">
                         <label for="rb1">Women</label>
                     </li>
                     <?php
                     }elseif($interest == 'Women') {
                     ?>
                     <li>
-                        <input type="checkbox" id="rb1">
+                        <input type="checkbox" id="rb1" name="interest" value="men">
                         <label for="rb1">Men</label>
                     </li>
                     <li>
-                        <input type="checkbox" id="rb1" checked="">
+                        <input type="checkbox" id="rb1" name="interest" checked="" value="women">
                         <label for="rb1">Women</label>
                     </li>
                     <?php
                     }else {
                     ?>
                         <li>
-                            <input type="checkbox" id="cb1">
+                            <input type="checkbox" id="cb1" name="interest" value="men">
                             <label for="rb1">Men</label>
                         </li>
                         <li>
-                            <input type="checkbox" id="cb2">
+                            <input type="checkbox" id="cb2" name="interest" value="women">
                             <label for="rb1">Women</label>
                         </li>
                     <?php
@@ -162,12 +181,13 @@
             </div>
             <div class="large-15">
                 <div id="ddInterest" class="wrapper-dropdown-3" tabindex="2">
-                    <span>Options</span>
+                    <span><?php echo $interestStatus; ?></span>
                     <ul class="dropdown">
                         <li><a href="#"><i class="icon-globe icon-large"></i>Public</a></li>
                         <li><a href="#"><i class="icon-group icon-large"></i>Friends</a></li>
                         <li><a href="#"><i class="icon-lock icon-large"></i>Only Me</a></li>
                     </ul>
+                    <input type="hidden" name="ddInterest" value="">
                 </div>
             </div>
         </div>
@@ -175,12 +195,12 @@
             <div class="large-30 leftColBox">Relationship Status</div>
             <div class="large-50 rightColBox fixColor-111111">
                 <div class="control large-40 uiSelectRelation">
-                    <select class="fixColor-a9b1c6 required" name="">
+                    <select class="fixColor-a9b1c6 required" name="relation">
                         <option value>
                             None
                         </option>
                         <?php $relationship = array("Single","In a relationship","Engaged","Married","In an open relationship","Separated","It's complicated"); for($i=0;$i<=6;$i++) { ; ?>
-                            <option value="<?php echo $i + 1; ?>"><?php echo $relationship[$i]; ?>
+                            <option value="<?php echo $relationship[$i]; ?>" <?=$relation==$relationship[$i]?'selected="selected"':'';?>><?php echo $relationship[$i]; ?>
                             </option>
                         <?php } ?>
                     </select>
@@ -188,12 +208,13 @@
             </div>
             <div class="large-15">
                 <div id="ddRelationship" class="wrapper-dropdown-3" tabindex="2">
-                    <span>Options</span>
+                    <span><?php echo $relationStatus; ?></span>
                     <ul class="dropdown">
                         <li><a href="#"><i class="icon-globe icon-large"></i>Public</a></li>
                         <li><a href="#"><i class="icon-group icon-large"></i>Friends</a></li>
                         <li><a href="#"><i class="icon-lock icon-large"></i>Only Me</a></li>
                     </ul>
+                    <input type="hidden" name="ddRelationship" value="">
                 </div>
             </div>
         </div>

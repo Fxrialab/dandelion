@@ -243,10 +243,15 @@ class AppModel {
     {
         $sql = "SELECT GREMLIN( '".$command."' ) FROM ".$this->_className;
         $queryResult    = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
-        $stringResult   = $this->getString($queryResult);
-        $result     = $this->getContentResult($stringResult);
+        //var_dump($queryResult);
+        if ($queryResult)
+        {
+            $stringResult   = $this->getString($queryResult);
+            $result     = $this->getContentResult($stringResult, $this->_className);
 
-        return $result;
+            return $result;
+        }else
+            return false;
     }
 
     public function getString($var)
@@ -263,7 +268,7 @@ class AppModel {
         return $array;
     }
 
-    public function getContentResult($resultGremlin)
+    public function getContentResult($resultGremlin, $className)
     {
         $toSecondFind = '[#';
         $arrayResult = array();
@@ -272,7 +277,7 @@ class AppModel {
             $pos2[$i] = strpos($resultGremlin[$i],$toSecondFind);
             if ($pos2[$i])
             {
-                $replace[$i] = str_replace(array('v(user)[#', ']'), '', $resultGremlin[$i]);
+                $replace[$i] = str_replace(array('v('.$className.')[#', ']'), '', $resultGremlin[$i]);
                 array_push($arrayResult, $replace[$i]);
             }
         }
