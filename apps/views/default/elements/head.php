@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>reset.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>main.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>popbox.css" type="text/css" />
     <!--[if IE 7 ]>
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink-ie7.css" type="text/css" media="screen"
           title="no title">
@@ -23,6 +24,7 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/addFriend.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/follow.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/like.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>popbox.js"></script>
     <script type="text/javascript">
         new LikePostByElement('.likeSegments');
         new FollowByElement('.followPostSegments');
@@ -35,7 +37,7 @@
             $('.taPostStatus').autosize();
             $('.taPostComment').autosize();
             //target show popUp
-            new showPopUpOver('a.postOption', '.uiPostOptionPopUpOver');
+//            new showPopUpOver('a.postOption', '.uiPostOptionPopUpOver');
             new showPopUpOver('a.settingOption', '.uiSettingOptionPopUpOver');
             new showPopUpOver('a.quickPostStatusNav', '.uiQuickPostStatusPopUpOver');
             new showPopUpOver('a.showRequestFriends', '.uiFriendRequestsPopUpOver');

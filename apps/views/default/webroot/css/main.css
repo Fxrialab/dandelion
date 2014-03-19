@@ -299,6 +299,7 @@ body {
 
 .borderLineLeft {
     border-left: 1px solid #CCCCCC;
+    min-height: 700px;
 }
 
 .uiBoxProfile {

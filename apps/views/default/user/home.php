@@ -1,21 +1,21 @@
 <?php
-foreach($js as $jshome){
+foreach ($js as $jshome) {
     ?>
     <script type="text/javascript" src="<?php echo $jshome; ?>"></script>
-<?php
+    <?php
 }
 ?>
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function() {
         $(".oembed5").oembed(null,
-        {
-            embedMethod: "append",
-            maxWidth: 1024,
-            maxHeight: 768,
-            autoplay: false
-        });
-        $(window).scroll(function(){
-            if ($(window).scrollTop() == $(document).height() - $(window).height()){
+                {
+                    embedMethod: "append",
+                    maxWidth: 1024,
+                    maxHeight: 768,
+                    autoplay: false
+                });
+        $(window).scroll(function() {
+            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
                 $('.uiMoreView').show();
                 var published = $(".uiBoxPostItem:last .uiBoxPostContainer .uiPostContent .articleSelectOption").find('.swTimeStatus').attr("name");
                 var existNoMoreActivity = $('.noMoreActivity').length;
@@ -26,12 +26,12 @@ foreach($js as $jshome){
                         url: "/morePostHome",
                         data: {published: published},
                         cache: false,
-                        success: function(html){
+                        success: function(html) {
                             $("#contentContainer").append(html);
                             $('.uiMoreView').hide();
                         }
                     });
-                }else {
+                } else {
                     $('.uiMoreView').hide();
                 }
             }
@@ -41,16 +41,15 @@ foreach($js as $jshome){
 
 <div class="uiMainContainer">
     <?php
-    AppController::elementModules('postWrap','post');
+    AppController::elementModules('postWrap', 'post');
     ?>
     <input name="profileID" id="profileID" type="hidden" value="<?php echo $currentProfileID; ?>">
     <div class="wrapperContainer">
         <div id="contentContainer">
             <?php
-            if($existActivities && $activities){
-                foreach($activities  as $homeViews){
-                    foreach(glob(MODULES.$homeViews['path'].'home.php') as $views)
-                    {
+            if ($existActivities && $activities) {
+                foreach ($activities as $homeViews) {
+                    foreach (glob(MODULES . $homeViews['path'] . 'home.php') as $views) {
                         require $views;
                     }
                 }
