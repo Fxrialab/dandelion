@@ -4,16 +4,19 @@
  * Author: Hoc Nguyen
  * Date: 12/21/12
  */
-class PostController extends AppController {
+class PostController extends AppController
+{
 
     protected $uses = array("Friendship", "User", "Follow", "Status", "Comment", "Post", "Photo");
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
     //has implement and fix logic
-    public function myPost($viewPath) {
+    public function myPost($viewPath)
+    {
         if ($this->isLogin()) {
             $this->layout = 'timeline';
 
@@ -26,8 +29,7 @@ class PostController extends AppController {
                     //@TODO: add layout return page not found in later
                     echo "page not found";
                 }
-            }
-            else
+            } else
                 $currentProfileID = $this->getCurrentUser()->recordID;
             $this->f3->set('SESSION.userProfileID', $currentProfileID);
             $currentProfileRC = $this->User->load($currentProfileID);
@@ -78,21 +80,27 @@ class PostController extends AppController {
             }
             $this->render($viewPath . 'myPost.php', 'modules');
         } else {
-            
+
         }
     }
 
-    public function delete() {
+    public function delete()
+    {
         if ($this->isLogin()) {
             $postID = $this->f3->get('POST.id');
             if ($postID && !is_array($postID)) {
-                $this->Status->deleteByCondition("@rid = ?", array('#' . str_replace('_', ':', $postID)));
+//                $findStatus = $this->Status->findOne("@rid = ?", array('#' . str_replace('_', ':', $postID)));
+                $active = array(
+                    'active' => 0,
+                );
+                $this->Status->updateByCondition($active, '@rid = ?', array('#' . str_replace('_', ':', $postID)));
             }
         }
     }
 
     //just implement
-    public function loadComment($object, $actor, $activityID) {
+    public function loadComment($object, $actor, $activityID)
+    {
         if ($this->isLogin()) {
             $findStatus = $this->Comment->findByCondition("@rid = ?", array('#' . $object));
             //var_dump($findStatus);
@@ -125,7 +133,8 @@ class PostController extends AppController {
     }
 
     //has implement and fix logic
-    public function postStatus() {
+    public function postStatus()
+    {
         if ($this->isLogin()) {
             $published = time();
             $currentUser = $this->getCurrentUser();
@@ -158,6 +167,7 @@ class PostController extends AppController {
                 'contentShare' => 'none',
                 'numberFollow' => '0',
                 'mainStatus' => 'none',
+                'active' => '1',
             );
 
             // save
@@ -181,7 +191,8 @@ class PostController extends AppController {
     }
 
     //just implement
-    public function postComment() {
+    public function postComment()
+    {
         if ($this->isLogin()) {
             $currentUser = $this->getCurrentUser();
             $postID = str_replace("_", ":", $this->f3->get('POST.postID'));
@@ -245,12 +256,13 @@ class PostController extends AppController {
 
             $this->renderModule('postComment', 'post');
         } else {
-            
+
         }
     }
 
     //has implement and fix logic
-    public function morePostStatus() {
+    public function morePostStatus()
+    {
         if ($this->isLogin()) {
             $currentUser = $this->getCurrentUser();
             $userProfileID = $this->f3->get('SESSION.userProfileID');
@@ -293,12 +305,13 @@ class PostController extends AppController {
                 $this->renderModule('noMorePostStatus', 'post');
             }
         } else {
-            
+
         }
     }
 
     //just implement
-    public function morePostComment() {
+    public function morePostComment()
+    {
         if ($this->isLogin()) {
             $published = $this->f3->get('POST.published');
             $statusID = str_replace("_", ":", $this->f3->get('POST.statusID'));
@@ -320,7 +333,8 @@ class PostController extends AppController {
     }
 
     //just implement
-    public function shareStatus() {
+    public function shareStatus()
+    {
         if ($this->isLogin()) {
             $statusID = str_replace('_', ':', $this->f3->get('POST.statusID'));
             $statusRC = $this->Status->findOne("@rid = ?", array($statusID));
@@ -332,7 +346,8 @@ class PostController extends AppController {
     }
 
     //just implement
-    public function insertStatus() {
+    public function insertStatus()
+    {
         if ($this->isLogin()) {
             $published = time();
             $statusID = str_replace('_', ':', $this->f3->get("POST.statusID"));
@@ -364,7 +379,8 @@ class PostController extends AppController {
     }
 
     //just implement
-    public function detailStatus() {
+    public function detailStatus()
+    {
         if ($this->isLogin()) {
             $this->layout = 'default';
             $statusID = F3::get('GET.id');

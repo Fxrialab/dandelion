@@ -5,7 +5,7 @@
  * Date: 8/29/13 - 4:07 PM
  * Project: userwired Network - Version: 1.0
  */
-require_once ('app_model.php');
+require_once('app_model.php');
 class Photo extends AppModel
 {
     public function __construct()
@@ -13,7 +13,8 @@ class Photo extends AppModel
         parent::__construct(21, 'photo');
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         parent::__destruct();
     }
 }

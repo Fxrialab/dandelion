@@ -5,7 +5,7 @@
             <?php
 //            if ($status_actor != $currentUserID) {
             ?>
-                <!--<a href=""><img src="<?php // echo $otherUserProfilePic;                         ?>"></a>-->
+                <!--<a href=""><img src="<?php // echo $otherUserProfilePic;                           ?>"></a>-->
             <?php // } else {
             ?>
             <a href=""><img src="<?php echo $avatar; ?>"></a>
@@ -16,7 +16,7 @@
             <div class="articleActorName fixMarginBottom-5">
                 <?php
                 if ($status_owner != $status_actor) {
-                    $otherUserName = ucfirst($otherUser->data->firstName) . " " . ucfirst($otherUser->data->lastName);
+
                     if (!$status_contentShare) {
                         if ($currentUserID != $status_owner) {
                             ?>
@@ -191,7 +191,7 @@
                                 </div>
                                 <div class="large-85 uiCommentContent">
                                     <p>
-                                        <a class="timeLineCommentLink" href="/content/myPost?username=<?php // echo $cm_username;                 ?>"><?php echo $actorComment; ?></a>
+                                        <a class="timeLineCommentLink" href="/content/myPost?username=<?php // echo $cm_username;                   ?>"><?php echo $actorComment; ?></a>
                                         <?php
                                         if ($tagged == 'none') {
                                             ?>
@@ -240,12 +240,12 @@
             </div>
         </div>
         <div class="large-5 uiPostOption">
-            <a href="" class="postOption info-<?php echo $rpStatusID; ?>"><i class="optionIcon-articlePost"></i></a>
+            <a href="javascript:void(0)" class="postOption info-<?php echo $rpStatusID; ?>"><i class="optionIcon-articlePost"></i></a>
             <div class="uiPostOptionPopUpOver infoOver-<?php echo $rpStatusID; ?> uiBox-PopUp topRightArrow">
                 <nav class="ink-navigation">
                     <ul class="menu vertical">
                         <li><a class="test" href="#">Report this post</a></li>
-                        <li><a href="javascript:void(0)" onclick="deletePost('<?php echo $rpStatusID ; ?>')">Delete</a></li>
+                        <li><a href="javascript:void(0)" onclick="deletePost('<?php echo $rpStatusID; ?>')">Delete</a></li>
                     </ul>
                 </nav>
             </div>
@@ -261,19 +261,5 @@
                                             $('.infoOver-<?php echo $rpStatusID; ?>').hide();
                                         });
                                     });
-                                    function deletePost(ids) {
-                                        var x = confirm("Are you sure you want to delete?");
-                                        if (x) {
-                                            $.ajax({
-                                                data: {id: ids},
-                                                type: 'POST',
-                                                url: '/content/post/delete',
-                                                cache: false,
-                                                success: function(response) {
-                                                    $('.postItem-' + ids).remove();
-                                                    return false;
-                                                }
-                                            });
-                                        }
-                                    }
+
 </script>

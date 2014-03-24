@@ -7,12 +7,15 @@
  */
 require_once('app_model.php');
 
-class Like extends AppModel {
-    public function __construct() {
-        parent::__construct('24','like');
+class Like extends AppModel
+{
+    public function __construct()
+    {
+        parent::__construct('24', 'like');
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         parent::__destruct();
     }
 }

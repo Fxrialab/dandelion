@@ -332,3 +332,13 @@ $otherUserID = $otherUser->recordID;
         <span class="successNotification">That status was shared on your timeline</span>
     </div>
 </div>
+
+
+   <div class="articleActorName fixMarginBottom-5">
+                <?php if ($friendProfileID && $currentUserID != $friendProfileID) { ?>
+                    <a class="timeLineLink" href="#"><?php echo $currentUserName; ?></a> was posted in wall of
+                    <a class="timeLineLink" href=""><?php echo $friendName; ?></a>
+                <?php } else { ?>
+                    <a class="timeLineLink" href="#"><?php echo $currentUserName; ?></a>
+                <?php } ?>
+            </div>

@@ -31,6 +31,7 @@ if ($homeViews) {
     $linkProfile = '/content/myPost?username=' . $otherUserUserName;
     $records = $comment[$statusID];
     $numberOfComments = $numberComment;
+    $otherUserName = ucfirst($otherUser->data->firstName) . " " . ucfirst($otherUser->data->lastName);
     $f3=require('_viewPost.php');
 //    include '_viewPost.php';
 }

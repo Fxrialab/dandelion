@@ -5,7 +5,7 @@
  * Date: 8/29/13 - 4:34 PM
  * Project: userwired Network - Version: 1.0
  */
-require_once ('app_model.php');
+require_once('app_model.php');
 class Status extends AppModel
 {
     public function __construct()
@@ -13,8 +13,10 @@ class Status extends AppModel
         parent::__construct(14, 'status');
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         parent::__destruct();
     }
 }
+
 ?>

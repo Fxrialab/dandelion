@@ -24,7 +24,7 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/addFriend.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/follow.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/like.js"></script>
-    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>popbox.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/init.js"></script>
     <script type="text/javascript">
         new LikePostByElement('.likeSegments');
         new FollowByElement('.followPostSegments');

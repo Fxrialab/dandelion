@@ -5,7 +5,7 @@
  * Date: 8/29/13 - 4:27 PM
  * Project: userwired Network - Version: 1.0
  */
-require_once ('app_model.php');
+require_once('app_model.php');
 class Sessions extends AppModel
 {
     public function __construct()
@@ -13,7 +13,8 @@ class Sessions extends AppModel
         parent::__construct(13, 'sessions');
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         parent::__destruct();
     }
 }

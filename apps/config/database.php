@@ -1,11 +1,11 @@
 <?php
 define('HOST', 'localhost');
 define('ROOT', 'root');
-define('ROOT_PW', '40F17CA4648BD2C40E3F79128F53A1903B0A3B8FFF3E5404A3F67902B7448C4A');
+define('ROOT_PW', '6E520B63BF56099D2ED1592DA320B2ABC5D51D20A340AAD784BBF54F4CCF7106');
 define('USER', 'admin');
 define('PASSWORD', 'admin');
 define('PORT', '2424');
-define('DATABASE', 'dandelion');
+define('DATABASE', 'dandelion_data');
 define('ATTEMPT', 'default');
 define('ALTER_CLASS', 'not');
 define('TIMEOUT', 10);
