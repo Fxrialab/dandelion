@@ -1,10 +1,9 @@
 <?php
-
 require_once(dirname(dirname(__FILE__)) . "/config/structure.php");
 require_once(CONFIG . 'database.php');
 require_once(ORIENTDB . "OrientDB.php");
 
-function &getDBConnection()
+function getDBConnection()
 {
     static $db = null;
 

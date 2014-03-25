@@ -19,7 +19,7 @@ class Controller {
         $this->f3=$f3;
         $this->_mergeVars(array("uses", "helpers"));
         $this->loadHelpers();
-        $this->loadModels();
+        //$this->loadModels();
     }
 
     public function _mergeVars($merges)

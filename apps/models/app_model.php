@@ -2,7 +2,7 @@
 
 require_once('db.php');
 require_once('model.php');
-require_once 'DbInterface.php';
+require_once 'IDataModel.php';
 
 //require_once('orientDB_Model.php');
 

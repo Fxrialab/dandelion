@@ -8,7 +8,7 @@
  */
 class HomeController extends AppController {
 
-    protected $uses = array("Activity", "User", "Friendship", "Actions");
+    //protected $uses = array("Activity", "User", "Friendship", "Actions");
     protected $helpers = array();
 
     public function __construct() {
@@ -17,6 +17,19 @@ class HomeController extends AppController {
 
     public function index() {
         $this->layout = 'index';
+        /*
+         * test
+         * */
+        $user = Model::get('user');
+        $dd = $user->findByCondition("email = ?", array('loc@gmail.com'));
+        var_dump($dd);
+        foreach ($dd as $d)
+        {
+            echo $d->data->name;
+        }
+        /*
+         * end test
+         * */
 
         if ($this->isLogin())
             header("Location:/home");
@@ -27,6 +40,7 @@ class HomeController extends AppController {
     public function home() {
         if ($this->isLogin()) {
             $this->layout = 'home';
+
 
             //var_dump($_SESSION['loggedUser']->recordID);
             // get activities

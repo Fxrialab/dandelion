@@ -9,7 +9,7 @@ require_once("base.php");
 
 class AppController extends Controller
 {
-    protected $uses     = array("User", "Friendship", "Sessions", "Follow", "Activity", "Like");
+    //protected $uses     = array("User", "Friendship", "Sessions", "Follow", "Activity", "Like");
     protected $helpers  = array();
 
     protected $layout   = '';
