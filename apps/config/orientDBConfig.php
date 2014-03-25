@@ -1,20 +1,11 @@
 <?php
 
-class OrientDBConfig
+class ExtraConfig
 {
-    static private $map;
-    static public function mapClass($className)
+    static public function getId($className)
     {
         require_once CONFIG."orientDBCC.php";
 
-        foreach ($collectionDefaults as $coll=>$details)
-        {
-            if ($coll == $className)
-            {
-                OrientDBConfig::$map = array('className'=>$details['className'], 'clusterID'=>$details['clusterID']);
-            }
-        }
-
-        return OrientDBConfig::$map;
+        return $map[$className];
     }
 }

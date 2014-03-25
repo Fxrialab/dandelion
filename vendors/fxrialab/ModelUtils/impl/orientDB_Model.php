@@ -1,5 +1,5 @@
 <?php
-require_once CONFIG . 'orientDBConfig.php';
+require_once CONFIG . 'ExtraConfig.php';
 require_once MODELS . "db.php";
 require_once MODEL_UTILS."interfaces/IDataModel.php";
 
@@ -10,6 +10,7 @@ class OrientDB_Model implements IDataModel
     protected $_config;
     protected $_className;
     protected $_clusterID;
+    private $flagLoaded= false;
 
     protected function loadHelpers() {
         foreach ($this->helpers as $helper) {
@@ -28,11 +29,9 @@ class OrientDB_Model implements IDataModel
     {
         $this->_db          = getDBConnection();
         $this->_config      = $this->_db->DBOpen(DATABASE, USER, PASSWORD);
-        $map = OrientDBConfig::mapClass($className);
-        $this->_className   = $map['className'];
-        $this->_clusterID   = $map['clusterID'];
-        $this->loadHelpers();
-        var_dump($map);
+        $this->_className   = $className;
+        $this->_clusterID   = ExtraConfig::getId('clusterID');
+        //$this->loadHelpers();
     }
 
     public function save($data, $excludes = '')
