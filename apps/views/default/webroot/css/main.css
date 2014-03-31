@@ -44,7 +44,9 @@ body {
     color: white !important;
     text-decoration: none;
 }
-
+.name{
+    font-weight: bold;
+}
 #uiLogInBox, #uiSignUpBox {
     padding: 10px 10px 0px;
 }
@@ -1087,6 +1089,46 @@ body {
     padding-left: 5px;
 }
 
+.uiPostContent .postActionWrapper {
+    margin-top: 10px;
+    border-top: 1px solid #E4E4E4 !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+}
+
+.uiPostContent .postActionWrapper .viewComment{
+margin: 0;
+}
+.uiPostContent .postActionWrapper .viewComment li{
+    background-color: #eaeaea;
+    padding: 5px;
+    margin: 0 0 1px;
+    float: left;
+    width: 100%;
+}
+.uiPostContent .postActionWrapper .viewComment li a img{
+    width: 40px;
+    height: 40px;
+}
+.uiPostContent .postActionWrapper .viewComment li .info{
+    font-size: 11px; padding-left: 5px;
+}
+.uiPostContent .postActionWrapper .viewComment li .info .time{
+    margin-top: 5px;
+}
+
+.uiPostContent .postActionWrapper .viewComment li .info .time a{
+    color: #999999;
+}
+
+.uiPostContent p.content {
+    padding: 5px 0;
+}
+
+.uiPostContent .articleSelectOption{
+    margin-top: 0;
+}
 .articleContentWrapper {
     padding: 0 0 5px;
 }
@@ -1117,7 +1159,7 @@ body {
 }
 
 .articleActions .ink-navigation ul.menu.horizontal li a {
-    padding: 0;
+    padding: 0 5px 0 0;
     font-size: 11px;
 }
 
@@ -1133,13 +1175,7 @@ body {
     cursor: pointer;
 }
 
-.postActionWrapper {
-    margin-top: 10px;
-    border-top: 1px solid #E4E4E4 !important;
-    border-right: none !important;
-    border-bottom: none !important;
-    border-left: none !important;
-}
+
 
 .whoLikeThisPost {
     padding: 5px;
@@ -1193,8 +1229,8 @@ body {
 }
 
 .uiActorCommentPicCol img {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
 }
 
 .timeLineCommentLink {

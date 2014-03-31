@@ -5,7 +5,7 @@
  * Date: 7/30/13 - 2:47 PM
  * Project: UserWired Network - Version: beta
  */
-require_once("base.php");
+require_once("Controller.php");
 
 class AppController extends Controller
 {
@@ -122,19 +122,19 @@ class AppController extends Controller
 
     public function getFriendsStt($actor)
     {
-        return $this->Friendship->findByCondition("userA = ? AND relationship = 'friend' AND status = 'ok'", array($actor));
+        return Model::get('friendship')->findByCondition("userA = ? AND relationship = 'friend' AND status = 'ok'", array($actor));
     }
     //will group two below func after check all case
     public function getLikeStatus($statusID, $userA)
     {
-        $likeRC[$statusID]              = $this->Like->findOne("userA = ? AND ID = ?", array($userA, $statusID));
+        $likeRC[$statusID]              = Model::get('like')->findOne("userA = ? AND ID = ?", array($userA, $statusID));
         $likeStatus[$statusID]          = ($likeRC[$statusID]) ? $likeRC[$statusID]->data->isLike : 'null';
         return $likeStatus[$statusID];
     }
 
     public function getFollowStatus($statusID, $userA)
     {
-        $getStatusFollow[$statusID] = $this->Follow->findOne("userA = ? AND follow = 'following' AND filterFollow = 'post' AND ID = ?", array($userA, $statusID));
+        $getStatusFollow[$statusID] = Model::get('follow')->findOne("userA = ? AND follow = 'following' AND filterFollow = 'post' AND ID = ?", array($userA, $statusID));
         $statusFollow[$statusID]    = ($getStatusFollow[$statusID]) ? $getStatusFollow[$statusID]->data->follow : 'null';
         return $statusFollow[$statusID];
     }
@@ -212,9 +212,9 @@ class AppController extends Controller
 
     public function trackComment($actor, $verb, $object, $statusID, $owner, $published)
     {
-        $findUser = $this->Comment->findByCondition("post = ?",array($statusID));
-        $checkActivity       = $this->Activity->findByCondition("owner = ? AND object = ?", array($actor->recordID, $object));
-        $findUserBOfFollow   = $this->Follow->findOne("userA = ? AND ID = ?", array($actor->recordID, $object));
+        $findUser = Model::get('comment')->findByCondition("post = ?",array($statusID));
+        $checkActivity       = Model::get('activity')->findByCondition("owner = ? AND object = ?", array($actor->recordID, $object));
+        $findUserBOfFollow   = Model::get('follow')->findOne("userA = ? AND ID = ?", array($actor->recordID, $object));
         //$actorID = ($findUserBOfFollow) ? $findUserBOfFollow->data->userB : $actor->recordID;
         if(!$checkActivity) {
             /* Insert in to Activity for user posted this status.*/
@@ -229,7 +229,7 @@ class AppController extends Controller
                     'published' => $published
                 );
 
-                $this->Activity ->create($userStatus);
+                Model::get('activity')->create($userStatus);
             }
 
             $friends = $this->getFriendsStt($actor->recordID);
@@ -238,7 +238,7 @@ class AppController extends Controller
                 for ($i = 0; $i < count($friends); $i++) {
                     //@todo handling follow after: HN
                     if($findUserBOfFollow) {
-                        $checkFriends        = $this->Friendship->findByCondition("userA = ? AND status = 'ok' userB = ?", array($friends[$i]->data->userB, $findUserBOfFollow->data->userB));
+                        $checkFriends        = Model::get('friendship')->findByCondition("userA = ? AND status = 'ok' userB = ?", array($friends[$i]->data->userB, $findUserBOfFollow->data->userB));
                         if($checkFriends == null) {
                             $activity = array(
                                 'owner' => $actor->recordID,
@@ -258,7 +258,7 @@ class AppController extends Controller
             if($findUser){
                 foreach($findUser as $userCmt){
                     if($userCmt){
-                        $checkActivityComment = $this->Activity->findByCondition("owner = ? AND object = ?", array($userCmt->data->actor, $object));
+                        $checkActivityComment = Model::get('activity')->findByCondition("owner = ? AND object = ?", array($userCmt->data->actor, $object));
                         if(!$checkActivityComment){
                             if($userCmt->data->actor !=$this->getCurrentUser()->recordID){
                                 $userComment = array(
@@ -270,7 +270,7 @@ class AppController extends Controller
                                     'idObject'  =>$statusID,
                                     'published' => $published
                                 );
-                                $this->Activity ->create($userComment);
+                                Model::get('activity') ->create($userComment);
                             }
                         }
                     }
