@@ -5,8 +5,8 @@
  * Date: 7/30/13 - 8:58 AM
  * Project: UserWired Network - Version: beta
  */
-require_once (CONTROLLERS . "appController.php");
-require_once (CONTROLLERS . "elementController.php");
+require_once (CONTROLLERS . "AppController.php");
+require_once (CONTROLLERS . "ElementController.php");
 /*F3::route('GET /min',
     function() {
         Web::minify($_GET['base'],explode(',',$_GET['files']));
@@ -22,7 +22,7 @@ $param          = $lastParams[0];
 
 if ($params_full)
 {
-    $routeConfigFile = CONFIG.'routeConfig.php';
+    $routeConfigFile = CONFIG.'RouteConfig.php';
     if (file_exists($routeConfigFile))
     {
         include $routeConfigFile;
@@ -42,7 +42,7 @@ if ($params_full)
                     foreach ($controllers as $controller)
                     {
                         $controllerFiles = CONTROLLERS.$controller.'.php';
-                        if (file_exists($controllerFiles))
+                          if (file_exists($controllerFiles))
                             include($controllerFiles);
                     }
                     $function = 'index';
@@ -84,7 +84,7 @@ if ($params_full)
 
                                 }
                                 // Set route for modules
-                                $moduleFile = CONTROLLERS.'moduleController.php';
+                                $moduleFile = CONTROLLERS.'ModuleController.php';
                                 $function = 'content';
                                 if (file_exists($moduleFile))
                                 {
@@ -96,7 +96,7 @@ if ($params_full)
                                 // Load routes file of module
                                 if ($params_full[2] == $mod)
                                 {
-                                    $routeFile  = MODULES.$mod."/routes.php";
+                                    $routeFile  = MODULES.$mod."/Routes.php";
                                     if (file_exists($routeFile))
                                         require_once $routeFile;
                                 }
@@ -134,7 +134,7 @@ if ($params_full)
                             else
                                 $f3->reroute('/');
                             // load all modules in home page
-                            if ($controller == 'homeController')
+                            if ($controller == 'HomeController')
                             {
                                 foreach (glob(MODULES."*/controllers/*.php") as $modulesControllerFile){
                                     require_once $modulesControllerFile;

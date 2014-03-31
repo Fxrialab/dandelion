@@ -10,55 +10,59 @@ class RouteConfig {
 
     //Notice: Put controller contain function is first
     public $default = array(
-        '_GET' => "homeController,userController",
+        '_GET' => "HomeController,UserController",
         'install_GET' => "installController",
         'installDB_POST' => "installController",
-        'signUp_POST' => "userController",
-        'login_POST' => "userController",
-        'logout_GET' => "userController",
-        'confirm_GET' => "userController",
-        'authentication_GET|POST' => "userController",
-        'confirmCode_POST' => "userController",
-        'forgotPassword_GET|POST' => "userController",
-        'resetPassword_POST' => "userController",
-        'confirmPassword_POST' => "userController",
-        'newPassword_POST' => "userController",
+        'signUp_POST' => "UserController",
+        'login_POST' => "UserController",
+        'logout_GET' => "UserController",
+        'confirm_GET' => "UserController",
+        'authentication_GET|POST' => "UserController",
+        'confirmCode_POST' => "UserController",
+        'forgotPassword_GET|POST' => "UserController",
+        'resetPassword_POST' => "UserController",
+        'confirmPassword_POST' => "UserController",
+        'newPassword_POST' => "UserController",
         /* Route config for home page */
-        'home_GET' => "homeController,userController",
-        'homeAMQ_POST' => "homeController",
-        'morePostHome_POST' => "homeController",
-        'moreCommentHome_POST' => "homeController",
+        'home_GET' => "HomeController,UserController",
+        'homeAMQ_POST' => "HomeController",
+        'morePostHome_POST' => "HomeController",
+        'moreCommentHome_POST' => "HomeController",
         /* Route config for request friend */
-        'sentFriendRequest_POST' => "friendController",
-        'acceptFriendship_POST' => "friendController",
-        'unAcceptFriendship_POST' => "friendController",
+        'sentFriendRequest_POST' => "FriendController",
+        'acceptFriendship_POST' => "FriendController",
+        'unAcceptFriendship_POST' => "FriendController",
         /* Route config for follow */
-        'like_POST' => "likeController",
-        'unlike_POST' => "likeController",
+        'like_POST' => "LikeController",
+        'unlike_POST' => "LikeController",
         /* Route config for follow */
-        'follow_POST' => "followController",
-        'unFollow_POST' => "followController",
+        'follow_POST' => "FollowController",
+        'unFollow_POST' => "FollowController",
         /* Route config for notification */
-        'notify_POST' => "notifyController,homeController",
-        'updateNotification_POST' => "notifyController,homeController",
+        'notify_POST' => "NotifyController,HomeController",
+        'updateNotification_POST' => "NotifyController,HomeController",
         /* Route config for load suggest element */
-        'pull_GET' => "homeController",
-        'loadSuggest_POST' => "homeController",
+        'pull_GET' => "HomeController",
+        'loadSuggest_POST' => "HomeController",
         /* Route config for search */
-        'search_POST' => "homeController",
-        'moreSearch_GET' => "homeController",
+        'search_POST' => "HomeController",
+        'moreSearch_GET' => "HomeController",
         /* Route config for about page */
-        'about_GET' => "userController",
-        'loadBasicInfo_POST' => "userController",
-        'editBasicInfo_POST' => "userController",
-        'loadEduWork_POST'      => "userController",
-        'addWork_POST'          => "userController",
-        'editEduWork_POST'      => "userController",
-        'searchWork_POST'       => "userController",
+        'about_GET' => "UserController",
+        'loadBasicInfo_POST' => "UserController",
+        'editBasicInfo_POST' => "UserController",
+        'loadEduWork_POST'      => "UserController",
+        'addWork_POST'          => "UserController",
+        'editEduWork_POST'      => "UserController",
+        'searchWork_POST'       => "UserController",
+    );
+
+    public $components = array(
+
     );
     public $modules = array(
         /* Route config for modules */
-        'myPost_post' => "postController,homePost",
+        'myPost_post' => "PostController,homePost",
      
         'myQA_qanda' => "qandaController,homeQA",
         'myPhoto_photo' => "photoController,homePhoto",

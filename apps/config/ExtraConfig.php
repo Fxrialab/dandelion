@@ -2,10 +2,10 @@
 
 class ExtraConfig
 {
+
     static public function getId($className)
     {
-        require_once CONFIG."orientDBCC.php";
-
+        include CONFIG . "OrientDBCC.php";
         return $map[$className];
     }
 }
