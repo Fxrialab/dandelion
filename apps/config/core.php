@@ -1,7 +1,7 @@
 <?php
 
-require_once('structure.php');
-require_once(MODELS.'model.php');
+require_once('Structure.php');
+require_once(MODELS.'Model.php');
 //require_once(MODELS.'installDB.php');
 $f3 = require(F3.'base.php');
 //not cache for development environment
@@ -24,7 +24,7 @@ $f3->set('STATIC_MOD',ROOT_MOD);
 $f3->set('ENCODING', 'utf-8');
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 
-require_once('routes.php');
+require_once('Routes.php');
 
 $f3->run();
 
