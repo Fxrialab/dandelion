@@ -5,7 +5,8 @@
  * Date: 7/30/13 - 2:48 PM
  * Project: UserWired Network - Version: beta
  */
-require_once dirname(__DIR__) . "/config/structure.php";
+require_once dirname(__DIR__) . "/config/Structure.php";
+require_once FACADE . "OrientDBFacade.php";
 
 class Controller {
     protected $f3;
