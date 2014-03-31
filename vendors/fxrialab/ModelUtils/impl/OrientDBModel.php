@@ -3,7 +3,7 @@ require_once CONFIG . 'ExtraConfig.php';
 require_once MODELS . "db.php";
 require_once MODEL_UTILS."interfaces/IDataModel.php";
 
-class OrientDB_Model implements IDataModel
+class OrientDBModel implements IDataModel
 {
     protected $helpers = array('Security', 'String');
     protected $_db;
