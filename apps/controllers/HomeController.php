@@ -17,20 +17,6 @@ class HomeController extends AppController {
 
     public function index() {
         $this->layout = 'index';
-        /*
-         * test
-         * */
-        $user = Model::get('user');
-        $dd = $user->findByCondition("email = ?", array('loc@gmail.com'));
-        var_dump($dd);
-        foreach ($dd as $d)
-        {
-            echo $d->data->name;
-        }
-        /*
-         * end test
-         * */
-
         if ($this->isLogin())
             header("Location:/home");
         else
@@ -44,7 +30,7 @@ class HomeController extends AppController {
 
             //var_dump($_SESSION['loggedUser']->recordID);
             // get activities
-            $activitiesRC = $this->Activity->findByCondition("owner = ? AND type = ? ORDER BY published DESC LIMIT 4", array($this->getCurrentUser()->recordID, "post"));
+            $activitiesRC = Model::get('activity')->findByCondition("owner = '".$this->getCurrentUser()->recordID."' AND type = 'post' ORDER BY published DESC LIMIT 4");
 
             if ($activitiesRC) {
                 $homes = array();
@@ -52,8 +38,8 @@ class HomeController extends AppController {
                     $verbMod = $activity->data->verb;
                     if (class_exists($verbMod)) {
                         $obj = new $verbMod;
-                        if (method_exists($obj, 'postInHome')) {
-                            $home = $obj->postInHome($activity, $key);
+                        if (method_exists($obj, 'viewPost')) {
+                            $home = $obj->viewPost($activity, $key);
                             array_push($homes, $home);
                             $this->f3->set('activities', $homes);
                         }
@@ -74,56 +60,24 @@ class HomeController extends AppController {
             $this->f3->set('js', $loadJS);
             $this->f3->set('currentProfileID', $this->getCurrentUser()->recordID);
             $this->f3->set('SESSION.userProfileID', $this->getCurrentUser()->recordID);
-            $this->render('user/home.php', 'default');
+            $this->render('home/home.php', 'default');
         } else {
             header("Location: /");
         }
     }
 
-    //Dont use for now
-    /* public function homeAMQ()
-      {
-      if($this->isLogin())
-      {
-      $activityID     = F3::get('POST.activity_id');
-      $activitiesRC   = $this->Activity->findByCondition("@rid = ? ",array($activityID));
-      F3::set('currentUser', $this->getCurrentUser());
-      if ($activitiesRC )
-      {
-      $homes = array();
-      foreach ($activitiesRC as $key => $activity)
-      {
-      $verbMod = $activity->data->verb;
-      if(class_exists($verbMod))
-      {
-      $obj =  new $verbMod;
-      if(method_exists($obj,'postInHome'))
-      {
-      $home = $obj->postInHome($activity,$key);
-      array_push($homes,$home);
-      F3::set('homes',$homes);
-      }
-      }
-      }
-      $this->render('user/homeAMQ.php','default');
-      }
-      }else {
-      header("Location: /");
-      }
-      } */
-
     public function morePostHome() {
         if ($this->isLogin()) {
             $published = $this->f3->get('POST.published');
-            $activitiesRC = $this->Activity->findByCondition("owner = ? and published < ? LIMIT 5 ORDER BY published DESC", array($this->getCurrentUser()->recordID, $published));
+             $activitiesRC = Model::get('activity')->findByCondition("owner = '".$this->getCurrentUser()->recordID."' AND published < '".$published."' ORDER BY published DESC LIMIT 4");
             $this->f3->set('currentUser', $this->getCurrentUser());
             if ($activitiesRC) {
                 $homes = array();
                 foreach ($activitiesRC as $key => $activity) {
                     $verbMod = $activity->data->verb;
                     $obj = new $verbMod;
-                    if (method_exists($obj, 'moreInHome')) {
-                        $home = $obj->moreInHome($activity, $key);
+                    if (method_exists($obj, 'viewPost')) {
+                        $home = $obj->viewPost($activity, $key);
                         array_push($homes, $home);
                         $this->f3->set('activities', $homes);
                     }

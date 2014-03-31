@@ -6,23 +6,25 @@
  * Date: 7/30/13 - 2:46 PM
  * Project: UserWired Network - Version: beta
  */
-class UserController extends AppController {
+class UserController extends AppController 
+{
 
-    protected $uses = array("User", "Notify", "Sessions", "Post", "Information", "Permission", "Work");
     protected $helpers = array("Encryption", "Validate", "Email", "String", "Time");
 
-    public function __construct() {
+    public function __construct() 
+            {
         parent::__construct();
     }
 
-    public function signUp() {
+    public function signUp()
+            {
         $this->layout = 'index';
         //get and prepare data for sign up
         $data = $this->f3->get('POST');
 
         if (isset($data['emailSignUp'])) {
             //check email field has existed in DB
-            $isUsedEmail = $this->User->findOne("email = ?", array($data["emailSignUp"]));
+            $isUsedEmail = Model::get('user')->findOne("email = ?", array($data["emailSignUp"]));
             //data is alright, create new user then send confirmation code to email
             if ($this->ValidateHelper->validation($data, $isUsedEmail, false) == '') {
                 /* if (isset($data['regCheckbox']))
@@ -62,7 +64,7 @@ class UserController extends AppController {
                     unset($data['birthdayMonth']);
                     unset($data['birthdayYear']);
                     // exclude form submit button and checkbox from data and create a new user
-                    $userRC = $this->User->create($data, 'smSignUp,regCheckbox');
+                    $userRC = Model::get('user')->create($data, 'smSignUp,regCheckbox');
                     // add user info to class
                     $infoData = array(
                         'user' => $userRC,
@@ -98,7 +100,7 @@ class UserController extends AppController {
         $email = $request['email'];
         $confirmationCode = $request['confirmationCode'];
         if ($email && $confirmationCode) {
-            $user = $this->User->findOne('email = ?', array($email));
+            $user = Model::get('user')->findOne('email = ?', array($email));
             if ($user->data->confirmationCode != 'none') {
                 if (($user->data->confirmationCode == $confirmationCode) /* &&
                   (time() <= $user->data->confirmationCodeValidUntil) */) {
@@ -107,7 +109,7 @@ class UserController extends AppController {
                     // reset confirmation info
                     $user->data->confirmationCode = 'none';
                     $user->data->confirmationCodeValidUntil = 'none';
-                    $this->User->update($user->recordID, $user);
+                    Model::get('user')->update($user->recordID, $user);
                     /* Create notify for user */
                     $notify = array(
                         'userID' => $user->recordID,
@@ -132,7 +134,7 @@ class UserController extends AppController {
         if (!empty($request)) {
             $email = $request['emailLogIn'];
             $password = $request['pwLogIn'];
-            $existUser = $this->User->findOne("email = ? AND role = ?", array($email, 'user'));
+            $existUser = Model::get('user')->findOne("email = ? AND role = ?", array($email, 'user'));
             //var_dump($existUser);
             if (!empty($existUser)) {
                 if ($this->EncryptionHelper->CheckPassword($password, $existUser->data->password)) {
@@ -154,7 +156,7 @@ class UserController extends AppController {
                         $sessionID = rand(1000, 10000000);
                         $macAddress = $this->getMacAddress();
                         $ipAddress = $this->getIPAddress();
-                        $existSessionUser = $this->Sessions->findOne("email = ? AND status = ?", array($email, 'Active'));
+                        $existSessionUser = Model::get('sessions')->findOne("email = ? AND status = ?", array($email, 'Active'));
 
                         if ($existSessionUser) {
                             $getMACAddress = $existSessionUser->data->macAddress;
@@ -164,7 +166,7 @@ class UserController extends AppController {
                                     'timeEnd' => time(),
                                     'status' => 'Disable',
                                 );
-                                $this->Sessions->updateByCondition($currentSession, "email = ? AND status = ? ", array($email, 'Active'));
+                                Model::get('sessions')->updateByCondition($currentSession, "email = ? AND status = ? ", array($email, 'Active'));
                                 //then create new session
                                 $newSession = array(
                                     'email' => $email,
@@ -176,7 +178,7 @@ class UserController extends AppController {
                                     'externalIpAddress' => $ipAddress,
                                     'status' => 'Active',
                                 );
-                                $this->Sessions->create($newSession);
+                                Model::get('sessions')->create($newSession);
                                 header("Location: /home");
                             }
                             if ($macAddress != $getMACAddress) {
@@ -193,7 +195,7 @@ class UserController extends AppController {
                                 'externalIpAddress' => $ipAddress,
                                 'status' => 'Active',
                             );
-                            $this->Sessions->create($newSession);
+                            Model::get('sessions')->create($newSession);
                             header("Location: /home");
                         }
                     }
@@ -214,7 +216,7 @@ class UserController extends AppController {
         $this->layout = 'index';
         $email = $this->f3->get("POST.email");
         if ($email) {
-            $existEmail = $this->User->findOne("email = ?", array($email));
+            $existEmail = Model::get('user')->findOne("email = ?", array($email));
             if ($this->ValidateHelper->validation($email, $existEmail, true) == '') {
                 $code = $this->StringHelper->generateRandomString(5);
                 setcookie('codeConfirmUser', $code, time() + 3600);
@@ -236,7 +238,7 @@ class UserController extends AppController {
         $codeAuthEmail = $this->f3->get('POST.codeAuthEmail');
         if ($codeAuthEmail == $_COOKIE["codeConfirmUser"]) {
             $email = $_COOKIE["email"];
-            $existUser = $this->User->findOne("email = ? AND role = ?", array($email, 'user'));
+            $existUser = Model::get('user')->findOne("email = ? AND role = ?", array($email, 'user'));
             if ($existUser) {
                 F3::clear('SESSION');
                 F3::set('SESSION.loggedUser', $existUser);
@@ -251,7 +253,7 @@ class UserController extends AppController {
                     'timeEnd' => time(),
                     'status' => 'Disable',
                 );
-                $disableSession = $this->Sessions->updateByCondition($currentUser, "email = ? AND status = ? ", array($email, 'Active'));
+                $disableSession = Model::get('sessions')->updateByCondition($currentUser, "email = ? AND status = ? ", array($email, 'Active'));
                 if ($disableSession) {
                     $newSession = array(
                         'email' => $email,
@@ -263,7 +265,7 @@ class UserController extends AppController {
                         'externalIpAddress' => $ipAddress,
                         'status' => 'Active',
                     );
-                    $this->Sessions->create($newSession);
+                    Model::get('sessions')->create($newSession);
                     header("Location:/home");
                 }
             }
@@ -279,7 +281,7 @@ class UserController extends AppController {
 
         $email = $this->f3->get('POST.email');
         if ($email) {
-            $isUsedEmail = $this->User->findOne("email = ?", array($email));
+            $isUsedEmail = Model::get('user')->findOne("email = ?", array($email));
             if ($this->ValidateHelper->validation($email, $isUsedEmail, true) == '') {
                 $this->f3->set('profileName', ucfirst($isUsedEmail->data->firstName) . ' ' . ucfirst($isUsedEmail->data->lastName));
                 $this->f3->set('user', $isUsedEmail);
@@ -338,8 +340,8 @@ class UserController extends AppController {
                 $updatePWord = array(
                     'password' => $hashPWord
                 );
-                $this->User->updateByCondition($updatePWord, "email = ? AND role = ?", array($email, 'user'));
-                $user = $this->User->findOne("email = ? AND role = ?", array($email, 'user'));
+                Model::get('user')->updateByCondition($updatePWord, "email = ? AND role = ?", array($email, 'user'));
+                $user = Model::get('user')->findOne("email = ? AND role = ?", array($email, 'user'));
                 if ($user) {
                     setcookie($email, '', time() - 3600);
                     if ($user->data->status == 'pending') {
@@ -353,7 +355,7 @@ class UserController extends AppController {
                         $sessionID = rand(1000, 10000000);
                         $macAddress = $this->getMacAddress();
                         $ipAddress = $this->getIPAddress();
-                        $existSessionUser = $this->Sessions->findOne("email = ? AND status = ?", array($email, 'Active'));
+                        $existSessionUser = Model::get('sessions')->findOne("email = ? AND status = ?", array($email, 'Active'));
                         //Will not check mac address same login func because it's high priority after reset password
                         if ($existSessionUser) {
                             //update status for current session
@@ -361,7 +363,7 @@ class UserController extends AppController {
                                 'timeEnd' => time(),
                                 'status' => 'Disable',
                             );
-                            $this->Sessions->updateByCondition($currentSession, "email = ? AND status = ? ", array($email, 'Active'));
+                            Model::get('sessions')->updateByCondition($currentSession, "email = ? AND status = ? ", array($email, 'Active'));
                             //then create new session
                             $newSession = array(
                                 'email' => $email,
@@ -373,7 +375,7 @@ class UserController extends AppController {
                                 'externalIpAddress' => $ipAddress,
                                 'status' => 'Active',
                             );
-                            $this->Sessions->create($newSession);
+                            Model::get('sessions')->create($newSession);
                             header("Location: /home");
                         } else {
                             //create new session
@@ -387,7 +389,7 @@ class UserController extends AppController {
                                 'externalIpAddress' => $ipAddress,
                                 'status' => 'Active',
                             );
-                            $this->Sessions->create($newSession);
+                            Model::get('sessions')->create($newSession);
                             header("Location: /home");
                         }
                     }
@@ -408,7 +410,7 @@ class UserController extends AppController {
                 'timeEnd' => time(),
                 'status' => 'Disable',
             );
-            $this->Sessions->updateByCondition($currentSession, 'email = ? AND status = ?', array($currentUser->data->email, 'Active'));
+            Model::get('sessions')->updateByCondition($currentSession, 'email = ? AND status = ?', array($currentUser->data->email, 'Active'));
             $this->f3->clear("SESSION");
             setcookie('email', '', time() - 3600);
             setcookie('password', '', time() - 3600);
@@ -474,7 +476,7 @@ class UserController extends AppController {
             $updateUserClass = array(
                 'birthday' => $birthday
             );
-            $this->User->updateByCondition($updateUserClass, 'email = ?', array($currentUser->data->email));
+            Model::get('user')->updateByCondition($updateUserClass, 'email = ?', array($currentUser->data->email));
 
             $gender = $this->f3->get('POST.gender');
             $interest = $this->f3->get('POST.interest');

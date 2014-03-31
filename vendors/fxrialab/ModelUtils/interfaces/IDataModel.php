@@ -8,7 +8,7 @@ interface IDataModel
 
     function findOne($conditions, $values);
     
-    function findByCondition($conditions, $values);
+    function findByCondition($conditions);
 
     function findAll();
 

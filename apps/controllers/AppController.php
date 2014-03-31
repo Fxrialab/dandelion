@@ -144,8 +144,8 @@ class AppController extends Controller
     // **********************************
     public function trackActivity($actor, $verb, $object, $published)
     {
-        $checkActivity      = $this->Activity->findByCondition("owner = ? AND object = ?", array($actor->recordID, $object));
-        $findUserBOfFollow  = $this->Follow->findOne("userA = ? AND ID = ?", array($actor->recordID, $object));
+        $checkActivity      = Model::get('activity')->findByCondition("owner = ? AND object = ?", array($actor->recordID, $object));
+        $findUserBOfFollow  = Model::get('follow')->findByPk($actor->recordID);
         $actorID            = ($findUserBOfFollow) ? $findUserBOfFollow->data->userB : $actor->recordID;
         if(!$checkActivity)
         {
@@ -160,7 +160,7 @@ class AppController extends Controller
                 'published' => $published
             );
             // create activity for currentUser
-            $this->Activity->create($activity);
+            Model::get('activity')->create($activity);
             $friends = $this->getFriendsStt($actor->recordID);
 
             // dupicate activities for followers
@@ -168,12 +168,12 @@ class AppController extends Controller
             {
                 for ($i = 0; $i < count($friends); $i++)
                 {
-                    $checkActivityFriend = $this->Activity->findByCondition("owner = ? AND object = ?", array($friends[$i]->data->userB, $object));
+                    $checkActivityFriend = Model::get('activity')->findByCondition("owner = '".$friends[$i]->data->userB."' AND object = '".$object."'");
                     //var_dump($checkActivityFriend);
                     //@todo handling follow after: HN
                     if($findUserBOfFollow)
                     {
-                        $checkFriends   = $this->Friendship->findByCondition("userA = ? AND status = 'ok' AND userB = ?", array($friends[$i]->data->userB, $findUserBOfFollow->data->userB));
+                        $checkFriends   = Model::get('friendship')->findByCondition("userA = '".$friends[$i]->data->userB."' AND status = 'ok' AND userB = '".$findUserBOfFollow->data->userB."'");
                         if($checkFriends == null)
                         {
                             $activity   = array(
@@ -185,7 +185,7 @@ class AppController extends Controller
                                 'idObject'  => $object,
                                 'published' => $published
                             );
-                            $this->Activity->create($activity);
+                            Model::get('activity')->create($activity);
 
                         }
                     }
@@ -201,7 +201,7 @@ class AppController extends Controller
                             'idObject'  => $object,
                             'published' => $published
                         );
-                        $this->Activity->create($activity);
+                        Model::get('activity')->create($activity);
 
                     }
                 }
@@ -213,7 +213,8 @@ class AppController extends Controller
     public function trackComment($actor, $verb, $object, $statusID, $owner, $published)
     {
         $findUser = Model::get('comment')->findByCondition("post = ?",array($statusID));
-        $checkActivity       = Model::get('activity')->findByCondition("owner = ? AND object = ?", array($actor->recordID, $object));
+        $checkActivity       = Model::get('activity')->findByCondition("owner = '".$actor->recordID."' AND object = '".$object."'");
+   
         $findUserBOfFollow   = Model::get('follow')->findOne("userA = ? AND ID = ?", array($actor->recordID, $object));
         //$actorID = ($findUserBOfFollow) ? $findUserBOfFollow->data->userB : $actor->recordID;
         if(!$checkActivity) {

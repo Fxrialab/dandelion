@@ -7,7 +7,7 @@
 class PostController extends AppController
 {
 
-    protected $uses = array("Friendship", "User", "Follow", "Status", "Comment", "Post", "Photo");
+//    protected $uses = array("Friendship", "User", "Follow", "Status", "Comment", "Post", "Photo");
 
     public function __construct()
     {
@@ -171,10 +171,10 @@ class PostController extends AppController
             );
 
             // save
-            $status = $this->Status->create($postEntry);
+            $status = Model::get('status')->create($postEntry);
             $this->f3->set('statusID', $status);
             // track activity
-            $this->trackActivity($currentUser, 'HomePost', $status, $published);
+            $this->trackActivity($currentUser, 'ListController', $status, $published);
 
             $this->f3->set('content', $content);
             //F3::set('taggedType', $taggedType);
@@ -183,7 +183,7 @@ class PostController extends AppController
             $this->f3->set('published', $published);
             if ($friendProfileID) {
                 $this->f3->set('friendProfileID', $friendProfileID);
-                $friendProfileInfoRC = $this->User->load($friendProfileID);
+                $friendProfileInfoRC = Model::get('user')->load($friendProfileID);
                 $this->f3->set('friendProfileInfo', $friendProfileInfoRC);
             }
             $this->renderModule('postStatus', 'post');
@@ -198,7 +198,7 @@ class PostController extends AppController
             $postID = str_replace("_", ":", $this->f3->get('POST.postID'));
             $actorName = $this->getCurrentUserName();
             $published = time();
-            $existCommentRC = $this->Comment->findByCondition("actor = ? AND post = ?", array($currentUser->recordID, $postID));
+            $existCommentRC = Model::get('comment')->findByCondition("actor = ? AND post = ?", array($currentUser->recordID, $postID));
             //prepare data
             $content = $this->f3->get('POST.comment');
             $URL = $this->f3->get('POST.fullURL');
@@ -222,7 +222,7 @@ class PostController extends AppController
                     "tagged" => $tagged
                 );
 
-                $commentRC = $this->Comment->create($commentEntryCase1);
+                $commentRC = Model::get('comment')->create($commentEntryCase1);
                 $commentID = $commentRC;
             } else {
                 $commentEntryCase2 = array(
@@ -234,18 +234,18 @@ class PostController extends AppController
                     "published" => $published,
                     "tagged" => $tagged
                 );
-                $commentRC = $this->Comment->create($commentEntryCase2);
+                $commentRC = Model::get('comment')->create($commentEntryCase2);
                 $commentID = $commentRC;
             }
             /* Update number comment */
-            $status_update = $this->Status->findOne('@rid = ?', array('#' . $postID));
+            $status_update = Model::get('status')->findOne('@rid = ?', array('#' . $postID));
             $dataCountNumberComment = array(
                 'numberComment' => $status_update->data->numberComment + 1
             );
-            $this->Status->updateByCondition($dataCountNumberComment, "@rid = ?", array("#" . $postID));
+            Model::get('status')->updateByCondition($dataCountNumberComment, "@rid = ?", array("#" . $postID));
 
             // track activity
-            $userPostID = $this->Status->findOne("@rid = ?", array($postID));
+            $userPostID = Model::get('status')->findOne("@rid = ?", array($postID));
             $this->trackComment($currentUser, "post" . $commentID, $commentID, $postID, $userPostID->data->actor, $published); //commentHoc SAVE Activity follow object is ID comment
             // data for ajax
             $this->f3->set('published', $published);

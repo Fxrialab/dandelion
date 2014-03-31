@@ -117,7 +117,6 @@ class OrientDBModel implements IDataModel
 
     public function findOne($conditions, $values)
     {
-
         for ($i = 0; $i < count($values); $i++) {
             $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
             $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
