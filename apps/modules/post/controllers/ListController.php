@@ -1,28 +1,31 @@
 <?php
 
-class ListController extends AppController {
+class ListController extends AppController
+{
 
     protected $uses = array("User", "Follow", "Status", "Comment", "Like");
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
     //has implement and fix logic
-    public function viewPost($entry, $key) {
+    public function viewPost($entry, $key)
+    {
         if ($entry) {
+            $facade = new OrientDBFacade();
             $currentUser = $this->getCurrentUser();
             $statusRC = Model::get('status')->load($entry->data->object);
             $activityID = $entry->recordID;
             if ($statusRC) {
                 $statusID = $statusRC->recordID;
                 if ($currentUser->recordID != $statusRC->data->actor)
-                    $userRC = Model::get('user')->findOne("@rid = ?", array($statusRC->data->actor));
+                    $userRC = $facade->findByPk("user", $statusRC->data->actor);
                 else
-                    $userRC = Model::get('user')->findOne("@rid = ?", array($statusRC->data->owner));
-                $commentOfStatusRC[$statusID] = Model::get('comment')->findByCondition("post = ? LIMIT 3 ORDER BY published DESC", array($statusID));
-                $numberCommentInStatusRC[$statusID] = Model::get('comment')->count("post = ?", array($statusID));
-
+                    $userRC = $facade->findByPk("user", $statusRC->data->owner);
+                $commentOfStatusRC[$statusID] = $facade->findAll('comment', array("post" => $statusID));
+                $numberCommentInStatusRC[$statusID] = $facade->count('comment', $statusID);
                 $likeStatus[$statusID] = $this->getLikeStatus($statusID, $currentUser->recordID);
                 $followStatus[$statusID] = $this->getFollowStatus($statusID, $currentUser->recordID);
 
@@ -62,19 +65,21 @@ class ListController extends AppController {
     }
 
     //has implement and fix logic
-    public function moreInHome($entry, $key) {
+    public function moreInHome($entry, $key)
+    {
         if ($entry) {
+            $facade = new OrientDBFacade();
             $currentUser = $this->getCurrentUser();
             $activityID = $entry->recordID;
             $statusRC = Model::get('status')->load($entry->data->object);
             if ($statusRC) {
                 $statusID = $statusRC->recordID;
                 if ($currentUser->recordID != $statusRC->data->actor)
-                    $userRC = Model::get('user')->findOne("@rid = ?", array($statusRC->data->actor));
+                    $userRC = $facade->findByPk("user", $statusRC->data->actor);
                 else
-                    $userRC = Model::get('user')->findOne("@rid = ?", array($statusRC->data->owner));
-                $commentsOfStatus[$statusID] = Model::get('comment')->findByCondition("post = ? LIMIT 4 ORDER BY published DESC", array($statusID));
-                $numberOfCommentsStatus[$statusID] = Model::get('comment')->count("post = ?", array($statusID));
+                    $userRC = $facade->findByPk("user", $statusRC->data->owner);
+                $commentsOfStatus[$statusID] = $facade->findAll('comment', array("post" => $statusID));
+                $numberOfCommentsStatus[$statusID] = $facade->count("comment", $statusID);
 
                 $likeStatus[$statusID] = $this->getLikeStatus($statusID, $currentUser->recordID);
                 $statusFollow[$statusID] = $this->getFollowStatus($statusID, $currentUser->recordID);

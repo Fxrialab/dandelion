@@ -6,18 +6,23 @@
  * Date: 7/30/13 - 2:46 PM
  * Project: UserWired Network - Version: beta
  */
-class UserController extends AppController 
+class UserController extends AppController
 {
 
     protected $helpers = array("Encryption", "Validate", "Email", "String", "Time");
 
-    public function __construct() 
-            {
+    public function __construct()
+    {
         parent::__construct();
     }
 
+    static function getUser($id)
+    {
+        return Model::get('user')->findByPk($id);
+    }
+
     public function signUp()
-            {
+    {
         $this->layout = 'index';
         //get and prepare data for sign up
         $data = $this->f3->get('POST');
@@ -92,7 +97,8 @@ class UserController extends AppController
         }
     }
 
-    public function confirm() {
+    public function confirm()
+    {
         //Set layout default
         $this->layout = 'index';
         $request = $this->f3->get('GET');
@@ -103,7 +109,8 @@ class UserController extends AppController
             $user = Model::get('user')->findOne('email = ?', array($email));
             if ($user->data->confirmationCode != 'none') {
                 if (($user->data->confirmationCode == $confirmationCode) /* &&
-                  (time() <= $user->data->confirmationCodeValidUntil) */) {
+                  (time() <= $user->data->confirmationCodeValidUntil) */
+                ) {
                     // change status
                     $user->data->status = 'confirmed';
                     // reset confirmation info
@@ -128,7 +135,8 @@ class UserController extends AppController
         }
     }
 
-    public function login() {
+    public function login()
+    {
         $this->layout = 'index';
         $request = $this->f3->get('POST');
         if (!empty($request)) {
@@ -212,7 +220,8 @@ class UserController extends AppController
         }
     }
 
-    public function authentication() {
+    public function authentication()
+    {
         $this->layout = 'index';
         $email = $this->f3->get("POST.email");
         if ($email) {
@@ -228,12 +237,12 @@ class UserController extends AppController
                 $this->f3->set('MsgValidate', $this->ValidateHelper->validation($email, $existEmail, true));
                 $this->render("user/authentication.php", 'default');
             }
-        }
-        else
+        } else
             $this->render("user/authentication.php", 'default');
     }
 
-    public function confirmCode() {
+    public function confirmCode()
+    {
         $this->layout = 'index';
         $codeAuthEmail = $this->f3->get('POST.codeAuthEmail');
         if ($codeAuthEmail == $_COOKIE["codeConfirmUser"]) {
@@ -276,7 +285,8 @@ class UserController extends AppController
         }
     }
 
-    public function forgotPassword() {
+    public function forgotPassword()
+    {
         $this->layout = 'index';
 
         $email = $this->f3->get('POST.email');
@@ -290,12 +300,12 @@ class UserController extends AppController
                 $this->f3->set('MsgValidate', $this->ValidateHelper->validation($email, $isUsedEmail, true));
                 $this->render('user/forgotPassword.php', 'default');
             }
-        }
-        else
+        } else
             $this->render('user/forgotPassword.php', 'default');
     }
 
-    public function resetPassword() {
+    public function resetPassword()
+    {
         $this->layout = 'index';
         $email = $this->f3->get('POST.email');
         if ($email) {
@@ -308,7 +318,8 @@ class UserController extends AppController
         $this->render('user/confirmPassword.php', 'default');
     }
 
-    public function confirmPassword() {
+    public function confirmPassword()
+    {
         $this->layout = 'index';
 
         $email = $_COOKIE["email"];
@@ -323,12 +334,12 @@ class UserController extends AppController
                 $this->f3->set('MsgValidate', 'The code is not correct!');
                 $this->render('user/confirmPassword.php', 'default');
             }
-        }
-        else
+        } else
             $this->render('user/forgotPassword.php', 'default');
     }
 
-    public function newPassword() {
+    public function newPassword()
+    {
         $this->layout = 'index';
 
         $email = $_COOKIE['email'];
@@ -398,12 +409,12 @@ class UserController extends AppController
                 $this->f3->set('MsgValidate', 'Two password does not match!');
                 $this->render('user/newPassword.php', 'default');
             }
-        }
-        else
+        } else
             $this->render('user/forgotPassword.php', 'default');
     }
 
-    public function logout() {
+    public function logout()
+    {
         if ($this->isLogin()) {
             $currentUser = $this->f3->get('SESSION.loggedUser');
             $currentSession = array(
@@ -418,10 +429,10 @@ class UserController extends AppController
         }
     }
 
-    public function about() {
+    public function about()
+    {
         if ($this->isLogin()) {
             $this->layout = "other";
-
 
 
             //set currentUser and otherUser for check in profile element and header
@@ -431,7 +442,8 @@ class UserController extends AppController
         }
     }
 
-    public function loadBasicInfo() {
+    public function loadBasicInfo()
+    {
         if ($this->isLogin()) {
             $gender = $this->f3->get('POST.gender');
             $interest = $this->f3->get('POST.interest');
@@ -446,7 +458,8 @@ class UserController extends AppController
             $relationStatus = $this->f3->get('POST.relationStatus');
 
             if ($gender && $interest && $relation && $day && $month && $year &&
-                    $birthDayStatus && $birthYearStatus && $genderStatus && $interestStatus && $relationStatus) {
+                $birthDayStatus && $birthYearStatus && $genderStatus && $interestStatus && $relationStatus
+            ) {
                 //set basic info to edit popUpOver
                 $this->f3->set('month', $month);
                 $this->f3->set('day', $day);
@@ -465,7 +478,8 @@ class UserController extends AppController
         }
     }
 
-    public function editBasicInfo() {
+    public function editBasicInfo()
+    {
         if ($this->isLogin()) {
             $currentUser = $this->f3->get('SESSION.loggedUser');
             $month = $this->f3->get('POST.change_Month');
@@ -491,7 +505,8 @@ class UserController extends AppController
         }
     }
 
-    public function loadEduWork() {
+    public function loadEduWork()
+    {
         if ($this->isLogin()) {
             $currentUser = $this->f3->get('SESSION.loggedUser');
             $work = $this->f3->get('POST.work');
@@ -518,7 +533,8 @@ class UserController extends AppController
         }
     }
 
-    public function searchWork() {
+    public function searchWork()
+    {
         if ($this->isLogin()) {
             $workIs = $this->f3->get('POST.workIs');
             $data = array(
@@ -544,7 +560,7 @@ class UserController extends AppController
                 $data['new'] = $workIs;
             }
             header("Content-Type: application/json; charset=UTF-8");
-            echo json_encode((object) $data);
+            echo json_encode((object)$data);
             //$this->render('user/editEduWork.php', 'default');
         }
     }

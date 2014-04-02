@@ -6,16 +6,19 @@
  * Date: 7/31/13 - 2:18 PM
  * Project: UserWired Network - Version: beta
  */
-class HomeController extends AppController {
+class HomeController extends AppController
+{
 
     //protected $uses = array("Activity", "User", "Friendship", "Actions");
     protected $helpers = array();
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    public function index() {
+    public function index()
+    {
         $this->layout = 'index';
         if ($this->isLogin())
             header("Location:/home");
@@ -23,15 +26,12 @@ class HomeController extends AppController {
             $this->render('user/index.php', 'default');
     }
 
-    public function home() {
+    public function home()
+    {
         if ($this->isLogin()) {
             $this->layout = 'home';
-
-
-            //var_dump($_SESSION['loggedUser']->recordID);
-            // get activities
-            $activitiesRC = Model::get('activity')->findByCondition("owner = '".$this->getCurrentUser()->recordID."' AND type = 'post' ORDER BY published DESC LIMIT 4");
-
+            $facade = new OrientDBFacade();
+            $activitiesRC = $facade->findAll('activity', array('owner' => $this->getCurrentUser()->recordID, 'type' => 'post'));
             if ($activitiesRC) {
                 $homes = array();
                 foreach ($activitiesRC as $key => $activity) {
@@ -66,12 +66,14 @@ class HomeController extends AppController {
         }
     }
 
-    public function morePostHome() {
+    public function morePostHome()
+    {
         if ($this->isLogin()) {
             $published = $this->f3->get('POST.published');
-             $activitiesRC = Model::get('activity')->findByCondition("owner = '".$this->getCurrentUser()->recordID."' AND published < '".$published."' ORDER BY published DESC LIMIT 4");
+            $facade = new OrientDBFacade();
+            $activitiesRC = $facade->findAll('activity', array('owner' => $this->getCurrentUser()->recordID, 'type' => 'post'));
             $this->f3->set('currentUser', $this->getCurrentUser());
-            if ($activitiesRC) {
+            if (!empty($activitiesRC)) {
                 $homes = array();
                 foreach ($activitiesRC as $key => $activity) {
                     $verbMod = $activity->data->verb;
@@ -82,7 +84,7 @@ class HomeController extends AppController {
                         $this->f3->set('activities', $homes);
                     }
                 }
-                $this->render('user/moreHome.php', 'default');
+                $this->render('home/moreHome.php', 'default');
             } else {
                 $this->render('user/noMoreHome.php', 'default');
             }
@@ -91,7 +93,8 @@ class HomeController extends AppController {
         }
     }
 
-    public function moreCommentHome() {
+    public function moreCommentHome()
+    {
         if ($this->isLogin()) {
             $activityID = F3::get('POST.activity_id');
             $activitiesRC = $this->Activity->findByCondition("@rid = ? ", array($activityID));
@@ -117,9 +120,10 @@ class HomeController extends AppController {
         }
     }
 
-    public function pull() {
+    public function pull()
+    {
         if ($this->isLogin()) {
-            $listActionsForSuggest = $this->Actions->findByCondition("isSuggest = ?", array('yes'));
+            $listActionsForSuggest = Model::get('activity')->findByAttributes(array("isSuggest =>yes"));
             $actionIDArrays = array();
             $actionElement = array();
             if ($listActionsForSuggest) {
@@ -129,7 +133,7 @@ class HomeController extends AppController {
 
                 $randomKeys = $this->randomKeys($actionIDArrays, 'randomSuggestElement');
                 foreach ($randomKeys as $key) {
-                    $suggestAction[$actionIDArrays[$key]] = $this->Actions->findByCondition("isSuggest = 'yes' AND @rid = ?", array('#' . $actionIDArrays[$key]));
+                    $suggestAction[$actionIDArrays[$key]] = Model::get('actions')->findByCondition("isSuggest = 'yes' AND @rid = '" . $actionIDArrays[$key] . "'");
                     array_push($actionElement, $suggestAction[$actionIDArrays[$key]][0]->data->actionElement);
                 }
                 //check if suggest by friend request is null. Will not return to load element
@@ -139,7 +143,8 @@ class HomeController extends AppController {
         }
     }
 
-    public function loadSuggest() {
+    public function loadSuggest()
+    {
         if ($this->isLogin()) {
             $actionArrays = $this->f3->get('POST.actionsName');
             if ($actionArrays) {
@@ -150,7 +155,8 @@ class HomeController extends AppController {
         }
     }
 
-    public function search() {
+    public function search()
+    {
         if ($this->isLogin()) {
             $searchText = $this->f3->get("POST.data");
 
@@ -159,7 +165,7 @@ class HomeController extends AppController {
                 'success' => false,
                 'error' => ''
             );
-            $command    = $this->getSearchCommand(array('firstName', 'lastName', 'fullName'), $searchText);
+            $command = $this->getSearchCommand(array('firstName', 'lastName', 'fullName'), $searchText);
             $result = $this->User->searchByGremlin($command);
             if ($result) {
                 foreach ($result as $people) {
@@ -177,11 +183,12 @@ class HomeController extends AppController {
                 $data['error'] = "Your search did not return any results";
             }
             header("Content-Type: application/json; charset=UTF-8");
-            echo json_encode((object) $data);
+            echo json_encode((object)$data);
         }
     }
 
-    public function moreSearch() {
+    public function moreSearch()
+    {
         if ($this->isLogin()) {
             $this->layout = 'default';
 

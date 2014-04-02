@@ -4,38 +4,48 @@
  * Author: Hoc Nguyen
  * Date: 12/21/12
  */
-class PostController extends AppController
+class PostController extends AppController 
 {
 
 //    protected $uses = array("Friendship", "User", "Follow", "Status", "Comment", "Post", "Photo");
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
     }
 
+    static function getFindComment($postID) {
+        $comment = Model::get('comment')->findByCondition("post = '" . $postID . "'");
+        return $comment;
+    }
+
+    static function getUser($id) {
+        return Model::get('user')->findByPk($id);
+    }
+
     //has implement and fix logic
-    public function myPost($viewPath)
-    {
+    public function myPost($viewPath) {
         if ($this->isLogin()) {
             $this->layout = 'timeline';
-
+            $facade = new OrientDBFacade();
             $requestCurrentProfile = $this->f3->get('GET.username');
-            if ($requestCurrentProfile) {
-                $currentProfileRC = $this->User->findOne("username = ?", array($requestCurrentProfile));
-                if ($currentProfileRC) {
+            if (!empty($requestCurrentProfile)) {
+//                $currentProfileRC = Model::get('user')->findOne("username = ?", array($requestCurrentProfile));
+                $currentProfileRC = $facade->findByAttributes('user', array('username'=>$requestCurrentProfile));
+                if (!empty($currentProfileRC)) {
                     $currentProfileID = $currentProfileRC->recordID;
                 } else {
                     //@TODO: add layout return page not found in later
                     echo "page not found";
                 }
-            } else
+            }
+            else
                 $currentProfileID = $this->getCurrentUser()->recordID;
             $this->f3->set('SESSION.userProfileID', $currentProfileID);
-            $currentProfileRC = $this->User->load($currentProfileID);
+            $currentProfileRC = Model::get('user')->load($currentProfileID);
             $currentUser = $this->getCurrentUser();
             //get status friendship
-            $statusFriendShipRC = $this->Friendship->findOne('userA = ? AND userB = ?', array($currentUser->recordID, $currentProfileRC->recordID));
+//            $statusFriendShipRC = Model::get('friendship')->findOne('userA = ? AND userB = ?', array($currentUser->recordID, $currentProfileRC->recordID));
+            $statusFriendShipRC = $facade->findByAttributes('friendship', array('userA'=>$currentUser->recordID,'userB'=>$currentProfileRC->recordID));
             $statusFriendship = ($statusFriendShipRC == NULL) ? 'null' : $statusFriendShipRC->data->relationship;
             //set
             $this->f3->set('currentUser', $currentUser);
@@ -45,27 +55,27 @@ class PostController extends AppController
             //set ID for postWrap.php
             $this->f3->set("currentProfileID", $currentProfileID);
             // get id status of user was following.
-            $getFollowRC = $this->Follow->findOne('userA = ?  and filterFollow = ?  ', array($currentProfileID, 'post'));
+            $getFollowRC = $facade->findByAttributes('follow',array('userA' => $currentProfileID,'filterFollow' =>'post'));
             /* if exist status following. Get status following and get status of this user. */
             if ($getFollowRC) {
-                $statusRC = $this->Status->findByCondition("owner = ? OR @rid = ? ORDER BY published DESC LIMIT 5", array($currentProfileID, $getFollowRC->data->ID));
+                $statusRC = Model::get('status')->findByCondition("owner = '" . $currentProfileID . "' OR @rid = '" . $getFollowRC->data->ID . "' ORDER BY published DESC LIMIT 5");
             } else {
-                $statusRC = $this->Status->findByCondition("owner = ? ORDER BY published DESC LIMIT 5", array($currentProfileID));
+                $statusRC = $facade->findAll('status',array("owner" =>$currentProfileID));
             }
 
             if ($statusRC) {
                 foreach ($statusRC as $status) {
-                    $comments[($status->recordID)] = $this->Comment->findByCondition("post = ? LIMIT 3 ORDER BY published DESC", array($status->recordID));
-                    $numberOfComments[($status->recordID)] = $this->Comment->count("post = ?", array($status->recordID));
+                    $comments[($status->recordID)] = $facade->findAll('comment',array("post" => $status->recordID));
+                    $numberOfComments[($status->recordID)] = $facade->count("comment", $status->recordID);
                     //get status follow, like
                     $likeStatus[($status->recordID)] = $this->getLikeStatus($status->recordID, $currentUser->recordID);
                     $statusFollow[($status->recordID)] = $this->getFollowStatus($status->recordID, $currentUser->recordID);
                     //get info user actor
-                    $postActor[($status->data->actor)] = $this->User->load($status->data->actor);
+                    $postActor[($status->data->actor)] = Model::get('user')->load($status->data->actor);
                     if ($comments[($status->recordID)]) {
                         $pos = (count($comments[($status->recordID)]) < 3 ? count($comments[($status->recordID)]) : 3);
                         for ($j = $pos - 1; $j >= 0; $j--) {
-                            $commentActor[$comments[($status->recordID)][$j]->data->actor] = $this->User->load($comments[($status->recordID)][$j]->data->actor);
+                            $commentActor[$comments[($status->recordID)][$j]->data->actor] = Model::get('user')->load($comments[($status->recordID)][$j]->data->actor);
                         }
                         $this->f3->set("commentActor", $commentActor);
                     }
@@ -80,12 +90,11 @@ class PostController extends AppController
             }
             $this->render($viewPath . 'myPost.php', 'modules');
         } else {
-
+            
         }
     }
 
-    public function delete()
-    {
+    public function delete() {
         if ($this->isLogin()) {
             $postID = $this->f3->get('POST.id');
             if ($postID && !is_array($postID)) {
@@ -99,8 +108,7 @@ class PostController extends AppController
     }
 
     //just implement
-    public function loadComment($object, $actor, $activityID)
-    {
+    public function loadComment($object, $actor, $activityID) {
         if ($this->isLogin()) {
             $findStatus = $this->Comment->findByCondition("@rid = ?", array('#' . $object));
             //var_dump($findStatus);
@@ -133,8 +141,7 @@ class PostController extends AppController
     }
 
     //has implement and fix logic
-    public function postStatus()
-    {
+    public function postStatus() {
         if ($this->isLogin()) {
             $published = time();
             $currentUser = $this->getCurrentUser();
@@ -191,14 +198,14 @@ class PostController extends AppController
     }
 
     //just implement
-    public function postComment()
-    {
+    public function postComment() {
         if ($this->isLogin()) {
+            $facade = new OrientDBFacade();
             $currentUser = $this->getCurrentUser();
             $postID = str_replace("_", ":", $this->f3->get('POST.postID'));
             $actorName = $this->getCurrentUserName();
             $published = time();
-            $existCommentRC = Model::get('comment')->findByCondition("actor = ? AND post = ?", array($currentUser->recordID, $postID));
+            $existCommentRC = $facade->findAllAttributes('comment',array("actor" => $currentUser->recordID, "post" => $postID));
             //prepare data
             $content = $this->f3->get('POST.comment');
             $URL = $this->f3->get('POST.fullURL');
@@ -211,8 +218,9 @@ class PostController extends AppController
                 $content = $content1 . "_linkWith_" . $content2;
             }
             //target for count who comments to post on notification, will check later
+
             if ($existCommentRC) {
-                $commentEntryCase1 = array(
+                $commentEntryCase = array(
                     "actor" => $currentUser->recordID,
                     "actor_name" => $actorName,
                     "content" => $content,
@@ -221,11 +229,8 @@ class PostController extends AppController
                     "published" => $published,
                     "tagged" => $tagged
                 );
-
-                $commentRC = Model::get('comment')->create($commentEntryCase1);
-                $commentID = $commentRC;
             } else {
-                $commentEntryCase2 = array(
+                $commentEntryCase = array(
                     "actor" => $currentUser->recordID,
                     "actor_name" => $actorName,
                     "content" => $content,
@@ -234,9 +239,9 @@ class PostController extends AppController
                     "published" => $published,
                     "tagged" => $tagged
                 );
-                $commentRC = Model::get('comment')->create($commentEntryCase2);
-                $commentID = $commentRC;
             }
+            $commentRC = Model::get('comment')->create($commentEntryCase);
+            $commentID = $commentRC;
             /* Update number comment */
             $status_update = Model::get('status')->findOne('@rid = ?', array('#' . $postID));
             $dataCountNumberComment = array(
@@ -256,13 +261,12 @@ class PostController extends AppController
 
             $this->renderModule('postComment', 'post');
         } else {
-
+            
         }
     }
 
     //has implement and fix logic
-    public function morePostStatus()
-    {
+    public function morePostStatus() {
         if ($this->isLogin()) {
             $currentUser = $this->getCurrentUser();
             $userProfileID = $this->f3->get('SESSION.userProfileID');
@@ -271,14 +275,14 @@ class PostController extends AppController
             $this->f3->set('currentUser', $currentUser);
             $this->f3->set('userProfileInfo', $userProfileRC);
             if ($currentUser->recordID == $userProfileID) {
-                $statusRC = $this->Status->findByCondition("owner = ? and published < ? LIMIT 5 ORDER BY published DESC", array($currentUser->recordID, $published));
+                $statusRC = Model::get('status')->findByCondition("owner = '".$currentUser->recordID."' and published < '".$published."' LIMIT 5 ORDER BY published DESC");
             } else {
-                $statusRC = $this->Status->findByCondition("owner = ? and published < ? LIMIT 5 ORDER BY published DESC", array($userProfileID, $published));
+                $statusRC =  Model::get('status')->findByCondition("owner = '".$userProfileID."' and published < '".$published."' LIMIT 5 ORDER BY published DESC");
             }
             if ($statusRC) {
                 foreach ($statusRC as $status) {
-                    $comments[($status->recordID)] = $this->Comment->findByCondition("post = ? ORDER BY published ASC LIMIT 4", array($status->recordID));
-                    $numberOfComments[($status->recordID)] = $this->Comment->count("post = ?", array($status->recordID));
+                    $comments[($status->recordID)] = Model::get('comment')->findByCondition("post = '".$status->recordID."' ORDER BY published ASC LIMIT 4");
+                    $numberOfComments[($status->recordID)] = Model::get('comment')->count("post = ?", array($status->recordID));
                     //get status follow
                     $likeStatus[($status->recordID)] = $this->getLikeStatus($status->recordID, $currentUser->recordID);
                     $statusFollow[($status->recordID)] = $this->getFollowStatus($status->recordID, $currentUser->recordID);
@@ -299,42 +303,37 @@ class PostController extends AppController
                 $this->f3->set("statusFollow", $statusFollow);
                 $this->f3->set("postActor", $postActor);
                 $this->f3->set("commentActor", $commentActor);
-
                 $this->renderModule('morePostStatus', 'post');
             } else {
                 $this->renderModule('noMorePostStatus', 'post');
             }
-        } else {
-
         }
     }
 
     //just implement
-    public function morePostComment()
-    {
+    public function morePostComment() {
         if ($this->isLogin()) {
             $published = $this->f3->get('POST.published');
             $statusID = str_replace("_", ":", $this->f3->get('POST.statusID'));
             if ($statusID) {
-                $comments = $this->Comment->findByCondition("post = ? and published < ? LIMIT 50 ORDER BY published DESC", array($statusID, $published));
-                if ($comments) {
-                    $pos = (count($comments) < 50 ? count($comments) : 50);
-                    for ($j = $pos - 1; $j >= 0; $j--) {
-                        $commentActor[$comments[$j]->data->actor] = $this->User->load($comments[$j]->data->actor);
-                    }
-                } else {
-                    $commentActor = null;
-                }
-                $this->f3->set("commentActor", $commentActor);
+                $comments = Model::get('comment')->findByCondition("post = '" . $statusID . "' and published < '" . $published . "' ORDER BY published DESC");
+//                if ($comments) {
+//                    $pos = (count($comments) < 50 ? count($comments) : 50);
+//                    for ($j = $pos - 1; $j >= 0; $j--) {
+//                        $commentActor[$comments[$j]->data->actor] = Model::get('user')->load($comments[$j]->data->actor);
+//                    }
+//                } else {
+//                    $commentActor = null;
+//                }
+//                $this->f3->set("commentActor", $commentActor);
                 $this->f3->set("comments", $comments);
-                $this->renderModule('morePostComment', 'post');
+                $this->renderModule('viewComment', 'post');
             }
         }
     }
 
     //just implement
-    public function shareStatus()
-    {
+    public function shareStatus() {
         if ($this->isLogin()) {
             $statusID = str_replace('_', ':', $this->f3->get('POST.statusID'));
             $statusRC = $this->Status->findOne("@rid = ?", array($statusID));
@@ -346,8 +345,7 @@ class PostController extends AppController
     }
 
     //just implement
-    public function insertStatus()
-    {
+    public function insertStatus() {
         if ($this->isLogin()) {
             $published = time();
             $statusID = str_replace('_', ':', $this->f3->get("POST.statusID"));
@@ -379,8 +377,7 @@ class PostController extends AppController
     }
 
     //just implement
-    public function detailStatus()
-    {
+    public function detailStatus() {
         if ($this->isLogin()) {
             $this->layout = 'default';
             $statusID = F3::get('GET.id');
