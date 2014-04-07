@@ -10,11 +10,9 @@
  * <li>{count:$facade->count()}</li>
  * </ul>
  */
-class OrientDBFacade
-{
+class OrientDBFacade {
 
-    function findAll($model, $params = array())
-    {
+    function findAll($model, $params = array()) {
         foreach ($params as $key => $v) {
             $k[] = $key;
             $value[] = $v;
@@ -27,13 +25,16 @@ class OrientDBFacade
         return $model;
     }
 
-    function findByPk($model, $params)
-    {
-        return Model::get('user')->findOne("@rid = ?", array($params));
+    function findByPk($model, $params) {
+        return Model::get($model)->findOne("@rid = ?", array($params));
     }
 
-    function findAllAttributes($model, $params = array())
-    {
+    function loadingPost($model,$limit,$offset) {
+        $model = Model::get($model)->findByCondition("type='post' ORDER BY published DESC LIMIT  " . $limit . " OFFSET " . $offset);
+        return $model;
+    }
+
+    function findAllAttributes($model, $params = array()) {
         foreach ($params as $key => $v) {
             $k[] = $key;
             $value[] = $v;
@@ -46,8 +47,7 @@ class OrientDBFacade
         return $model;
     }
 
-    function findByAttributes($model, $params = array())
-    {
+    function findByAttributes($model, $params = array()) {
         foreach ($params as $key => $v) {
             $k[] = $key;
             $value[] = $v;
@@ -60,8 +60,7 @@ class OrientDBFacade
         return $model;
     }
 
-    function count($model, $params)
-    {
+    function count($model, $params) {
         return Model::get($model)->count("post = ?", array($params));
     }
 

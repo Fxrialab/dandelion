@@ -6,19 +6,16 @@
  * Date: 7/31/13 - 2:18 PM
  * Project: UserWired Network - Version: beta
  */
-class HomeController extends AppController
-{
+class HomeController extends AppController {
 
     //protected $uses = array("Activity", "User", "Friendship", "Actions");
     protected $helpers = array();
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
     }
 
-    public function index()
-    {
+    public function index() {
         $this->layout = 'index';
         if ($this->isLogin())
             header("Location:/home");
@@ -26,8 +23,7 @@ class HomeController extends AppController
             $this->render('user/index.php', 'default');
     }
 
-    public function home()
-    {
+    public function home() {
         if ($this->isLogin()) {
             $this->layout = 'home';
             $facade = new OrientDBFacade();
@@ -65,19 +61,17 @@ class HomeController extends AppController
             header("Location: /");
         }
     }
-
-    public function morePostHome()
-    {
+    public function morePostHome() {
         if ($this->isLogin()) {
             $published = $this->f3->get('POST.published');
-            $facade = new OrientDBFacade();
-            $activitiesRC = $facade->findAll('activity', array('owner' => $this->getCurrentUser()->recordID, 'type' => 'post'));
+            $activitiesRC = Model::get('activity')->findByCondition("owner = '" . $this->getCurrentUser()->recordID . "' and published < '" . $published . "'");
             $this->f3->set('currentUser', $this->getCurrentUser());
             if (!empty($activitiesRC)) {
                 $homes = array();
                 foreach ($activitiesRC as $key => $activity) {
                     $verbMod = $activity->data->verb;
                     $obj = new $verbMod;
+                 
                     if (method_exists($obj, 'viewPost')) {
                         $home = $obj->viewPost($activity, $key);
                         array_push($homes, $home);
@@ -93,8 +87,26 @@ class HomeController extends AppController
         }
     }
 
-    public function moreCommentHome()
-    {
+    public function loading() {
+        $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
+        $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
+        $activitiesRC = Model::get('activity')->findByCondition("type = 'post' limit $limit ORDER BY published DESC offset $offset");
+        if (!empty($activitiesRC)) {
+            $homes = array();
+            foreach ($activitiesRC as $key => $activity) {
+                $verbMod = $activity->data->verb;
+                $obj = new $verbMod;
+                if (method_exists($obj, 'viewPost')) {
+                    $home = $obj->viewPost($activity, $key);
+                    array_push($homes, $home);
+                    $this->f3->set('activities', $homes);
+                }
+            }
+        }
+        $this->render('home/view.php', 'default');
+    }
+
+    public function moreCommentHome() {
         if ($this->isLogin()) {
             $activityID = F3::get('POST.activity_id');
             $activitiesRC = $this->Activity->findByCondition("@rid = ? ", array($activityID));
@@ -120,8 +132,7 @@ class HomeController extends AppController
         }
     }
 
-    public function pull()
-    {
+    public function pull() {
         if ($this->isLogin()) {
             $listActionsForSuggest = Model::get('activity')->findByAttributes(array("isSuggest =>yes"));
             $actionIDArrays = array();
@@ -143,8 +154,7 @@ class HomeController extends AppController
         }
     }
 
-    public function loadSuggest()
-    {
+    public function loadSuggest() {
         if ($this->isLogin()) {
             $actionArrays = $this->f3->get('POST.actionsName');
             if ($actionArrays) {
@@ -155,8 +165,7 @@ class HomeController extends AppController
         }
     }
 
-    public function search()
-    {
+    public function search() {
         if ($this->isLogin()) {
             $searchText = $this->f3->get("POST.data");
 
@@ -183,12 +192,11 @@ class HomeController extends AppController
                 $data['error'] = "Your search did not return any results";
             }
             header("Content-Type: application/json; charset=UTF-8");
-            echo json_encode((object)$data);
+            echo json_encode((object) $data);
         }
     }
 
-    public function moreSearch()
-    {
+    public function moreSearch() {
         if ($this->isLogin()) {
             $this->layout = 'default';
 

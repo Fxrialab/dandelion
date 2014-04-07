@@ -1,12 +1,13 @@
+
 <?php
+
 if (!empty($statusID))
     $records = PostController::getFindComment($statusID);
 else
     $records = $this->f3->get('comments');
-
 if (!empty($records)) {
     ?>
-    <div class="commentContentWrapper">
+
         <?php
         $pos = (count($records) < 3 ? count($records) : 3);
         for ($j = $pos - 1; $j >= 0; $j--) {
@@ -45,8 +46,5 @@ if (!empty($records)) {
             </div>
             <?php
         } // end for
-        ?>
-    </div>
-    <?php
 }
 ?>

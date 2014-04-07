@@ -1,107 +1,86 @@
 <?php
+
 /**
  * Created by fxrialab team
  * Author: Uchiha
  * Date: 9/27/13 - 2:46 PM
  * Project: userwired Network - Version: 1.0
  */
-class LikeController extends AppController
-{
-    protected $uses     = array("Like", "Status", "Photo");
-    protected $helper   = array();
+class LikeController extends AppController {
 
-    public function __construct()
-    {
+//    protected $uses = array("Like", "Status", "Photo");
+    protected $helper = array();
+
+    public function __construct() {
         parent::__construct();
     }
 
-    public function like()
-    {
-        if ($this->isLogin())
-        {
-            $getIDUser  = $this->f3->get("POST.id");
-            $userA      = $this->getCurrentUser()->recordID;
-            $userB      = $this->User->getClusterID().':'.$getIDUser;
+    public function like() {
+        if ($this->isLogin()) {
+//            $getIDUser  = $this->f3->get("POST.id");
+//            $userA      = $this->getCurrentUser()->recordID;
+//            $userB      = Model::get('user')->getClusterID().':'.$getIDUser;
             //filter follow status, qa, photo and all
-            $statusID   = $this->f3->get("POST.statusID");
-            $photoID    = $this->f3->get("POST.photoID");
-            $published  = time();
+            $owner = $this->getCurrentUser()->recordID;
+            $actor = str_replace('_', ':', $_POST['actor']);
+            $statusID = $this->f3->get("POST.statusID");
+//            $photoID    = $this->f3->get("POST.photoID");
+            $published = time();
 
-            $existStatusLikeRC = $this->Like->findOne("userA = ? AND ID = ?", array($userA, str_replace('_', ':', $statusID)));
+            $existStatusLikeRC = Model::get('like')->findOne("userA = ? AND ID = ?", array($owner, str_replace('_', ':', $statusID)));
 
-            if ($statusID && $userB && !$existStatusLikeRC)
-            {
+            if ($statusID && $actor && empty($existStatusLikeRC)) {
                 $statusID = str_replace('_', ':', $statusID);
                 $data = array(
-                    'userA'         => $userA,
-                    'isLike'        => 'like',
-                    'filterLike'    => 'post',
-                    'ID'            => $statusID,
-                    'userB'         => $userB,
-                    'published'     => $published
+                    'owner' => $owner,
+                    'actor' => $actor,
+                    'isLike' => 'like',
+                    'filterLike' => 'post',
+                    'ID' => $statusID,
+                    'published' => $published
                 );
-                $this->Like->create($data);
+                Model::get('like')->create($data);
                 //update number like to status
-                $statusRC = $this->Status->findOne('@rid = ?',array('#'.$statusID));
+                $statusRC = Model::get('status')->findOne('@rid = ?', array('#' . $statusID));
+                $numLike = $statusRC->data->numberLike + 1;
                 $updateNumLike = array(
-                    'numberLike'  => $statusRC->data->numberLike + 1,
+                    'numberLike' => $numLike,
                 );
-                $this->Status->updateByCondition($updateNumLike, "@rid = ?", array("#".$statusID));
-            }
-            if ($photoID && $userB && !$existStatusLikeRC)
-            {
-                $photoID = str_replace('_', ':', $photoID);
-                $data = array(
-                    'userA'         => $userA,
-                    'isLike'        => 'like',
-                    'filterLike'    => 'photo',
-                    'ID'            => $photoID,
-                    'userB'         => $userB,
-                    'published'     => $published
-                );
-                $this->Like->create($data);
-                //update number like to photo
-                $photoRC = $this->Photo->findOne('@rid = ?',array('#'.$photoID));
-                $updateNumLike = array(
-                    'numberLike'  => $photoRC->data->numberLike + 1,
-                );
-                $this->Photo->updateByCondition($updateNumLike, "@rid = ?", array("#".$photoID));
+                Model::get('status')->updateByCondition($updateNumLike, "@rid = ?", array("#" . $statusID));
+                $facade = new OrientDBFacade();
+                $like = $facade->findByAttributes('like', array('owner' => $owner, 'ID' => $statusID));
+                $this->f3->set('likes', '123');
+                $this->render('home/like.php', 'default');
+//                echo json_encode($numLike);
             }
         }
     }
 
-    public function unlike()
-    {
-        if ($this->isLogin())
-        {
-            $getIDUser  = $this->f3->get("POST.id");
-            $userA      = $this->getCurrentUser()->recordID;
-            $userB      = $this->User->getClusterID().':'.$getIDUser;
-            $statusID   = $this->f3->get("POST.statusID");
-            $photoID    = $this->f3->get("POST.photoID");
+    public function unlike() {
+        if ($this->isLogin()) {
+//            $getIDUser  = $this->f3->get("POST.id");
+//            $userA      = $this->getCurrentUser()->recordID;
+//            $userB      = $this->User->getClusterID().':'.$getIDUser;
+//            $statusID   = $this->f3->get("POST.statusID");
+//            $photoID    = $this->f3->get("POST.photoID");
+
+            $owner = $this->getCurrentUser()->recordID;
+            $actor = str_replace('_', ':', $_POST['actor']);
+            $statusID = $this->f3->get("POST.statusID");
             //find id of record then delete record
-            if($statusID && $userB)
-            {
+            if (!empty($statusID) && !empty($owner) && !empty($actor)) {
                 $statusID = str_replace('_', ':', $statusID);
-                $this->Like->deleteByCondition("userA = ? AND userB = ? AND ID = ?", array($userA, $userB, $statusID));
+                Model::get('like')->deleteByCondition("owner = ? AND actor = ? AND ID = ?", array($owner, $actor, $statusID));
                 //update number like to status
-                $statusRC = $this->Status->findOne('@rid = ?',array('#'.$statusID));
+                $statusRC = Model::get('status')->findOne('@rid = ?', array('#' . $statusID));
+                $numLike = $statusRC->data->numberLike - 1;
                 $updateNumLike = array(
-                    'numberLike'  => $statusRC->data->numberLike - 1,
+                    'numberLike' => $numLike,
                 );
-                $this->Status->updateByCondition($updateNumLike, "@rid = ?", array("#".$statusID));
-            }
-            if($photoID && $userB)
-            {
-                $photoID = str_replace('_', ':', $photoID);
-                $this->Like->deleteByCondition("userA = ? AND userB = ? AND ID = ?", array($userA, $userB, $photoID));
-                //update number like to photo
-                $photoRC = $this->Photo->findOne('@rid = ?',array('#'.$photoID));
-                $updateNumLike = array(
-                    'numberLike'  => $photoRC->data->numberLike - 1,
-                );
-                $this->Photo->updateByCondition($updateNumLike, "@rid = ?", array("#".$photoID));
+                Model::get('status')->updateByCondition($updateNumLike, "@rid = ?", array("#" . $statusID));
+                echo json_encode($numLike);
             }
         }
     }
+
 }

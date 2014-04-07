@@ -75,13 +75,13 @@ class UserController extends AppController
                         'user' => $userRC,
                         'gender' => $this->f3->get('POST.sex')
                     );
-                    $this->Information->create($infoData);
+                    Model::get('information')->create($infoData);
                     // set default permission for user
                     $permissionDefault = array(
                         'user' => $userRC,
                         'gender' => 'globe'
                     );
-                    $this->Permission->create($permissionDefault);
+                    Model::get('permission')->create($permissionDefault);
                     // sent mail for confirmation account
                     $this->EmailHelper->sendConfirmationEmail($data['email'], $confirmationCode);
                     $this->f3->set('MsgSignUp', 'You are registered success. Please check mail and confirm !');
@@ -158,8 +158,14 @@ class UserController extends AppController
                             setcookie('email', $email, time() - 3600);
                             setcookie('password', $password, time() - 3600);
                         }
-                        $this->f3->clear('SESSION');
+//                        $this->f3->clear('SESSION');
                         $this->f3->set('SESSION.loggedUser', $existUser);
+                        $this->f3->set('SESSION.username',$existUser->data->username);
+                        $this->f3->set('SESSION.email',$existUser->data->email);
+                        $this->f3->set('SESSION.fullname',$existUser->data->fullName);
+                        $this->f3->set('SESSION.birthday',$existUser->data->birthday);
+                        $this->f3->set('SESSION.avatar', $existUser->data->profilePic);
+                        $this->f3->set('SESSION.userID', $existUser->recordID);
                         // start initial sessions.
                         $sessionID = rand(1000, 10000000);
                         $macAddress = $this->getMacAddress();
