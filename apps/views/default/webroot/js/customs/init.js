@@ -508,10 +508,10 @@ function unlike(statusID, actor) {
         url: "/unlike",
         data: {statusID: statusID, actor: actor},
         cache: false,
-        success: function(data) {
-             var obj = jQuery.parseJSON(data);
-            $('.like-' + statusID).html('<a href="javascript:void(0)" onclick="like(' + statusID + ', ' + actor + ')">Like</a>');
-            $('#numLike-' + statusID).html(obj);
+        success: function(html) {
+//             var obj = jQuery.parseJSON(data);
+            $('.like-' + statusID).html(html);
+//            $('#numLike-' + statusID).html(obj);
 
         }
     })

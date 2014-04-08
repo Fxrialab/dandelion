@@ -5,6 +5,9 @@
  * and open the template in the editor.
  */
 
-                var_dump($this->f3->get('likes'));
+if (!empty($like))
+    echo '<a href="javascript:void(0)" onclick="unlike('.$statusID.','.$actor.')">UnLike</a>'; 
+else
+    echo '<a href="javascript:void(0)" onclick="like('.$statusID.','.$actor.')">Like</a>';
 ?>
-<a href="javascript:void(0)" onclick="unlike()">UnLike</a>
+

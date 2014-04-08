@@ -46,7 +46,7 @@ $statusID = str_replace(":", "_", $mod['actions']->recordID);
                             <!--Like Segments-->
                             <li class="like-<?php echo $rpStatusID ?>">
                                 <?php
-                                if (!empty($mod['like'])) {
+                                if ($mod['like'] == TRUE) {
                                     ?>
                                     <a href="javascript:void(0)" onclick="unlike('<?php echo $rpStatusID ?>', '<?php echo $status->data->actor ?>')" title="Like post">Un Like</a>
                                 <?php } else { ?>
