@@ -26,22 +26,6 @@ class HomeController extends AppController {
     public function home() {
         if ($this->isLogin()) {
             $this->layout = 'home';
-            $facade = new OrientDBFacade();
-            $activitiesRC = $facade->findAll('activity', array('owner' => $this->getCurrentUser()->recordID, 'type' => 'post'));
-            if ($activitiesRC) {
-                $homes = array();
-                foreach ($activitiesRC as $key => $activity) {
-                    $verbMod = $activity->data->verb;
-                    if (class_exists($verbMod)) {
-                        $obj = new $verbMod;
-                        if (method_exists($obj, 'viewPost')) {
-                            $home = $obj->viewPost($activity, $key);
-                            array_push($homes, $home);
-                            $this->f3->set('activities', $homes);
-                        }
-                    }
-                }
-            }
             //load js file of all modules existed
             $js = glob(MODULES . '*/webroot/js/*.js');
             $loadJS = array();
@@ -49,13 +33,8 @@ class HomeController extends AppController {
                 $jsMod = substr($jsFile, strpos($jsFile, 'app'));
                 array_push($loadJS, BASE_URL . $jsMod);
             }
-            //set currentUser and otherUser for check in profile element and header
-            $this->f3->set('currentUser', $this->getCurrentUser());
-            $this->f3->set('otherUser', $this->getCurrentUser());
-            $this->f3->set('existActivities', $activitiesRC);
             $this->f3->set('js', $loadJS);
             $this->f3->set('currentProfileID', $this->getCurrentUser()->recordID);
-            $this->f3->set('SESSION.userProfileID', $this->getCurrentUser()->recordID);
             $this->render('home/home.php', 'default');
         } else {
             header("Location: /");

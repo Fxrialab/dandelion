@@ -1,14 +1,9 @@
-<?php
-$currentUser        = $this->f3->get('currentUser');
 
-$currentProfilePic  = $currentUser->data->profilePic;
-$currentUserName    = ucfirst($currentUser->data->firstName)." ".ucfirst($currentUser->data->lastName);
-?>
 <div class="uiLeftCol large-20">
     <div class="uiBoxProfile column-group">
-        <div class="uiProfilePic large-30"><a href=""><img src="<?php echo $currentProfilePic; ?>" width="50" height="50"></a></div>
+        <div class="uiProfilePic large-30"><a href=""><img src="<?php echo $this->f3->get('SESSION.avatar'); ?>" width="50" height="50"></a></div>
         <div class="uiProfileInfo large-70">
-            <p class="fixMarginBottom-5"><a href=""><?php echo $currentUserName; ?></a></p>
+            <p class="fixMarginBottom-5"><a href=""><?php echo $this->f3->get('SESSION.fullname'); ?></a></p>
             <span><a href="">Edit Profile</a></span>
         </div>
     </div>

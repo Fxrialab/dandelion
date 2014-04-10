@@ -1,8 +1,4 @@
-<?php
-$currentUser            = $this->f3->get('currentUser');
 
-$currentUserName        = ucfirst($currentUser->data->firstName);
-?>
 <div class="ink-grid">
     <div class="column-group fixMarginTopBottom-10">
         <div class="large-80">
@@ -179,7 +175,7 @@ $currentUserName        = ucfirst($currentUser->data->firstName);
                     </div>-->
                 </div>
                 <div class="large-55 content-center fixMarginTop-12 uiTimeLineNav">
-                    <a class="linkColor-9aa9c8" href="/content/myPost"><?php echo $currentUserName; ?></a>
+                    <a class="linkColor-9aa9c8" href="/content/myPost"><?php echo $this->f3->get('SESSION.username'); ?></a>
                 </div>
                 <div class="large-10 uiSettingOptions content-right">
                     <a href="" class="settingOption"><i class="topNavIcon2-settingOptions"></i></a>

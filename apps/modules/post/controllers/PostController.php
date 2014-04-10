@@ -14,7 +14,7 @@ class PostController extends AppController {
 
     static function getFindComment($postID) {
         $comment = Model::get('comment')->findByCondition("post = '" . str_replace("_", ":", $postID) . "'");
-        return $comment;       
+        return $comment;
     }
 
     static function getPhoto($id) {
@@ -70,7 +70,7 @@ class PostController extends AppController {
                 $statusRC = $facade->findAll('status', array("owner" => $currentProfileID));
             }
 
-            if ($statusRC) {
+            if (!empty($statusRC)) {
                 foreach ($statusRC as $status) {
                     $comments[($status->recordID)] = $facade->findAll('comment', array("post" => $status->recordID));
                     $numberOfComments[($status->recordID)] = $facade->count("comment", $status->recordID);
@@ -196,7 +196,7 @@ class PostController extends AppController {
             $this->f3->set('tagged', $taggedElement);
             $this->f3->set('currentUser', $currentUser);
             $this->f3->set('published', $published);
-            $this->f3->set('img',$img);
+            $this->f3->set('img', $img);
             if ($friendProfileID) {
                 $this->f3->set('friendProfileID', $friendProfileID);
                 $friendProfileInfoRC = Model::get('user')->load($friendProfileID);
@@ -280,7 +280,7 @@ class PostController extends AppController {
             $currentUser = $this->getCurrentUser();
             $userProfileID = $this->f3->get('SESSION.userProfileID');
             $published = $this->f3->get('POST.published');
-            $userProfileRC = $this->User->load($userProfileID);
+            $userProfileRC = Model::get('user')->load($userProfileID);
             $this->f3->set('currentUser', $currentUser);
             $this->f3->set('userProfileInfo', $userProfileRC);
             if ($currentUser->recordID == $userProfileID) {
@@ -295,11 +295,11 @@ class PostController extends AppController {
                     //get status follow
                     $likeStatus[($status->recordID)] = $this->getLikeStatus($status->recordID, $currentUser->recordID);
                     $statusFollow[($status->recordID)] = $this->getFollowStatus($status->recordID, $currentUser->recordID);
-                    $postActor[($status->data->actor)] = $this->User->load($status->data->actor);
+                    $postActor[($status->data->actor)] = Model::get('user')->load($status->data->actor);
                     if ($comments[($status->recordID)]) {
                         $pos = (count($comments[($status->recordID)]) < 4 ? count($comments[($status->recordID)]) : 4);
                         for ($j = $pos - 1; $j >= 0; $j--) {
-                            $commentActor[$comments[($status->recordID)][$j]->data->actor] = $this->User->load($comments[($status->recordID)][$j]->data->actor);
+                            $commentActor[$comments[($status->recordID)][$j]->data->actor] = Model::get('user')->load($comments[($status->recordID)][$j]->data->actor);
                         }
                     } else {
                         $commentActor = null;

@@ -1,55 +1,25 @@
 <?php
 $listStatus = $this->f3->get('listStatus');
-$comments = $this->f3->get('comments');
-$numberOfComments = $this->f3->get('numberOfComments');
-$currentUser = $this->f3->get('currentUser');
-$otherUser = $this->f3->get('otherUser');
-$likeStatus = $this->f3->get('likeStatus');
-$statusFollow = $this->f3->get('statusFollow');
-$statusFriendship = $this->f3->get('statusFriendShip');
-$postActor = $this->f3->get('postActor');
-$commentActor = $this->f3->get('commentActor');
-$currentProfileID = $this->f3->get('currentProfileID');
-$currentUserID = $currentUser->recordID;
-$otherUserID = $otherUser->recordID;
-
 ?>
 
 <div class="uiMainColProfile large-70">
     <div class="uiMainContainer">
         <?php
-        if ($statusFriendship == 'friend' || $currentUserID == $otherUserID)
-            AppController::elementModules('postWrap', 'post');
+        AppController::elementModules('postWrap', 'post');
         ?>
-        <input name="profileID" id="profileID" type="hidden" value="<?php echo $currentProfileID; ?>">
+        <input name="profileID" id="profileID" type="hidden" value="<?php echo $this->f3->get('SESSION.userID'); ?>">
         <div class="wrapperContainer">
             <div id="contentContainer">
                 <?php
-                if ($listStatus) {
-                    for ($i = 0; $i < count($listStatus); $i++) {
-                        $statusID = $listStatus[$i]->recordID;
-                        $status_owner = $listStatus[$i]->data->owner;
-                        $status_actor = $listStatus[$i]->data->actor;
-                        $status_contentShare = $listStatus[$i]->data->contentShare;
-                        $status_username = $listStatus[$i]->data->actorName;
-                        $status_tagged = $listStatus[$i]->data->tagged;
-                        $status_content = $listStatus[$i]->data->content;
-                        $numC = $listStatus[$i]->data->numberComment;
-                        $numS = $listStatus[$i]->data->numberShared;
-                        $status_contentShare = $listStatus[$i]->data->contentShare;
-                        $status_published = $listStatus[$i]->data->published;
-                        $numberLikes = $listStatus[$i]->data->numberLike;
-                        $status_mainStatus = str_replace(":", "_", $listStatus[$i]->data->mainStatus);
-                        $linkProfile = '';
-                        $rpStatusID = str_replace(":", "_", $listStatus[$i]->recordID);
-                        $actorProfile = $postActor[$listStatus[$i]->data->actor];
-                        $avatar = $actorProfile->data->profilePic;
-                        $actor = $otherUserID;
-                        $records = $comments[$listStatus[$i]->recordID];
-                        $userCommentProfilePic = $actorProfile->data->profilePic;
-                        $otherUserName = ucfirst($otherUser->data->firstName) . " " . ucfirst($otherUser->data->lastName);
-                        $f3 = require('_viewPost.php');
-                    }
+                foreach ($listStatus as $key => $status) {
+                    $statusID = $status->recordID;
+                    $rpStatusID = str_replace(":", "_", $statusID);
+                    $activity = $status->data;
+                    $user = OrientDBFind::user($status->data->actor);
+                    $username = $user->data->username;
+                    $avatar = $user->data->profilePic;
+                    $like = TRUE;
+                    $f3 = require('viewPost.php');
                 }
                 ?>
             </div>

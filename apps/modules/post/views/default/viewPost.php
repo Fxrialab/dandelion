@@ -1,19 +1,12 @@
-<?php
-$status = $mod["actions"];
-$statusID = $mod['statusID'];
-$rpStatusID = str_replace(":", "_", $statusID);
-$activity = $mod['actions']->data;
 
-$statusID = str_replace(":", "_", $mod['actions']->recordID);
-?>
 <div class="uiBoxPostItem">
     <div class="uiBoxPostContainer column-group">
         <div class="large-10 uiActorPicCol">
-            <a href="/content/myPost?username=<?php echo $mod['username'] ?>"><img src="<?php echo $mod['avatar'] ?>"></a>
+            <a href="/content/myPost?username=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
         </div>
         <div class="large-85 uiPostContent">
             <div class="articleActorName fixMarginBottom-5">
-                <a href="/content/myPost?username=<?php echo $mod['username'] ?>" class="timeLineLink"><?php echo $status->data->actorName; ?></a>
+                <a href="/content/myPost?username=<?php echo $username ?>" class="timeLineLink"><?php echo $status->data->actorName; ?></a>
             </div>
             <div class="articleContentWrapper">
                 <div class="column-group">
@@ -46,7 +39,7 @@ $statusID = str_replace(":", "_", $mod['actions']->recordID);
                             <!--Like Segments-->
                             <li class="like-<?php echo $rpStatusID ?>">
                                 <?php
-                                if ($mod['like'] == TRUE) {
+                                if ($like == TRUE) {
                                     ?>
                                     <a href="javascript:void(0)" onclick="unlike('<?php echo $rpStatusID ?>', '<?php echo $status->data->actor ?>')" title="Like post">Un Like</a>
                                 <?php } else { ?>
@@ -131,7 +124,7 @@ $statusID = str_replace(":", "_", $mod['actions']->recordID);
 
                     <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID ?>">
                         <div class="large-10 uiActorCommentPicCol">
-                            <a href="/content/myPost?username=<?php echo $mod['username'] ?>"><img src="<?php echo $mod['avatar'] ?>"></a>
+                            <a href="/content/myPost?username=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
                         </div>
                         <div class="large-90 uiTextCommentArea">
                             <form class="ink-form" id="fmComment-<?php echo $rpStatusID ?>">
