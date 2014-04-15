@@ -50,17 +50,13 @@ class OrientDBModel implements IDataModel
         $this->loadHelpers();
     }
 
-    public function save($data, $excludes = '')
+    public function save($data)
     {
-        if (is_string($excludes))
-            $excludes = explode(",", $excludes);
-
         $record = new OrientDBRecord();
         $record->className = $this->_className;
 
         foreach ($data as $key => $value) {
-            if (!in_array($key, $excludes))
-                $record->data->$key = $value;
+            $record->data->$key = $value;
         }
         $this->_db->recordCreate($this->_clusterID, $record);
 
@@ -72,97 +68,68 @@ class OrientDBModel implements IDataModel
         return $this->_db->recordLoad($id);
     }
 
-    public function find($conditions, $values)
-    {
+    /*
+     * Find a record by condition
+     * @return a object
+     * */
 
-        for ($i = 0; $i < count($values); $i++) {
+    public function find($id)
+    {
+        $sql = "SELECT FROM " . $this->_className ." WHERE @rid = #".$id;
+        $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
+
+        return $queryResult[0];
+    }
+
+    /*
+     * Find record by condition
+     * @return a object array
+     * */
+
+    public function findByCondition($conditions, $values)
+    {
+        for ($i = 0; $i < count($values); $i++)
+        {
             $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
             $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
         }
-
-        $sql = "SELECT FROM " . $this->_className . (empty($conditions) ? "" : (" WHERE " . $conditions)) . " LIMIT 1";
-
+        //$conditionQuery
+        $sql = "SELECT FROM " . $this->_className . (empty($conditions) ? "" : (" WHERE " . $conditions)) ;
+        echo $sql;
         $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
 
-        return $queryResult[0];
-    }
-
-    public function findByPk($id)
-    {
-
-        $sql = "SELECT FROM " . $this->_className . " WHERE @rid=#" . str_replace("_", ":", $id);
-        $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
-        return $queryResult[0];
-    }
-
-    public function findByAttributes($params)
-    {
-        foreach ($params as $key => $value) {
-            $sql = "SELECT FROM " . $this->_className . " WHERE " . $key . '="' . $value . '"';
-            $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
-        }
-
-        return $queryResult[0];
-    }
-
-    public function findAllByAttributes($params)
-    {
-        foreach ($params as $key => $value) {
-            $k[] = $key . '="' . $value.'"';
-        }
-        $sql = "SELECT FROM " . $this->_className . " WHERE " . $k[0] . ' AND ' . $k[1];
-        $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
         return $queryResult;
     }
-
-    public function findOne($conditions, $values)
-    {
-        for ($i = 0; $i < count($values); $i++) {
-            $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
-            $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
-        }
-
-        $sql = "SELECT FROM " . $this->_className . (empty($conditions) ? "" : (" WHERE " . $conditions)) . " LIMIT 1";
-
-        $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
-
-        return $queryResult[0];
-    }
-
-    public function findByCondition($conditions)
-    {
-        $sql = "SELECT FROM " . $this->_className . " WHERE " . $conditions;
-        $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
-        return $queryResult;
-    }
-
-    public function findLimit($conditions)
-    {
-        $sql = "SELECT FROM " . $this->_className . " LIMIT " . $conditions;
-        $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
-        return $queryResult;
-    }
-
 
     public function findAll()
     {
-        $sql = "SELECT FROM " . $this->_className . " order by @rid DESC ";
+        $sql = "SELECT FROM " . $this->_className;
+
         $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
         return $queryResult;
     }
 
-    //update an record in Class has determine recordID
+    /*
+     * Update record is determined by recordID
+     * @return
+     * */
+
     public function update($recordID, $record)
     {
         $recordUpdate = $this->_db->recordUpdate($recordID, $record);
         return $recordUpdate;
     }
 
-    //update data for record was determined by separate conditions with values
+    /*
+     * Update data for record was determined by separate conditions with values
+     * @return
+     * */
+
     public function updateByCondition($data, $conditions, $values)
     {
         // @todo: exception for handle parsing error (count("?") != len($values))
-        for ($i = 0; $i < count($values); $i++) {
+        for ($i = 0; $i < count($values); $i++)
+        {
             $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
             $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
         }
@@ -179,10 +146,16 @@ class OrientDBModel implements IDataModel
         return $queryResult;
     }
 
-    public function count($conditions, $values)
+    /*
+     * Count record by separate conditions with values
+     * @return number
+     * */
+
+    public function countByCondition($conditions, $values)
     {
         // @todo: exception for handle parsing error (count("?") != len($values))
-        for ($i = 0; $i < count($values); $i++) {
+        for ($i = 0; $i < count($values); $i++)
+        {
             $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
             $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
         }
@@ -193,17 +166,26 @@ class OrientDBModel implements IDataModel
         return $queryResult[0]->data->COUNT;
     }
 
-    //delete an record in Class has determine recordID
+    /*
+     * Delete record is determined by recordID
+     * @return
+     * */
+
     public function delete($recordID)
     {
         return $this->_db->recordDelete($recordID);
     }
 
-    //delete an record was determined by separate conditions with values
+    /*
+     * delete an record was determined by separate conditions with values
+     * @return
+     * */
+
     public function deleteByCondition($conditions, $values)
     {
         // @todo: exception for handle parsing error (count("?") != len($values))
-        for ($i = 0; $i < count($values); $i++) {
+        for ($i = 0; $i < count($values); $i++)
+        {
             $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
             $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
         }
@@ -213,24 +195,6 @@ class OrientDBModel implements IDataModel
         return $queryResult;
     }
 
-    //create new record in class with column field by key
-    public function create($data, $excludes = '')
-    {
-        //$this->createClass('sessions','V');
-        if (is_string($excludes))
-            $excludes = explode(",", $excludes);
-
-        $record = new OrientDBRecord();
-        $record->className = $this->_className;
-
-        foreach ($data as $key => $value) {
-            if (!in_array($key, $excludes))
-                $record->data->$key = $value;
-        }
-        $this->_db->recordCreate($this->_clusterID, $record);
-
-        return $record->recordID;
-    }
 }
 
 ?>

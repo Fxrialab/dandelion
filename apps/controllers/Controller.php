@@ -7,18 +7,22 @@
  */
 require_once dirname(__DIR__) . "/config/Structure.php";
 
-require_once FACADE . "OrientDBFacade.php";
+require_once FACADE . "DataFacade.php";
+require_once MODEL_UTILS . "ObjectHandler.php";
 
 class Controller {
     protected $f3;
     protected $uses = array("");
     protected $helpers = array("");
+    protected $facade;
 
     public function __construct()
     {
         $f3 = Base::instance();
+        $facade = new DataFacade();
 
         $this->f3=$f3;
+        $this->facade = $facade;
         $this->_mergeVars(array("uses", "helpers"));
         $this->loadHelpers();
         //$this->loadModels();
@@ -54,21 +58,6 @@ class Controller {
             {
                 require_once(HELPERS . $helperFile . '_helper.php');
                 $this->$helper= new $helper;
-            }
-        }
-    }
-
-    protected function loadModels()
-    {
-        foreach ($this->uses as $model)
-        {
-            // get file name
-            $modelFile = lcfirst($model);
-
-            if (file_exists(MODELS . $modelFile . '.php'))
-            {
-                require_once(MODELS . $modelFile . '.php');
-                $this->$model = new $model;
             }
         }
     }

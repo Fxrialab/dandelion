@@ -2,13 +2,13 @@
 
 interface IDataModel
 {
-    function save($data, $excludes = '');
+    function save($data);
 
     function load($id);
 
-    function findOne($conditions, $values);
+    function find($id);
     
-    function findByCondition($conditions);
+    function findByCondition($conditions, $values);
 
     function findAll();
 
@@ -16,7 +16,7 @@ interface IDataModel
 
     function updateByCondition($data, $conditions, $values);
 
-    function count($conditions, $values);
+    function countByCondition($conditions, $values);
 
     function delete($recordID);
 
