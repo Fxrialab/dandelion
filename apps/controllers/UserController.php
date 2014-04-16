@@ -1,14 +1,6 @@
 <?php
-
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 7/30/13 - 2:46 PM
- * Project: UserWired Network - Version: beta
- */
 class UserController extends AppController
 {
-
     protected $helpers = array("Encryption", "Validate", "Email", "String", "Time");
 
     public function __construct()
@@ -27,16 +19,16 @@ class UserController extends AppController
         //get and prepare data for sign up
         $data = $this->f3->get('POST');
 
-        if (isset($data['emailSignUp'])) {
+        if (isset($data['emailSignUp']))
+        {
+            $userModel = Model::get('user');
             //check email field has existed in DB
-            $isUsedEmail = Model::get('user')->findOne("email = ?", array($data["emailSignUp"]));
+            $isUsedEmail = $userModel->findOne("email = ?", array($data["emailSignUp"]));
             //data is alright, create new user then send confirmation code to email
-            if ($this->ValidateHelper->validation($data, $isUsedEmail, false) == '') {
-                /* if (isset($data['regCheckbox']))
-                  echo "ok";
-                  else
-                  echo "fail"; */
-                if (isset($data['regCheckbox'])) {
+            if ($this->ValidateHelper->validation($data, $isUsedEmail, false) == '')
+            {
+                if (isset($data['regCheckbox']))
+                {
                     // prepare birthday data
                     $data['firstName'] = strtolower($data['firstName']);
                     $data['lastName'] = strtolower($data['lastName']);
@@ -69,7 +61,7 @@ class UserController extends AppController
                     unset($data['birthdayMonth']);
                     unset($data['birthdayYear']);
                     // exclude form submit button and checkbox from data and create a new user
-                    $userRC = Model::get('user')->create($data, 'smSignUp,regCheckbox');
+                    $userRC = $userModel->create($data, 'smSignUp,regCheckbox');
                     // add user info to class
                     $infoData = array(
                         'user' => $userRC,
@@ -100,14 +92,16 @@ class UserController extends AppController
     public function confirm()
     {
         //Set layout default
-        $this->layout = 'index';
-        $request = $this->f3->get('GET');
-        //var_dump($request);
-        $email = $request['email'];
+        $this->layout   = 'index';
+        $request    = $this->f3->get('GET');
+        $email      = $request['email'];
         $confirmationCode = $request['confirmationCode'];
-        if ($email && $confirmationCode) {
-            $user = Model::get('user')->findOne('email = ?', array($email));
-            if ($user->data->confirmationCode != 'none') {
+        if ($email && $confirmationCode)
+        {
+            $userModel = Model::get('user');
+            $user = $userModel->findOne('email = ?', array($email));
+            if ($user->data->confirmationCode != 'none')
+            {
                 if (($user->data->confirmationCode == $confirmationCode) /* &&
                   (time() <= $user->data->confirmationCodeValidUntil) */
                 ) {
@@ -116,7 +110,7 @@ class UserController extends AppController
                     // reset confirmation info
                     $user->data->confirmationCode = 'none';
                     $user->data->confirmationCodeValidUntil = 'none';
-                    Model::get('user')->update($user->recordID, $user);
+                    $userModel->update($user->recordID, $user);
                     /* Create notify for user */
                     $notify = array(
                         'userID' => $user->recordID,
@@ -124,7 +118,7 @@ class UserController extends AppController
                         'requestFriend' => 0,
                         'message' => 0
                     );
-                    $this->Notify->create($notify);
+                    Model::get('notify')->create($notify);
                     $this->f3->set('MsgSignIn', 'Thank you confirm email. Now, you can login !');
                     $this->render('user/index.php', 'default');
                 } else {
@@ -139,13 +133,17 @@ class UserController extends AppController
     {
         $this->layout = 'index';
         $request = $this->f3->get('POST');
-        if (!empty($request)) {
-            $email = $request['emailLogIn'];
-            $password = $request['pwLogIn'];
-            $existUser = Model::get('user')->findOne("email = ? AND role = ?", array($email, 'user'));
-            //var_dump($existUser);
-            if (!empty($existUser)) {
-                if ($this->EncryptionHelper->CheckPassword($password, $existUser->data->password)) {
+        if (!empty($request))
+        {
+            $email      = $request['emailLogIn'];
+            $password   = $request['pwLogIn'];
+            $userModel  = Model::get('user');
+            $sessionModel  = Model::get('sessions');
+            $existUser  = $this->facade->findByAttributes('user', array('email'=>$email,'role'=>'user'));
+            if (!empty($existUser))
+            {
+                if ($this->EncryptionHelper->CheckPassword($password, $existUser->data->password))
+                {
                     //Check status of user. If status='pending' must enter confirm code
                     if ($existUser->data->status == 'pending') {
                         $this->f3->set('MsgSignIn', 'We have sent an confirmation email to you. Please check the email and confirm your email with us !');
@@ -167,10 +165,10 @@ class UserController extends AppController
                         $this->f3->set('SESSION.avatar', $existUser->data->profilePic);
                         $this->f3->set('SESSION.userID', $existUser->recordID);
                         // start initial sessions.
-                        $sessionID = rand(1000, 10000000);
+                        $sessionID  = rand(1000, 10000000);
                         $macAddress = $this->getMacAddress();
-                        $ipAddress = $this->getIPAddress();
-                        $existSessionUser = Model::get('sessions')->findOne("email = ? AND status = ?", array($email, 'Active'));
+                        $ipAddress  = $this->getIPAddress();
+                        $existSessionUser = $sessionModel->findOne("email = ? AND status = ?", array($email, 'Active'));
 
                         if ($existSessionUser) {
                             $getMACAddress = $existSessionUser->data->macAddress;
@@ -180,7 +178,7 @@ class UserController extends AppController
                                     'timeEnd' => time(),
                                     'status' => 'Disable',
                                 );
-                                Model::get('sessions')->updateByCondition($currentSession, "email = ? AND status = ? ", array($email, 'Active'));
+                                $sessionModel->updateByCondition($currentSession, "email = ? AND status = ? ", array($email, 'Active'));
                                 //then create new session
                                 $newSession = array(
                                     'email' => $email,
@@ -192,7 +190,7 @@ class UserController extends AppController
                                     'externalIpAddress' => $ipAddress,
                                     'status' => 'Active',
                                 );
-                                Model::get('sessions')->create($newSession);
+                                $sessionModel->create($newSession);
                                 header("Location: /home");
                             }
                             if ($macAddress != $getMACAddress) {
@@ -209,7 +207,7 @@ class UserController extends AppController
                                 'externalIpAddress' => $ipAddress,
                                 'status' => 'Active',
                             );
-                            Model::get('sessions')->create($newSession);
+                            $this->facade->save('sessions',$newSession);
                             header("Location: /home");
                         }
                     }

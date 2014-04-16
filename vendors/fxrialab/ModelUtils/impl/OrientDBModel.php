@@ -81,6 +81,20 @@ class OrientDBModel implements IDataModel
         return $queryResult[0];
     }
 
+    public function findOne($conditions, $values)
+    {
+        for ($i = 0; $i < count($values); $i++) {
+            $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
+            $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
+        }
+
+        $sql = "SELECT FROM " . $this->_className . (empty($conditions) ? "" : (" WHERE " . $conditions)) . " LIMIT 1";
+
+        $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
+
+        return $queryResult[0];
+    }
+
     /*
      * Find record by condition
      * @return a object array
