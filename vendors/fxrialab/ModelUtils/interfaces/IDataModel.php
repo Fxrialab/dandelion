@@ -10,9 +10,9 @@ interface IDataModel
     
     function findByCondition($conditions, $values);
 
-    function findAll();
+    function findCustomers($conditions);
 
-    function update($recordID, $record);
+    function update($id, $record);
 
     function updateByCondition($data, $conditions, $values);
 

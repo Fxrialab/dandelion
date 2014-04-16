@@ -11,11 +11,9 @@ class DataFacade {
     public function save($model, $data)
     {
         if (!empty($model) && is_array($data))
-            $result = Model::get($model)->save($data);
+            return Model::get($model)->save($data);
         else
-            $result = false;
-
-        return $result;
+            return false;
     }
 
     /**
@@ -28,11 +26,9 @@ class DataFacade {
     public function load($model, $recordID)
     {
         if (!empty($model) && is_string($recordID))
-            $result = Model::get($model)->load($recordID);
+            return Model::get($model)->load($recordID);
         else
-            $result = false;
-
-        return $result;
+            return false;
     }
 
     /**
@@ -51,29 +47,27 @@ class DataFacade {
     public function findByPk($model, $id)
     {
         if (!empty($model) && !empty($id))
-            $result = Model::get($model)->find($id);
+            return Model::get($model)->find($id);
         else
-            $result = false;
-
-        return $result;
+            return false;
     }
 
     /**
-     * This is find an or many record by conditions
+     * This is find an or many record by conditions. Default as AND operator in condition
      *
      * Here is an inline example:
      * <code>
      * <?php
-     * $this->facade->findByAttributes('user', array('username'=>'userA', 'email'=>'userA@gmail.com'));
+     * $this->facade->findAllAttributes('user', array('username'=>'userA', 'email'=>'userA@gmail.com'));
      * ?>
      * </code>
      * @param string $model
      * @param array $array
      * @return bool|array
      */
-    public function findByAttributes($model, $array)
+    public function findAllAttributes($model, $array)
     {
-        if (!empty($model) && is_array($array))
+        if (!empty($model) && is_array($array) && count($array) > 0)
         {
             $condition  = "";
             $operator   = " AND ";
@@ -114,21 +108,131 @@ class DataFacade {
             {
                 $select = $array['select'];
                 array_shift($array);
-                $condition  = "";
+                $conditions = "";
                 $operator   = " AND ";
                 foreach ($array as $key => $v) {
-                    $condition = $condition.$operator.$key." = ?";
+                    $conditions = $conditions.$operator.$key." = ?";
                     $value[] = $v;
                 }
-                $condition = substr($condition,strlen($operator));
-                $condition = $condition . (!isset($select) ? "" : " " .$select);
+                $conditions = substr($conditions,strlen($operator));
+                $conditions = $conditions . (!isset($select) ? "" : " " .$select);
 
-                return Model::get($model)->findByCondition($condition, $value);
-            }else
-                return false;
+                return Model::get($model)->findByCondition($conditions, $value);
+            }else {
+                $select = $array['select'];
+                $conditions = (!isset($select) ? "" : " " .$select);
+
+                return Model::get($model)->findCustomers($conditions);
+            }
         }else {
             return false;
         }
     }
 
+    /**
+     * Update record is determine by id
+     *
+     * Here is an inline example:
+     * <code>
+     * <?php
+     * $this->facade->updateByPk('status', '14:1');
+     * ?>
+     * </code>
+     * @param string $model
+     * @param string $id
+     * @param $record
+     * @return bool
+     */
+    public function updateByPk($model, $id, $record)
+    {
+        if (!empty($model) && !empty($id) && !empty($record))
+            return Model::get($model)->update($id, $record);
+        else
+            return false;
+    }
+
+    /**
+     * Update record is determine by conditions. Default as AND operator in condition
+     *
+     * Here is an inline example:
+     * <code>
+     * <?php
+     * $data = array('comment'=>5, 'content'=>'none');
+     * $this->facade->updateByAttributes('user', $data, array('username'=>'userA', 'email'=>'userA@gmail.com'));
+     * ?>
+     * </code>
+     * @param string $model
+     * @param array $data
+     * @param array $array
+     * @return bool
+     */
+    public function updateByAttributes($model, $data, $array)
+    {
+        if (!empty($model) && is_array($data) && is_array($array) && count($array) > 0)
+        {
+            $condition  = "";
+            $operator   = " AND ";
+            foreach ($array as $key => $v) {
+                $condition = $condition.$operator.$key." = ?";
+                $value[] = $v;
+            }
+            $condition = substr($condition,strlen($operator));
+
+            return Model::get($model)->updateByCondition($data, $condition, $value);
+        }else {
+            return false;
+        }
+    }
+
+    /**
+     * Delete record is determine by id
+     *
+     * Here is an inline example:
+     * <code>
+     * <?php
+     * $this->facade->deleteByPk('status', '14:1');
+     * ?>
+     * </code>
+     * @param string $model
+     * @param string $id
+     * @return bool
+     */
+    public function deleteByPk($model, $id)
+    {
+        if (!empty($model) && !empty($id))
+            return Model::get($model)->delete($id);
+        else
+            return false;
+    }
+
+    /**
+     * Delete record is determine by conditions. Default as AND operator in condition
+     *
+     * Here is an inline example:
+     * <code>
+     * <?php
+     * $this->facade->deleteByAttributes('user', array('username'=>'userA', 'email'=>'userA@gmail.com'));
+     * ?>
+     * </code>
+     * @param string $model
+     * @param array $array
+     * @return bool
+     */
+    public function deleteByAttributes($model, $array)
+    {
+        if (!empty($model) && is_array($array) && count($array) > 0)
+        {
+            $condition  = "";
+            $operator   = " AND ";
+            foreach ($array as $key => $v) {
+                $condition = $condition.$operator.$key." = ?";
+                $value[] = $v;
+            }
+            $condition = substr($condition,strlen($operator));
+
+            return Model::get($model)->deleteByCondition($condition, $value);
+        }else {
+            return false;
+        }
+    }
 }

@@ -95,15 +95,15 @@ class OrientDBModel implements IDataModel
         }
         //$conditionQuery
         $sql = "SELECT FROM " . $this->_className . (empty($conditions) ? "" : (" WHERE " . $conditions)) ;
-        echo $sql;
+
         $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
 
         return $queryResult;
     }
 
-    public function findAll()
+    public function findCustomers($conditions)
     {
-        $sql = "SELECT FROM " . $this->_className;
+        $sql = "SELECT FROM " . $this->_className . $conditions;
 
         $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
         return $queryResult;
