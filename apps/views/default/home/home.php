@@ -33,17 +33,11 @@ foreach ($js as $jshome) {
     <?php
     AppController::elementModules('postWrap', 'post');
     ?>
-
     <input name="profileID" id="profileID" type="hidden" value="<?php echo $currentProfileID; ?>">
-    <!--<div id ="content"></div>-->
     <div class="wrapperContainer">
         <div id="contentContainer">
 
-        </div><!--
-        <div class="uiMoreView content-center">
-            <div class="loading uiLoadingIcon"></div>
         </div>
-    </div>-->
         <!--Other part-->
         <div id="fade" class="black_overlay"></div>
         <div class="uiShare uiPopUp"></div>
@@ -56,3 +50,4 @@ foreach ($js as $jshome) {
             </div>
         </div>
     </div>
+</div>

@@ -53,7 +53,7 @@ class DataFacade {
     }
 
     /**
-     * This is find an or many record by conditions. Default as AND operator in condition
+     * This is find an record by conditions. Default as AND operator in condition
      *
      * Here is an inline example:
      * <code>
@@ -262,6 +262,24 @@ class DataFacade {
             $condition = substr($condition,strlen($operator));
 
             return Model::get($model)->deleteByCondition($condition, $value);
+        }else {
+            return false;
+        }
+    }
+
+    public function count($model, $array)
+    {
+        if (!empty($model) && is_array($array) && count($array) > 0)
+        {
+            $condition  = "";
+            $operator   = " AND ";
+            foreach ($array as $key => $v) {
+                $condition = $condition.$operator.$key." = ?";
+                $value[] = $v;
+            }
+            $condition = substr($condition,strlen($operator));
+
+            return Model::get($model)->countByCondition($condition, $value);
         }else {
             return false;
         }

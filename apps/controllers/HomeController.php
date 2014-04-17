@@ -6,30 +6,36 @@
  * Date: 7/31/13 - 2:18 PM
  * Project: UserWired Network - Version: beta
  */
-class HomeController extends AppController {
-
-    //protected $uses = array("Activity", "User", "Friendship", "Actions");
+class HomeController extends AppController
+{
     protected $helpers = array();
 
     public function __construct() {
         parent::__construct();
     }
 
-    public function index() {
+    public function index()
+    {
         $this->layout = 'index';
+
         if ($this->isLogin())
             header("Location:/home");
         else
             $this->render('user/index.php', 'default');
     }
 
-    public function home() {
-        if ($this->isLogin()) {
+    public function home()
+    {
+        if ($this->isLogin())
+        {
             $this->layout = 'home';
+
+
             //load js file of all modules existed
             $js = glob(MODULES . '*/webroot/js/*.js');
             $loadJS = array();
-            foreach ($js as $jsFile) {
+            foreach ($js as $jsFile)
+            {
                 $jsMod = substr($jsFile, strpos($jsFile, 'app'));
                 array_push($loadJS, BASE_URL . $jsMod);
             }
@@ -40,74 +46,34 @@ class HomeController extends AppController {
             header("Location: /");
         }
     }
-    public function morePostHome() {
-        if ($this->isLogin()) {
-            $published = $this->f3->get('POST.published');
-            $activitiesRC = Model::get('activity')->findByCondition("owner = '" . $this->getCurrentUser()->recordID . "' and published < '" . $published . "'");
-            $this->f3->set('currentUser', $this->getCurrentUser());
-            if (!empty($activitiesRC)) {
+
+    public function loading()
+    {
+        if ($this->isLogin())
+        {
+            $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
+            $limit  = is_numeric($_POST['number']) ? $_POST['number'] : die();
+            $obj    = new ObjectHandler();
+            $obj->type = 'post';
+            $obj->select = 'LIMIT '.$limit.' ORDER BY published DESC offset '.$offset;
+            $activitiesRC = $this->facade->findAll('activity', $obj);
+            //var_dump($activitiesRC);
+            if (!empty($activitiesRC))
+            {
                 $homes = array();
-                foreach ($activitiesRC as $key => $activity) {
-                    $verbMod = $activity->data->verb;
-                    $obj = new $verbMod;
-                 
-                    if (method_exists($obj, 'viewPost')) {
+                foreach ($activitiesRC as $key => $activity)
+                {
+                    $verbMod= $activity->data->verb;
+                    $obj    = new $verbMod;
+                    if (method_exists($obj, 'viewPost'))
+                    {
                         $home = $obj->viewPost($activity, $key);
                         array_push($homes, $home);
                         $this->f3->set('activities', $homes);
                     }
                 }
-                $this->render('home/moreHome.php', 'default');
-            } else {
-                $this->render('user/noMoreHome.php', 'default');
             }
-        } else {
-            header("Location: /");
-        }
-    }
-
-    public function loading() {
-        $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
-        $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
-        $activitiesRC = Model::get('activity')->findByCondition("type = 'post' limit $limit ORDER BY published DESC offset $offset");
-        if (!empty($activitiesRC)) {
-            $homes = array();
-            foreach ($activitiesRC as $key => $activity) {
-                $verbMod = $activity->data->verb;
-                $obj = new $verbMod;
-                if (method_exists($obj, 'viewPost')) {
-                    $home = $obj->viewPost($activity, $key);
-                    array_push($homes, $home);
-                    $this->f3->set('activities', $homes);
-                }
-            }
-        }
-        $this->render('home/view.php', 'default');
-    }
-
-    public function moreCommentHome() {
-        if ($this->isLogin()) {
-            $activityID = F3::get('POST.activity_id');
-            $activitiesRC = $this->Activity->findByCondition("@rid = ? ", array($activityID));
-            if ($activitiesRC) {
-                $resultComments = array();
-                foreach ($activitiesRC as $oneComment) {
-                    $modulesType = substr($oneComment->data->verb, 0, strpos($oneComment->data->verb, $oneComment->data->object)) . 'controller';
-                    foreach (glob(MODULES . '*/controllers/' . $modulesType . '.php') as $modulesFileControl) {
-                        if (file_exists($modulesFileControl)) {
-                            $modController = new $modulesType;
-                            if (method_exists($modController, 'loadComment')) {
-                                $resultComment = $modController->loadComment($oneComment->data->object, $oneComment->data->actor, $oneComment->recordID);
-                                array_push($resultComments, $resultComment);
-                            }
-                        }
-                    }
-                }
-                F3::set('commentAmq', $resultComments);
-                $this->render('user/commentAMQ.php', 'default');
-            }
-        } else {
-            header("Location: /");
+            $this->render('home/view.php', 'default');
         }
     }
 

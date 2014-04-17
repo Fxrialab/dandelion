@@ -28,6 +28,7 @@ class RouteConfig {
         'homeAMQ_POST' => "HomeController",
         'morePostHome_POST' => "HomeController",
         'moreCommentHome_POST' => "HomeController",
+        'loading_POST' => "HomeController",
         /* Route config for request friend */
         'sentFriendRequest_POST' => "FriendController",
         'acceptFriendship_POST' => "FriendController",

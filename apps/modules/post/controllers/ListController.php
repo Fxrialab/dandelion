@@ -1,38 +1,40 @@
 <?php
 
-class ListController extends AppController {
-
-    protected $uses = array("User", "Follow", "Status", "Comment", "Like");
+class ListController extends AppController
+{
 
     public function __construct() {
         parent::__construct();
     }
 
     //has implement and fix logic
-    public function viewPost($entry, $key) {
-        if (!empty($entry)) {
-            $facade = new OrientDBFacade();
+    public function viewPost($entry, $key)
+    {
+        if (!empty($entry))
+        {
             $currentUser = $this->getCurrentUser();
-            $statusRC = Model::get('status')->load($entry->data->object);
+            $statusRC = $this->facade->load('status', $entry->data->object);
             $activityID = $entry->recordID;
             $userID = $this->f3->get('SESSION.userID');
 
-            if (!empty($statusRC)) {
+            if (!empty($statusRC))
+            {
                 $statusID = $statusRC->recordID;
+                echo $statusRC->data->actor;
                 if ($currentUser->recordID != $statusRC->data->actor)
-                    $userRC = $facade->findByPk("user", $statusRC->data->actor);
+                    $userRC = $this->facade->findByPk("user", $statusRC->data->actor);
                 else
-                    $userRC = $facade->findByPk("user", $statusRC->data->owner);
-                $like = $facade->findByAttributes('like', array('owner' => $statusRC->data->owner,'ID'=>$statusID));
+                    $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
+                $like = $this->facade->findAllAttributes('like', array('owner' => $statusRC->data->owner,'ID'=>$statusID));
                 $entry = array(
-                    'type' => 'post',
-                    'key' => $key,
-                    'like' => $like,
-                    'username' => $userRC->data->username,
-                    'avatar' => $userRC->data->profilePic,
-                    'actions' => $statusRC,
-                    'statusID' => $statusID,
-                    'path' => Register::getPathModule('post'),
+                    'type'      => 'post',
+                    'key'       => $key,
+                    'like'      => $like,
+                    'username'  => $userRC->data->username,
+                    'avatar'    => $userRC->data->profilePic,
+                    'actions'   => $statusRC,
+                    'statusID'  => $statusID,
+                    'path'      => Register::getPathModule('post'),
                 );
             }
             return $entry;
@@ -42,18 +44,17 @@ class ListController extends AppController {
     //has implement and fix logic
     public function moreInHome($entry, $key) {
         if ($entry) {
-            $facade = new OrientDBFacade();
             $currentUser = $this->getCurrentUser();
             $activityID = $entry->recordID;
             $statusRC = Model::get('status')->load($entry->data->object);
             if ($statusRC) {
                 $statusID = $statusRC->recordID;
                 if ($currentUser->recordID != $statusRC->data->actor)
-                    $userRC = $facade->findByPk("user", $statusRC->data->actor);
+                    $userRC = $this->facade->findByPk("user", $statusRC->data->actor);
                 else
-                    $userRC = $facade->findByPk("user", $statusRC->data->owner);
-                $commentsOfStatus[$statusID] = $facade->findAll('comment', array("post" => $statusID));
-                $numberOfCommentsStatus[$statusID] = $facade->count("comment", $statusID);
+                    $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
+                $commentsOfStatus[$statusID] = $this->facade->findAllAttributes('comment', array("post" => $statusID));
+                $numberOfCommentsStatus[$statusID] = $this->facade->count("comment", array('post'=>$statusID));
 
                 $likeStatus[$statusID] = $this->getLikeStatus($statusID, $currentUser->recordID);
                 $statusFollow[$statusID] = $this->getFollowStatus($statusID, $currentUser->recordID);
@@ -62,7 +63,7 @@ class ListController extends AppController {
                     $comments = $commentsOfStatus[$statusID];
                     $pos = (count($comments) < 4 ? count($comments) : 4);
                     for ($j = $pos - 1; $j >= 0; $j--) {
-                        $userComment[$comments[$j]->data->actor] = Model::get('user')->load($comments[$j]->data->actor);
+                        $userComment[$comments[$j]->data->actor] = $this->facade->load('user', $comments[$j]->data->actor);
                     }
                 } else {
                     $userComment = null;

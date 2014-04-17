@@ -13,9 +13,8 @@ $listStatus = $this->f3->get('listStatus');
                 <?php
                 foreach ($listStatus as $key => $status) {
                     $statusID = $status->recordID;
-                    $rpStatusID = str_replace(":", "_", $statusID);
                     $activity = $status->data;
-                    $user = OrientDBFind::user($status->data->actor);
+                    $user = PostController::getUser($status->data->actor);
                     $username = $user->data->username;
                     $avatar = $user->data->profilePic;
                     $like = TRUE;
@@ -23,9 +22,9 @@ $listStatus = $this->f3->get('listStatus');
                 }
                 ?>
             </div>
-            <div class="uiMoreView content-center">
+            <!--<div class="uiMoreView content-center">
                 <div class="loading uiLoadingIcon"></div>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>

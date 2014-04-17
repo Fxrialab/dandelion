@@ -489,11 +489,11 @@ function moreComment(id) {
 /**
  * l
  */
-function like(statusID, actor) {
+function like(statusID) {
     $.ajax({
         type: "POST",
         url: "/like",
-        data: {statusID: statusID, actor: actor},
+        data: {statusID: statusID},
         cache: false,
         success: function(html) {
 //            var obj = jQuery.parseJSON(data);

@@ -4,16 +4,16 @@
  * Author: Hoc Nguyen
  * Date: 12/21/12
  */
-class PostController extends AppController {
-
-//    protected $uses = array("Friendship", "User", "Follow", "Status", "Comment", "Post", "Photo");
+class PostController extends AppController
+{
 
     public function __construct() {
         parent::__construct();
     }
 
     static function getFindComment($postID) {
-        $comment = Model::get('comment')->findByCondition("post = '" . str_replace("_", ":", $postID) . "'");
+        $facade = new DataFacade();
+        $comment = $facade->findAllAttributes('comment', array('post'=>str_replace("_", ":", $postID)));
         return $comment;
     }
 
@@ -26,26 +26,30 @@ class PostController extends AppController {
     }
 
     static function getUser($id) {
-        return Model::get('user')->findByPk($id);
+        $facade = new DataFacade();
+        return $facade->findByPk('user', str_replace("_", ":", $id));
     }
 
     //has implement and fix logic
-    public function myPost($viewPath) {
-        if ($this->isLogin()) {
+    public function myPost($viewPath)
+    {
+        if ($this->isLogin())
+        {
             $this->layout = 'timeline';
-            $facade = new OrientDBFacade();
+            $facade = new DataFacade();
             $requestCurrentProfile = $this->f3->get('GET.username');
-            if (!empty($requestCurrentProfile)) {
+            if (!empty($requestCurrentProfile))
+            {
 //                $currentProfileRC = Model::get('user')->findOne("username = ?", array($requestCurrentProfile));
                 $currentProfileRC = $facade->findByAttributes('user', array('username' => $requestCurrentProfile));
-                if (!empty($currentProfileRC)) {
+                if (!empty($currentProfileRC))
+                {
                     $currentProfileID = $currentProfileRC->recordID;
                 } else {
                     //@TODO: add layout return page not found in later
                     echo "page not found";
                 }
-            }
-            else
+            }else
                 $currentProfileID = $this->getCurrentUser()->recordID;
             $this->f3->set('SESSION.userProfileID', $currentProfileID);
             $currentProfileRC = Model::get('user')->load($currentProfileID);
@@ -65,9 +69,15 @@ class PostController extends AppController {
             $getFollowRC = $facade->findByAttributes('follow', array('userA' => $currentProfileID, 'filterFollow' => 'post'));
             /* if exist status following. Get status following and get status of this user. */
             if ($getFollowRC) {
-                $statusRC = Model::get('status')->findByCondition("owner = '" . $currentProfileID . "' OR @rid = '" . $getFollowRC->data->ID . "' ORDER BY published DESC LIMIT 5");
+                $obj =  new ObjectHandler();
+                $obj->owner = $currentProfileID;
+                $obj->select = "OR @rid = '" . $getFollowRC->data->ID . "' ORDER BY published DESC LIMIT 5";
+                $statusRC = $this->facade->findAll('status', $obj);
             } else {
-                $statusRC = $facade->findAll('status', array("owner" => $currentProfileID));
+                $obj =  new ObjectHandler();
+                $obj->owner = $currentProfileID;
+                $obj->select = "ORDER BY published DESC LIMIT 5";
+                $statusRC = $this->facade->findAll('status', $obj);
             }
 
             if (!empty($statusRC)) {

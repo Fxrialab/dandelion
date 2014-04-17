@@ -8,9 +8,7 @@
 require_once("Controller.php");
 class AppController extends Controller
 {
-    //protected $uses     = array("User", "Friendship", "Sessions", "Follow", "Activity", "Like");
     protected $helpers = array();
-
     protected $layout = '';
 
     //protected $elements = null;
@@ -34,11 +32,13 @@ class AppController extends Controller
     public function isLogin()
     {
         $session = $this->f3->get("SESSION");
-        if (isset($session["loggedUser"])) {
+        if (isset($session["loggedUser"]))
+        {
             return true;
         }
         //session ok
-        if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
+        if (isset($_COOKIE['email']) && isset($_COOKIE['password']))
+        {
             $user = $this->User->findOne('email = ?', array($_COOKIE['email']));
             $this->f3->clear('SESSION');
             $this->f3->set('SESSION.loggedUser', $user);

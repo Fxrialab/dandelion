@@ -1,4 +1,7 @@
-
+<?php
+$rpActorID = str_replace(':', '_', $status->data->actor);
+$rpStatusID = str_replace(":", "_", $statusID);
+?>
 <div class="uiBoxPostItem">
     <div class="uiBoxPostContainer column-group">
         <div class="large-10 uiActorPicCol">
@@ -41,9 +44,9 @@
                                 <?php
                                 if ($like == TRUE) {
                                     ?>
-                                    <a href="javascript:void(0)" onclick="unlike('<?php echo $rpStatusID ?>', '<?php echo $status->data->actor ?>')" title="Like post">Un Like</a>
+                                    <a href="javascript:void(0)" onclick="unlike('<?php echo $rpStatusID; ?>', '<?php echo $rpActorID; ?>')" title="Unlike post">Unlike</a>
                                 <?php } else { ?>
-                                    <a href="javascript:void(0)" onclick="like('<?php echo $rpStatusID ?>', '<?php echo $status->data->actor ?>')" title="Like post">Like</a>
+                                    <a href="javascript:void(0)" onclick="like('<?php echo $rpStatusID; ?>')" title="Like post">Like</a>
                                 <?php } ?>
                             </li>
                             <li class="gapArticleActions">.</li>
