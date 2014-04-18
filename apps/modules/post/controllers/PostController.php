@@ -36,12 +36,11 @@ class PostController extends AppController
         if ($this->isLogin())
         {
             $this->layout = 'timeline';
-            $facade = new DataFacade();
+
             $requestCurrentProfile = $this->f3->get('GET.username');
             if (!empty($requestCurrentProfile))
             {
-//                $currentProfileRC = Model::get('user')->findOne("username = ?", array($requestCurrentProfile));
-                $currentProfileRC = $facade->findByAttributes('user', array('username' => $requestCurrentProfile));
+                $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $requestCurrentProfile));
                 if (!empty($currentProfileRC))
                 {
                     $currentProfileID = $currentProfileRC->recordID;
@@ -56,7 +55,7 @@ class PostController extends AppController
             $currentUser = $this->getCurrentUser();
             //get status friendship
 //            $statusFriendShipRC = Model::get('friendship')->findOne('userA = ? AND userB = ?', array($currentUser->recordID, $currentProfileRC->recordID));
-            $statusFriendShipRC = $facade->findByAttributes('friendship', array('userA' => $currentUser->recordID, 'userB' => $currentProfileRC->recordID));
+            $statusFriendShipRC = $this->facade->findByAttributes('friendship', array('userA' => $currentUser->recordID, 'userB' => $currentProfileRC->recordID));
             $statusFriendship = ($statusFriendShipRC == NULL) ? 'null' : $statusFriendShipRC->data->relationship;
             //set
             $this->f3->set('currentUser', $currentUser);
@@ -66,33 +65,35 @@ class PostController extends AppController
             //set ID for postWrap.php
             $this->f3->set("currentProfileID", $currentProfileID);
             // get id status of user was following.
-            $getFollowRC = $facade->findByAttributes('follow', array('userA' => $currentProfileID, 'filterFollow' => 'post'));
+            $getFollowRC = $this->facade->findByAttributes('follow', array('userA' => $currentProfileID, 'filterFollow' => 'post'));
             /* if exist status following. Get status following and get status of this user. */
             if ($getFollowRC) {
                 $obj =  new ObjectHandler();
                 $obj->owner = $currentProfileID;
+                $obj->active = 1;
                 $obj->select = "OR @rid = '" . $getFollowRC->data->ID . "' ORDER BY published DESC LIMIT 5";
                 $statusRC = $this->facade->findAll('status', $obj);
             } else {
                 $obj =  new ObjectHandler();
                 $obj->owner = $currentProfileID;
+                $obj->active = 1;
                 $obj->select = "ORDER BY published DESC LIMIT 5";
                 $statusRC = $this->facade->findAll('status', $obj);
             }
 
             if (!empty($statusRC)) {
                 foreach ($statusRC as $status) {
-                    $comments[($status->recordID)] = $facade->findAll('comment', array("post" => $status->recordID));
-                    $numberOfComments[($status->recordID)] = $facade->count("comment", $status->recordID);
+                    $comments[($status->recordID)] = $this->facade->findAll('comment', array("post" => $status->recordID));
+                    $numberOfComments[($status->recordID)] = $this->facade->count("comment", $status->recordID);
                     //get status follow, like
                     $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID,'objID'=>$status->recordID));
                     $statusFollow[($status->recordID)] = $this->getFollowStatus($status->recordID, $currentUser->recordID);
                     //get info user actor
-                    $postActor[($status->data->actor)] = Model::get('user')->load($status->data->actor);
+                    $postActor[($status->data->actor)] = $this->facade->load('user', $status->data->actor);
                     if ($comments[($status->recordID)]) {
                         $pos = (count($comments[($status->recordID)]) < 3 ? count($comments[($status->recordID)]) : 3);
                         for ($j = $pos - 1; $j >= 0; $j--) {
-                            $commentActor[$comments[($status->recordID)][$j]->data->actor] = Model::get('user')->load($comments[($status->recordID)][$j]->data->actor);
+                            $commentActor[$comments[($status->recordID)][$j]->data->actor] = $this->facade->load('user',$comments[($status->recordID)][$j]->data->actor);
                         }
                         $this->f3->set("commentActor", $commentActor);
                     }
@@ -111,15 +112,17 @@ class PostController extends AppController
         }
     }
 
-    public function delete() {
-        if ($this->isLogin()) {
-            $postID = $this->f3->get('POST.id');
-            if ($postID && !is_array($postID)) {
-//                $findStatus = $this->Status->findOne("@rid = ?", array('#' . str_replace('_', ':', $postID)));
+    public function delete()
+    {
+        if ($this->isLogin())
+        {
+            $postID = str_replace('_', ':',$this->f3->get('POST.objectID'));
+            if (!empty($postID) && !is_array($postID))
+            {
                 $active = array(
                     'active' => 0,
                 );
-                $this->Status->updateByCondition($active, '@rid = ?', array('#' . str_replace('_', ':', $postID)));
+                $this->facade->updateByAttributes('status', $active, array('@rid'=>'#'.$postID));
             }
         }
     }
@@ -158,8 +161,10 @@ class PostController extends AppController
     }
 
     //has implement and fix logic
-    public function postStatus() {
-        if ($this->isLogin()) {
+    public function postStatus()
+    {
+        if ($this->isLogin())
+        {
             $published = time();
             $currentUser = $this->getCurrentUser();
             $friendProfileID = $this->f3->get('SESSION.userProfileID');
@@ -168,7 +173,8 @@ class PostController extends AppController
             //$taggedType         = F3::get("POST.taggedType");
             $content = $this->f3->get("POST.status");
             $img = substr(($this->f3->get("POST.img")), 0, -1);
-            if ($taggedElement != 'none') {
+            if ($taggedElement != 'none')
+            {
                 $countChar = strlen($taggedElement);
                 $countCharFirst = strpos($content, $taggedElement);
                 $content1 = substr($content, 0, $countCharFirst);
@@ -196,7 +202,7 @@ class PostController extends AppController
             );
 
             // save
-            $status = Model::get('status')->create($postEntry);
+            $status = $this->facade->save('status',$postEntry);
             $this->f3->set('statusID', $status);
             // track activity
             $this->trackActivity($currentUser, 'ListController', $status, $published);
@@ -350,47 +356,51 @@ class PostController extends AppController
         }
     }
 
-    //just implement
-    public function shareStatus() {
-        if ($this->isLogin()) {
+    public function shareStatus()
+    {
+        if ($this->isLogin())
+        {
             $statusID = str_replace('_', ':', $this->f3->get('POST.statusID'));
-            $statusRC = $this->Status->findOne("@rid = ?", array($statusID));
-            $user = $this->User->findOne(" @rid = ? ", array($statusRC->data->owner));
+            $statusRC = $this->facade->findByPk('status', $statusID);
+            $user = $this->facade->findByPk('user', $statusRC->data->owner);
             $this->f3->set('status', $statusRC);
             $this->f3->set('user', $user);
             $this->renderModule('shareStatus', 'post');
         }
     }
 
-    //just implement
-    public function insertStatus() {
-        if ($this->isLogin()) {
+    public function insertStatus()
+    {
+        if ($this->isLogin())
+        {
             $published = time();
             $statusID = str_replace('_', ':', $this->f3->get("POST.statusID"));
             $txtShare = $this->f3->get("POST.shareTxt");
-            $parentStatus = $this->Status->findOne("@rid = ?", array($statusID));
+            $parentStatus = $this->facade->findByPk('status', $statusID);
             $parentStatus->data->numberShared = $parentStatus->data->numberShared + 1;
-            $this->Status->update($statusID, $parentStatus);
+            $this->facade->updateByPk('status', $statusID, $parentStatus);
             $postEntry = array(
-                'owner' => $this->getCurrentUser()->recordID,
-                'actor' => $parentStatus->data->owner,
-                'content' => $parentStatus->data->content,
-                'tagged' => $parentStatus->data->tagged,
+                'owner'         => $this->getCurrentUser()->recordID,
+                'actor'         => $parentStatus->data->owner,
+                'content'       => $parentStatus->data->content,
+                'tagged'        => $parentStatus->data->tagged,
                 /* 'taggedType'    => $old_status->data->taggedType, */
-                'actorName' => $parentStatus->data->actorName,
-                'numberLike' => '0',
+                'actorName'     => $parentStatus->data->actorName,
+                'numberLike'    => '0',
                 'numberComment' => $parentStatus->data->numberComment,
-                'published' => $published,
-                'contentShare' => $txtShare,
-                'numberShared' => '0',
-                'numberFollow' => '0',
-                'mainStatus' => $statusID,
+                'published'     => $published,
+                'contentShare'  => $txtShare,
+                'numberShared'  => '0',
+                'numberFollow'  => '0',
+                'mainStatus'    => $statusID,
+                'active'        => '1',
+                'img'           => false
             );
 
             // save
-            $status = $this->Status->create($postEntry);
+            $status = $this->facade->save('status', $postEntry);
             // track activity
-            $this->trackActivity($this->getCurrentUser(), 'HomePost', $status, $published);
+            $this->trackActivity($this->getCurrentUser(), 'ListController', $status, $published);
         }
     }
 

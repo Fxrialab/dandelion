@@ -54,7 +54,8 @@ class HomeController extends AppController
             $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
             $limit  = is_numeric($_POST['number']) ? $_POST['number'] : die();
             $obj    = new ObjectHandler();
-            $obj->type = 'post';
+            $obj->owner = $this->getCurrentUser()->recordID;
+            $obj->type  = 'post';
             $obj->select = 'LIMIT '.$limit.' ORDER BY published DESC offset '.$offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
             //var_dump($activitiesRC);

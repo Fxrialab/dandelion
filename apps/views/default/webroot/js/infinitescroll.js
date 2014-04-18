@@ -63,8 +63,8 @@
 						
 						// No longer busy!	
 						busy = false;
-					}	
-						
+					}
+                    updateTime();
 				});
 					
 			}	

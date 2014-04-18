@@ -12,8 +12,9 @@ class ListController extends AppController
     {
         if (!empty($entry))
         {
-            $currentUser = $this->getCurrentUser();
-            $statusRC = $this->facade->load('status', $entry->data->object);
+            $currentUser= $this->getCurrentUser();
+            $statusRC   = $this->facade->findByAttributes('status', array('@rid'=>'#'.$entry->data->object, 'active'=>1));
+
             $activityID = $entry->recordID;
             $userID = $this->f3->get('SESSION.userID');
 
@@ -25,20 +26,23 @@ class ListController extends AppController
                 else
                     $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
                 $like = $this->facade->findAllAttributes('like', array('actor' => $statusRC->data->owner,'objID'=>$statusID));
-                //var_dump($like);
+
                 $entry = array(
                     'type'      => 'post',
                     'key'       => $key,
                     'like'      => $like,
                     'username'  => $userRC->data->username,
                     'avatar'    => $userRC->data->profilePic,
-                    'currentUser'   => $userRC,
+                    /*'currentUser'   => $userRC,*/
                     'actions'   => $statusRC,
                     'statusID'  => $statusID,
                     'path'      => Register::getPathModule('post'),
                 );
+                return $entry;
+            }else{
+                return false;
             }
-            return $entry;
+
         }
     }
 

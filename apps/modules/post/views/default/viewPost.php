@@ -1,9 +1,14 @@
 <?php
 $rpOwnerID  = str_replace(':', '_', $status->data->owner);
 $rpStatusID = str_replace(":", "_", $statusID);
-$rpCurUserID = str_replace(":", "_", $curUserID);
+//$rpCurUserID = str_replace(":", "_", $curUserID);
+$status_tagged  = $status->data->tagged;
+$status_content = $status->data->content;
+$numberLikes    = $status->data->numberLike;
+$status_contentShare    = $status->data->contentShare;
+$status_published       = $status->data->published;
 ?>
-<div class="uiBoxPostItem">
+<div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
     <div class="uiBoxPostContainer column-group">
         <div class="large-10 uiActorPicCol">
             <a href="/content/myPost?username=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
@@ -31,9 +36,34 @@ $rpCurUserID = str_replace(":", "_", $curUserID);
                     }
                     ?>
                 </div>
-                <div class="textPostContainer fixMarginBottom-5">
-                            <span class="textPost"><?php echo $status->data->content; ?></span>
-                </div>
+                <?php
+                if($status_contentShare == 'none')
+                {
+                    if($status_tagged =='none')
+                    {?>
+                        <div class="textPostContainer fixMarginBottom-5">
+                            <span class="textPost"><?php echo $status_content; ?></span>
+                        </div>
+                    <?php
+                    } else {  ?>
+                        <div class="textPostContainer fixMarginBottom-5">
+                                <span class="textPost">
+                                    <?php echo substr($status_content,0,strpos($status_content,'_linkWith_')); ?>
+                                    <a href="<?php echo $status_tagged; ?>"><?php echo $status_tagged; ?></a>
+                                    <a href="<?php echo $status_tagged; ?>" class="oembed5"> </a>
+                                </span>
+                        </div>
+                    <?php
+                    }
+                } else { ?>
+                    <div class="textPostContainer fixMarginBottom-5">
+                        <span class="textPost"><?php echo $status_contentShare; ?></span>
+                        <div class="attachmentStatus">
+                            <span class="textPost"><?php echo $status_content; ?></span>
+                        </div>
+                    </div>
+                <?php
+                } ?>
 
             </div>
             <div class="articleSelectOption">
@@ -147,74 +177,19 @@ $rpCurUserID = str_replace(":", "_", $curUserID);
             </div>
         </div>
         <div class="large-5 uiPostOption">
-            <a href="" class="postOption" data-action=".optionPopUp"><i class="optionIcon-articlePost"></i></a>
-            <div class="uiPostOptionPopUpOver uiBox-PopUp topRightArrow" data-target=".optionPopUp">
+            <a href="" class="postOption info-<?php echo $rpStatusID; ?>" data-action=".optionPopUp"><i class="optionIcon-articlePost"></i></a>
+            <div class="uiPostOptionPopUpOver uiBox-PopUp topRightArrow infoOver-<?php echo $rpStatusID; ?>" data-target=".optionPopUp">
                 <nav class="ink-navigation">
                     <ul class="menu vertical">
                         <li><a class="test" href="#">Report this post</a></li>
-                        <li><a href="#">Option 1</a></li>
+                        <li><a href="javascript:void(0)" onclick="new Delete('<?php echo $rpStatusID; ?>')">Delete this post</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </div>
 </div>
-<script>
-                                    $(function() {
-                                        $(".submitComment").bind('keypress', function(e) {
-                                            var code = e.keyCode || e.which;
-                                            if (code == 13)
-                                            {
-                                                var statusID = $(this).attr('id').replace('textComment-', '');
-                                                var comment = $("#textComment-" + statusID).val();
-                                                var numComment = parseInt($("#numCommentValue-" + statusID).val());
-                                                console.log('cm: ', comment);
-                                                if (comment == '')
-                                                {
-                                                    return false;
-                                                } else {
-                                                    var url, urlString, urlSpace, urlHttp, urlFirst, fullURL;
-                                                    var text = $('#textComment-' + statusID).val();
-                                                    text = $('<span>' + text + '</span>').text(); //strip html
-                                                    urlHttp = text.indexOf('http');
-                                                    if (urlHttp >= 0)
-                                                    {
-                                                        urlString = text.substr(urlHttp);
-                                                        urlSpace = urlString.indexOf(" ");
-                                                        if (urlSpace >= 0)
-                                                        {
-                                                            urlFirst = text.substr(urlHttp, urlSpace);
-                                                            if (isValidURL(urlFirst))
-                                                            {
-                                                                fullURL = url = urlFirst;
-                                                            }
-                                                        } else {
-                                                            if (isValidURL(urlString))
-                                                            {
-                                                                fullURL = url = urlString;
-                                                            }
-                                                        }
-                                                    }
-                                                    $('#fmComment-' + statusID).append("<input id='fullURL' name='fullURL' type='hidden' value=" + fullURL + ">");
-                                                    $.ajax({
-                                                        type: "POST",
-                                                        url: "/content/post/postComment",
-                                                        data: $('#fmComment-' + statusID).serialize(),
-                                                        cache: false,
-                                                        success: function(html) {
-                                                            $("#numC-" + statusID).html(numComment + 1);
-                                                            $("#commentBox-" + statusID).before(html);
-                                                            $("#textComment-" + statusID).val('');
-                                                        }
-                                                    });
-                                                    exit();
-                                                }
-                                            }
-                                            //return false;
-                                        });
-                                    });
-                                    /**
-                                     * Comment
-                                     */
-
+<script type="text/javascript">
+    //target show popUp
+    new showPopUpOver('a.info-<?php echo $rpStatusID; ?>', '.infoOver-<?php echo $rpStatusID; ?>');
 </script>

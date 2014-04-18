@@ -118,7 +118,7 @@ class AppController extends Controller
 
     public function getFriendsStt($actor)
     {
-        return Model::get('friendship')->findByCondition("userA = ? AND relationship = 'friend' AND status = 'ok'", array($actor));
+        return $this->facade->findAllAttributes('friendship', array('userA'=>$actor, 'relationship'=>'friend', 'status'=>'ok'));
     }
 
     //will group two below func after check all case
@@ -141,8 +141,8 @@ class AppController extends Controller
     // **********************************
     public function trackActivity($actor, $verb, $object, $published)
     {
-        $checkActivity = Model::get('activity')->findByCondition("owner = ? AND object = ?", array($actor->recordID, $object));
-        $findUserBOfFollow = Model::get('follow')->findByPk($actor->recordID);
+        $checkActivity = $this->facade->findAllAttributes('activity', array('owner'=>$actor->recordID, 'object'=>$object));
+        $findUserBOfFollow = $this->facade->findByPk('follow', $actor->recordID);
         $actorID = ($findUserBOfFollow) ? $findUserBOfFollow->data->userB : $actor->recordID;
         if (!$checkActivity) {
             // prepare activity data
@@ -156,17 +156,20 @@ class AppController extends Controller
                 'published' => $published
             );
             // create activity for currentUser
-            Model::get('activity')->create($activity);
+            $this->facade->save('activity', $activity);
             $friends = $this->getFriendsStt($actor->recordID);
 
             // dupicate activities for followers
-            if (!empty($friends) && !$checkActivity) {
-                for ($i = 0; $i < count($friends); $i++) {
-                    $checkActivityFriend = Model::get('activity')->findByCondition("owner = '" . $friends[$i]->data->userB . "' AND object = '" . $object . "'");
+            if (!empty($friends) && !$checkActivity)
+            {
+                for ($i = 0; $i < count($friends); $i++)
+                {
+                    $checkActivityFriend = $this->facade->findAllAttributes('activity', array('owner'=>$friends[$i]->data->userB, 'object'=>$object));
                     //var_dump($checkActivityFriend);
                     //@todo handling follow after: HN
-                    if ($findUserBOfFollow) {
-                        $checkFriends = Model::get('friendship')->findByCondition("userA = '" . $friends[$i]->data->userB . "' AND status = 'ok' AND userB = '" . $findUserBOfFollow->data->userB . "'");
+                    if ($findUserBOfFollow)
+                    {
+                        $checkFriends = $this->facade->findAllAttributes('friendship', array('userA'=>$friends[$i]->data->userB, 'userB'=>$findUserBOfFollow->data->userB, 'status'=>'ok'));
                         if ($checkFriends == null) {
                             $activity = array(
                                 'owner' => $actor->recordID,
@@ -177,7 +180,7 @@ class AppController extends Controller
                                 'idObject' => $object,
                                 'published' => $published
                             );
-                            Model::get('activity')->create($activity);
+                            $this->facade->save('activity', $activity);
 
                         }
                     }
@@ -192,7 +195,7 @@ class AppController extends Controller
                             'idObject' => $object,
                             'published' => $published
                         );
-                        Model::get('activity')->create($activity);
+                        $this->facade->save('activity', $activity);
 
                     }
                 }

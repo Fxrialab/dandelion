@@ -22,6 +22,17 @@ function ShareStatus(statusID) {
     });
 }
 
+function Delete(id)
+{
+    $.ajax({
+        type: 'POST',
+        url: '/content/post/delete',
+        data: {objectID: id},
+        success: function(){
+            $('.postItem-'+id).fadeOut('slow');
+        }
+    });
+}
 
 // post status
 $(function() {
@@ -51,8 +62,6 @@ $(function() {
                     $('.photoItem').remove();
                     $('#imgID').val();
                     $('#status').val('');
-                    new LikePostByElement('.likePostStatus');
-                    new FollowByElement('.followSegments');
                     updateTime();
                 }
             });
@@ -72,7 +81,59 @@ $(function() {
 
 });
 // post a comment
-
+$(function() {
+    $(".submitComment").bind('keypress', function(e) {
+        var code = e.keyCode || e.which;
+        if (code == 13)
+        {
+            var statusID = $(this).attr('id').replace('textComment-', '');
+            var comment = $("#textComment-" + statusID).val();
+            var numComment = parseInt($("#numCommentValue-" + statusID).val());
+            console.log('cm: ', comment);
+            if (comment == '')
+            {
+                return false;
+            } else {
+                var url, urlString, urlSpace, urlHttp, urlFirst, fullURL;
+                var text = $('#textComment-' + statusID).val();
+                text = $('<span>' + text + '</span>').text(); //strip html
+                urlHttp = text.indexOf('http');
+                if (urlHttp >= 0)
+                {
+                    urlString = text.substr(urlHttp);
+                    urlSpace = urlString.indexOf(" ");
+                    if (urlSpace >= 0)
+                    {
+                        urlFirst = text.substr(urlHttp, urlSpace);
+                        if (isValidURL(urlFirst))
+                        {
+                            fullURL = url = urlFirst;
+                        }
+                    } else {
+                        if (isValidURL(urlString))
+                        {
+                            fullURL = url = urlString;
+                        }
+                    }
+                }
+                $('#fmComment-' + statusID).append("<input id='fullURL' name='fullURL' type='hidden' value=" + fullURL + ">");
+                $.ajax({
+                    type: "POST",
+                    url: "/content/post/postComment",
+                    data: $('#fmComment-' + statusID).serialize(),
+                    cache: false,
+                    success: function(html) {
+                        $("#numC-" + statusID).html(numComment + 1);
+                        $("#commentBox-" + statusID).before(html);
+                        $("#textComment-" + statusID).val('');
+                    }
+                });
+                exit();
+            }
+        }
+        //return false;
+    });
+});
 
 // more status, comment
 //$(function() {
