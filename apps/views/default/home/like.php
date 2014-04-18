@@ -1,13 +1,14 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-if (!empty($like))
-    echo '<a href="javascript:void(0)" onclick="unlike('.$statusID.','.$actor.')">UnLike</a>'; 
-else
-    echo '<a href="javascript:void(0)" onclick="like('.$statusID.','.$actor.')">Like</a>';
+$objID   = str_replace(':', '_', $objectID);
+if (!empty($liked))
+{
+    ?>
+    <a href="javascript:void(0)" onclick="new Unlike('<?php echo $type; ?>','<?php echo $objID; ?>')" title="Unlike post">Unlike</a>
+<?php
+}else {
+    ?>
+    <a href="javascript:void(0)" onclick="new Like('<?php echo $type; ?>','<?php echo $objID; ?>')" title="Like post">Like</a>
+<?php
+}
 ?>
 

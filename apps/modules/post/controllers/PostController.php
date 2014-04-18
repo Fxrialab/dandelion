@@ -85,7 +85,7 @@ class PostController extends AppController
                     $comments[($status->recordID)] = $facade->findAll('comment', array("post" => $status->recordID));
                     $numberOfComments[($status->recordID)] = $facade->count("comment", $status->recordID);
                     //get status follow, like
-                    $likeStatus[($status->recordID)] = $this->getLikeStatus($status->recordID, $currentUser->recordID);
+                    $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID,'objID'=>$status->recordID));
                     $statusFollow[($status->recordID)] = $this->getFollowStatus($status->recordID, $currentUser->recordID);
                     //get info user actor
                     $postActor[($status->data->actor)] = Model::get('user')->load($status->data->actor);

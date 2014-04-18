@@ -1,5 +1,6 @@
 <?php
 $listStatus = $this->f3->get('listStatus');
+$likeStatus = $this->f3->get('likeStatus');
 ?>
 
 <div class="uiMainColProfile large-70">
@@ -16,8 +17,9 @@ $listStatus = $this->f3->get('listStatus');
                     $activity = $status->data;
                     $user = PostController::getUser($status->data->actor);
                     $username = $user->data->username;
+                    $curUserID = $user->recordID;
                     $avatar = $user->data->profilePic;
-                    $like = TRUE;
+                    $like = $likeStatus[$statusID];
                     $f3 = require('viewPost.php');
                 }
                 ?>

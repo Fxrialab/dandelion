@@ -20,18 +20,19 @@ class ListController extends AppController
             if (!empty($statusRC))
             {
                 $statusID = $statusRC->recordID;
-                echo $statusRC->data->actor;
                 if ($currentUser->recordID != $statusRC->data->actor)
                     $userRC = $this->facade->findByPk("user", $statusRC->data->actor);
                 else
                     $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
-                $like = $this->facade->findAllAttributes('like', array('owner' => $statusRC->data->owner,'ID'=>$statusID));
+                $like = $this->facade->findAllAttributes('like', array('actor' => $statusRC->data->owner,'objID'=>$statusID));
+                //var_dump($like);
                 $entry = array(
                     'type'      => 'post',
                     'key'       => $key,
                     'like'      => $like,
                     'username'  => $userRC->data->username,
                     'avatar'    => $userRC->data->profilePic,
+                    'currentUser'   => $userRC,
                     'actions'   => $statusRC,
                     'statusID'  => $statusID,
                     'path'      => Register::getPathModule('post'),

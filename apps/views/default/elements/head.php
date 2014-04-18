@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>reset.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>main.css" type="text/css" />
-    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>popbox.css" type="text/css" />
     <!--[if IE 7 ]>
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink-ie7.css" type="text/css" media="screen"
           title="no title">

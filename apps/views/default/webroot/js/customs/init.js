@@ -4,7 +4,7 @@
  */
 
 
-$(".autoloadModuleElement").ready(function()
+/*$(".autoloadModuleElement").ready(function()
 {
     $.ajax({
         type: "GET",
@@ -40,7 +40,7 @@ $(".autoloadModuleElement").ready(function()
             })
         }
     })
-});
+});*/
 
 
 $(document).ready(function() {
@@ -489,30 +489,50 @@ function moreComment(id) {
 /**
  * l
  */
-function like(statusID) {
+function Like(type, objectID)
+{
+    var getNumLike = parseInt($("#numLike-" + objectID).html());
     $.ajax({
         type: "POST",
         url: "/like",
-        data: {statusID: statusID},
+        data: {type: type, objectID: objectID},
         cache: false,
         success: function(html) {
-//            var obj = jQuery.parseJSON(data);
-            $('.like-' + statusID).html(html);
-//            $('#numLike-' + statusID).html(obj);
+            $('.like-' + objectID).html(html);
+            $('.postItem-' + objectID).fadeIn("slow");
+            //console.log('owner: ',ownerID,' current: ',currentUserID);
+            var likeSentence = $('#likeSentence-' + objectID).length;
+            $('#numLike-' + objectID).html(getNumLike + 1);
+            if (likeSentence)
+            {
+                $("<span>You and </span>").prependTo("#likeSentence-" + objectID);
+            } else {
+                $(".tempLike-" + objectID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + objectID + "'>" +
+                    "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
+                    "</div>");
+            }
         }
     })
 }
-function unlike(statusID, actor) {
+function Unlike(type, objectID)
+{
+    var getNumLike = parseInt($("#numLike-" + objectID).html());
     $.ajax({
         type: "POST",
         url: "/unlike",
-        data: {statusID: statusID, actor: actor},
+        data: {type: type, objectID: objectID},
         cache: false,
         success: function(html) {
-//             var obj = jQuery.parseJSON(data);
-            $('.like-' + statusID).html(html);
-//            $('#numLike-' + statusID).html(obj);
-
+            $('.like-' + objectID).html(html);
+            $('#numLike-' + objectID).html(getNumLike - 1);
+            $('.postItem-' + objectID).fadeIn("slow");
+            var otherLike = $('#likeSentence-' + objectID + ' a').length;
+            if (otherLike)
+            {
+                $('#likeSentence-' + objectID + ' span').remove();
+            } else {
+                $('#likeSentence-' + objectID).detach();
+            }
         }
     })
 }

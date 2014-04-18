@@ -1,6 +1,7 @@
 <?php
-$rpActorID = str_replace(':', '_', $status->data->actor);
+$rpOwnerID  = str_replace(':', '_', $status->data->owner);
 $rpStatusID = str_replace(":", "_", $statusID);
+$rpCurUserID = str_replace(":", "_", $curUserID);
 ?>
 <div class="uiBoxPostItem">
     <div class="uiBoxPostContainer column-group">
@@ -31,7 +32,7 @@ $rpStatusID = str_replace(":", "_", $statusID);
                     ?>
                 </div>
                 <div class="textPostContainer fixMarginBottom-5">
-                    <span class="textPost"><?php echo $status->data->content; ?></span>
+                            <span class="textPost"><?php echo $status->data->content; ?></span>
                 </div>
 
             </div>
@@ -44,9 +45,9 @@ $rpStatusID = str_replace(":", "_", $statusID);
                                 <?php
                                 if ($like == TRUE) {
                                     ?>
-                                    <a href="javascript:void(0)" onclick="unlike('<?php echo $rpStatusID; ?>', '<?php echo $rpActorID; ?>')" title="Unlike post">Unlike</a>
+                                    <a href="javascript:void(0)" onclick="Unlike('status','<?php echo $rpStatusID; ?>')" title="Unlike post">Unlike</a>
                                 <?php } else { ?>
-                                    <a href="javascript:void(0)" onclick="like('<?php echo $rpStatusID; ?>')" title="Like post">Like</a>
+                                    <a href="javascript:void(0)" onclick="Like('status','<?php echo $rpStatusID; ?>')" title="Like post">Like</a>
                                 <?php } ?>
                             </li>
                             <li class="gapArticleActions">.</li>

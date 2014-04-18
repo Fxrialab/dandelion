@@ -11,7 +11,7 @@ if (!empty($activities))
             $like       = $mod['like'];
             $statusID   = $mod['statusID'];
             $activity   = $mod['actions']->data;
-            //$statusID   = str_replace(":", "_", $mod['actions']->recordID);
+            $curUserID  = $mod['currentUser']->recordID;
             require $views;
         }
     }
