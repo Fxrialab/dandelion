@@ -52,29 +52,6 @@ $likeStatus = $this->f3->get('likeStatus');
                     maxHeight: 768,
                     autoplay: false
                 });
-        $(window).scroll(function() {
-            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-                $('.uiMoreView').show();
-                var published = $(".uiBoxPostItem:last .uiBoxPostContainer .uiPostContent .articleSelectOption").find('.swTimeStatus').attr("name");
-                var existNoMoreStatus = $('.noMoreStatus').length;
-                console.log('sss', existNoMoreStatus);
-                if (existNoMoreStatus == 0)
-                {
-                    $.ajax({
-                        type: "POST",
-                        url: "/content/post/morePostStatus",
-                        data: {published: published},
-                        cache: false,
-                        success: function(html) {
-                            $("#contentContainer").append(html);
-                            $('.uiMoreView').hide();
-                        }
-                    });
-                } else {
-                    $('.uiMoreView').hide();
-                }
-            }
-        });
     });
 
 </script>

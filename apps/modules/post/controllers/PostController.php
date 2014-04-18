@@ -290,51 +290,6 @@ class PostController extends AppController
         }
     }
 
-    //has implement and fix logic
-    public function morePostStatus() {
-        if ($this->isLogin()) {
-            $currentUser = $this->getCurrentUser();
-            $userProfileID = $this->f3->get('SESSION.userProfileID');
-            $published = $this->f3->get('POST.published');
-            $userProfileRC = Model::get('user')->load($userProfileID);
-            $this->f3->set('currentUser', $currentUser);
-            $this->f3->set('userProfileInfo', $userProfileRC);
-            if ($currentUser->recordID == $userProfileID) {
-                $statusRC = Model::get('status')->findByCondition("owner = '" . $currentUser->recordID . "' and published < '" . $published . "' LIMIT 5 ORDER BY published DESC");
-            } else {
-                $statusRC = Model::get('status')->findByCondition("owner = '" . $userProfileID . "' and published < '" . $published . "' LIMIT 5 ORDER BY published DESC");
-            }
-            if ($statusRC) {
-                foreach ($statusRC as $status) {
-                    $comments[($status->recordID)] = Model::get('comment')->findByCondition("post = '" . $status->recordID . "' ORDER BY published ASC LIMIT 4");
-                    $numberOfComments[($status->recordID)] = Model::get('comment')->count("post = ?", array($status->recordID));
-                    //get status follow
-                    $likeStatus[($status->recordID)] = $this->getLikeStatus($status->recordID, $currentUser->recordID);
-                    $statusFollow[($status->recordID)] = $this->getFollowStatus($status->recordID, $currentUser->recordID);
-                    $postActor[($status->data->actor)] = Model::get('user')->load($status->data->actor);
-                    if ($comments[($status->recordID)]) {
-                        $pos = (count($comments[($status->recordID)]) < 4 ? count($comments[($status->recordID)]) : 4);
-                        for ($j = $pos - 1; $j >= 0; $j--) {
-                            $commentActor[$comments[($status->recordID)][$j]->data->actor] = Model::get('user')->load($comments[($status->recordID)][$j]->data->actor);
-                        }
-                    } else {
-                        $commentActor = null;
-                    }
-                }
-                $this->f3->set("listStatus", $statusRC);
-                $this->f3->set("comments", $comments);
-                $this->f3->set("numberOfComments", $numberOfComments);
-                $this->f3->set("likeStatus", $likeStatus);
-                $this->f3->set("statusFollow", $statusFollow);
-                $this->f3->set("postActor", $postActor);
-                $this->f3->set("commentActor", $commentActor);
-                $this->renderModule('morePostStatus', 'post');
-            } else {
-                $this->renderModule('noMorePostStatus', 'post');
-            }
-        }
-    }
-
     //just implement
     public function moreComment() {
         if ($this->isLogin()) {

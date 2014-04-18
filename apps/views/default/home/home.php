@@ -20,7 +20,6 @@ foreach ($js as $jshome) {
                     // but will still load if the user clicks.
 
         });
-
     });
 </script>
 <style>

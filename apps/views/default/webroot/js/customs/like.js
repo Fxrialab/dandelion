@@ -63,7 +63,6 @@ function LikePostByElement($element)
                             $('.postItem-' + getID).fadeIn("slow");
                             var likeSentence = $('#likeSentence-' + getID).length;
                             $('#numLike-' + getPostID).html(getNumLike + 1);
-                            //console.log('likeSentence: ', likeSentence);
                             if (likeSentence)
                             {
                                 $("<span>You and </span>").prependTo("#likeSentence-" + getID);

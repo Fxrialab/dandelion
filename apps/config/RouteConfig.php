@@ -11,8 +11,6 @@ class RouteConfig {
     //Notice: Put controller contain function is first
     public $default = array(
         '_GET' => "HomeController,UserController",
-        'install_GET' => "installController",
-        'installDB_POST' => "installController",
         'signUp_POST' => "UserController",
         'login_POST' => "UserController",
         'logout_GET' => "UserController",
@@ -25,8 +23,6 @@ class RouteConfig {
         'newPassword_POST' => "UserController",
         /* Route config for home page */
         'home_GET' => "HomeController,UserController",
-        'homeAMQ_POST' => "HomeController",
-        'morePostHome_POST' => "HomeController",
         'moreCommentHome_POST' => "HomeController",
         'loading_POST' => "HomeController",
         /* Route config for request friend */
@@ -58,13 +54,9 @@ class RouteConfig {
         'searchWork_POST'       => "UserController",
     );
 
-    public $components = array(
-
-    );
     public $modules = array(
         /* Route config for modules */
         'myPost_post' => "PostController,homePost",
-     
         'myQA_qanda' => "qandaController,homeQA",
         'myPhoto_photo' => "photoController,homePhoto",
     );

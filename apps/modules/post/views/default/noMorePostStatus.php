@@ -1,1 +1,0 @@
-<div class="noMoreStatus">No more status to show</div>

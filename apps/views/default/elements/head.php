@@ -22,11 +22,6 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/init.js"></script>
      <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>/infinitescroll.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>/jquery.leanModal.min.js"></script>
-    <script type="text/javascript">
-        new LikePostByElement('.likeSegments');
-        new FollowByElement('.followPostSegments');
-
-    </script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/general.js"></script>
     <script type="text/javascript">
         jQuery.fn.center = function() {
