@@ -111,8 +111,10 @@ class HomeController extends AppController
         }
     }
 
-    public function search() {
-        if ($this->isLogin()) {
+    public function search()
+    {
+        if ($this->isLogin())
+        {
             $searchText = $this->f3->get("POST.data");
 
             $data = array(
@@ -121,10 +123,13 @@ class HomeController extends AppController
                 'error' => ''
             );
             $command = $this->getSearchCommand(array('firstName', 'lastName', 'fullName'), $searchText);
-            $result = $this->User->searchByGremlin($command);
-            if ($result) {
-                foreach ($result as $people) {
-                    $infoOfSearchFound[$people] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#' . $people));
+            $result = Model::get('user')->callGremlin($command);
+            if (!empty($result))
+            {
+                foreach ($result as $people)
+                {
+                    $infoOfSearchFound[$people] = Model::get('user')->callGremlin("current.map", array('@rid'=>'#' . $people));
+
                     $data['results'][] = array(
                         'recordID' => str_replace(':', '_', $people),
                         'firstName' => ucfirst($infoOfSearchFound[$people][0]->firstName),
@@ -142,23 +147,25 @@ class HomeController extends AppController
         }
     }
 
-    public function moreSearch() {
-        if ($this->isLogin()) {
-            $this->layout = 'default';
+    public function moreSearch()
+    {
+        if ($this->isLogin())
+        {
+            $this->layout = 'home';
 
-            $searchText = F3::get("GET.search");
-            $command = $this->getSearchCommand(array('firstName', 'lastName', 'fullName'), $searchText);
-            $resultSearch = $this->User->searchByGremlin($command);
-            if ($resultSearch) {
-                foreach ($resultSearch as $people) {
-                    $infoOfSearchFound[$people] = $this->User->sqlGremlin("current.map", "@rid = ?", array('#' . $people));
+            $searchText = $this->f3->get("GET.search");
+            $command    = $this->getSearchCommand(array('firstName', 'lastName', 'fullName'), $searchText);
+            $resultSearch = Model::get('user')->callGremlin($command);
+            if (!empty($resultSearch))
+            {
+                foreach ($resultSearch as $people)
+                {
+                    $infoOfSearchFound[$people] = Model::get('user')->callGremlin("current.map", array('@rid'=>'#' . $people));
                 }
                 $this->f3->set('resultSearch', $resultSearch);
                 $this->f3->set('infoOfSearchFound', $infoOfSearchFound);
+                $this->render('user/searchResult.php', 'default');
             }
-            $this->f3->set('currentUser', $this->getCurrentUser());
-            $this->f3->set('otherUser', $this->getCurrentUser());
-            $this->render('user/searchResult.php', 'default');
         }
     }
 

@@ -1,13 +1,4 @@
 <?php
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 10/2/13 - 11:22 AM
- * Project: userwired Network - Version: 1.0
- */
-$resultSearch   = F3::get('resultSearch');
-$infoOfSearchFound  = F3::get('infoOfSearchFound');
-//var_dump($resultSearch);
 if ($resultSearch)
 {
 ?>

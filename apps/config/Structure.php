@@ -11,7 +11,7 @@ $dir = dirname(__FILE__);
 $dirSource = substr($dir, 0, strpos($dir, 'apps') - 1);
 
 define ('DS', '/');
-define ('BASE_URL', 'http://dandelion.local/');
+define ('BASE_URL', 'http://demo.dandelionet.org/');
 define ('DOCUMENT_ROOT', $dirSource . DS);
 define ('F3', DOCUMENT_ROOT . 'lib' . DS);
 define ('CONFIG', DOCUMENT_ROOT . 'apps' . DS . 'config' . DS);
@@ -40,8 +40,8 @@ define ('UPLOAD_URL', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS . 'w
 
 // vendors
 define ('VENDORS', DOCUMENT_ROOT . 'vendors' . DS);
-define ('MODEL_UTILS', VENDORS . 'Fxrialab' . DS . 'ModelUtils' . DS);
-define ('FACADE', VENDORS . 'Fxrialab' . DS . 'Facade' . DS);
+define ('MODEL_UTILS', VENDORS . 'fxrialab' . DS . 'modelUtils' . DS);
+define ('FACADE', VENDORS . 'fxrialab' . DS . 'facade' . DS);
 define ('ORIENTDB', VENDORS . 'OrientDB' . DS);
 //define ('AMQP', VENDORS . 'PhpAmqpLib' . DS);
 define ('SYMFONY_LOADER', VENDORS . "Symfony/Component/ClassLoader" . DS);
