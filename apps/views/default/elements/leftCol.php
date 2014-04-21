@@ -25,14 +25,14 @@
                     </a>
                 </li>
                 <li class="">
-                    <a href="#" class="uiVerticalNav-item">
+                    <a href="/content/group/groupMember" class="uiVerticalNav-item">
                         <i class="navMenuIcon-group"></i>
                         Group
                         <span class="uiVerticalNav-counter">15</span>
                     </a>
                     <ul class="uiVerticalNav-subnav">
-                        <li class="active"><a href="">Create Group <span class="uiVerticalNav-counter">16</span></a></li>
-                        <li><a href="">Vacation <span class="uiVerticalNav-counter">23</span></a></li>
+                        <li class="active"><a href="/content/group/addGroup">Create Group</a></li>
+                        <!--<li><a href="">Vacation <span class="uiVerticalNav-counter">23</span></a></li>-->
                     </ul>
                 </li>
                 <li>

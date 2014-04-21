@@ -7,6 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 $path='photo/views/default/';
+$pathElement = 'photo/views/elements';
 // Info viewPath
 $viewPath[]= array('type'=>'photo','viewPath'=>$path);
 // Info my Photo page

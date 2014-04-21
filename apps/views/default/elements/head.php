@@ -1,14 +1,18 @@
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $this->f3->get('ENCODING'); ?>" />
-    <title><?php echo $this->f3->get('site1'); ?></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Dandelion</title>
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>reset.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>main.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>popbox.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>jquery-ui-1.8.custom.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>autocomplete.css" type="text/css" />
     <!--[if IE 7 ]>
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink-ie7.css" type="text/css" media="screen"
           title="no title">
     <![endif]-->
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery-1.9.1.min.js"></script>
+        <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>-->
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/holder.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink.min.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink-ui.min.js"></script>
@@ -20,8 +24,14 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/pretty.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/dropDownStyle.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/init.js"></script>
-     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>/infinitescroll.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>/infinitescroll.js"></script>
+    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>/jquery-ui-1.8.custom.min.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>/jquery.leanModal.min.js"></script>
+    <script type="text/javascript">
+        new LikePostByElement('.likeSegments');
+        new FollowByElement('.followPostSegments');
+
+    </script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/general.js"></script>
     <script type="text/javascript">
         jQuery.fn.center = function() {

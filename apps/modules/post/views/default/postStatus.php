@@ -10,7 +10,7 @@ $rpStatusID = str_replace(":", "_", $this->f3->get('statusID'));
 $currentUserID = $currentUser->recordID;
 $friendProfileID = $this->f3->get('friendProfileID');
 $currentUserName = ucfirst($currentUser->data->firstName) . " " . ucfirst($currentUser->data->lastName);
-$friendName = ucfirst($friendProfileInfo->data->firstName) . " " . ucfirst($friendProfileInfo->data->lastName);
+//$friendName = ucfirst($friendProfileInfo->data->firstName) . " " . ucfirst($friendProfileInfo->data->lastName);
 $avatar = $currentUser->data->profilePic;
 ?>
 
