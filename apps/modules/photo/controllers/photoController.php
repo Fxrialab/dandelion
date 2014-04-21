@@ -1,22 +1,26 @@
 <?php
 
-class PhotoController extends AppController {
+class PhotoController extends AppController
+{
 
 //    protected $uses = array("Activity" ,"Album", "Photo", "Comment", "User", "Follow","Status");
-    protected $helpers = array("Array", "Pagination", "Upload");
+//    protected $helpers = array("Array", "Pagination", "Upload");
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
     // @todo: ask client for album page
-    public function myPhoto($viewPath) {
-        if ($this->isLogin()) {
+    public function myPhoto($viewPath)
+    {
+        if ($this->isLogin())
+        {
             $this->layout = "other";
-            $facade = new OrientDBFacade();
             $requestCurrentProfile = $this->f3->get('GET.username');
-            if ($requestCurrentProfile) {
-                $currentProfileRC = Model::get('photo')->findOne("username = ?", array($requestCurrentProfile));
+            if ($requestCurrentProfile)
+            {
+                $currentProfileRC = $this->User->findOne("username = ?", array($requestCurrentProfile));
                 if ($currentProfileRC)
                     $currentProfileID = $currentProfileRC->recordID;
                 else
@@ -26,19 +30,23 @@ class PhotoController extends AppController {
                 $currentProfileID = $this->getCurrentUser()->recordID;
 
             $currentUser = $this->getCurrentUser(); //user login
-            $currentProfileRC = Model::get('user')->load($currentProfileID);
+            $currentProfileRC = $this->User->load($currentProfileID);
 
             $this->f3->set('currentUser', $currentUser);
             $this->f3->set('otherUser', $currentProfileRC);
 
-            $photos = $facade->findAll('photo', array('actor' => $currentProfileID, 'album' => "none"));
-            if (!empty($photos)) {
-                foreach ($photos as $photo) {
-                    $commentsOfPhoto[$photo->recordID] = $facade->findAll('comment', array("post" => $photo->recordID));
+            $photos = $this->Photo->findByCondition('actor = ? AND album = ? ORDER BY published DESC', array($currentProfileID, "none"));
+            if ($photos)
+            {
+                foreach ($photos as $photo)
+                {
+                    $commentsOfPhoto[$photo->recordID] = $this->Comment->findByCondition("post = ? ORDER BY published DESC", array($photo->recordID));
                     $likeStatus[($photo->recordID)] = $this->getLikeStatus($photo->recordID, $currentUser->recordID);
-                    if ($commentsOfPhoto[($photo->recordID)]) {
+                    if ($commentsOfPhoto[($photo->recordID)])
+                    {
                         $pos = (count($commentsOfPhoto[($photo->recordID)]) < 2 ? count($commentsOfPhoto[($photo->recordID)]) : 2);
-                        for ($j = $pos - 1; $j >= 0; $j--) {
+                        for ($j = $pos - 1; $j >= 0; $j--)
+                        {
                             $commentActor[$commentsOfPhoto[($photo->recordID)][$j]->data->actor] = $this->User->load($commentsOfPhoto[($photo->recordID)][$j]->data->actor);
                             //var_dump($commentActor);
                         }
@@ -54,15 +62,19 @@ class PhotoController extends AppController {
         }
     }
 
-    public function myAlbum() {
-        if ($this->isLogin()) {
+    public function myAlbum()
+    {
+        if ($this->isLogin())
+        {
             $this->layout = 'other';
             $requestCurrentProfile = $this->f3->get('GET.username');
-            if ($requestCurrentProfile) {
+            if ($requestCurrentProfile)
+            {
                 $currentProfileRC = $this->User->findOne("username = ?", array($requestCurrentProfile));
                 if ($currentProfileRC)
                     $currentProfileID = $currentProfileRC->recordID;
-                else {
+                else
+                {
                     echo "page not found";
                     exit;
                 }
@@ -76,8 +88,10 @@ class PhotoController extends AppController {
             $this->f3->set('otherUser', $currentProfileRC);
 
             $albums = $this->Album->findByCondition('owner = ? ORDER BY published DESC', array($currentProfileID));
-            if ($albums) {
-                foreach ($albums as $getAlbums) {
+            if ($albums)
+            {
+                foreach ($albums as $getAlbums)
+                {
                     $firstPhotoOfAlbum[($getAlbums->recordID)] = $this->Photo->findByCondition("album = ? LIMIT 1 ORDER BY published DESC", array($getAlbums->recordID));
                     $numberPhotosOfAlbum[($getAlbums->recordID)] = $this->Photo->findByCondition("album = ?", array($getAlbums->recordID));
                     $numberPhotos = ($numberPhotosOfAlbum[($getAlbums->recordID)]) ? count($numberPhotosOfAlbum[($getAlbums->recordID)]) : 0;
@@ -95,22 +109,29 @@ class PhotoController extends AppController {
         }
     }
 
-    public function viewAlbum() {
-        if ($this->isLogin()) {
+    public function viewAlbum()
+    {
+        if ($this->isLogin())
+        {
             $this->layout = "other";
 
             $currentUser = $this->getCurrentUser();
             $getAlbumID = $this->f3->get("GET.albumID");
             $albumID = str_replace("_", ":", $getAlbumID);
-            if ($albumID) {
+            if ($albumID)
+            {
                 $photos = $this->Photo->findByCondition("album  = ? AND actor = ?", array($albumID, $currentUser->recordID));
-                if ($photos) {
-                    foreach ($photos as $photo) {
+                if ($photos)
+                {
+                    foreach ($photos as $photo)
+                    {
                         $commentsOfPhoto[$photo->recordID] = $this->Comment->findByCondition("post = ? ORDER BY published DESC", array($photo->recordID));
 
-                        if ($commentsOfPhoto[($photo->recordID)]) {
+                        if ($commentsOfPhoto[($photo->recordID)])
+                        {
                             $pos = (count($commentsOfPhoto[($photo->recordID)]) < 4 ? count($commentsOfPhoto[($photo->recordID)]) : 4);
-                            for ($j = $pos - 1; $j >= 0; $j--) {
+                            for ($j = $pos - 1; $j >= 0; $j--)
+                            {
                                 $commentActor[$commentsOfPhoto[($photo->recordID)][$j]->data->actor] = $this->User->load($commentsOfPhoto[($photo->recordID)][$j]->data->actor);
                                 //var_dump($commentActor);
                             }
@@ -128,8 +149,10 @@ class PhotoController extends AppController {
         }
     }
 
-    public function loadingPhoto() {
-        if ($this->isLogin()) {
+    public function loadingPhoto()
+    {
+        if ($this->isLogin())
+        {
             $outPutDir = UPLOAD . "test/";
             $data = array(
                 'results' => array(),
@@ -137,17 +160,17 @@ class PhotoController extends AppController {
                 'error' => ''
             );
 
-            if (isset($_FILES["myfile"])) {
-                $facade = new OrientDBFacade();
+            if (isset($_FILES["myfile"]))
+            {
                 $currentUser = $this->getCurrentUser();
 
                 $data['success'] = true;
                 $data['error'] = $_FILES["myfile"]["error"];
 
-                if (!is_array($_FILES["myfile"]['name'])) { //single file
-                    $temp = explode(".", $_FILES["myfile"]["name"][$i]);
-                    $fileName = md5($temp[0]) . '.' . $temp[1];
-
+                if (!is_array($_FILES["myfile"]['name'])) //single file
+                {
+                    $fileName = $_FILES["myfile"]["name"];
+                    $path = $outPutDir . $fileName;
                     move_uploaded_file($_FILES["myfile"]["tmp_name"], $path);
 
                     $entry = array(
@@ -160,29 +183,25 @@ class PhotoController extends AppController {
                         'numberLike' => '0',
                         'numberComment' => '0',
                         'statusUpload' => 'uploaded',
-                        'published' => time(),
+                        'published' => ''
                     );
-                    $id = Model::get('photo')->create($entry);
-                    $data['results'][] = array(
-                        'id' => str_replace(':', '_', $id),
-                        'photoID' => str_replace(':', '_', $currentUser->recordID),
-                        'fileName' => $fileName,
-                        'url' => UPLOAD_URL . "test/" . $fileName,
-                    );
+                    Model::get('photo')->create($entry);
                     //get recordID of each photo for pass other info
-//                    $infoPhotoRC    = $facade->findByAttributes('photo',array("actor" => $currentUser->recordID,'statusUpload' => 'uploaded'));
-//                    $data['results'][]  = array(
-//                        'photoID'   => str_replace(':', '_', $infoPhotoRC->recordID),
-//                        'fileName'  => $infoPhotoRC->data->fileName,
-//                        'url'       => $infoPhotoRC->data->url,
-//                    );
-                } else {
-                    $fileCount = count($_FILES["myfile"]['name']);
-                    for ($i = 0; $i < $fileCount; $i++) {
+                    $infoPhotoRC = $this->facade->findByAttributes('photo', array('actor' => $currentUser->recordID, 'statusUpload' => 'uploaded'));
+//                    $infoPhotoRC    = $this->Photo->findOne("actor = ? AND statusUpload = 'uploading'", array($currentUser->recordID));
 
-//                        $fileName = $_FILES["myfile"]["name"][$i];
-                        $temp = explode(".", $_FILES["myfile"]["name"][$i]);
-                        $fileName = md5($temp[0]) . '.' . $temp[1];
+                    $data['results'][] = array(
+                        'photoID' => str_replace(':', '_', $infoPhotoRC->recordID),
+                        'fileName' => $infoPhotoRC->data->fileName,
+                        'url' => $infoPhotoRC->data->url,
+                    );
+                }
+                else
+                {
+                    $fileCount = count($_FILES["myfile"]['name']);
+                    for ($i = 0; $i < $fileCount; $i++)
+                    {
+                        $fileName = $_FILES["myfile"]["name"][$i];
                         move_uploaded_file($_FILES["myfile"]["tmp_name"][$i], $outPutDir . $fileName);
 
                         $entry = array(
@@ -195,18 +214,19 @@ class PhotoController extends AppController {
                             'numberLike' => '0',
                             'numberComment' => '0',
                             'statusUpload' => 'uploaded',
-                            'published' => time(),
+                            'published' => ''
                         );
-                        $id = Model::get('photo')->create($entry);
+
+                        $photoID = $this->facade->save('photo', $entry);
+                        $photo = $this->facade->findByPk('photo', $photoID);
                         $data['results'][] = array(
-                            'id' => str_replace(':', '_', $id),
-                            'photoID' => str_replace(':', '_', $currentUser->recordID),
-                            'fileName' => $fileName,
-                            'url' => UPLOAD_URL . "test/" . $fileName,
+                            'photoID' => str_replace(':', '_', $photo->recordID),
+                            'fileName' => $photo->data->fileName,
+                            'url' => $photo->data->url,
                         );
-                        //get recordID of each photo for pass other info
-//                        $infoPhotoRC = $facade->findAllAttributes('photo', array("actor" => $currentUser->recordID, "statusUpload" => 'uploaded'));
-//                        foreach ($infoPhotoRC as $infoPhoto) {
+//                        $infoPhotoRC = $this->facade->findAllAttributes('photo', array('actor' => $currentUser->recordID, 'statusUpload' => 'uploaded'));
+//                        foreach ($infoPhotoRC as $infoPhoto)
+//                        {
 //                            $data['results'][] = array(
 //                                'photoID' => str_replace(':', '_', $infoPhoto->recordID),
 //                                'fileName' => $infoPhoto->data->fileName,
@@ -218,28 +238,33 @@ class PhotoController extends AppController {
                 header("Content-Type: application/json; charset=UTF-8");
                 $jsonData = json_encode((object) $data);
                 echo $jsonData;
-//                if ($jsonData)
-//                {
-//                    $updateEntry    = array(
-//                        'statusUpload'  => 'uploaded',
-//                    );
-//                    Model::get('photo')->updateByCondition($updateEntry, "actor = ? AND statusUpload = 'uploading'", array($currentUser->recordID));
-//                }
+                if ($jsonData)
+                {
+                    $updateEntry = array(
+                        'statusUpload' => 'uploaded',
+                    );
+                    $this->facade->updateByAttributes('photo', $updateEntry, array('actor'=>$currentUser->recordID, 'statusUpload'=>'uploaded'));
+                }
             }
         }
     }
 
-    public function uploadPhoto() {
-        if ($this->isLogin()) {
+    public function uploadPhoto()
+    {
+        if ($this->isLogin())
+        {
             $outPutDir = UPLOAD . "test/";
             $qualityCB = $this->f3->get('POST.stage');
             $data = $this->f3->get('POST.data');
             $albumID = $this->f3->get('POST.albumID');
             $albumID = ($albumID == 'none') ? $albumID : str_replace('_', ':', $albumID);
             $published = time();
-            if ($qualityCB == 'checked') {
-                if ($data) {
-                    foreach ($data as $photo) {
+            if ($qualityCB == 'checked')
+            {
+                if ($data)
+                {
+                    foreach ($data as $photo)
+                    {
                         $photoID = str_replace('_', ':', $photo['photoID']);
                         $description = $photo['description'];
                         $updateEntry = array(
@@ -248,7 +273,7 @@ class PhotoController extends AppController {
                             'published' => $published
                         );
                         $this->Photo->updateByCondition($updateEntry, "@rid = ?", array('#' . $photoID));
-                        $photoRC = Model::get('photo')->findOne("@rid = ?", array('#' . $photoID));
+                        $photoRC = $this->Photo->findOne("@rid = ?", array('#' . $photoID));
                         $filePath = $outPutDir . $photoRC->data->fileName;
                         //check size of image
                         list($width, $height) = getimagesize($filePath);
@@ -256,9 +281,12 @@ class PhotoController extends AppController {
                             $this->resizeImage($filePath, 960, $filePath);
                     }
                 }
-            }else {
-                if ($data) {
-                    foreach ($data as $photo) {
+            }else
+            {
+                if ($data)
+                {
+                    foreach ($data as $photo)
+                    {
                         $photoID = str_replace('_', ':', $photo['photoID']);
                         $description = $photo['description'];
                         $updateEntry = array(
@@ -266,8 +294,8 @@ class PhotoController extends AppController {
                             'description' => $description,
                             'published' => $published
                         );
-                        Model::get('photo')->updateByCondition($updateEntry, "@rid = ?", array('#' . $photoID));
-                        $photoRC = Model::get('photo')->findOne("@rid = ?", array('#' . $photoID));
+                        $this->Photo->updateByCondition($updateEntry, "@rid = ?", array('#' . $photoID));
+                        $photoRC = $this->Photo->findOne("@rid = ?", array('#' . $photoID));
                         $filePath = $outPutDir . $photoRC->data->fileName;
                         //check size of image
                         list($width, $height) = getimagesize($filePath);
@@ -280,35 +308,31 @@ class PhotoController extends AppController {
         }
     }
 
-    public function removePhoto() {
-        if ($this->isLogin()) {
+    public function removePhoto()
+    {
+        if ($this->isLogin())
+        {
             $photoID = $this->f3->get('POST.photoID');
 
-            if ($photoID && !is_array($photoID)) {
+            if ($photoID && !is_array($photoID))
+            {
                 $this->Photo->deleteByCondition("@rid = ?", array('#' . str_replace('_', ':', $photoID)));
                 //@todo: remove file in out put dir
-            } else {
-                foreach ($photoID as $id) {
-                    Model::get('photo')->deleteByCondition("@rid = ?", array('#' . str_replace('_', ':', $id)));
+            }
+            else
+            {
+                foreach ($photoID as $id)
+                {
+                    $this->Photo->deleteByCondition("@rid = ?", array('#' . str_replace('_', ':', $id)));
                 }
             }
         }
     }
 
-    public function deleteImage() {
-        if ($this->isLogin()) {
-            $id = $this->f3->get('POST.id');
-            $model = Model::get('photo')->findOne("@rid = ?", array('#' . str_replace('_', ':', $id)));
-            if (!empty($model)) {
-                 Model::get('photo')->deleteByCondition("@rid = ?", array('#' . str_replace('_', ':', $id)));
-            }
-           
-            //@todo: remove file in out put dir
-        }
-    }
-
-    public function createAlbum() {
-        if ($this->isLogin()) {
+    public function createAlbum()
+    {
+        if ($this->isLogin())
+        {
             $name = $this->f3->get("POST.titleAlbum");
             $description = $this->f3->get("POST.descriptionAlbum");
             $published = time();
@@ -326,13 +350,16 @@ class PhotoController extends AppController {
         }
     }
 
-    public function viewPhoto() {
-        if ($this->isLogin()) {
+    public function viewPhoto()
+    {
+        if ($this->isLogin())
+        {
 
             $getPhotoID = $this->f3->get('POST.photoID');
             $currentUser = $this->getCurrentUser();
 
-            if ($getPhotoID != '') {
+            if ($getPhotoID != '')
+            {
                 $photoID = $this->Photo->getClusterID() . ':' . $getPhotoID;
                 $photoRC = $this->Photo->findOne('@rid= ? ', array('#' . $photoID));
                 //var_dump($photoRC);
@@ -348,31 +375,38 @@ class PhotoController extends AppController {
                 $preloadUrls = array();
                 $comments = array();
                 //var_dump($listPhotos);
-                foreach ($listPhotos as $key => $photo) {
+                foreach ($listPhotos as $key => $photo)
+                {
                     //echo $photo->recordID."<br />";
                     $id = substr($photo->recordID, strpos($photo->recordID, ':') + 1);
                     //echo $getPhotoID."<br />";
-                    if ($getPhotoID == $id) {
+                    if ($getPhotoID == $id)
+                    {
                         $this->f3->set('key', $key);
                     }
                 }
                 //var_dump($listPhotos);
-                if ($listPhotos) {
-                    for ($i = 0; $i < count($listPhotos); $i++) {
+                if ($listPhotos)
+                {
+                    for ($i = 0; $i < count($listPhotos); $i++)
+                    {
                         array_push($preloadUrls, $listPhotos[$i]->data->url);
                         array_push($preparedPhotosData, $this->Photo->export($listPhotos[$i]));
                     }
                 }
-                foreach ($listPhotos as $photo) {
+                foreach ($listPhotos as $photo)
+                {
                     $commentsOfPhoto[$photo->recordID] = $this->Comment->findByCondition("post = ? ORDER BY published DESC", array($photo->recordID));
                     $infoActorUser[$photo->data->actor] = $this->User->findOne("@rid = ?", array($photo->data->actor));
                     //get status
                     $likeStatus[($photo->recordID)] = $this->getLikeStatus($photo->recordID, $currentUser->recordID);
                     $statusFollow[($photo->recordID)] = $this->getFollowStatus($photo->recordID, $currentUser->recordID);
                     //var_dump($commentsOfPhoto[$photo->recordID]);
-                    if ($commentsOfPhoto[($photo->recordID)]) {
+                    if ($commentsOfPhoto[($photo->recordID)])
+                    {
                         $pos = (count($commentsOfPhoto[($photo->recordID)]) < 4 ? count($commentsOfPhoto[($photo->recordID)]) : 4);
-                        for ($j = $pos - 1; $j >= 0; $j--) {
+                        for ($j = $pos - 1; $j >= 0; $j--)
+                        {
                             $commentActor[$commentsOfPhoto[($photo->recordID)][$j]->data->actor] = $this->User->load($commentsOfPhoto[($photo->recordID)][$j]->data->actor);
                             //var_dump($commentActor);
                         }
@@ -394,8 +428,10 @@ class PhotoController extends AppController {
         }
     }
 
-    public function addDescription() {
-        if ($this->isLogin()) {
+    public function addDescription()
+    {
+        if ($this->isLogin())
+        {
             $description = F3::get('POST.description');
             $getPhotoID = F3::get('POST.photoID');
             $photoID = str_replace('_', ':', $getPhotoID);
@@ -405,15 +441,18 @@ class PhotoController extends AppController {
         }
     }
 
-    public function postComment() {
-        if ($this->isLogin()) {
+    public function postComment()
+    {
+        if ($this->isLogin())
+        {
             $currentUser = $this->getCurrentUser();
             $photoID = str_replace("_", ":", $this->f3->get('POST.postPhotoID'));
             $textComment = $this->f3->get('POST.comment');
             $actorName = $this->getCurrentUserName();
             $published = time();
             $existCommentRC = $this->Comment->findByCondition("actor = ? AND post = ?", array($currentUser->recordID, $photoID));
-            if ($existCommentRC) {
+            if ($existCommentRC)
+            {
                 $commentEntryCase1 = array(
                     "actor" => $currentUser->recordID,
                     "actor_name" => $actorName,
@@ -425,7 +464,9 @@ class PhotoController extends AppController {
                 );
                 $comment1 = $this->Comment->create($commentEntryCase1);
                 $commentID = $comment1;
-            } else {
+            }
+            else
+            {
                 $commentEntryCase2 = array(
                     "actor" => $this->getCurrentUser()->recordID,
                     "actor_name" => $actorName,
@@ -458,10 +499,13 @@ class PhotoController extends AppController {
     /* Load comment for Insert in Activity */
 
     //@todo Check again with album and photo.
-    public function LoadComment($object, $actor, $activityID) {
-        if ($this->isLogin()) {
+    public function LoadComment($object, $actor, $activityID)
+    {
+        if ($this->isLogin())
+        {
             $findStatus = $this->Comment->findByCondition("@rid = ?", array('#' . $object));
-            if ($findStatus) {
+            if ($findStatus)
+            {
                 $findContentStt = $this->Photo->findByCondition("@rid = ?", array('#' . $findStatus[0]->data->post));
                 $profileCommentActor[$actor] = $this->User->load($actor);
                 $entry = array(
@@ -483,28 +527,37 @@ class PhotoController extends AppController {
         }
     }
 
-    public function deletePhoto() {
-        if ($this->isLogin()) {
+    public function deletePhoto()
+    {
+        if ($this->isLogin())
+        {
             $id_photo = str_replace('_', ':', F3::get('POST.id_photo'));
-            if ($id_photo) {
+            if ($id_photo)
+            {
                 $this->Photo->deleteByCondition('@rid = ? ', array('#' . $id_photo));
                 $this->Activity->deleteByCondition('idObject = ? ', array($id_photo));
             }
         }
     }
 
-    public function morePhotoComment() {
-        if ($this->isLogin()) {
+    public function morePhotoComment()
+    {
+        if ($this->isLogin())
+        {
             $published = $this->f3->get('POST.published');
             $photoID = str_replace("_", ":", $this->f3->get('POST.photoID'));
 
             $comments = $this->Comment->findByCondition("post = ? and published < ? LIMIT 50 ORDER BY published DESC", array($photoID, $published));
-            if ($comments) {
+            if ($comments)
+            {
                 $pos = (count($comments) < 50 ? count($comments) : 50);
-                for ($j = $pos - 1; $j >= 0; $j--) {
+                for ($j = $pos - 1; $j >= 0; $j--)
+                {
                     $commentActor[$comments[$j]->data->actor] = $this->User->load($comments[$j]->data->actor);
                 }
-            } else {
+            }
+            else
+            {
                 $commentActor = null;
             }
             $this->f3->set("commentActor", $commentActor);
@@ -513,8 +566,10 @@ class PhotoController extends AppController {
         }
     }
 
-    public function sharePhoto() {
-        if ($this->isLogin()) {
+    public function sharePhoto()
+    {
+        if ($this->isLogin())
+        {
             $photoID = F3::get('POST.photoID');
             $content_stt = $this->Photo->findOne("@rid = ?", array($photoID));
             $getAvatar = $this->User->findOne(" @rid = ? ", array($content_stt->data->actor));
