@@ -1,16 +1,6 @@
 <?php
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 8/19/13 - 4:04 PM
- * Project: UserWired Network - Version: beta
- */
-
 class FriendController extends AppController
 {
-    protected $uses     = array("Friendship", "Information", "Actions");
-    protected $helpers  = array();
-
     public function __construct()
     {
         parent::__construct();
@@ -20,31 +10,40 @@ class FriendController extends AppController
     {
         if ($this->isLogin())
         {
-            $getID  = $this->f3->get("POST.id");
-            $userA  = $this->getCurrentUser()->recordID;
-            $userB  = $this->User->getClusterID().':'.$getID;
-            //prepare data
-            $relationship   = array(
-                'userA'         => $userA,
-                'relationship'  => 'request',
-                'status'        => 'new',
-                'userB'         => $userB,
-                'published'     => time()
-            );
-            //save data
-            $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
+            $currentUser= $this->getCurrentUser();
+            $toUser     = $this->f3->get("POST.toUser");
+            $userB      = str_replace('_', ':', $toUser);
+            $existRequestRC = $this->facade->findByAttributes('friendship', array('userA'=>$currentUser->recordID, 'relationship'=>'request', 'userB'=>$userB));
+            if (!$existRequestRC)
+            {
+                //prepare data
+                $relationship   = array(
+                    'userA'         => $currentUser->recordID,
+                    'relationship'  => 'request',
+                    'status'        => 'new',
+                    'userB'         => $userB,
+                    'published'     => time()
+                );
+                //save data
+                Model::get('friendship')->createEdge('#'.$currentUser->recordID, '#'.$userB, $relationship);
+            }
             //After friend request is sent. The friendRequests action will be create
-            $existFriendRequestAction   = $this->Actions->findOne("actionElement = ?", array('friendRequests'));
+            $existFriendRequestAction   = $this->facade->findByAttributes('actions', array('actionElement'=>'friendRequests'));
             if (!$existFriendRequestAction)
             {
-                $actionRC       = array(
+                $actionRC   = array(
                     'actionName'    => 'Friend Requests',
                     'actionElement' => 'friendRequests',
                     'isSearch'      => 'no',
                     'isSuggest'     => 'yes',
                 );
-                $this->Actions->create($actionRC);
+                $this->facade->save('actions', $actionRC);
             }
+            $this->f3->set('requestFriend', true);
+            $this->f3->set('addFriend', false);
+            $this->f3->set('isFriend', false);
+            $this->f3->set('toUser', $toUser);
+            $this->render('home/friend.php', 'default');
         }
     }
 
@@ -52,27 +51,27 @@ class FriendController extends AppController
     {
         if ($this->isLogin())
         {
-            $getIdUserB = $this->f3->GET("POST.id");
-            $userA      = $this->getCurrentUser()->recordID;
-            $userB      = $this->User->getClusterID().':'.$getIdUserB;
+            $currentUser= $this->getCurrentUser();
+            $toUser     = $this->f3->get("POST.toUser");
+            $userB      = str_replace('_', ':', $toUser);
             //update a record
             $updateRecord   = array(
                 'relationship'  => 'friend',
                 'status'        => 'ok'
             );
-            $this->Friendship->updateByCondition($updateRecord, "userA = ? AND userB = ?", array($userB, $userA));
+            $this->facade->updateByAttributes('friendship', $updateRecord, array('userA'=>$userB, 'userB'=>$currentUser->recordID));
             //prepare data
             $relationship   = array(
-                'userA'         => $userA,
+                'userA'         => $currentUser->recordID,
                 'relationship'  => 'friend',
                 'status'        => 'ok',
                 'userB'         => $userB,
                 'published'     => time()
             );
             //save data
-            $this->Friendship->createEdge('#'.$userA, '#'.$userB, $relationship);
+            Model::get('friendship')->createEdge('#'.$currentUser->recordID, '#'.$userB, $relationship);
             //After friend is accept. The peopleYouMayKnow action will be create
-            $existPeopleYouMayKnowAction   = $this->Actions->findOne("actionElement = ?", array('peopleYouMayKnow'));
+            $existPeopleYouMayKnowAction   = $this->facade->findByAttributes('actions', array('actionElement'=>'peopleYouMayKnow'));
             if (!$existPeopleYouMayKnowAction)
             {
                 $actionRC       = array(
@@ -81,8 +80,13 @@ class FriendController extends AppController
                     'isSearch'      => 'yes',
                     'isSuggest'     => 'yes',
                 );
-                $this->Actions->create($actionRC);
+                $this->facade->save('actions', $actionRC);
             }
+            $this->f3->set('requestFriend', false);
+            $this->f3->set('addFriend', false);
+            $this->f3->set('isFriend', true);
+            $this->f3->set('toUser', $toUser);
+            $this->render('home/friend.php', 'default');
         }
     }
 
@@ -90,14 +94,27 @@ class FriendController extends AppController
     {
         if ($this->isLogin())
         {
-            $getIdUserB = $this->f3->GET("POST.id");
-            $userA      = $this->getCurrentUser()->recordID;
-            $userB      = $this->User->getClusterID().':'.$getIdUserB;
-            //update a record
-            $updateRecord   = array(
-                'status'  => 'later'
-            );
-            $this->Friendship->updateByCondition($updateRecord, "userA = ? AND userB = ?", array($userB, $userA));
+            $currentUser= $this->getCurrentUser();
+            $toUser     = str_replace('_', ':', $this->f3->get("POST.toUser"));
+            $existRequestAtoB = $this->facade->findByAttributes('friendship', array('userA'=>$currentUser->recordID, 'userB'=>$toUser));
+            $existRequestBtoA = $this->facade->findByAttributes('friendship', array('userA'=>$toUser, 'userB'=>$currentUser->recordID));
+            if (!empty($existRequestAtoB) && !empty($existRequestBtoA))
+            {
+                Model::get('friendship')->deleteEdge('#'.$currentUser->recordID, '#'.$toUser, array('userA'=>$currentUser->recordID, 'relationship'=>'friend', 'userB'=>$toUser));
+                Model::get('friendship')->deleteEdge('#'.$toUser, '#'.$currentUser->recordID, array('userA'=>$toUser, 'relationship'=>'friend', 'userB'=>$currentUser->recordID));
+            }else {
+                if (!empty($existRequestAtoB) && !$existRequestBtoA)
+                {
+                    Model::get('friendship')->deleteEdge('#'.$currentUser->recordID, '#'.$toUser, array('userA'=>$currentUser->recordID, 'relationship'=>'request', 'userB'=>$toUser));
+                }elseif (!$existRequestAtoB && !empty($existRequestBtoA)) {
+                    Model::get('friendship')->deleteEdge('#'.$toUser, '#'.$currentUser->recordID, array('userA'=>$toUser, 'relationship'=>'request', 'userB'=>$currentUser->recordID));
+                }
+            }
+            $this->f3->set('requestFriend', false);
+            $this->f3->set('addFriend', true);
+            $this->f3->set('isFriend', false);
+            $this->f3->set('toUser', $toUser);
+            $this->render('home/friend.php', 'default');
         }
     }
 }

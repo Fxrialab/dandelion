@@ -47,12 +47,14 @@ $(document).ready(function() {
     $('.taPostStatus').autosize();
     $('.taPostComment').autosize();
     //target show popUp
-//            new showPopUpOver('a.postOption', '.uiPostOptionPopUpOver');
     new showPopUpOver('a.settingOption', '.uiSettingOptionPopUpOver');
     new showPopUpOver('a.quickPostStatusNav', '.uiQuickPostStatusPopUpOver');
     new showPopUpOver('a.showRequestFriends', '.uiFriendRequestsPopUpOver');
     new showPopUpOver('a.showMessages', '.uiMessagesPopUpOver');
     new showPopUpOver('a.showNotifications', '.uiNotificationsPopUpOver');
+    new hoverShowPopUpOver('a.requestFriend', '.uiFriendOptionPopUpOver');
+    new hoverShowPopUpOver('a.respondFriendRequest', '.uiFriendOptionPopUpOver');
+    new hoverShowPopUpOver('a.isFriend', '.uiFriendOptionPopUpOver');
     $(document).click(function() {
         $('.uiPostOptionPopUpOver').hide();
         $('.uiSettingOptionPopUpOver').hide();
@@ -75,15 +77,26 @@ $(document).ready(function() {
     $('#resultsHolder').click(function(e) {
         e.stopPropagation();
     });
-    /*$('.uiBoxPostContainer').each(function(){
-     var invisible = $('.postActionWrapper > div').length;
-     console.log('count: ',invisible);
-     if (invisible > 0)
-     {
-     $('.uiStreamCommentBox').hide();
-     }
-     });*/
-
+    $('body').on('click', '.likeAction', function(){
+        var objectID = $(this).attr('id');
+        $(this).like('status', objectID);
+    });
+    $('body').on('click', '.unlikeAction', function(){
+        var objectID = $(this).attr('id');
+        $(this).unlike('status', objectID);
+    });
+    $('body').on('click', '.addFriend', function(){
+        var objectID = $(this).attr('id');
+        $(this).addFriend(objectID);
+    });
+    $('body').on('click', '.cancelRequestFriend', function(){
+        var objectID = $(this).attr('id');
+        $(this).unAccept(objectID);
+    });
+    $('body').on('click', '.confirmFriend', function(){
+        var objectID = $(this).attr('id');
+        $(this).acceptFriend(objectID);
+    });
 });
 
 //layout photo like pinterest
@@ -96,327 +109,120 @@ $(window).load(function() {
 });
 
 function showPopUpOver($click, $popUpOver) {
-    $($click).click(function() {
+    $('body').on('click', $click, function() {
         $($popUpOver).show();
         return false;
     });
 }
 
-function FollowByElement($element)
-{
-    $(document).ready(function() {
-        var Follow = 'Follow';
-        var UnFollow = 'Unfollow';
-
-        $($element).each(function()
-        {
-            var getStatusFollow = $(this).attr('name').replace('getStatus-', '');
-            $(this).data("state", {pressed: false});
-            if (getStatusFollow == 'following')
-            {
-                $(this).html(UnFollow);
-                $(this).data("state", {pressed: true});
-            }
-            if (getStatusFollow == 'null')
-            {
-                $(this).html(Follow);
-                $(this).data("state", {pressed: false});
-            }
-
-            $(this).click(function()
-            {
-                var getID = $(this).attr('id').replace('followID-', '');
-                if ($(this).data("state").pressed)
-                {
-                    $(this).html(Follow);
-                    $.ajax({
-                        type: 'POST',
-                        url: '/unFollow',
-                        data: $('#fmFollow-' + getID).serialize(),
-                        cache: false,
-                        success: function() {
-
-                        }
-                    });
-                    $(this).data("state", {pressed: false});
-                } else {
-                    $(this).html(UnFollow);
-                    $.ajax({
-                        type: 'POST',
-                        url: '/follow',
-                        data: $('#fmFollow-' + getID).serialize(),
-                        cache: false,
-                        success: function() {
-                            console.log(this);
-                        }
-                    });
-                    $(this).data("state", {pressed: true});
-                }
-            });
-        })
+function hoverShowPopUpOver($click, $popUpOver) {
+    $('body').on('mouseover', $click, function() {
+        $($popUpOver).show();
+    });
+    $('body').on('mouseout', $click, function() {
+        $($popUpOver).hide();
+    });
+    $('body').on('mouseover', $popUpOver, function() {
+        $(this).show();
+    });
+    $('body').on('mouseout', $popUpOver, function() {
+        $(this).hide();
     });
 }
-$(function() {
-    //add friend place profile area
-    var AddFriend = "Add Friend";
-    var FriendRequest = "Friend Request Sent";
-    var getStatus = $('#status_fr').attr('value');
-    if (getStatus == 'request') {
-        $('.addFriend').html(FriendRequest);
-    } else {
-        $('.addFriend').html(AddFriend);
-        $('body').on("click", '.addFriend', function() {
-            $('.addFriend').html(FriendRequest);
-            $.ajax({
-                type: 'POST',
-                url: '/sentFriendRequest',
-                data: $('#friendID').serialize(),
-                cache: false
-                        /*success : function(){
-                         alert('Request friend was sent!');
-                         }*/
-            });
-            return false;
+
+(function($){
+    $.fn.like = function(type, objectID)
+    {
+        var getNumLike = parseInt($("#numLike-" + objectID).html());
+        $.ajax({
+            type: "POST",
+            url: "/like",
+            data: {type: type, objectID: objectID},
+            cache: false,
+            success: function(html) {
+                $('.like-' + objectID).html(html);
+                $('.postItem-' + objectID).fadeIn("slow");
+                var likeSentence = $('#likeSentence-' + objectID).length;
+                $('#numLike-' + objectID).html(getNumLike + 1);
+                if (likeSentence)
+                {
+                    $("<span>You and </span>").prependTo("#likeSentence-" + objectID);
+                } else {
+                    $(".tempLike-" + objectID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + objectID + "'>" +
+                        "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
+                        "</div>");
+                }
+            }
+        });
+    };
+    $.fn.unlike = function(type, objectID)
+    {
+        var getNumLike = parseInt($("#numLike-" + objectID).html());
+        $.ajax({
+            type: "POST",
+            url: "/unlike",
+            data: {type: type, objectID: objectID},
+            cache: false,
+            success: function(html) {
+                $('.like-' + objectID).html(html);
+                $('#numLike-' + objectID).html(getNumLike - 1);
+                $('.postItem-' + objectID).fadeIn("slow");
+                var otherLike = $('#likeSentence-' + objectID + ' a').length;
+                if (otherLike)
+                {
+                    $('#likeSentence-' + objectID + ' span').remove();
+                } else {
+                    $('#likeSentence-' + objectID).detach();
+                }
+            }
         });
     }
+})(jQuery);
 
-    //accept friendship
-    $('body').on('click', '#acceptFriend', function() {
-        //alert('clicked friend');
-        var getPeopleID = $('#PeopleID').attr('value');
+(function($){
+    $.fn.addFriend = function(to)
+    {
+        $.ajax({
+            type: 'POST',
+            url: '/sentFriendRequest',
+            data: {toUser:to},
+            cache: false,
+            success : function(html){
+                $('.uiActionUser').html(html);
+            }
+        });
+    };
+    $.fn.acceptFriend = function(to)
+    {
         $.ajax({
             type: 'POST',
             url: '/acceptFriendship',
-            data: $('#RequestOfID-' + getPeopleID).serialize(),
+            data: {toUser:to},
             cache: false,
-            success: function() {
-                $('#people-' + getPeopleID).hide('slow');
+            success : function(html){
+                $('.uiActionUser').html(html);
             }
         });
-
-    });
-    //unaccept friendship
-    $('body').on('click', '#cancelFriend', function() {
-        var getPeopleID = $('#PeopleID').attr('value');
-        //alert(getPeopleID);
+    };
+    $.fn.unAccept = function(to)
+    {
         $.ajax({
             type: 'POST',
             url: '/unAcceptFriendship',
-            data: $('#RequestOfID-' + getPeopleID).serialize(),
+            data: {toUser:to},
             cache: false,
-            success: function() {
-                $('#people-' + getPeopleID).hide('slow');
+            success : function(html){
+                $('.uiActionUser').html(html);
             }
         });
-    });
-});
-
-function IsActionsForSuggest()
-{
-    $(document).ready(function() {
-        var friendRequest = 'Friend request sent';
-        //for add friend of people you may know
-        $('.uiAddFriend').each(function()
-        {
-            $('body').on('click', '.uiAddFriend', function(e)
-            {
-                e.preventDefault();
-                var yourFriendID = $('.uiAddFriend').attr('id');
-                console.log(yourFriendID);
-                $(this).html(friendRequest);
-                $.ajax({
-                    type: 'POST',
-                    url: '/sentFriendRequest',
-                    data: {id: yourFriendID},
-                    cache: false,
-                    success: function() {
-                        $('#unit' + yourFriendID).fadeOut(1000);
-                        var existPeopleYMK = $('.uiBoxPeopleYouMayKnow .rowItemBox').length;
-                        if (existPeopleYMK < 1)
-                            $('.uiBoxPeopleYouMayKnow').hide();
-                    }
-                });
-            })
-        });
-        //for confirm friend of friend requests
-        $('.confirmFriend').each(function()
-        {
-            $('body').on('click', '.confirmFriend', function(e)
-            {
-                e.preventDefault();
-                var friendRequestID = $('.confirmFriend').attr('id');
-                $.ajax({
-                    type: 'POST',
-                    url: '/acceptFriendship',
-                    data: {id: friendRequestID},
-                    cache: false,
-                    success: function() {
-                        $('#unit' + friendRequestID).fadeOut(1000);
-                        var existFriendRequests = $('.uiBoxFriendRequests .rowItemBox').length;
-                        if (existFriendRequests < 1)
-                            $('.uiBoxFriendRequests').hide();
-                    }
-                });
-            })
-        })
-    });
-}
-
-function LikePostByElement($element)
-{
-    $(document).ready(function() {
-        var Like = 'Like';
-        var UnLike = 'Unlike';
-
-        $($element).each(function()
-        {
-
-            var getLikeStatus = $(this).attr('name').replace('likeStatus-', '');
-            var getPostID = $(this).attr('id').replace('likeLinkID-', '');
-            var getNumLike = parseInt($("#numLikeValue-" + getPostID).val());
-            $(this).data("state", {pressed: false});
-            if (getLikeStatus == 'like')
-            {
-                $(this).html(UnLike);
-                $(this).data("state", {pressed: true});
-            }
-            if (getLikeStatus == 'null')
-            {
-                $(this).html(Like);
-                $(this).data("state", {pressed: false});
-            }
-
-            $(this).click(function()
-            {
-                var getID = $(this).attr('id').replace('likeLinkID-', '');
-                console.log('ID: ', getID);
-                if ($(this).data("state").pressed)
-                {
-                    $(this).html(Like);
-                    console.log('come here');
-                    $.ajax({
-                        type: 'POST',
-                        url: '/unlike',
-                        data: $('#likeHiddenID-' + getID).serialize(),
-                        cache: false,
-                        success: function() {
-                            //console.log('ok men');
-                            var otherLike = $('#likeSentence-' + getID + ' a').length;
-                            if (getNumLike == 0)
-                                $('#numLike-' + getPostID).html(0);
-                            else
-                                $('#numLike-' + getPostID).html(getNumLike - 1);
-                            //console.log('otherLike: ', otherLike);
-                            if (otherLike)
-                            {
-                                $('#likeSentence-' + getID + ' span').remove();
-                            } else {
-                                $('#likeSentence-' + getID).detach();
-                            }
-                        }
-                    });
-                    $(this).data("state", {pressed: false});
-                } else {
-                    $(this).html(UnLike);
-                    $.ajax({
-                        type: 'POST',
-                        url: '/like',
-                        data: $('#likeHiddenID-' + getID).serialize(),
-                        cache: false,
-                        success: function() {
-                            $('.postItem-' + getID).fadeIn("slow");
-                            var likeSentence = $('#likeSentence-' + getID).length;
-                            $('#numLike-' + getPostID).html(getNumLike + 1);
-                            //console.log('likeSentence: ', likeSentence);
-                            if (likeSentence)
-                            {
-                                $("<span>You and </span>").prependTo("#likeSentence-" + getID);
-                            } else {
-                                $(".tempLike-" + getID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + getID + "'>" +
-                                        "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
-                                        "</div>");
-                            }
-                        }
-                    });
-                    $(this).data("state", {pressed: true});
-                }
-            });
-        })
-    });
-}
-
-function LikePhotoByElement($element)
-{
-    $($element).each(function() {
-        var getLikeStatus = $(this).attr('title');
-        $(this).data("state", {pressed: false});
-        if (getLikeStatus == 'Like')
-        {
-            $(this).addClass('photoNavIcon-like');
-            $(this).data("state", {pressed: false});
-        } else {
-            $(this).addClass('photoNavIcon-unlike');
-            $(this).data("state", {pressed: true});
-        }
-        $(this).click(function(e)
-        {
-            e.preventDefault();
-            var getID = $(this).attr('id').replace('likePhoto-', '');
-
-            if ($(this).data("state").pressed)
-            {
-                $.ajax({
-                    type: 'POST',
-                    url: '/unlike',
-                    data: $('#likeHiddenID-' + getID).serialize(),
-                    cache: false,
-                    success: function() {
-                        var otherLike = $('#likeSentence-' + getID + ' a').length;
-                        if (otherLike)
-                        {
-                            $('#likeSentence-' + getID + ' span').remove();
-                        } else {
-                            $('#likeSentence-' + getID).detach();
-                        }
-                    }
-                });
-                $(this).removeClass('photoNavIcon-unlike');
-                $(this).addClass('photoNavIcon-like');
-                $(this).data("state", {pressed: false});
-            } else {
-                $.ajax({
-                    type: 'POST',
-                    url: '/like',
-                    data: $('#likeHiddenID-' + getID).serialize(),
-                    cache: false,
-                    success: function() {
-                        $('.photoItem-' + getID).fadeIn("slow");
-                        var likeSentence = $('#likeSentence-' + getID).length;
-                        if (likeSentence)
-                        {
-
-                            $("<span>You and </span>").prependTo("#likeSentence-" + getID);
-                        } else {
-                            $(".tempLike-" + getID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + getID + "'>" +
-                                    "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
-                                    "</div>");
-                        }
-                    }
-                });
-                $(this).removeClass('photoNavIcon-like');
-                $(this).addClass('photoNavIcon-unlike');
-                $(this).data("state", {pressed: true});
-            }
-        });
-    });
-}
+    };
+})(jQuery);
 
 $(document).ready(function()
 {
     $('#search').keyup(function()
     {
         var searchText = $(this).val();
-        //console.log('searchText:',searchText);
         if (searchText != '')
         {
             $.ajax({
@@ -486,85 +292,3 @@ function moreComment(id) {
         }
     })
 }
-/**
- * l
- */
-function Like(type, objectID)
-{
-    var getNumLike = parseInt($("#numLike-" + objectID).html());
-    $.ajax({
-        type: "POST",
-        url: "/like",
-        data: {type: type, objectID: objectID},
-        cache: false,
-        success: function(html) {
-            $('.like-' + objectID).html(html);
-            $('.postItem-' + objectID).fadeIn("slow");
-            //console.log('owner: ',ownerID,' current: ',currentUserID);
-            var likeSentence = $('#likeSentence-' + objectID).length;
-            $('#numLike-' + objectID).html(getNumLike + 1);
-            if (likeSentence)
-            {
-                $("<span>You and </span>").prependTo("#likeSentence-" + objectID);
-            } else {
-                $(".tempLike-" + objectID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + objectID + "'>" +
-                    "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
-                    "</div>");
-            }
-        }
-    })
-}
-function Unlike(type, objectID)
-{
-    var getNumLike = parseInt($("#numLike-" + objectID).html());
-    $.ajax({
-        type: "POST",
-        url: "/unlike",
-        data: {type: type, objectID: objectID},
-        cache: false,
-        success: function(html) {
-            $('.like-' + objectID).html(html);
-            $('#numLike-' + objectID).html(getNumLike - 1);
-            $('.postItem-' + objectID).fadeIn("slow");
-            var otherLike = $('#likeSentence-' + objectID + ' a').length;
-            if (otherLike)
-            {
-                $('#likeSentence-' + objectID + ' span').remove();
-            } else {
-                $('#likeSentence-' + objectID).detach();
-            }
-        }
-    })
-}
-//$(document).ready(function() {
-//    $(".oembed5").oembed(null,
-//            {
-//                embedMethod: "append",
-//                maxWidth: 1024,
-//                maxHeight: 768,
-//                autoplay: false
-//            });
-//    $(window).scroll(function() {
-//        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-//            $('.uiMoreView').show();
-//            var published = $(".uiBoxPostItem:last .uiBoxPostContainer .uiPostContent .articleSelectOption").find('.swTimeStatus').attr("name");
-//            var existNoMoreActivity = $('.noMoreActivity').length;
-//            if (existNoMoreActivity < 1)
-//            {
-//                $.ajax({
-//                    type: "POST",
-//                    url: "/morePostHome",
-//                    data: {published: published},
-//                    cache: false,
-//                    success: function(html) {
-//                        $("#contentContainer").append(html);
-//                        $('.uiMoreView').hide();
-//                    }
-//                });
-//            } else {
-//                $('.uiMoreView').hide();
-//            }
-//        }
-//    });
-//});
-

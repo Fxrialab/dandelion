@@ -10,7 +10,7 @@ $currentUserName= ucfirst($currentUser->data->firstName)." ".ucfirst($currentUse
 
 if($otherUserID != $currentUserID)
 {
-    $rpOtherUserID  = substr($otherUserID, strpos($otherUserID, ':') + 1);
+    $rpOtherUserID  = str_replace(':', '_', $otherUserID);
 ?>
     <div class="uiCoverTimeLineContainer">
         <div class="uiCoverTimeLine">
@@ -44,25 +44,55 @@ if($otherUserID != $currentUserID)
             <div class="uiProfileInfoTimeLine column-group">
                 <div class="profileInfoDiv large-50">
                     <p class="profileName"><a class="tlProfileLink large-100" href=""><?php echo $otherUserName; ?></a></p>
-                    <?php
-                    if ($statusFriendShip == 'request' || $statusFriendShip == 'null'){
-                    ?>
-                        <form id="friendID">
-                            <input type="hidden" value="<?php echo $rpOtherUserID; ?>" name="id">
-                            <input type="hidden" id="status_fr" value="<?php echo $statusFriendShip; ?>" name="status_fr">
-                            <button class="addFriend uiMediumButton orange linkHover-fffff" type="submit"></button>
-                        </form>
-                    <?php
-                    }else {
-                    ?>
-                        <form id="friendID">
-                            <input type="hidden" value="<?php echo $rpOtherUserID; ?>" name="id">
-                            <input type="hidden" id="status_fr" value="<?php echo $statusFriendShip; ?>" name="status_fr">
-                            <button class="friend uiMediumButton orange linkHover-fffff" type="submit">Friend</button>
-                        </form>
-                    <?php
-                    }
-                    ?>
+                    <div class="uiActionUser">
+                        <?php
+                        if ($statusFriendShip == 'request' || $statusFriendShip == 'later' || $statusFriendShip == 'addFriend')
+                        {
+                            if ($statusFriendShip == 'request' || $statusFriendShip == 'later')
+                            {
+                                ?>
+                                <a class="requestFriend uiMediumButton orange linkHover-fffff">Friend Request Sent</a>
+                                <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
+                                    <nav class="ink-navigation">
+                                        <ul class="menu vertical">
+                                            <li><a>Report/Block</a></li>
+                                            <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Cancel Request</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            <?php
+                            }else {
+                                ?>
+                                <a class="addFriend uiMediumButton orange linkHover-fffff" id="<?php echo $rpOtherUserID; ?>">Add Friend</a>
+                            <?php
+                            }
+                        }elseif ($statusFriendShip == 'respondRequest') {
+                            ?>
+                            <a class="respondFriendRequest uiMediumButton orange linkHover-fffff">Respond to Friend Request</a>
+                            <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
+                                <nav class="ink-navigation">
+                                    <ul class="menu vertical">
+                                        <li><a class="confirmFriend" id="<?php echo $rpOtherUserID; ?>">Confirm Friend</a></li>
+                                        <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unaccept Request</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        <?php
+                        }else {
+                            ?>
+                            <a class="isFriend uiMediumButton orange linkHover-fffff">Friend</a>
+                            <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
+                                <nav class="ink-navigation">
+                                    <ul class="menu vertical">
+                                        <li><a>Report/Block</a></li>
+                                        <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unfriend</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
                 </div>
                 <div class="viewBox large-50 push-right">
                     <div class="friendsBox">
