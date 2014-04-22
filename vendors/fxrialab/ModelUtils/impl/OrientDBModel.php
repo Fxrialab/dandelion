@@ -209,6 +209,32 @@ class OrientDBModel implements IDataModel
     }
 
     /**
+     * @param $sourceID
+     * @param $destinationID
+     * @param array|null $data
+     * @return mixed
+     */
+    public function createEdge($sourceID, $destinationID, $data = null)
+    {
+        $sql = "CREATE EDGE " . $this->_className . " FROM " . $sourceID . " TO " . $destinationID;
+        if (is_array($data) && count($data) > 0)
+        {
+            $sql = $sql . " SET ";
+            foreach ($data as $key => $value) {
+                $sql = $sql . ' ' . $key . " = " . "'" . $this->SecurityHelper->postIn($value) . "',";
+            }
+            $sql = substr($sql, 0, -1);
+        }
+        $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
+        return $queryResult;
+    }
+
+    public function deleteEdge($sourceID, $desID, $data = null)
+    {
+
+    }
+
+    /**
      * @param string $command
      * @param array|null $arrays
      * @return array|bool
@@ -240,6 +266,7 @@ class OrientDBModel implements IDataModel
             {
                 $stringResult = $this->getString($queryResult);
                 $result = $this->getContentResult($stringResult, $this->_className);
+                //var_dump($stringResult);
                 return $result;
             }else
                 return false;
@@ -298,8 +325,9 @@ class OrientDBModel implements IDataModel
 
                         $arrayResult = $obj[$i];
                     } else {
-                        $replace[$i] = str_replace(array('"', '[', ']'), '', $resultGremlin[$i]);
-                        $arrayResult = explode(',', $replace[$i]);
+                        /*$replace[$i] = str_replace(array('"', '[', ']'), '', $resultGremlin[$i]);
+                        $arrayResult = explode(',', $replace[$i]);*/
+                        return false;
                     }
                 }
             }
