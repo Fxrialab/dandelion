@@ -11,7 +11,7 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '')
             foreach ($randomKeys as $key)
             {
                 $randYourFriend         = $requestUserArrays[$key];
-                $friendRequestID        = substr($randYourFriend, strpos($randYourFriend, ':') + 1);
+                $friendRequestID        = str_replace(':', '_', $randYourFriend);
                 $requestProfile         = $infoRequestUser[$randYourFriend][0]->username;
                 $requestUserName        = ucfirst($infoRequestUser[$randYourFriend][0]->firstName)." ".$infoRequestUser[$randYourFriend][0]->lastName;
                 $requestUserProfilePic  = $infoRequestUser[$randYourFriend][0]->profilePic;
@@ -23,7 +23,7 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '')
                     <div class="profileInfoDiv large-70">
                         <p class="timeLineName fixMarginBottom-5"><a class="timeLineLink large-100" href="/content/myPost?username=<?php echo $requestProfile;?>"><?php echo $requestUserName; ?></a></p>
                         <?php
-                        if ($numMutualFriends[$randYourFriend] != null)
+                        if (!empty($numMutualFriends[$randYourFriend]))
                         {
                             $numberMutualFriend     = count($numMutualFriends[$randYourFriend]);
                             ?>
@@ -31,7 +31,7 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '')
                         <?php
                         }
                         ?>
-                        <a href="" class="confirmFriend uiSmallButton orange linkHover-fffff" id="<?php echo $friendRequestID; ?>"><i></i>Confirm friend</a>
+                        <a class="confirmFriend uiSmallButton orange linkHover-fffff" id="<?php echo $friendRequestID; ?>"><i></i>Confirm friend</a>
                     </div>
                 </div>
             <?php

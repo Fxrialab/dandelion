@@ -1,10 +1,4 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-/*$(".autoloadModuleElement").ready(function()
+$(".autoloadModuleElement").ready(function()
 {
     $.ajax({
         type: "GET",
@@ -28,7 +22,7 @@
                 cache: false,
                 success: function(html) {
                     $(".autoloadModuleElement").html(html);
-                    new IsActionsForSuggest();
+                    //new IsActionsForSuggest();
                     var existFriendRequests = $('.uiBoxFriendRequests .rowItemBox').length;
                     if (existFriendRequests < 1)
                         $('.uiBoxFriendRequests').hide();
@@ -40,7 +34,7 @@
             })
         }
     })
-});*/
+});
 
 
 $(document).ready(function() {

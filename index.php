@@ -1,3 +1,3 @@
 <?php
-	require_once('apps/config/core.php');
+	require_once('apps/config/Core.php');
 ?>

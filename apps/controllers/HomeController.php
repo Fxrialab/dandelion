@@ -78,19 +78,22 @@ class HomeController extends AppController
         }
     }
 
-    public function pull() {
-        if ($this->isLogin()) {
-            $listActionsForSuggest = Model::get('activity')->findByAttributes(array("isSuggest =>yes"));
+    public function pull()
+    {
+        if ($this->isLogin())
+        {
+            $listActionsForSuggest = $this->facade->findAllAttributes('actions', array("isSuggest" =>"yes"));
             $actionIDArrays = array();
             $actionElement = array();
-            if ($listActionsForSuggest) {
+            if (!empty($listActionsForSuggest))
+            {
                 foreach ($listActionsForSuggest as $listAction) {
                     array_push($actionIDArrays, $listAction->recordID);
                 }
 
                 $randomKeys = $this->randomKeys($actionIDArrays, 'randomSuggestElement');
                 foreach ($randomKeys as $key) {
-                    $suggestAction[$actionIDArrays[$key]] = Model::get('actions')->findByCondition("isSuggest = 'yes' AND @rid = '" . $actionIDArrays[$key] . "'");
+                    $suggestAction[$actionIDArrays[$key]] = $this->facade->findAllAttributes('actions', array("isSuggest" =>"yes", "@rid"=>$actionIDArrays[$key]));
                     array_push($actionElement, $suggestAction[$actionIDArrays[$key]][0]->data->actionElement);
                 }
                 //check if suggest by friend request is null. Will not return to load element
@@ -100,10 +103,13 @@ class HomeController extends AppController
         }
     }
 
-    public function loadSuggest() {
-        if ($this->isLogin()) {
+    public function loadSuggest()
+    {
+        if ($this->isLogin())
+        {
             $actionArrays = $this->f3->get('POST.actionsName');
-            if ($actionArrays) {
+            if (!empty($actionArrays))
+            {
                 foreach ($actionArrays as $action) {
                     $this->suggest($action);
                 }
@@ -124,6 +130,7 @@ class HomeController extends AppController
             );
             $command = $this->getSearchCommand(array('firstName', 'lastName', 'fullName'), $searchText);
             $result = Model::get('user')->callGremlin($command);
+
             if (!empty($result))
             {
                 foreach ($result as $people)
