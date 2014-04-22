@@ -315,7 +315,6 @@ $(function() {
     }
 })( jQuery );
 
-
 function getNextPhotoIndex(currentIndex, countPhotos)
 {
     return ((currentIndex + 1) % countPhotos);
@@ -417,7 +416,7 @@ $(function() {
             }
         });
     });
-    new LikePhotoByElement('.likePhotoSegments');
+    //new LikePhotoByElement('.likePhotoSegments');
     //Click to image for view
     $('.viewThisPhoto').each(function(){
         $(this).click(function(e)

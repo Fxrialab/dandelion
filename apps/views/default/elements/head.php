@@ -4,9 +4,6 @@
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>reset.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>main.css" type="text/css" />
-    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>popbox.css" type="text/css" />
-    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>jquery-ui-1.8.custom.css" type="text/css" />
-    <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>autocomplete.css" type="text/css" />
     <!--[if IE 7 ]>
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink-ie7.css" type="text/css" media="screen"
           title="no title">
@@ -25,13 +22,6 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/dropDownStyle.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/init.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>/infinitescroll.js"></script>
-    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>/jquery-ui-1.8.custom.min.js"></script>
-    <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>/jquery.leanModal.min.js"></script>
-    <script type="text/javascript">
-        new LikePostByElement('.likeSegments');
-        new FollowByElement('.followPostSegments');
-
-    </script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/general.js"></script>
     <script type="text/javascript">
         jQuery.fn.center = function() {
@@ -40,8 +30,5 @@
             this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
             return this;
         };
-
-
-
     </script>
 </head>

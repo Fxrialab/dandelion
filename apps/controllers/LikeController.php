@@ -52,7 +52,6 @@ class LikeController extends AppController
             $currentUser= $this->getCurrentUser();
             $type       = $this->f3->get("POST.type");
             $objectID   = str_replace('_', ':', $this->f3->get("POST.objectID"));
-            $published  = time();
             //find id of record then delete record
             if (!empty($type) && !empty($objectID))
             {

@@ -75,9 +75,9 @@ $status_published       = $status->data->published;
                                 <?php
                                 if ($like == TRUE) {
                                     ?>
-                                    <a href="javascript:void(0)" onclick="Unlike('status','<?php echo $rpStatusID; ?>')" title="Unlike post">Unlike</a>
+                                    <a class="unlikeAction" id="<?php echo $rpStatusID; ?>" title="Unlike post">Unlike</a>
                                 <?php } else { ?>
-                                    <a href="javascript:void(0)" onclick="Like('status','<?php echo $rpStatusID; ?>')" title="Like post">Like</a>
+                                    <a class="likeAction" id="<?php echo $rpStatusID; ?>" title="Like post">Like</a>
                                 <?php } ?>
                             </li>
                             <li class="gapArticleActions">.</li>
