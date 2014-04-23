@@ -71,23 +71,23 @@ $(document).ready(function() {
     $('#resultsHolder').click(function(e) {
         e.stopPropagation();
     });
-    $('body').on('click', '.likeAction', function(){
+    $('body').on('click', '.likeAction', function() {
         var objectID = $(this).attr('id');
         $(this).like('status', objectID);
     });
-    $('body').on('click', '.unlikeAction', function(){
+    $('body').on('click', '.unlikeAction', function() {
         var objectID = $(this).attr('id');
         $(this).unlike('status', objectID);
     });
-    $('body').on('click', '.addFriend', function(){
+    $('body').on('click', '.addFriend', function() {
         var objectID = $(this).attr('id');
         $(this).addFriend(objectID);
     });
-    $('body').on('click', '.cancelRequestFriend', function(){
+    $('body').on('click', '.cancelRequestFriend', function() {
         var objectID = $(this).attr('id');
         $(this).unAccept(objectID);
     });
-    $('body').on('click', '.confirmFriend', function(){
+    $('body').on('click', '.confirmFriend', function() {
         var objectID = $(this).attr('id');
         $(this).acceptFriend(objectID);
     });
@@ -124,7 +124,7 @@ function hoverShowPopUpOver($click, $popUpOver) {
     });
 }
 
-(function($){
+(function($) {
     $.fn.like = function(type, objectID)
     {
         var getNumLike = parseInt($("#numLike-" + objectID).html());
@@ -143,8 +143,8 @@ function hoverShowPopUpOver($click, $popUpOver) {
                     $("<span>You and </span>").prependTo("#likeSentence-" + objectID);
                 } else {
                     $(".tempLike-" + objectID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + objectID + "'>" +
-                        "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
-                        "</div>");
+                            "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
+                            "</div>");
                 }
             }
         });
@@ -173,15 +173,15 @@ function hoverShowPopUpOver($click, $popUpOver) {
     }
 })(jQuery);
 
-(function($){
+(function($) {
     $.fn.addFriend = function(to)
     {
         $.ajax({
             type: 'POST',
             url: '/sentFriendRequest',
-            data: {toUser:to},
+            data: {toUser: to},
             cache: false,
-            success : function(html){
+            success: function(html) {
                 $('.uiActionUser').html(html);
             }
         });
@@ -191,9 +191,9 @@ function hoverShowPopUpOver($click, $popUpOver) {
         $.ajax({
             type: 'POST',
             url: '/acceptFriendship',
-            data: {toUser:to},
+            data: {toUser: to},
             cache: false,
-            success : function(html){
+            success: function(html) {
                 $('.uiActionUser').html(html);
             }
         });
@@ -203,9 +203,9 @@ function hoverShowPopUpOver($click, $popUpOver) {
         $.ajax({
             type: 'POST',
             url: '/unAcceptFriendship',
-            data: {toUser:to},
+            data: {toUser: to},
             cache: false,
-            success : function(html){
+            success: function(html) {
                 $('.uiActionUser').html(html);
             }
         });
@@ -286,3 +286,174 @@ function moreComment(id) {
         }
     })
 }
+$(function() {
+    $("#submitStatus").click(function(e)
+    {
+        e.preventDefault();
+        var status = $("#status").val();
+        var profileID = $("#profileID").val();
+        var fullURL = $("#fullURL").html();
+        var taggedType = $("#taggedType").val();
+        var URL = (fullURL == 'undefined') ? 'none' : fullURL;
+        var imgID = $("#imgID").val();
+        if (status == '')
+        {
+            return false;
+        }
+        else
+        {
+            $.ajax({
+                type: "POST",
+                url: "/content/post/postStatus",
+                data: {status: status, profileID: profileID, fullURL: URL, taggedType: taggedType, imgID: imgID},
+                cache: false,
+                success: function(html) {
+                    $('#tagElements').css('display', 'none');
+                    $("#contentContainer").prepend(html);
+                    $('.photoWrap').remove();
+                    $('#imgID').val();
+                    $('#status').val('');
+                    new LikePostByElement('.likePostStatus');
+                    new FollowByElement('.followSegments');
+                    updateTime();
+                }
+            });
+        }
+        return false;
+    });
+
+    $("body").on("click", "a.commentBtn", function(e) {
+        e.preventDefault();
+        var getId = $(this).attr('id').replace('stream-', '');
+        $('.postItem-' + getId).fadeIn("slow");
+        $('#commentBox-' + getId).fadeIn("slow");
+        $('#textComment-' + getId).focus();
+    }
+    );
+
+
+});
+
+$(document).ready(function()
+{
+    var settingSingleFile = {
+        url: "/content/photo/loadingPhoto",
+        method: "POST",
+        allowedTypes: "jpg,png,gif",
+        fileName: "myfile",
+        multiple: false,
+        onSuccess: function(files, data, xhr)
+        {
+            $('.ajax-file-upload-statusbar').fadeOut('slow');
+            $.each(data.results, function() {
+                console.log(this.url);
+                $('#displayPhotos').append("<form class='photoDataItems' id='photoItems-" + this.photoID + "'>" +
+                        "<div class='photoWrap'>" +
+                        "<div class='loadedPhoto' id='photo" + this.photoID + "'>" +
+                        "<div class='wrapperHoverDelete removeImg' title='Remove' id='removePhoto" + this.photoID + "'></div>" +
+                        "<img src='" + this.url + "' title='" + this.fileName + "'/>" +
+                        "</div> " +
+                        "<div class='writeSomething'>" +
+                        "<textarea rows='4' id='someThingAboutPhoto-" + this.photoID + "' spellcheck='false' placeholder='Write something about this photo'></textarea>" +
+                        "</div>" +
+                        "</div>" +
+                        "</form>");
+//                $('#removePhoto'+this.photoID).click(function(){
+//                    var photoID = $(this).attr('id').replace('removePhoto','');
+//                    console.log(photoID);
+//                    $.ajax({
+//                        type: 'POST',
+//                        url: '/content/photo/removePhoto',
+//                        data: {photoID: photoID},
+//                        cache: false,
+//                        success: function(){
+//                            $('#photoItems-'+photoID).detach();
+//                        }
+//                    });
+//                });
+            });
+            new Hover();
+        },
+        onError: function(files, status, errMsg)
+        {
+            $("#status").html("<font color='red'>Upload is Failed</font>");
+        }
+    };
+    var settingMultiFiles = {
+        url: "/content/photo/loadingPhoto",
+        method: "POST",
+        allowedTypes: "jpg,png,gif",
+        fileName: "myfile",
+        multiple: true,
+        onSuccess: function(files, data, xhr)
+        {
+            $('.ajax-file-upload-statusbar').fadeOut('slow');
+            $.each(data.results, function() {
+                console.log(this.url);
+                $('#imgID').append(this.photoID + ',');
+                $('#displayPhotos').append("<div class='photoWrap' id='photoItem-" + this.photoID + "'>" +
+                        "<input type='hidden' id ='imgID' name='imgID[]' value='" + this.photoID + "'/>" +
+                        "<img src='" + this.url + "' title='" + this.fileName + "'/>" +
+                        "</div>");
+                $('#removePhoto' + this.photoID).click(function() {
+                    var photoID = $(this).attr('id').replace('removePhoto', '');
+                    console.log(photoID);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/content/photo/removePhoto',
+                        data: {photoID: photoID},
+                        cache: false,
+                        success: function() {
+                            $('#photoItems-' + photoID).detach();
+                        }
+                    });
+                });
+            });
+            new Hover();
+        },
+        onError: function(files, status, errMsg)
+        {
+            $("#status").html("<font color='red'>Upload is Failed</font>");
+        }
+    };
+    var settingMultiFiles2 = {
+        url: "/content/photo/loadingPhoto",
+        method: "POST",
+        allowedTypes: "jpg,png,gif",
+        fileName: "myfile",
+        multiple: true,
+        onSuccess: function(files, data, xhr)
+        {
+            $('.ajax-file-upload-statusbar').fadeOut('slow');
+            $.each(data.results, function() {
+                console.log(this.url);
+                $('#displayPhotos').append("<div class='photoWrap' id='photoItem" + this.photoID + "'>" +
+                        "<div class='loadedPhoto' id='photo" + this.photoID + "'>" +
+                        "<img src='" + this.url + "' title='" + this.fileName + "'/>" +
+                        "</div> " +
+                        "</div>");
+                $('#removePhoto' + this.photoID).click(function() {
+                    var photoID = $(this).attr('id').replace('removePhoto', '');
+                    console.log(photoID);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/content/photo/removePhoto',
+                        data: {photoID: photoID},
+                        cache: false,
+                        success: function() {
+                            $('#photoItems-' + photoID).detach();
+                        }
+                    });
+                });
+            });
+            new Hover();
+        },
+        onError: function(files, status, errMsg)
+        {
+            $("#status").html("<font color='red'>Upload is Failed</font>");
+        }
+    };
+    $("#singleFile").uploadFile(settingSingleFile);
+    $("#multiFiles").uploadFile(settingMultiFiles);
+    $("#multiFiles2").uploadFile(settingMultiFiles2);
+});

@@ -1,11 +1,5 @@
 
-<?php
-foreach ($js as $jshome) {
-    ?>
-    <script type="text/javascript" src="<?php echo $jshome; ?>"></script>
-    <?php
-}
-?>
+
 <script>
     $(document).ready(function() {
 
@@ -20,7 +14,10 @@ foreach ($js as $jshome) {
                     // but will still load if the user clicks.
 
         });
+        $('#typeActivity').html('<input type=hidden id=type name=type value=post >');
     });
+
+
 </script>
 <style>
     #uploaded_images {width: 800px;margin: 0 auto}
@@ -30,13 +27,18 @@ foreach ($js as $jshome) {
 
 <div class="uiMainContainer">
     <?php
-    AppController::elementModules('postWrap', 'post');
+    FactoryUtils::element('formPost', array('module' => 'post'))
     ?>
-    <input name="profileID" id="profileID" type="hidden" value="<?php echo $currentProfileID; ?>">
+    <!--<div id ="content"></div>-->
     <div class="wrapperContainer">
+
         <div id="contentContainer">
 
+        </div><!--
+        <div class="uiMoreView content-center">
+            <div class="loading uiLoadingIcon"></div>
         </div>
+    </div>-->
         <!--Other part-->
         <div id="fade" class="black_overlay"></div>
         <div class="uiShare uiPopUp"></div>
@@ -49,4 +51,3 @@ foreach ($js as $jshome) {
             </div>
         </div>
     </div>
-</div>

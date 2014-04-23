@@ -1,6 +1,7 @@
 <?php
 $rand = rand(100, 100000);
 ?>
+
 <div class="ink-tabs top"> <!-- Creates a tabbed view with top nav -->
     <ul class="tabs-nav">
         <li><a href="#item1"><img src="<?php echo IMAGES; ?>status.png"> Status</a></li> <!-- Points to item 1 below -->
@@ -28,7 +29,7 @@ $rand = rand(100, 100000);
                                 <ul class="menu horizontal">
                                     <li>
                                         <input name="album_id" id="albumID" value="none" type="hidden">
-                                        <div id="multiFiles">Select Files</div>
+                                        <div id="multiFiles">Upload Images</div>
                                     </li>
                                     <li class="lineGapPostOption">|</li>
                                     <li><a href="#" title="Paste a video link"><img src="<?php echo IMAGES; ?>uploadVideoIcon.png"></a></li>
@@ -62,3 +63,6 @@ $rand = rand(100, 100000);
     </div>
 </div>
 <!--Other part-->
+<script>
+
+</script>
