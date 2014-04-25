@@ -10,7 +10,7 @@ $rand = rand(100, 100000);
     <div id="item1" class="tabs-content"> <!-- Item 1 -->
         <div class="uiPostArea column-group">
             <div class="uiPostStatusArea">
-                <form class="ink-form">
+                <form class="ink-form" id="submitFormStatus">
                     <div id="tagElements"></div>
                     <fieldset>
                         <div class="control-group">
@@ -33,7 +33,7 @@ $rand = rand(100, 100000);
                                     </li>
                                     <li class="lineGapPostOption">|</li>
                                     <li><a href="#" title="Paste a video link"><img src="<?php echo IMAGES; ?>uploadVideoIcon.png"></a></li>
-                                    <li class="fixRightFloat"><a id="submitStatus" class="uiMediumButton blue">Post</a></li>
+                                    <li class="fixRightFloat"><button class="uiMediumButton blue">Post</button></li>
                                 </ul>
                             </nav>
                         </div>
@@ -64,5 +64,21 @@ $rand = rand(100, 100000);
 </div>
 <!--Other part-->
 <script>
+$("#submitFormStatus").submit(function() {
+    $.ajax({
+        type: "POST",
+        url: "/content/post/postStatus",
+        data: $("#submitFormStatus").serialize(), // serializes the form's elements.
+        success: function(html)
+        {
+            $('#tagElements').css('display', 'none');
+            $("#contentContainer").prepend(html);
+            $('.photoWrap').remove();
+            $('#imgID').val();
+            $('#status').val('');
+        }
+    });
 
+    return false; // avoid to execute the actual submit of the form.
+});
 </script>
