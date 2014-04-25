@@ -185,10 +185,8 @@ class PhotoController extends AppController
                         'statusUpload' => 'uploaded',
                         'published' => ''
                     );
-                    Model::get('photo')->create($entry);
-                    //get recordID of each photo for pass other info
+                    $this->facade->save('photo',$entry);
                     $infoPhotoRC = $this->facade->findByAttributes('photo', array('actor' => $currentUser->recordID, 'statusUpload' => 'uploaded'));
-//                    $infoPhotoRC    = $this->Photo->findOne("actor = ? AND statusUpload = 'uploading'", array($currentUser->recordID));
 
                     $data['results'][] = array(
                         'photoID' => str_replace(':', '_', $infoPhotoRC->recordID),
