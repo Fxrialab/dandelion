@@ -56,9 +56,9 @@ class RouteConfig {
 
     public $modules = array(
         /* Route config for modules */
-        'myPost_post' => "PostController,homePost",
-        'myQA_qanda' => "qandaController,homeQA",
-        'myPhoto_photo' => "photoController,homePhoto",
+        'myPost_post' => "PostController",
+        'group_group' => "GroupController",
+        'myPhoto_photo' => "photoController",
     );
 
 }

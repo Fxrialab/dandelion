@@ -139,7 +139,7 @@ class AppController extends Controller
     // **********************************
     // Track activity
     // **********************************
-    public function trackActivity($actor, $verb, $object, $published)
+    public function trackActivity($actor, $verb, $object, $type, $typeID, $published)
     {
         $checkActivity = $this->facade->findAllAttributes('activity', array('owner'=>$actor->recordID, 'object'=>$object));
         $findUserBOfFollow = $this->facade->findByPk('follow', $actor->recordID);
@@ -151,7 +151,8 @@ class AppController extends Controller
                 'actor' => $actorID,
                 'verb' => $verb,
                 'object' => $object,
-                'type' => 'post',
+                'type' => $type,
+                'typeID' => $typeID,
                 'idObject' => $object,
                 'published' => $published
             );
