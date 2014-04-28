@@ -16,7 +16,6 @@ class UserController extends AppController
 
         if (isset($data['emailSignUp']))
         {
-            $userModel = Model::get('user');
             //check email field has existed in DB
             $isUsedEmail = $this->facade->findByAttributes("user", array('email'=>$data["emailSignUp"]));
             //data is alright, create new user then send confirmation code to email
@@ -150,7 +149,7 @@ class UserController extends AppController
                             setcookie('email', $email, time() - 3600);
                             setcookie('password', $password, time() - 3600);
                         }
-//                        $this->f3->clear('SESSION');
+                        //$this->f3->clear('SESSION');
                         $this->f3->set('SESSION.loggedUser', $existUser);
                         $this->f3->set('SESSION.username',$existUser->data->username);
                         $this->f3->set('SESSION.email',$existUser->data->email);

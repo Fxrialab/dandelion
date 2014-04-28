@@ -50,7 +50,7 @@
                     number: $settings.nop,
                     offset: offset,
                     type: type,
-                    typeID: typeID,
+                    typeID: typeID
                 }, function(data) {
 
                     // Change loading bar content (it may have been altered)
@@ -116,7 +116,7 @@
             });
 
         });
-    }
+    };
 
     $.fn.scrollPaginationGroup = function(options) {
 

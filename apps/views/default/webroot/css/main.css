@@ -177,6 +177,10 @@ body {
     margin-bottom: 10px;
 }
 
+.fixMarginBottom-15 {
+    margin-bottom: 15px;
+}
+
 .fixMarginBottom-20 {
     margin-bottom: 20px;
 }
@@ -1057,6 +1061,17 @@ body {
     box-shadow: none;
 }
 
+#typeActivity {
+    display: none;
+}
+
+.embedElements {
+    border-top:1px dashed #ccc;
+    margin-top:5px;
+    padding-top:3px;
+    padding-bottom:3px;
+}
+
 .uiAlbumContainer .ink-form input.titleAlbum {
     box-shadow: none;
 }
@@ -1785,6 +1800,27 @@ body {
     margin-top: 10px;
     box-shadow: none;
     min-height: 300px;
+}
+
+.uiFriendsWrapper {
+    padding: 10px;
+}
+
+.uiFriendsWrapper li {
+    padding: 0 5px;
+}
+
+.friendItemWrapper {
+    border: 1px solid #E4E4E4;
+}
+
+.infoFriends {
+    padding: 0 10px;
+    margin-top: 40px;
+}
+
+.actionFriends {
+    margin-top: 40px;
 }
 
 .uiPhotoActionsBox {

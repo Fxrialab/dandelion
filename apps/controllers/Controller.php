@@ -9,6 +9,7 @@ require_once dirname(__DIR__) . "/config/Structure.php";
 
 require_once FACADE . "DataFacade.php";
 require_once MODEL_UTILS . "ObjectHandler.php";
+require_once FACTORY_UTILS . "FactoryUtils.php";
 
 class Controller {
     protected $f3;

@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+<head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Dandelion</title>
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink.css" type="text/css" />

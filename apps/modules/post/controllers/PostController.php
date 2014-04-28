@@ -149,86 +149,59 @@ class PostController extends AppController
         }
     }
 
-    //just implement
-    public function loadComment($object, $actor, $activityID)
-    {
-        if ($this->isLogin())
-        {
-            $findStatus = $this->Comment->findByCondition("@rid = ?", array('#' . $object));
-            //var_dump($findStatus);
-            if ($findStatus)
-            {
-                $findContentStt = $this->Status->findByCondition("@rid = ?", array('#' . $findStatus[0]->data->post));
-                $lengthComment = strlen($findContentStt[0]->data->content);
-                $contentStatusDisplay = ($lengthComment > 40) ? str_replace(substr($findContentStt[0]->data->content, 40), '...', $findContentStt[0]->data->content) : $findContentStt[0]->data->content;
-                $profileCommentActor[$actor] = $this->User->load($actor);
-                $entry = array(
-                    'activityID' => $activityID,
-                    'currentUser' => $this->getCurrentUser(),
-                    'name' => $findStatus[0]->data->actor_name,
-                    'pfCommentActor' => $profileCommentActor,
-                    'content' => $contentStatusDisplay,
-                    'numberComment' => $findContentStt[0]->data->numberComment,
-                    'published' => $findStatus[0]->data->published,
-                    'text' => 'has comment ',
-                    'actor' => $actor,
-                    'commentID' => $object,
-                    'owner' => $findContentStt[0]->data->owner,
-                    'link' => 'detailStatus?id=' . $findStatus[0]->data->post,
-                    'type' => 'status',
-                    'contentCmt' => $findStatus[0]->data->content,
-                    'tagged' => $findContentStt[0]->data->tagged,
-                    'path' => Register::getPathModule('post'),
-                );
-                return $entry;
-            }
-        }
-    }
-
     //has implement and fix logic
     public function postStatus()
     {
         if ($this->isLogin())
         {
-            $published = time();
-            $currentUser = $this->getCurrentUser();
-            $friendProfileID = $this->f3->get('SESSION.userProfileID');
-            $taggedElement = $this->f3->get("POST.fullURL");
+            $published      = time();
+            $currentUser    = $this->getCurrentUser();
+            $friendProfileID= $this->f3->get('SESSION.userProfileID');
             //@TODO: check type of tagged later
-            //$taggedType         = F3::get("POST.taggedType");
-            $content = $this->f3->get("POST.status");
-            $type = $this->f3->get("POST.type");
-            $img = substr(($this->f3->get("POST.imgID")), 0, -1);
+            $content        = $this->f3->get("POST.status");
+            $type           = $this->f3->get("POST.type");
+            //determine embed type if existing
+            $embedType      = $this->f3->get('POST.embedType');
+            if (!$embedType || $embedType == 'none')
+                $embedSource    = false;
+            else {
+                if ($embedType == 'photo')
+                {
+                    $images         = $this->f3->get("POST.imgID");
+                    $embedSource    = implode(',',$images);
+                }else {
+                    $video  = $this->f3->get("POST.videoURL");
+
+                    $countChar      = strlen($video);
+                    $countCharFirst = strpos($content, $video);
+                    $content1       = substr($content, 0, $countCharFirst);
+                    $content2       = substr($content, $countChar + $countCharFirst);
+                    $content        = $content1 . "_linkWith_" . $content2;
+                    $embedSource    = $video;
+                }
+            }
             if (!empty($_POST['typeID']))
                 $typeID = $_POST['typeID'];
             else
                 $typeID = FALSE;
-//            if ($taggedElement != 'none')
-//            {
-//                $countChar = strlen($taggedElement);
-//                $countCharFirst = strpos($content, $taggedElement);
-//                $content1 = substr($content, 0, $countCharFirst);
-//                $content2 = substr($content, $countChar + $countCharFirst);
-//                $content = $content1 . "_linkWith_" . $content2;
-//            }
             // prepare data
             $postEntry = array(
-                'owner' => $this->f3->get('SESSION.userID'),
-                'actor' => $currentUser->recordID,
-                'content' => $content,
-                'tagged' => $taggedElement,
-                'actorName' => $this->getCurrentUserName(),
-                'numberLike' => '0',
+                'owner'         => $this->f3->get('SESSION.userID'),
+                'actor'         => $currentUser->recordID,
+                'content'       => $content,
+                'embedType'     => $embedType,
+                'embedSource'   => $embedSource,
+                'actorName'     => $this->getCurrentUserName(),
+                'numberLike'    => '0',
                 'numberComment' => '0',
-                'published' => $published,
-                'numberShared' => '0',
-                'contentShare' => 'none',
-                'numberFollow' => '0',
-                'mainStatus' => 'none',
-                'active' => '1',
-                'img' => $img,
-                'type' => $type,
-                'typeID' => $typeID
+                'published'     => $published,
+                'numberShared'  => '0',
+                'contentShare'  => 'none',
+                'numberFollow'  => '0',
+                'mainStatus'    => 'none',
+                'active'        => '1',
+                'type'          => $type,
+                'typeID'        => $typeID
             );
 
             // save
@@ -239,16 +212,9 @@ class PostController extends AppController
             $this->f3->set('status', $status);
             $this->f3->set('statusID', $statusID);
             $this->f3->set('content', $content);
-            $this->f3->set('tagged', $taggedElement);
+            $this->f3->set('tagged', 'none');
             $this->f3->set('currentUser', $currentUser);
             $this->f3->set('published', $published);
-            $this->f3->set('img', $img);
-            if ($friendProfileID)
-            {
-                $this->f3->set('friendProfileID', $friendProfileID);
-                $friendProfileInfoRC = Model::get('user')->load($friendProfileID);
-                $this->f3->set('friendProfileInfo', $friendProfileInfoRC);
-            }
             $this->renderModule('postStatus', 'post');
         }
     }

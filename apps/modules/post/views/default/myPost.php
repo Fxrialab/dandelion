@@ -14,15 +14,16 @@ $likeStatus = $this->f3->get('likeStatus');
                 <?php
                 if (!empty($listStatus))
                 {
-                    foreach ($listStatus as $key => $status) {
-                        $statusID = $status->recordID;
-                        $activity = $status->data;
-                        $user = PostController::getUser($status->data->actor);
-                        $username = $user->data->username;
-                        $curUserID = $user->recordID;
-                        $avatar = $user->data->profilePic;
-                        $like = $likeStatus[$statusID];
-                        $f3 = require('viewPost.php');
+                    foreach ($listStatus as $key => $status)
+                    {
+                        $statusID   = $status->recordID;
+                        $activity   = $status->data;
+                        $user       = PostController::getUser($status->data->actor);
+                        $username   = $user->data->username;
+                        $curUserID  = $user->recordID;
+                        $avatar     = $user->data->profilePic;
+                        $like       = $likeStatus[$statusID];
+                        $f3         = require('viewPost.php');
                     }
                 }
                 ?>

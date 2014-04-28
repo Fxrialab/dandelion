@@ -2,7 +2,7 @@
 $rpOwnerID  = str_replace(':', '_', $status->data->owner);
 $rpStatusID = str_replace(":", "_", $statusID);
 //$rpCurUserID = str_replace(":", "_", $curUserID);
-$status_tagged  = $status->data->tagged;
+$embedType      = $status->data->embedType;
 $status_content = $status->data->content;
 $numberLikes    = $status->data->numberLike;
 $status_contentShare    = $status->data->contentShare;
@@ -20,10 +20,56 @@ $status_published       = $status->data->published;
             <div class="articleContentWrapper">
                 <div class="column-group">
                     <?php
-                    if (!empty($status->data->img)) {
-                        $img = explode(',', $status->data->img);
-                        $countImg = count($img);
-                        foreach ($img as $value) {
+                    if($status_contentShare == 'none')
+                    {
+                        if(!empty($status->data->embedType) && $status->data->embedType == 'none' || $status->data->embedType == 'photo')
+                        {
+                            $existLink = strpos($status_content,"http");
+                            if ($existLink != false || $existLink >= 0)
+                            {
+                                $existSpace = strpos(substr($status_content, $existLink), ' ');
+                                $link = !empty($existSpace)?substr($status_content, $existLink, $existSpace):substr($status_content, $existLink);
+                                $htmlLink = "<a href='".$link."'>".$link."</a>";
+                                ?>
+                                <div class="textPostContainer fixMarginBottom-5">
+                                    <span class="textPost"><?php echo str_replace($link, $htmlLink, $status_content); ?></span>
+                                </div>
+                                <?php
+                            }else {
+                                ?>
+                                <div class="textPostContainer fixMarginBottom-5">
+                                    <span class="textPost"><?php echo $status_content; ?></span>
+                                </div>
+                                <?php
+                            }
+                        } else {  ?>
+                            <div class="textPostContainer fixMarginBottom-5">
+                                <span class="textPost">
+                                    <?php
+                                    $link = "<a href='".$status->data->embedSource."'>".$status->data->embedSource."</a>";
+                                    echo str_replace('_linkWith_',$link, $status_content);
+                                    ?>
+                                    <a href="<?php echo $status->data->embedSource; ?>" class="oembed<?php echo $rand; ?>"> </a>
+                                </span>
+                            </div>
+                        <?php
+                        }
+                    } else { ?>
+                        <div class="textPostContainer fixMarginBottom-5">
+                            <span class="textPost"><?php echo $status_contentShare; ?></span>
+                            <div class="attachmentStatus">
+                                <span class="textPost"><?php echo $status_content; ?></span>
+                            </div>
+                        </div>
+                    <?php
+                    } ?>
+                    <?php
+                    if (!empty($status->data->embedType) && $status->data->embedType == 'photo')
+                    {
+                        $imagesID = explode(',', $status->data->embedSource);
+                        $countImg = count($imagesID);
+                        foreach ($imagesID as $value)
+                        {
                             $findImg = PostController::getPhoto($value);
                             if ($countImg == 1) {
                                 echo '<div class="large-100"><img src=' . $findImg->data->url . '></div>';
@@ -36,35 +82,6 @@ $status_published       = $status->data->published;
                     }
                     ?>
                 </div>
-                <?php
-                if($status_contentShare == 'none')
-                {
-                    if($status_tagged =='none')
-                    {?>
-                        <div class="textPostContainer fixMarginBottom-5">
-                            <span class="textPost"><?php echo $status_content; ?></span>
-                        </div>
-                    <?php
-                    } else {  ?>
-                        <div class="textPostContainer fixMarginBottom-5">
-                                <span class="textPost">
-                                    <?php echo substr($status_content,0,strpos($status_content,'_linkWith_')); ?>
-                                    <a href="<?php echo $status_tagged; ?>"><?php echo $status_tagged; ?></a>
-                                    <a href="<?php echo $status_tagged; ?>" class="oembed5"> </a>
-                                </span>
-                        </div>
-                    <?php
-                    }
-                } else { ?>
-                    <div class="textPostContainer fixMarginBottom-5">
-                        <span class="textPost"><?php echo $status_contentShare; ?></span>
-                        <div class="attachmentStatus">
-                            <span class="textPost"><?php echo $status_content; ?></span>
-                        </div>
-                    </div>
-                <?php
-                } ?>
-
             </div>
             <div class="articleSelectOption">
                 <div class="articleActions">
@@ -189,6 +206,7 @@ $status_published       = $status->data->published;
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     //target show popUp
     new showPopUpOver('a.info-<?php echo $rpStatusID; ?>', '.infoOver-<?php echo $rpStatusID; ?>');

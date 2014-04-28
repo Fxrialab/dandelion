@@ -288,41 +288,6 @@ function moreComment(id) {
 }
 
 $(function() {
-//    $("#submitStatus").click(function(e)
-//    {
-//        e.preventDefault();
-//        var status = $("#status").val();
-//        var profileID = $("#profileID").val();
-//        var fullURL = $("#fullURL").html();
-//        var taggedType = $("#taggedType").val();
-//        var URL = (fullURL == 'undefined') ? 'none' : fullURL;
-//        var imgID = $("#imgID").val();
-//        if (status == '')
-//        {
-//            return false;
-//        }
-//        else
-//        {
-//            $.ajax({
-//                type: "POST",
-//                url: "/content/post/postStatus",
-//                data: {status: status, profileID: profileID, fullURL: URL, taggedType: taggedType, imgID: imgID},
-//                cache: false,
-//                success: function(html) {
-//                    $('#tagElements').css('display', 'none');
-//                    $("#contentContainer").prepend(html);
-//                    $('.photoWrap').remove();
-//                    $('#imgID').val();
-//                    $('#status').val('');
-//                    new LikePostByElement('.likePostStatus');
-//                    new FollowByElement('.followSegments');
-//                    updateTime();
-//                }
-//            });
-//        }
-//        return false;
-//    });
-
     $("body").on("click", "a.commentBtn", function(e) {
         e.preventDefault();
         var getId = $(this).attr('id').replace('stream-', '');
@@ -391,8 +356,7 @@ $(document).ready(function()
             $('.ajax-file-upload-statusbar').fadeOut('slow');
             $.each(data.results, function() {
                 console.log(this.url);
-                $('#imgID').append(this.photoID + ',');
-                $('#displayPhotos').append("<div class='photoWrap' id='photoItem-" + this.photoID + "'>" +
+                $('#embedPhotos').append("<div class='photoWrap' id='photoItem-" + this.photoID + "'>" +
                         "<input type='hidden' id ='imgID' name='imgID[]' value='" + this.photoID + "'/>" +
                         "<img src='" + this.url + "' title='" + this.fileName + "'/>" +
                         "</div>");
