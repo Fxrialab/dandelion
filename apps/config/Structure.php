@@ -41,6 +41,7 @@ define ('UPLOAD_URL', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS . 'w
 // vendors
 define ('VENDORS', DOCUMENT_ROOT . 'vendors' . DS);
 define ('MODEL_UTILS', VENDORS . 'fxrialab' . DS . 'modelUtils' . DS);
+define ('FACTORY_UTILS', VENDORS . 'fxrialab' . DS . 'factoryUtils' . DS);
 define ('FACADE', VENDORS . 'fxrialab' . DS . 'facade' . DS);
 define ('ORIENTDB', VENDORS . 'OrientDB' . DS);
 //define ('AMQP', VENDORS . 'PhpAmqpLib' . DS);

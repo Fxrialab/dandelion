@@ -117,6 +117,50 @@ class FriendController extends AppController
             $this->render('home/friend.php', 'default');
         }
     }
+
+    public function friends()
+    {
+        if ($this->isLogin())
+        {
+            $this->layout = 'other';
+
+            $currentUser = $this->getCurrentUser();
+            $requestCurrentProfile = $this->f3->get('GET.username');
+
+            if (!empty($requestCurrentProfile))
+            {
+                $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $requestCurrentProfile));
+                if (!empty($currentProfileRC))
+                {
+                    $currentProfileID = $currentProfileRC->recordID;
+                }else {
+                    //@TODO: add layout return page not found in later
+                    echo "page not found";
+                }
+            }else
+                $currentProfileID = $this->getCurrentUser()->recordID;
+            $currentProfileRC = $this->facade->load('user', $currentProfileID);
+            $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
+            $this->f3->set('statusFriendShip', $statusFriendShip);
+
+            $friendsCurrentUser = Model::get('user')->callGremlin("current.out", array('@rid'=>'#' . $currentProfileID));
+            if (!empty($friendsCurrentUser))
+            {
+                foreach ($friendsCurrentUser as $friend)
+                {
+                    $infoFriends[$friend] = Model::get('user')->callGremlin("current.map", array('@rid'=>'#' . $friend));
+                    $friendsShip[$friend] = $this->getStatusFriendShip($currentUser->recordID, $friend);
+                }
+                $this->f3->set('friendsCurrentUser', $friendsCurrentUser);
+                $this->f3->set('infoFriends', $infoFriends);
+                $this->f3->set('friendsShip', $friendsShip);
+            }
+
+            $this->f3->set('currentUser', $currentUser);
+            $this->f3->set('otherUser', $currentProfileRC);
+            $this->render('user/friends.php', 'default');
+        }
+    }
 }
 
 ?>

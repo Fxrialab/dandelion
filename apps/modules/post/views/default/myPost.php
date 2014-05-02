@@ -1,6 +1,7 @@
 <?php
 $listStatus = $this->f3->get('listStatus');
 $likeStatus = $this->f3->get('likeStatus');
+$rand = rand(100, 100000);
 ?>
 
 <div class="uiMainColProfile large-70">
@@ -49,12 +50,13 @@ $likeStatus = $this->f3->get('likeStatus');
 <script type="text/javascript" src="<?php echo $this->f3->get('STATIC_MOD'); ?>post/webroot/js/socialewired.post.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".oembed2").oembed(null,
-                {
-                    embedMethod: "append",
-                    maxWidth: 1024,
-                    maxHeight: 768,
-                    autoplay: false
-                });
+        $(".oembed<?php echo $rand; ?>").oembed(null,
+            {
+                embedMethod: "append",
+                maxWidth: 1024,
+                maxHeight: 768,
+                autoplay: false
+            }
+        );
     });
 </script>

@@ -62,27 +62,7 @@ class PostController extends AppController
             $currentProfileRC = $this->facade->load('user', $currentProfileID);
             $currentUser = $this->getCurrentUser();
             //get status friendship
-            $friendShipAtoB = $this->facade->findByAttributes('friendship', array('userA' => $currentUser->recordID, 'userB' => $currentProfileRC->recordID));
-            $friendShipBtoA = $this->facade->findByAttributes('friendship', array('userA' => $currentProfileRC->recordID, 'userB' => $currentUser->recordID));
-            if (!empty($friendShipAtoB) && !empty($friendShipBtoA))
-            {
-                $statusFriendShip = $friendShipBtoA->data->relationship;
-            }
-            else
-            {
-                if (!empty($friendShipAtoB) && !$friendShipBtoA)
-                {
-                    $statusFriendShip = 'request';
-                }
-                elseif (!$friendShipAtoB && !empty($friendShipBtoA))
-                {
-                    $statusFriendShip = 'respondRequest';
-                }
-                else
-                {
-                    $statusFriendShip = 'addFriend';
-                }
-            }
+            $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
             //set
             $this->f3->set('currentUser', $currentUser);
             $this->f3->set('otherUser', $currentProfileRC);

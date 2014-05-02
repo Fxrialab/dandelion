@@ -29,6 +29,7 @@
     <?php
     FactoryUtils::element('formPost', array('module' => 'post'))
     ?>
+	<input type="hidden" id="type" name="type" value="post">
     <div class="wrapperContainer">
 
         <div id="contentContainer">

@@ -133,12 +133,19 @@
     color:#b8bfac;
 }
 
-#tagElements{
+.embedElements {
     border-top:1px dashed #ccc;
     margin-top:5px;
     padding-top:3px;
     padding-bottom:3px;
 }
+
+/*#tagElements{
+    border-top:1px dashed #ccc;
+    margin-top:5px;
+    padding-top:3px;
+    padding-bottom:3px;
+}*/
 
 .swComposerTagControl{
     margin-top:7px;

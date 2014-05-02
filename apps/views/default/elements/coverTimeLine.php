@@ -7,7 +7,7 @@ $otherUserID    = $otherUser->recordID;
 $currentUserID  = $currentUser->recordID;
 $otherUserName  = ucfirst($otherUser->data->firstName)." ".ucfirst($otherUser->data->lastName);
 $currentUserName= ucfirst($currentUser->data->firstName)." ".ucfirst($currentUser->data->lastName);
-
+//var_dump($otherUser);
 if($otherUserID != $currentUserID)
 {
     $rpOtherUserID  = str_replace(':', '_', $otherUserID);
@@ -33,10 +33,10 @@ if($otherUserID != $currentUserID)
             <div class="timeLineMenuNav column-right">
                 <nav class="ink-navigation uiTimeLineHeadLine">
                     <ul class="menu horizontal">
-                        <li><a href="/content/myPost">TimeLine</a></li>
-                        <li><a href="/about">About</a></li>
-                        <li><a href="/friends">Friends</a></li>
-                        <li><a href="/content/myPhoto">Photos</a></li>
+                        <li><a href="/content/myPost?username=<?php echo $otherUser->data->username; ?>">TimeLine</a></li>
+                        <li><a href="/about?username=<?php echo $otherUser->data->username; ?>">About</a></li>
+                        <li><a href="/friends?username=<?php echo $otherUser->data->username; ?>">Friends</a></li>
+                        <li><a href="/content/myPhoto?username=<?php echo $otherUser->data->username; ?>">Photos</a></li>
                         <li><a href="#">More</a></li>
                     </ul>
                 </nav>

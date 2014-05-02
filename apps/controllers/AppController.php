@@ -121,19 +121,31 @@ class AppController extends Controller
         return $this->facade->findAllAttributes('friendship', array('userA'=>$actor, 'relationship'=>'friend', 'status'=>'ok'));
     }
 
-    //will group two below func after check all case
-    public function getLikeStatus($statusID, $userA)
+    public function getStatusFriendShip($userA, $userB)
     {
-        $likeRC[$statusID] = Model::get('like')->findOne("userA = ? AND ID = ?", array($userA, $statusID));
-        $likeStatus[$statusID] = ($likeRC[$statusID]) ? $likeRC[$statusID]->data->isLike : 'null';
-        return $likeStatus[$statusID];
-    }
+        $friendShipAtoB = $this->facade->findByAttributes('friendship', array('userA' => $userA, 'userB' => $userB));
+        $friendShipBtoA = $this->facade->findByAttributes('friendship', array('userA' => $userB, 'userB' => $userA));
+        if (!empty($friendShipAtoB) && !empty($friendShipBtoA))
+        {
+            $statusFriendShip = $friendShipBtoA->data->relationship;
+        }
+        else
+        {
+            if (!empty($friendShipAtoB) && !$friendShipBtoA)
+            {
+                $statusFriendShip = 'request';
+            }
+            elseif (!$friendShipAtoB && !empty($friendShipBtoA))
+            {
+                $statusFriendShip = 'respondRequest';
+            }
+            else
+            {
+                $statusFriendShip = 'addFriend';
+            }
+        }
 
-    public function getFollowStatus($statusID, $userA)
-    {
-        $getStatusFollow[$statusID] = Model::get('follow')->findOne("userA = ? AND follow = 'following' AND filterFollow = 'post' AND ID = ?", array($userA, $statusID));
-        $statusFollow[$statusID] = ($getStatusFollow[$statusID]) ? $getStatusFollow[$statusID]->data->follow : 'null';
-        return $statusFollow[$statusID];
+        return $statusFriendShip;
     }
 
     // **********************************

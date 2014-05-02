@@ -52,6 +52,8 @@ class RouteConfig {
         'addWork_POST'          => "UserController",
         'editEduWork_POST'      => "UserController",
         'searchWork_POST'       => "UserController",
+        /* Route config for friends page */
+        'friends_GET' => "FriendController",
     );
 
     public $modules = array(
