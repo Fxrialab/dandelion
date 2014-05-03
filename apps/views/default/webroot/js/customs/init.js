@@ -421,4 +421,8 @@ $(document).ready(function()
     $("#singleFile").uploadFile(settingSingleFile);
     $("#multiFiles").uploadFile(settingMultiFiles);
     $("#multiFiles2").uploadFile(settingMultiFiles2);
+
 });
+$("a[rel*=leanModal]").leanModal();
+
+$('a[rel*=leanModal]').leanModal({top: 100, closeButton: ".modal_close"});

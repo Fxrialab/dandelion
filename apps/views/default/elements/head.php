@@ -9,7 +9,7 @@
           title="no title">
     <![endif]-->
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery-1.9.1.min.js"></script>
-        <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>-->
+
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/holder.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink.min.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink-ui.min.js"></script>
@@ -23,6 +23,7 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/init.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>/infinitescroll.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/general.js"></script>
+        <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/jquery.uploadfile.min.js"></script>
     <script type="text/javascript">
         jQuery.fn.center = function() {
             this.css("position", "absolute");

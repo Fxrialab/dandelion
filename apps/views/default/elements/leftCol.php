@@ -25,7 +25,7 @@
                     </a>
                 </li>
                 <li class="">
-                    <a href="/content/group/groupMember" class="uiVerticalNav-item">
+                    <a href="/content/group" class="uiVerticalNav-item">
                         <i class="navMenuIcon-group"></i>
                         Group
                         <span class="uiVerticalNav-counter">15</span>

@@ -2,7 +2,11 @@
 $rpOwnerID  = str_replace(':', '_', $status->data->owner);
 $rpStatusID = str_replace(":", "_", $statusID);
 //$rpCurUserID = str_replace(":", "_", $curUserID);
+<<<<<<< Updated upstream
 $embedType      = $status->data->embedType;
+=======
+//$status_tagged  = $status->data->tagged;
+>>>>>>> Stashed changes
 $status_content = $status->data->content;
 $numberLikes    = $status->data->numberLike;
 $status_contentShare    = $status->data->contentShare;
@@ -82,6 +86,38 @@ $status_published       = $status->data->published;
                     }
                     ?>
                 </div>
+<<<<<<< Updated upstream
+=======
+                <?php
+                if($status_contentShare == 'none')
+                {
+                    if(!empty($status->data->tagged))
+                    {?>
+                        <div class="textPostContainer fixMarginBottom-5">
+                            <span class="textPost"><?php echo $status_content; ?></span>
+                        </div>
+                    <?php
+                    } else {  ?>
+                        <div class="textPostContainer fixMarginBottom-5">
+                                <span class="textPost">
+                                    <?php echo substr($status_content,0,strpos($status_content,'_linkWith_')); ?>
+<!--                                    <a href="<?php // echo $status_tagged; ?>"><?php // echo $status_tagged; ?></a>
+                                    <a href="<?php // echo $status_tagged; ?>" class="oembed5"> </a>-->
+                                </span>
+                        </div>
+                    <?php
+                    }
+                } else { ?>
+                    <div class="textPostContainer fixMarginBottom-5">
+                        <span class="textPost"><?php echo $status_contentShare; ?></span>
+                        <div class="attachmentStatus">
+                            <span class="textPost"><?php echo $status_content; ?></span>
+                        </div>
+                    </div>
+                <?php
+                } ?>
+
+>>>>>>> Stashed changes
             </div>
             <div class="articleSelectOption">
                 <div class="articleActions">
@@ -209,5 +245,6 @@ $status_published       = $status->data->published;
 
 <script type="text/javascript">
     //target show popUp
+    
     new showPopUpOver('a.info-<?php echo $rpStatusID; ?>', '.infoOver-<?php echo $rpStatusID; ?>');
 </script>
