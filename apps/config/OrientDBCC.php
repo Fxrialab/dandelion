@@ -14,5 +14,6 @@ $map = array(
     'information'=> '22',
     'permission'=> '23',
     'like'      => '24',
-    
+    'group'      => '25',
+    'groupMember' => '26',
 );
