@@ -56,7 +56,7 @@ if ($params_full)
             {
                 //echo 'modules route <br />';
                 $modules = $routeConfig->modules;
-                $registerFile   = CONTROLLERS.'register.php';
+                $registerFile   = CONTROLLERS.'Register.php';
                 if (file_exists($registerFile))
                 {
                     require_once $registerFile;

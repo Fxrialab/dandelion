@@ -1,6 +1,6 @@
 <?php
-require_once CONFIG."database.php";
-require_once MODEL_UTILS."impl/".DBTYPE."Model.php";
+require_once CONFIG."Database.php";
+require_once MODEL_UTILS . "impl/" . DBTYPE . "Model.php";
 
 class Model
 {

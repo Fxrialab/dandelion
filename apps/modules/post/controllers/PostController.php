@@ -85,7 +85,7 @@ class PostController extends AppController
                     $numberOfComments[($status->recordID)] = $this->facade->count("comment", $status->recordID);
                     //get status follow, like
                     $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $status->recordID));
-                    $statusFollow[($status->recordID)] = $this->getFollowStatus($status->recordID, $currentUser->recordID);
+                    //$statusFollow[($status->recordID)] = $this->getFollowStatus($status->recordID, $currentUser->recordID);
                     //get info user actor
                     $postActor[($status->data->actor)] = $this->facade->load('user', $status->data->actor);
                     if ($comments[($status->recordID)])
@@ -103,7 +103,7 @@ class PostController extends AppController
                 $this->f3->set("comments", $comments);
                 $this->f3->set("numberOfComments", $numberOfComments);
                 $this->f3->set("likeStatus", $likeStatus);
-                $this->f3->set("statusFollow", $statusFollow);
+                //$this->f3->set("statusFollow", $statusFollow);
                 $this->f3->set("postActor", $postActor);
             }
             $this->render($viewPath . 'myPost.php', 'modules');
