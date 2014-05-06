@@ -12,7 +12,7 @@ $param          = $lastParams[0];
 
 if ($params_full && count($params_full) > 3)
 {
-    $routeModuleConfigFile = MODULES.$params_full[2]."/routeModuleConfig.php";
+    $routeModuleConfigFile = MODULES.$params_full[2]."/RouteModuleConfig.php";
     if (file_exists($routeModuleConfigFile))
     {
         include $routeModuleConfigFile;
@@ -29,8 +29,8 @@ if ($params_full && count($params_full) > 3)
             {
                 // Set route
                 $function = $params;
-             
-                F3::route($method." /content/group/".$params,
+
+                $f3->route($method." /content/group/".$params,
                     array(new $controllers[0], $function)
                 );
             }

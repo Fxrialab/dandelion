@@ -7,13 +7,6 @@
  */
 require_once (CONTROLLERS . "AppController.php");
 require_once (CONTROLLERS . "ElementController.php");
-/*F3::route('GET /min',
-    function() {
-        Web::minify($_GET['base'],explode(',',$_GET['files']));
-    },
-    CACHE_TIME
-);*/
-
 $url            = $_SERVER["REQUEST_URI"];
 $params_full    = explode('/',$url);
 //var_dump($params_full);
@@ -96,7 +89,7 @@ if ($params_full)
                                 // Load routes file of module
                                 if ($params_full[2] == $mod)
                                 {
-                                    $routeFile  = MODULES.$mod."/Routes.php";
+                                    $routeFile  = MODULES.$mod."/routes.php";
                                     if (file_exists($routeFile))
                                         require_once $routeFile;
                                 }
@@ -140,7 +133,7 @@ if ($params_full)
                                     require_once $modulesControllerFile;
                                     //echo $modulesControllerFile."<br />";
                                 }
-                                $registerFile   = CONTROLLERS.'register.php';
+                                $registerFile   = CONTROLLERS.'Register.php';
                                 if (file_exists($registerFile))
                                     require_once $registerFile;
                             }
