@@ -313,30 +313,10 @@ $(document).ready(function()
             $('.ajax-file-upload-statusbar').fadeOut('slow');
             $.each(data.results, function() {
                 console.log(this.url);
-                $('#displayPhotos').append("<form class='photoDataItems' id='photoItems-" + this.photoID + "'>" +
-                        "<div class='photoWrap'>" +
-                        "<div class='loadedPhoto' id='photo" + this.photoID + "'>" +
-                        "<div class='wrapperHoverDelete removeImg' title='Remove' id='removePhoto" + this.photoID + "'></div>" +
+                $('#displayPhotoGroup').html("<div id='photoItem-" + this.photoID + "'>" +
+                        "<input type='hidden' id ='imgID' name='imgID[]' value='" + this.photoID + "'/>" +
                         "<img src='" + this.url + "' title='" + this.fileName + "'/>" +
-                        "</div> " +
-                        "<div class='writeSomething'>" +
-                        "<textarea rows='4' id='someThingAboutPhoto-" + this.photoID + "' spellcheck='false' placeholder='Write something about this photo'></textarea>" +
-                        "</div>" +
-                        "</div>" +
-                        "</form>");
-//                $('#removePhoto'+this.photoID).click(function(){
-//                    var photoID = $(this).attr('id').replace('removePhoto','');
-//                    console.log(photoID);
-//                    $.ajax({
-//                        type: 'POST',
-//                        url: '/content/photo/removePhoto',
-//                        data: {photoID: photoID},
-//                        cache: false,
-//                        success: function(){
-//                            $('#photoItems-'+photoID).detach();
-//                        }
-//                    });
-//                });
+                        "</div>");
             });
             new Hover();
         },
@@ -423,6 +403,72 @@ $(document).ready(function()
     $("#multiFiles2").uploadFile(settingMultiFiles2);
 
 });
-$("a[rel*=leanModal]").leanModal();
 
-$('a[rel*=leanModal]').leanModal({top: 100, closeButton: ".modal_close"});
+//(function(e, t, n) {
+//
+//    e.fn.imagedrag = function(t) {
+//        function n(e, t) {
+//            i(e, t)
+//        }
+//        function i(t, n) {
+//            var i = e("img", r);
+//    
+//            var s = e(n.input);
+//            var o = r.height();
+//            var u = r.width();
+//            var a = i.height();
+//            var f = i.width();
+//            i.width(u);
+//            i.height(u / f * a);
+//            var l = i.height();
+//            var c = i.width();
+//            var h = (l - o) * -1;
+//            i.draggable({axis: "y", cursor: n.cursor, create: function() {
+//                    var e = "0px";
+//                    if (n.position.toLowerCase() == "top" || n.position == "" || n.position == " " || n.position == null) {
+//                    } else if (n.position.toLowerCase() == "middle") {
+//                        e = h / 2 + "px"
+//                    } else if (n.position.toLowerCase() == "bottom") {
+//                        e = h + "px"
+//                    } else {
+//                        e = n.position
+//                    }
+//                    i.css("top", e);
+//                    if (n.attribute == "html")
+//                        s.html(e);
+//                    else
+//                        s.attr(n.attribute, e)
+//                }, drag: function(e, t) {
+//                    var r = t.position.top;
+//                    if (r > 0) {
+//                        t.position.top = 0
+//                    }
+//                    if (r < h) {
+//                        t.position.top = h
+//                    }
+//                    if (n.attribute == "html")
+//                        s.html(t.position.top + "px");
+//                    else
+//                        s.attr(n.attribute, t.position.top + "px")
+//                }})
+//        }
+//        var r;
+//        var s = {input: "#output", attribute: "value", position: "middle", cursor: "move"};
+//         
+//        var o = e.extend(s, t);
+//        return this.each(function() {
+//            r = e(this);
+//            if (r == null)
+//                return false;
+//            n(r, o)
+//        })
+//    }
+//})(jQuery, this);
+//$(function() {
+//    $('#wrap').imagedrag({
+//        input: "#output",
+//        position: "middle",
+//        attribute: "html"
+//    });
+//
+//});

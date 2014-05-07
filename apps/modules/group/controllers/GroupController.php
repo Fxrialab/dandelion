@@ -131,6 +131,7 @@ class GroupController extends AppController
 
             $group = $this->facade->findByPk('group', str_replace("_", ":", $groupID));
             $count = $this->facade->count('groupMember', array('groupID' => $groupID));
+
             $this->f3->set('group', $group);
             $this->f3->set('members', $members);
             $this->f3->set('countMember', $count);
@@ -154,6 +155,34 @@ class GroupController extends AppController
             );
             $this->facade->updateByAttributes('group', $updateGroup, array('@rid' => '#' . str_replace("_", ":", $_POST['groupID'])));
             echo json_encode(array('groupID' => $_POST['groupID'], 'description' => $_POST['groupDescription']));
+        }
+    }
+
+    public function myphotos()
+    {
+        $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
+        $this->f3->set('photos', $photos);
+        $this->f3->set('groupID', $_POST['id']);
+        $this->renderModule('myphotos', 'Group');
+    }
+
+    public function cover()
+    {
+        if (!empty($_POST['photoID']))
+        {
+            $photo = $this->facade->findByPk('photo', str_replace("_", ":", $_POST['photoID']));
+            $updateGroup = array(
+                'urlCover' => $photo->data->url,
+            );
+            $group = $this->facade->updateByAttributes('group', $updateGroup, array('@rid' => '#' . $_POST['groupID']));
+            if ($group == 1)
+            {
+                $this->f3->set('url', $photo->data->url);
+                $this->f3->set('photoID', $photoID);
+            }
+            $this->f3->set('groupID', $_POST['groupID']);
+
+            $this->renderModule('cover', 'Group');
         }
     }
 
@@ -184,7 +213,11 @@ class GroupController extends AppController
             $this->layout = 'group';
             $groupID = $this->f3->get('GET.id');
             $group = $this->facade->findByPk('group', str_replace("_", ":", $groupID));
+            $member = $this->facade->findAllAttributes('groupMember', array('groupID' => str_replace("_", ":", $groupID)));
+            $photo = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
+            $this->f3->set('photo', $photo);
             $this->f3->set('group', $group);
+            $this->f3->set('member', $member);
             $this->render($viewPath . 'detail.php', 'modules');
         }
     }

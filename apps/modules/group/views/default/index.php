@@ -20,8 +20,9 @@
         });
         $('#typeActivity').html('<input type=hidden id=type name=type value=post >');
     });
-
+ 
 </script>
+
 <div class="large-100">
     <div class="column-group">
         <div style ="padding:5px; border: 1px solid #ccc; overflow: hidden; margin-bottom: 10px">

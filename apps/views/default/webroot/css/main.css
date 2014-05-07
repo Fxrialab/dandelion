@@ -255,6 +255,7 @@ body {
     top: 0;
     left: 0;
     right: 0;
+    padding: 5px 0;
     display: block;
     background: rgb(0,91,159); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(0,91,159,1) 0%, rgba(13,132,199,1) 100%); /* FF3.6+ */
@@ -449,6 +450,7 @@ body {
 [class*="topNavIcon1-"] {
     display: block;
     height: 32px;
+    width: 37px;
     background-image: url("../images/topNavIcons-1.png");
     background-repeat: no-repeat;
     font: 0/0 serif;
@@ -464,33 +466,33 @@ body {
     background-position: -190px 0;
 }
 
-.topNavIcon1-home:hover {
+/*.topNavIcon1-home:hover {
     background-position: -241px 0;
-}
+}*/
 
 .topNavIcon1-requestFriends {
     background-position: -290px 0;
 }
 
-.topNavIcon1-requestFriends:hover {
+/*.topNavIcon1-requestFriends:hover {
     background-position: -345.5px 0;
-}
+}*/
 
 .topNavIcon1-messages {
     background-position: -395px 0;
 }
 
-.topNavIcon1-messages:hover {
+/*.topNavIcon1-messages:hover {
     background-position: -449px 0;
-}
+}*/
 
 .topNavIcon1-notifications {
     background-position: -495px 0;
 }
 
-.topNavIcon1-notifications:hover {
+/*.topNavIcon1-notifications:hover {
     background-position: -544px 0;
-}
+}*/
 
 [class*="topNavIcon2-"] {
     display: block;
@@ -513,7 +515,9 @@ body {
 .topNavIcon2-quickWriteStatus:hover {
     background-position: -36px 0;
 }
-
+.topNavIcon2-settingGroup {
+    background-position: -135px 0;
+}
 .topNavIcon2-settingOptions {
     background-position: -135px 0;
 }
@@ -1072,10 +1076,6 @@ body {
 }
 
 .embedElements {
-    border-top:1px dashed #ccc;
-    margin-top:5px;
-    padding-top:3px;
-    padding-bottom:3px;
 }
 
 .uiAlbumContainer .ink-form input.titleAlbum {
@@ -2666,7 +2666,7 @@ body {
     background: #000;
     display: none;
 }
-#modalGroup,#modalAddMember,#modalMember,#modalRemove {
+#modalGroup,#modalAddMember,#modalMember,#modalRemove,#modalGroupPhoto {
 
     width: 404px;
     padding-bottom: 2px;
@@ -2882,5 +2882,31 @@ body {
     font-weight: bold;
 }
 .topBarGroup{
-    padding:10px 5px; border: 1px solid #ccc;
+    padding:10px 5px; border: 1px solid #ccc; border-top: none;
+}
+.profileCover li a{
+    padding: 0 !important;
+    position: relative;
+}
+.profileCover li a span{
+    position: absolute;
+    display: none;
+    bottom: 5px;
+    left: 15px;
+    font-weight: bold;
+    z-index: 999;
+}
+.profileCover li a:hover span{
+    display: block;
+}
+.profileCover li a img{
+    max-width: 100px
+}
+#dialog{
+    padding: 0;
+    margin: 0;
+}
+.loading{
+    text-align: center;
+    margin-top: 30px;
 }

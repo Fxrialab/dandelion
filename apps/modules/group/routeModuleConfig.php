@@ -19,6 +19,8 @@ class RouteModuleConfig
         'groupSuccess_POST' => "GroupController",
         'makeAdmin_POST' => "GroupController",
         'removeGroup_POST' => "GroupController",
+        'myphotos_POST' => "GroupController",
+        'cover_POST' => "GroupController",
     );
 
 }

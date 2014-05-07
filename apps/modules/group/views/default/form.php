@@ -31,9 +31,7 @@
     </div>
 </form>
 <script>
-//    $("a[rel*=leanModal]").leanModal();
     $(function() {
-//        $('a[rel*=leanModal]').leanModal({top: 100, closeButton: ".modal_close"});
 
         $("#submitForm").submit(function() {
             $.ajax({

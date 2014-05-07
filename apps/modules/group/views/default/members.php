@@ -56,8 +56,7 @@ $countMember = $this->f3->get('countMember');
                     <div class="large-65">
                         <div class="userItem">
                             <a class="fullName" href="/content/myPost?username=<?php echo $user->data->username ?>"><?php echo $user->data->fullName; ?></a><br>
-                            <a href="#" data-dropdown="#dropdown-<?php echo str_replace(":", "_", $user->recordID) ?>"></a>
-                            <input type="button" class="ink-button topNavIcon2-settingOptions" data-dropdown="#dropdown-<?php echo str_replace(":", "_", $user->recordID) ?>" />
+                            <a href="#" data-dropdown="#dropdown-<?php echo str_replace(":", "_", $user->recordID) ?>" class=" topNavIcon2-settingGroup"></a>
                             <div id="dropdown-<?php echo str_replace(":", "_", $user->recordID) ?>" class="dropdown dropdown-tip">
                                 <ul class="dropdown-menu">
                                     <?php
@@ -93,20 +92,26 @@ $countMember = $this->f3->get('countMember');
                     <li><?php echo $group->data->privacy ?> Group <p>What should people post in this group?</p></li>
                     <li id="groupDescription">
                         <?php
-                        echo $group->data->description;
-                        if ($group->data->admin = 'admin')
+                        if (!empty($group->data->description))
+                            echo $group->data->description;
+                        if (!empty($group->data->admin))
                         {
-                            ?>
-                            <a href="#" rel="<?php echo str_replace(":", "_", $group->recordID) ?>" id="groupDescriptionLink">
-                                <?php
-                                if (!empty($group->data->description))
-                                    echo 'Edit';
-                                else
-                                    echo 'Add a Description'
-                                    ?>
+                            if ($group->data->admin = 'admin')
+                            {
+                                ?>
+                                <a href="#" rel="<?php echo str_replace(":", "_", $group->recordID) ?>" id="groupDescriptionLink">
+                                    <?php
+                                    if (!empty($group->data->description))
+                                        echo 'Edit';
+                                    else
+                                        echo 'Add a Description'
+                                        ?>
 
-                            </a>
-                        <?php } ?>
+                                </a>
+                                <?php
+                            }
+                        }
+                        ?>
                     </li>
                 </ul>
             </nav>
