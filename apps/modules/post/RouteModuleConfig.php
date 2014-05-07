@@ -1,10 +1,6 @@
 <?php
-
 /**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 8/6/13 - 5:16 PM
- * Project: joinShare Network - Version: 1.0
+ * Route photo module
  */
 class RouteModuleConfig {
 

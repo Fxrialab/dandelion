@@ -5,7 +5,7 @@
  * Date: 12/20/12
  * Project: UserWired Network - Version: beta
  */
-require_once(CONFIG . 'moduleConfig.php');
+require_once(CONFIG . 'ModuleConfig.php');
 
 class Register
 {

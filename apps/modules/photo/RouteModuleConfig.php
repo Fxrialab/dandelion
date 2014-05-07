@@ -1,10 +1,6 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: King
- * Date: 10/09/2013
- * Time: 03:11
- * To change this template use File | Settings | File Templates.
+ * Route photo module
  */
 class RouteModuleConfig
 {
