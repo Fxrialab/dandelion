@@ -5,8 +5,9 @@
 class RouteModuleConfig {
 
     public $route = array(
-        'postStatus_POST' => "PostController",
-        'postComment_POST' => "PostController",
+        'loading_POST'      => "PostController",
+        'postStatus_POST'   => "PostController",
+        'postComment_POST'  => "PostController",
         'morePostStatus_POST' => "PostController",
         'morePostComment_POST' => "PostController",
         'shareStatus_POST' => "PostController",

@@ -36,7 +36,7 @@ class PostController extends AppController
     }
 
     //has implement and fix logic
-    public function myPost($viewPath)
+    public function post($viewPath)
     {
         if ($this->isLogin())
         {
@@ -71,46 +71,41 @@ class PostController extends AppController
             //set ID for postWrap.php
             $this->f3->set("currentProfileID", $currentProfileID);
 
-            $obj = new ObjectHandler();
-            $obj->owner = $currentProfileID;
-            $obj->active = 1;
-            $obj->select = "ORDER BY published DESC LIMIT 5";
-            $statusRC = $this->facade->findAll('status', $obj);
-
-            if (!empty($statusRC))
-            {
-                foreach ($statusRC as $status)
-                {
-                    $comments[($status->recordID)] = $this->facade->findAll('comment', array("post" => $status->recordID));
-                    $numberOfComments[($status->recordID)] = $this->facade->count("comment", $status->recordID);
-                    //get status follow, like
-                    $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $status->recordID));
-                    //$statusFollow[($status->recordID)] = $this->getFollowStatus($status->recordID, $currentUser->recordID);
-                    //get info user actor
-                    $postActor[($status->data->actor)] = $this->facade->load('user', $status->data->actor);
-                    if ($comments[($status->recordID)])
-                    {
-                        $pos = (count($comments[($status->recordID)]) < 3 ? count($comments[($status->recordID)]) : 3);
-                        for ($j = $pos - 1; $j >= 0; $j--)
-                        {
-                            $commentActor[$comments[($status->recordID)][$j]->data->actor] = $this->facade->load('user', $comments[($status->recordID)][$j]->data->actor);
-                        }
-                        $this->f3->set("commentActor", $commentActor);
-                    }
-                }
-
-                $this->f3->set("listStatus", $statusRC);
-                $this->f3->set("comments", $comments);
-                $this->f3->set("numberOfComments", $numberOfComments);
-                $this->f3->set("likeStatus", $likeStatus);
-                //$this->f3->set("statusFollow", $statusFollow);
-                $this->f3->set("postActor", $postActor);
-            }
             $this->render($viewPath . 'myPost.php', 'modules');
         }
         else
         {
             
+        }
+    }
+
+    public function loading()
+    {
+        if ($this->isLogin())
+        {
+            $currentUser = $this->getCurrentUser();
+            $currentProfileID = $this->f3->get('SESSION.userProfileID');
+            if (!empty($currentProfileID))
+            {
+                $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
+                $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
+                $obj = new ObjectHandler();
+                $obj->owner = $currentProfileID;
+                $obj->active = 1;
+                $obj->select = "ORDER BY published DESC offset ".$offset." LIMIT ".$limit;
+                $statusRC = $this->facade->findAll('status', $obj);
+                //var_dump($statusRC);
+                if (!empty($statusRC))
+                {
+                    foreach ($statusRC as $status)
+                    {
+                        $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $status->recordID));
+                    }
+                    $this->f3->set("listStatus", $statusRC);
+                    $this->f3->set("likeStatus", $likeStatus);
+                    $this->renderModule('post','post');
+                }
+            }
         }
     }
 
@@ -137,7 +132,6 @@ class PostController extends AppController
             $published      = time();
             $currentUser    = $this->getCurrentUser();
             $friendProfileID= $this->f3->get('SESSION.userProfileID');
-            //@TODO: check type of tagged later
             $content        = $this->f3->get("POST.status");
             $type           = $this->f3->get("POST.type");
             //determine embed type if existing
@@ -192,7 +186,7 @@ class PostController extends AppController
             $this->f3->set('status', $status);
             $this->f3->set('statusID', $statusID);
             $this->f3->set('content', $content);
-            $this->f3->set('tagged', 'none');
+            //$this->f3->set('tagged', 'none');
             $this->f3->set('currentUser', $currentUser);
             $this->f3->set('published', $published);
             $this->renderModule('postStatus', 'post');
@@ -318,33 +312,34 @@ class PostController extends AppController
     {
         if ($this->isLogin())
         {
-            $published = time();
-            $statusID = str_replace('_', ':', $this->f3->get("POST.statusID"));
-            $txtShare = $this->f3->get("POST.shareTxt");
+            $published  = time();
+            $statusID   = str_replace('_', ':', $this->f3->get("POST.statusID"));
+            $txtShare   = $this->f3->get("POST.shareTxt");
             $parentStatus = $this->facade->findByPk('status', $statusID);
             $parentStatus->data->numberShared = $parentStatus->data->numberShared + 1;
             $this->facade->updateByPk('status', $statusID, $parentStatus);
             $postEntry = array(
-                'owner' => $this->getCurrentUser()->recordID,
-                'actor' => $parentStatus->data->owner,
-                'content' => $parentStatus->data->content,
-                'tagged' => $parentStatus->data->tagged,
-                /* 'taggedType'    => $old_status->data->taggedType, */
-                'actorName' => $parentStatus->data->actorName,
-                'numberLike' => '0',
+                'owner'         => $this->getCurrentUser()->recordID,
+                'actor'         => $parentStatus->data->owner,
+                'content'       => $parentStatus->data->content,
+                'embedType'     => $parentStatus->data->embedType,
+                'embedSource'   => $parentStatus->data->embedSource,
+                'actorName'     => $parentStatus->data->actorName,
+                'numberLike'    => '0',
                 'numberComment' => $parentStatus->data->numberComment,
-                'published' => $published,
-                'contentShare' => $txtShare,
-                'numberShared' => '0',
-                'numberFollow' => '0',
-                'mainStatus' => $statusID,
-                'active' => '1',
-                'img' => false
+                'published'     => $published,
+                'contentShare'  => $txtShare,
+                'numberShared'  => '0',
+                'numberFollow'  => '0',
+                'mainStatus'    => $statusID,
+                'active'        => '1',
+                'type'          => $parentStatus->data->type,
+                'typeID'        => $parentStatus->data->typeID
             );
             // save
             $status = $this->facade->save('status', $postEntry);
             // track activity
-            $this->trackActivity($this->getCurrentUser(), 'ListController', $status, $published);
+            $this->trackActivity($this->getCurrentUser(), 'ListController', $status, $parentStatus->data->type, $parentStatus->data->typeID, $published);
         }
     }
 

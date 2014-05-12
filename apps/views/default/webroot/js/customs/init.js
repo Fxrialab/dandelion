@@ -79,6 +79,14 @@ $(document).ready(function() {
         var objectID = $(this).attr('id');
         $(this).unlike('status', objectID);
     });
+    $('body').on('click', '.shareStatus', function() {
+        var objectID = $(this).attr('id');
+        $(this).share(objectID);
+    });
+    $('body').on('click', '.deleteAction', function() {
+        var objectID = $(this).attr('id');
+        $(this).deleteEntry(objectID);
+    });
     $('body').on('click', '.addFriend', function() {
         var objectID = $(this).attr('id');
         $(this).addFriend(objectID);
@@ -91,16 +99,22 @@ $(document).ready(function() {
         var objectID = $(this).attr('id');
         $(this).acceptFriend(objectID);
     });
+    jQuery.fn.center = function() {
+        this.css("position", "absolute");
+        this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
+        this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
+        return this;
+    };
 });
 
 //layout photo like pinterest
-$(window).load(function() {
+/*$(window).load(function() {
     $('.uiPhotoPinCol').BlocksIt({
         numOfCol: 3,
         offsetX: -5,
         offsetY: 5
     });
-});
+});*/
 
 function showPopUpOver($click, $popUpOver) {
     $('body').on('click', $click, function() {
@@ -168,6 +182,37 @@ function hoverShowPopUpOver($click, $popUpOver) {
                 } else {
                     $('#likeSentence-' + objectID).detach();
                 }
+            }
+        });
+    };
+    $.fn.share = function(objectID)
+    {
+        $('#fade').show();
+        $('.uiShare').show();
+        $('.uiShare').center();
+        $('.notificationShare').center();
+        $.ajax({
+            async: true,
+            type: 'POST',
+            beforeSend: function() {
+                $('.uiShare').addClass('loading');
+            },
+            complete: function(request, json) {
+                $('.uiShare').removeClass('loading');
+                $('.uiShare').html(request.responseText);
+            },
+            url: '/content/post/shareStatus',
+            data: {statusID: objectID}
+        });
+    };
+    $.fn.deleteEntry = function(objectID)
+    {
+        $.ajax({
+            type: 'POST',
+            url: '/content/post/delete',
+            data: {objectID: objectID},
+            success: function(){
+                $('.postItem-'+objectID).fadeOut('slow');
             }
         });
     }
@@ -418,6 +463,7 @@ $("body").on('click', '#createGroup', function(e) {
         open: function(event, ui) {
             $(".ui-dialog-titlebar-close").hide();
             $('body').css('overflow', 'hidden');
+
 
         }
     });

@@ -1,37 +1,29 @@
-<?php
-$listStatus = $this->f3->get('listStatus');
-$likeStatus = $this->f3->get('likeStatus');
-$rand = rand(100, 100000);
-?>
-
+<script>
+    $(document).ready(function() {
+        $('#contentContainer').scrollPaginationPost({
+            nop: 5, // The number of posts per scroll to be loaded
+            offset: 0, // Initial offset, begins at 0 in this case
+            error: 'No More Posts!', // When the user reaches the end this is the message that is
+            // displayed. You can change this if you want.
+            delay: 500, // When you scroll down the posts will load after a delayed amount of time.
+            // This is mainly for usability concerns. You can alter this as you see fit
+            scroll: true // The main bit, if set to false posts will not load as the user scrolls.
+            // but will still load if the user clicks.
+        });
+        $('#typeActivity').html('<input type=hidden id=type name=type value=post >');
+    });
+</script>
 <div class="uiMainColProfile large-70">
     <div class="uiMainContainer">
         <?php
-        AppController::elementModules('postWrap', 'post');
+        FactoryUtils::element('formPost', array('module' => 'post'));
         ?>
+        <!--<input type="hidden" id="type" name="type" value="post">-->
         <input name="profileID" id="profileID" type="hidden" value="<?php echo $this->f3->get('SESSION.userID'); ?>">
         <div class="wrapperContainer">
             <div id="contentContainer">
-                <?php
-                if (!empty($listStatus))
-                {
-                    foreach ($listStatus as $key => $status)
-                    {
-                        $statusID   = $status->recordID;
-                        $activity   = $status->data;
-                        $user       = PostController::getUser($status->data->actor);
-                        $username   = $user->data->username;
-                        $curUserID  = $user->recordID;
-                        $avatar     = $user->data->profilePic;
-                        $like       = $likeStatus[$statusID];
-                        $f3         = require('viewPost.php');
-                    }
-                }
-                ?>
+            <!--Loading all post on here-->
             </div>
-            <!--<div class="uiMoreView content-center">
-                <div class="loading uiLoadingIcon"></div>
-            </div>-->
         </div>
     </div>
 </div>
@@ -48,15 +40,3 @@ $rand = rand(100, 100000);
 </div>
 
 <script type="text/javascript" src="<?php echo $this->f3->get('STATIC_MOD'); ?>post/webroot/js/socialewired.post.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $(".oembed<?php echo $rand; ?>").oembed(null,
-            {
-                embedMethod: "append",
-                maxWidth: 1024,
-                maxHeight: 768,
-                autoplay: false
-            }
-        );
-    });
-</script>

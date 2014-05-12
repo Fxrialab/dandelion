@@ -58,7 +58,7 @@ class RouteConfig {
 
     public $modules = array(
         /* Route config for modules */
-        'myPost_post' => "PostController",
+        'post_post' => "PostController",
         'group_group' => "GroupController",
         'myPhoto_photo' => "photoController",
     );

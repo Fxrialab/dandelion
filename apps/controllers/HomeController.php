@@ -32,7 +32,6 @@ class HomeController extends AppController
         {
             $this->layout = 'home';
 
-
             //load js file of all modules existed
             $js = glob(MODULES . '*/webroot/js/*.js');
             $loadJS = array();

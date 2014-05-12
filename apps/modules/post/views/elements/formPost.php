@@ -152,6 +152,7 @@ $("#submitFormStatus").submit(function() {
                 $('.photoWrap').remove();
                 $('#imgID').val();
                 $('#status').val('');
+                updateTime();
             }
         });
     }

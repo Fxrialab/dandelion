@@ -1,9 +1,7 @@
 <?php
 $rpOwnerID  = str_replace(':', '_', $status->data->owner);
 $rpStatusID = str_replace(":", "_", $statusID);
-//$rpCurUserID = str_replace(":", "_", $curUserID);
 $embedType      = $status->data->embedType;
-
 $status_content = $status->data->content;
 $numberLikes    = $status->data->numberLike;
 $status_contentShare    = $status->data->contentShare;
@@ -12,22 +10,28 @@ $status_published       = $status->data->published;
 <div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
     <div class="uiBoxPostContainer column-group">
         <div class="large-10 uiActorPicCol">
-            <a href="/content/myPost?username=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+            <a href="/content/post?username=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
         </div>
         <div class="large-85 uiPostContent">
             <div class="articleActorName fixMarginBottom-5">
-                <a href="/content/myPost?username=<?php echo $username ?>" class="timeLineLink"><?php echo $status->data->actorName; ?></a>
+                <a href="/content/post?username=<?php echo $username ?>" class="timeLineLink"><?php echo $status->data->actorName; ?></a>
             </div>
             <div class="articleContentWrapper">
                 <div class="column-group">
                     <?php
                     if($status_contentShare == 'none')
                     {
+                        $existLink = strpos($status_content,"http");
                         if(!empty($status->data->embedType) && $status->data->embedType == 'none' || $status->data->embedType == 'photo')
                         {
-                            $existLink = strpos($status_content,"http");
-                            if ($existLink != false || $existLink >= 0)
+                            if (is_bool($existLink))
                             {
+                                ?>
+                                <div class="textPostContainer fixMarginBottom-5">
+                                    <span class="textPost"><?php echo $status_content; ?></span>
+                                </div>
+                                <?php
+                            }else {
                                 $existSpace = strpos(substr($status_content, $existLink), ' ');
                                 $link = !empty($existSpace)?substr($status_content, $existLink, $existSpace):substr($status_content, $existLink);
                                 $htmlLink = "<a href='".$link."'>".$link."</a>";
@@ -36,21 +40,25 @@ $status_published       = $status->data->published;
                                     <span class="textPost"><?php echo str_replace($link, $htmlLink, $status_content); ?></span>
                                 </div>
                                 <?php
-                            }else {
-                                ?>
-                                <div class="textPostContainer fixMarginBottom-5">
-                                    <span class="textPost"><?php echo $status_content; ?></span>
-                                </div>
-                                <?php
                             }
                         } else {  ?>
                             <div class="textPostContainer fixMarginBottom-5">
                                 <span class="textPost">
                                     <?php
-                                    $link = "<a href='".$status->data->embedSource."'>".$status->data->embedSource."</a>";
-                                    echo str_replace('_linkWith_',$link, $status_content);
+                                    if (!is_bool($existLink))
+                                    {
+                                        $existSpace = strpos(substr($status_content, $existLink), ' ');
+                                        $link       = !empty($existSpace)?substr($status_content, $existLink, $existSpace):substr($status_content, $existLink);
+                                        $htmlLink   = "<a href='".$link."'>".$link."</a>";
+                                        $rpLink     = str_replace($link, $htmlLink, $status_content);
+                                        $linkEmbed  = "<a href='".$status->data->embedSource."'>".$status->data->embedSource."</a>";
+                                        echo str_replace('_linkWith_',$linkEmbed, $rpLink);
+                                    }else {
+                                        $link = '<a href="'.$status->data->embedSource.'">'.$status->data->embedSource.'</a>';
+                                        echo str_replace('_linkWith_',$link, $status_content);
+                                    }
                                     ?>
-                                    <a href="<?php echo $status->data->embedSource; ?>" class="oembed<?php echo $rand; ?>"> </a>
+                                    <a href="<?php echo $status->data->embedSource; ?>" class="oembed<?php echo $rand; ?>"></a>
                                 </span>
                             </div>
                         <?php
@@ -108,13 +116,13 @@ $status_published       = $status->data->published;
                             if ($status->data->contentShare == 'none') {
                                 ?>
                                 <!--Share Segments-->
-                                <li ><a class="shareStatus" onclick="ShareStatus('<?php echo str_replace(":", "_", $statusID); ?>')" title="Share">Share</a></li>
+                                <li ><a class="shareStatus" id="<?php echo str_replace(":", "_", $statusID); ?>" title="Share">Share</a></li>
                                 <li class="gapArticleActions">.</li>
                                 <?php
                             } else {
                                 ?>
                                 <!--Share Segments-->
-                                <li ><a class="shareStatus" onclick="ShareStatus('<?php echo str_replace(":", "_", $status->data->mainStatus); ?>')" title="Share">Share</a></li>
+                                <li ><a class="shareStatus" id="<?php echo str_replace(":", "_", $status->data->mainStatus); ?>" title="Share">Share</a></li>
                                 <li class="gapArticleActions">.</li>
                                 <?php
                             }
@@ -176,7 +184,7 @@ $status_published       = $status->data->published;
 
                     <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID ?>">
                         <div class="large-10 uiActorCommentPicCol">
-                            <a href="/content/myPost?username=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+                            <a href="/content/post?username=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
                         </div>
                         <div class="large-90 uiTextCommentArea">
                             <form class="ink-form" id="fmComment-<?php echo $rpStatusID ?>">
@@ -200,16 +208,14 @@ $status_published       = $status->data->published;
                 <nav class="ink-navigation">
                     <ul class="menu vertical">
                         <li><a class="test" href="#">Report this post</a></li>
-                        <li><a href="javascript:void(0)" onclick="new Delete('<?php echo $rpStatusID; ?>')">Delete this post</a></li>
+                        <li><a class="deleteAction" id="<?php echo $rpStatusID; ?>">Delete this post</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
     //target show popUp
-    
     new showPopUpOver('a.info-<?php echo $rpStatusID; ?>', '.infoOver-<?php echo $rpStatusID; ?>');
 </script>
