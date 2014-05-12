@@ -42,7 +42,7 @@ $members = $this->f3->get('member');
                 open: function(event, ui) {
                     $(".ui-dialog-titlebar-close").hide();
                     $('body').css('overflow', 'hidden'); //this line does the actual hiding
-                    $('#dialog').html('<p class="loading">Loading...</p>');
+                    $('#dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
                 }
             });
 
@@ -84,26 +84,26 @@ $members = $this->f3->get('member');
 
     <div class="column-group" id="displayPhotoGroup">
         <?php
-        if (!empty($group->data->urlCover))
-        {
-            $urlCover = $group->data->urlCover;
-            $f3 = require('cover.php');
-        }
-        else
-        {
-            ?>
-            <div  style="border: 1px solid #ccc; padding: 70px 0; overflow:  ">
-                <div class="large-30"></div>
-                <div class="large-20">
-                    <div id="singleFile">Upload Photo</div>
-                </div>
-                <div class="large-20"><div style="padding: 5px 0">    
-                        <a href="#" id="myPhotoGroup" rel="<?php echo $group->recordID ?>" title="My Photos">Choose from My Photos</a>
-                    </div>
-                </div>
-                <div class="large-40"></div>
+//        if (!empty($group->data->urlCover))
+//        {
+//            $urlCover = $group->data->urlCover;
+//            $f3 = require('cover.php');
+//        }
+//        else
+//        {
+        ?>
+        <div  style="border: 1px solid #ccc; padding: 70px 0; overflow:  ">
+            <div class="large-30"></div>
+            <div class="large-20">
+                <div id="singleFile">Upload Photo</div>
             </div>
-        <?php } ?>
+            <div class="large-20"><div style="padding: 5px 0">    
+                    <a href="#" id="myPhotoGroup" rel="<?php echo $group->recordID ?>" title="My Photos">Choose from My Photos</a>
+                </div>
+            </div>
+            <div class="large-40"></div>
+        </div>
+        <?php // } ?>
     </div>
     <?php $f3 = require('groupBar.php'); ?>
     <div class="uiMainColProfile uiMainContainer large-70">
@@ -118,12 +118,7 @@ $members = $this->f3->get('member');
         </div> 
 
     </div>
-    <div id="modalGroup">
-        <div class="modalGroupHeader">
-            <h2>Create group</h2>
-        </div>
-        <?php $f3 = require('form.php'); ?>
-    </div>
+
     <div id="dialog">
 
     </div>

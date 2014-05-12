@@ -31,7 +31,7 @@ else
         $("#formRemoveGroup").submit(function() {
             $.ajax({
                 type: "POST",
-                url: "/content/group/ajax/comfirmRemoveGrorup",
+                url: "/content/group/ajax/comfirmRemove",
                 data: $("#formRemoveGroup").serialize(), // serializes the form's elements.
                 success: function(data)
                 {

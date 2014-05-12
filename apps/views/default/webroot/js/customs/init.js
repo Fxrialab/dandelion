@@ -403,72 +403,148 @@ $(document).ready(function()
     $("#multiFiles2").uploadFile(settingMultiFiles2);
 
 });
+$("body").on('click', '#createGroup', function(e) {
+    e.preventDefault();
+    var title = $(this).attr('title');
+    var href = $(this).attr('href');
+    $('.ui-dialog').html('<div class="loadingGroup">Loading...</div>');
+    $(".dialog").dialog({
+        width: "400",
+        height: "280",
+        position: ['top', 120],
+        title: title,
+        resizable: false,
+        modal: true,
+        open: function(event, ui) {
+            $(".ui-dialog-titlebar-close").hide();
+            $('body').css('overflow', 'hidden');
 
-//(function(e, t, n) {
-//
-//    e.fn.imagedrag = function(t) {
-//        function n(e, t) {
-//            i(e, t)
-//        }
-//        function i(t, n) {
-//            var i = e("img", r);
-//    
-//            var s = e(n.input);
-//            var o = r.height();
-//            var u = r.width();
-//            var a = i.height();
-//            var f = i.width();
-//            i.width(u);
-//            i.height(u / f * a);
-//            var l = i.height();
-//            var c = i.width();
-//            var h = (l - o) * -1;
-//            i.draggable({axis: "y", cursor: n.cursor, create: function() {
-//                    var e = "0px";
-//                    if (n.position.toLowerCase() == "top" || n.position == "" || n.position == " " || n.position == null) {
-//                    } else if (n.position.toLowerCase() == "middle") {
-//                        e = h / 2 + "px"
-//                    } else if (n.position.toLowerCase() == "bottom") {
-//                        e = h + "px"
-//                    } else {
-//                        e = n.position
-//                    }
-//                    i.css("top", e);
-//                    if (n.attribute == "html")
-//                        s.html(e);
-//                    else
-//                        s.attr(n.attribute, e)
-//                }, drag: function(e, t) {
-//                    var r = t.position.top;
-//                    if (r > 0) {
-//                        t.position.top = 0
-//                    }
-//                    if (r < h) {
-//                        t.position.top = h
-//                    }
-//                    if (n.attribute == "html")
-//                        s.html(t.position.top + "px");
-//                    else
-//                        s.attr(n.attribute, t.position.top + "px")
-//                }})
-//        }
-//        var r;
-//        var s = {input: "#output", attribute: "value", position: "middle", cursor: "move"};
-//         
-//        var o = e.extend(s, t);
-//        return this.each(function() {
-//            r = e(this);
-//            if (r == null)
-//                return false;
-//            n(r, o)
-//        })
-//    }
-//})(jQuery, this);
-//$(function() {
-//    $('#wrap').imagedrag({
-//        input: "#output",
-//        position: "middle",
-//        attribute: "html"
-//    });
-//
-//});
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: href,
+        success: function(data) {
+            $(".dialog").html(data);
+
+        }
+    });
+});
+$("body").on('click', '#leaveGroup', function(e) {
+    e.preventDefault();
+    var title = $(this).attr('title');
+    var href = $(this).attr('href');
+    var groupID = $(this).attr('rel');
+    $(".dialog").dialog({
+        width: "500",
+        height: "150",
+        position: ['top', 120],
+        title: "Leave " + title,
+        resizable: false,
+        modal: true,
+        open: function(event, ui) {
+            $(".ui-dialog-titlebar-close").hide();
+            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: href,
+        data: {groupID: groupID},
+        success: function(data) {
+            $(".dialog").html(data);
+
+        }
+    });
+});
+
+$("body").on('click', '#addMember', function(e) {
+    e.preventDefault();
+    var title = $(this).attr('title');
+    var href = $(this).attr('href');
+    var groupID = $(this).attr('rel');
+    $(".dialog").dialog({
+        width: "500",
+        height: "160",
+        position: ['top', 120],
+        title: title,
+        resizable: false,
+        modal: true,
+        open: function(event, ui) {
+            $(".ui-dialog-titlebar-close").hide();
+            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: href,
+        data: {groupID: groupID},
+        success: function(data) {
+            $(".dialog").html(data);
+
+        }
+    });
+});
+
+$("body").on('click', '.removeGroup', function(e) {
+    e.preventDefault();
+    var title = $(this).attr('title');
+    var href = $(this).attr('href');
+    var userID = $(this).attr('rel');
+    var groupID = $("#group_id").val();
+    $(".dialog").dialog({
+        width: "500",
+        height: "160",
+        position: ['top', 120],
+        title: title,
+        resizable: false,
+        modal: true,
+        open: function(event, ui) {
+            $(".ui-dialog-titlebar-close").hide();
+            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: href,
+        data: {groupID: groupID, userID: userID},
+        success: function(data) {
+            $(".dialog").html(data);
+
+        }
+    });
+});
+$("body").on('click', '.roleGroup', function(e) {
+    e.preventDefault();
+    var title = $(this).attr('title');
+    var href = $(this).attr('href');
+    var userID = $(this).attr('rel');
+    var groupID = $("#group_id").val();
+    $(".dialog").dialog({
+        width: "500",
+        height: "160",
+        position: ['top', 120],
+        title: title,
+        resizable: false,
+        modal: true,
+        open: function(event, ui) {
+            $(".ui-dialog-titlebar-close").hide();
+            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: href,
+        data: {groupID: groupID, userID: userID},
+        success: function(data) {
+            $(".dialog").html(data);
+
+        }
+    });
+});
+$("body").on('click', '.closeDialog', function(e) {
+    e.preventDefault();
+    $(".dialog").dialog("close");
+    $('body').css('overflow', 'scroll'); //this line does the actual hiding
+});

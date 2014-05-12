@@ -1,0 +1,263 @@
+/* 
+    Document   : group
+    Created on : May 10, 2014, 8:46:32 AM
+    Author     : Asus
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.selectricWrapper {
+    position: relative;
+    margin: 0 0 10px;
+    cursor: pointer;
+}
+
+.selectricResponsive {
+    width: 100%;
+}
+
+.selectric {
+    border: 1px solid #DDD;
+    background: #F8F8F8;
+    position: relative;
+    border-radius: 2px;
+}
+
+.selectric .label {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0 30px 0 0;
+    padding: 5px;
+    font-size: 12px;
+    line-height: 18px;
+    color: #444;
+    min-height: 18px;
+}
+
+.selectric .button {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    color: #BBB;
+    text-align: center;
+    font: 0/0 a;
+    /* IE Fix */
+    *font: 20px/30px Lucida Sans Unicode, Arial Unicode MS, Arial;
+}
+
+.selectric .button:after {
+    content: " ";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 0;
+    height: 0;
+    border: 4px solid transparent;
+    border-top-color: #BBB;
+    border-bottom: none;
+}
+
+.selectricHover .selectric {
+    border-color: #CCC;
+}
+
+.selectricHover .selectric .button {
+    color: #888;
+}
+
+.selectricHover .selectric .button:after {
+    border-top-color: #888;
+}
+
+.selectricOpen {
+    z-index: 9999;
+}
+
+.selectricOpen .selectric {
+    border-color: #CCC;
+    background: #F0F0F0;
+    z-index: 9999;
+}
+
+.selectricOpen .selectricItems {
+    display: block;
+}
+
+.selectricDisabled {
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.selectricHideSelect {
+    position: relative;
+    overflow: hidden;
+    width: 0;
+    height: 0;
+}
+
+.selectricHideSelect select {
+    position: absolute;
+    left: -100%;
+    display: none;
+}
+
+.selectricInput {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 1px !important;
+    height: 1px !important;
+    outline: none !important;
+    border: none !important;
+    *font: 0/0 a !important;
+    background: none !important;
+}
+
+.selectricTempShow {
+    position: absolute !important;
+    visibility: hidden !important;
+    display: block !important;
+}
+
+/* Items box */
+
+.selectricItems {
+    display: none;
+    position: absolute;
+    overflow: auto;
+    top: 100%;
+    left: 0;
+    background: #F9F9F9;
+    border: 1px solid #CCC;
+    z-index: 9998;
+    -webkit-box-shadow: 0 0 10px -6px;
+    box-shadow: 0 0 10px -6px;
+}
+
+.selectricItems ul,
+.selectricItems li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    line-height: 20px;
+    min-height: 20px;
+}
+
+.selectricItems li {
+    display: block;
+    padding: 5px;
+    border-top: 1px solid #FFF;
+    border-bottom: 1px solid #EEE;
+    color: #666;
+    cursor: pointer;
+}
+
+.selectricItems li.selected {
+    background: #EFEFEF;
+    color: #444;
+    border-top-color: #E0E0E0;
+}
+
+.selectricItems li:hover {
+    background: #F0F0F0;
+    color: #444;
+}
+
+.selectricItems li.disabled {
+    background: #F5F5F5;
+    color: #BBB;
+    border-top-color: #FAFAFA;
+    cursor: default;
+}
+.menuGroup {
+    padding-top: 10px !important;
+}
+.menuGroup li{
+    padding: 5px 0;
+    text-transform: capitalize
+}
+.menuGroup li#groupDescription a{
+    font-weight: bold;
+}
+.menuGroup li a{
+    padding: 0 !important;
+}
+.userItem{
+    margin: 0 5px;
+}
+.userItem .fullName{
+    font-weight: bold;
+}
+.topBarGroup{
+    padding:10px 5px; border: 1px solid #ccc; border-top: none;
+}
+.profileCover li a{
+    padding: 0 !important;
+    position: relative;
+}
+.profileCover li a span{
+    position: absolute;
+    display: none;
+    bottom: 5px;
+    left: 15px;
+    font-weight: bold;
+    z-index: 999;
+}
+.profileCover li a:hover span{
+    display: block;
+}
+.profileCover li a img{
+    max-width: 100px
+}
+#dialog{
+    padding: 0;
+    margin: 0;
+}
+
+.footerDialog{
+    text-align: right;
+    padding: 8px;
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    background-image: -webkit-linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
+    background-image: -moz-linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
+    background-image: -o-linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
+    background-image: -ms-linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
+    background-image: linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f9f9f9', EndColorStr='#e9e9e9');
+
+    border-top:1px solid #bababa;
+
+}
+.statusDialog{
+    padding: 10px;
+    line-height: 20px;
+}
+.ink-form select, .ink-form textarea, .ink-form input[type="text"], .ink-form input[type="password"], .ink-form input[type="datetime"], .ink-form input[type="datetime-local"], .ink-form input[type="date"], .ink-form input[type="month"], .ink-form input[type="time"], .ink-form input[type="week"], .ink-form input[type="number"], .ink-form input[type="email"], .ink-form input[type="url"], .ink-form input[type="search"], .ink-form input[type="tel"], .ink-form input[type="color"] {
+    padding: 5px !important;
+}
+.ink-form .control-group input[type="radio"] + label, .ink-form .control-group input[type="checkbox"] + label {
+    margin-top: -4px !important;
+}
+.loadingGroup{
+    width: 50px;
+    background-image: url('../images/loadingIcon.gif');
+    position: relative;
+}

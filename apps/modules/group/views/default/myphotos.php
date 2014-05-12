@@ -9,10 +9,7 @@
 
 </script>
 <style>
-    .footerDialog{
-        text-align: right;
-        background: #ccc; position: absolute; bottom: 0; left: 0; width: 100%
-    }
+
 </style>
 <div class=" column-group">
     <?php

@@ -29,7 +29,7 @@ li.token-input-token-facebook {
     height: auto !important; 
     height: 15px;
     margin: 3px;
-    padding: 1px 3px;
+    padding: 0px 3px;
     background-color: #eff2f7;
     color: #000;
     cursor: default;
@@ -83,7 +83,7 @@ div.token-input-dropdown-facebook {
     cursor: default;
     font-size: 11px;
     z-index: 9999999;
-    width: 385px;
+    min-width: 250px;
     float: left;
 }
 

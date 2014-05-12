@@ -6,6 +6,7 @@
 ?>
 <div class="column-group">
     <div style ="padding:10px 5px; border-bottom: 1px solid #ccc;">
-        <a href="#"><?php echo $this->f3->get('name')?></a>
+        <a href="#"><?php echo $this->f3->get('name') ?></a>
+    
     </div>
 </div>
