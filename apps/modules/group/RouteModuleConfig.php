@@ -14,6 +14,7 @@ class RouteModuleConfig
         'groupSuccess_POST' => "GroupController",
         'myphotos_POST' => "GroupController",
         'cover_POST' => "GroupController",
+        'search_POST' => "GroupController",
         'leave_POST' => "GroupController",
         'addFriend_POST' => "AjaxController",
         'searchFriends_POST' => "AjaxController",

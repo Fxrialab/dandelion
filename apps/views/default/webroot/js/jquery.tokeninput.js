@@ -40,7 +40,7 @@
         idPrefix: "token-input-",
         // Formatters
         resultsFormatter: function(item) {
-            return "<li><img style='width:40px; float:left' src=" + item[this.propertyAvatar] + "><div style='margin-left:10px'>" + item[this.propertyToSearch] + " " + item[this.propertyMess] + "</div></li>"
+            return "<li><div class='column-group'><div class='large-20'><img style='width:40px;' src=" + item[this.propertyAvatar] + "></div><div class='large-80 fullName'>" + item[this.propertyToSearch] + "<br><br>" + item[this.propertyMess] + "</div></div></li>"
         },
         tokenFormatter: function(item) {
             return "<li><p>" + item[this.propertyToSearch] + "</p></li>"

@@ -25,13 +25,27 @@
                     </a>
                 </li>
                 <li class="">
-                    <a href="/content/group" class="uiVerticalNav-item">
+                    <a href="/content/group?category=membership" class="uiVerticalNav-item">
                         <i class="navMenuIcon-group"></i>
                         Group
                         <span class="uiVerticalNav-counter">15</span>
                     </a>
-                    <ul class="uiVerticalNav-subnav">
-                        <li class="active"><a href="/content/group/addGroup">Create Group</a></li>
+                    <ul class="uiVerticalNav-menu">
+                        <li class="active"><a href="/content/group?category=admin">Groups your Admin</a></li>
+                        <?php
+                        $memberGroup = ElementController::groupMember();
+                        if (!empty($memberGroup))
+                        {
+                            foreach ($memberGroup as $value)
+                            {
+                                $group = ElementController::findGroup($value->data->groupID);
+                                ?>
+                                <li><a href="/content/group/groupdetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><?php echo $group->data->name ?></a></li>
+                                <?php
+                            }
+                        }
+                        ?>
+                        <!--<li class="active"><a href="/content/group/addGroup">Create Group</a></li>-->
                         <!--<li><a href="">Vacation <span class="uiVerticalNav-counter">23</span></a></li>-->
                     </ul>
                 </li>

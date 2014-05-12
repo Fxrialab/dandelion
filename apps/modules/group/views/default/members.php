@@ -39,7 +39,7 @@ $countAdmin = $this->f3->get('countAdmin');
                                     <li>
                                         <form class="ink-form" action="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>&act=<?php echo $admin ?>" method="post">
                                             <div class="control-group">
-                                                <input type="text" id="search" name="search" style="height: 25px">
+                                                <input type="text" id="search" name="search" style="height: 26px">
                                             </div>
                                             <input type="hidden">
                                         </form>
@@ -56,9 +56,23 @@ $countAdmin = $this->f3->get('countAdmin');
         <?php
         if (!empty($members))
         {
+              
             foreach ($members as $key => $value)
+              
             {
-                $user = GroupController::findUser($value->data->member);
+                if (!empty($value->data->member))
+                {
+                    $userID = $value->data->member;
+                    $role = $value->data->role;
+                    $action = $value->data->action;
+                }
+                else
+                {
+                    $userID = $value->member;
+                    $role = $value->role;
+                    $action = $value->action;
+                }
+                $user = GroupController::findUser($userID);
                 ?>
                 <div class="large-30" id="user_<?php echo str_replace(":", "_", $user->recordID) ?>">
                     <div class="large-35">
@@ -71,7 +85,7 @@ $countAdmin = $this->f3->get('countAdmin');
                             <div id="dropdown-<?php echo str_replace(":", "_", $user->recordID) ?>" class="dropdown dropdown-tip">
                                 <ul class="dropdown-menu">
                                     <?php
-                                    if ($value->data->action == 0)
+                                    if ($action == 0)
                                     {
                                         ?>
                                         <li><a rel="<?php echo $user->recordID ?>" title="Remove as admin" class="removeGroup" href="/content/group/ajax/removeAdmin"> Remove as admin</a></li>
@@ -80,7 +94,7 @@ $countAdmin = $this->f3->get('countAdmin');
                                     }
                                     else
                                     {
-                                        if ($value->data->role == 'admin')
+                                        if ($role == 'admin')
                                         {
                                             ?>
                                             <li><a class="roleGroup" rel="<?php echo $user->recordID ?>" title="Remove as admin" href="/content/group/ajax/rolegroup">Remove as admin</a></li>

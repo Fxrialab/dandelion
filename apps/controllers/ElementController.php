@@ -9,15 +9,24 @@
 class ElementController extends Controller
 {
 
-
     public function __construct()
     {
         parent::__construct();
     }
 
-    static public function head()
+    static public function groupMember()
     {
-        return '123';
+        $facade = new DataFacade;
+        $model = $facade->findAllAttributes('groupMember', array('member' => F3::get('SESSION.userID')));
+        return $model;
+    }
+
+    static public function findGroup($id)
+    {
+
+        $facade = new DataFacade;
+        $model = $facade->findByPk('group', $id);
+        return $model;
     }
 
 //    public function profileElement()
@@ -26,7 +35,6 @@ class ElementController extends Controller
 //        $getProfile = $this->User->findOne("@rid = ?", array("#" . $currentUser->recordID));
 //        F3::set('profile', $getProfile);
 //    }
-
 //    public function header()
 //    {
 //        $currentUser = $this->getCurrentUser();

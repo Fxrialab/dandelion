@@ -104,19 +104,53 @@ class GroupController extends AppController
         {
             $this->layout = 'group';
             $groupID = str_replace("_", ":", $this->f3->get('GET.id'));
-            if ($_GET['act'] == 'admin')
+            if (!empty($_POST['search']))
             {
-                $members = $this->facade->findAllAttributes('groupMember', array('groupID' => $groupID, 'role' => 'admin'));
-
-                $this->f3->set('admin', 'admin');
+                $searchText = $this->f3->get("POST.search");
+                $act = $this->f3->get("GET.act");
+                $data = array();
+                $command = $this->getSearchCommand(array('fullName'), $searchText);
+                $result = Model::get('user')->callGremlin($command);
+                if (!empty($result))
+                {
+                    foreach ($result as $people)
+                    {
+                        if ($act == 'admin')
+                        {
+                            $member = $this->facade->findByAttributes('groupMember', array('member' => $people, 'groupID' => str_replace("_", ":", $groupID), 'role' => 'admin'));
+                            $this->f3->set('admin', 'admin');
+                        }
+                        else
+                        {
+                            $member = $this->facade->findByAttributes('groupMember', array('member' => $people, 'groupID' => str_replace("_", ":", $groupID)));
+                            $this->f3->set('admin', 'membership');
+                        }
+                        $data[] = array(
+                            'recordID' => $member->recordID,
+                            'groupID' => $member->data->groupID,
+                            'member' => $member->data->member,
+                            'action' => $member->data->action,
+                            'published' => $member->data->published,
+                            'role' => $member->data->role,
+                        );
+                    }
+                }
+                $json = json_encode($data);
+                $members = json_decode($json);
             }
             else
             {
-                $members = $this->facade->findAllAttributes('groupMember', array('groupID' => $groupID));
-
-                $this->f3->set('admin', 'membership');
+                if ($_GET['act'] == 'admin')
+                {
+                    $members = $this->facade->findAllAttributes('groupMember', array('groupID' => $groupID, 'role' => 'admin'));
+                    $this->f3->set('admin', 'admin');
+                }
+                else
+                {
+                    $members = $this->facade->findAllAttributes('groupMember', array('groupID' => $groupID));
+                    $this->f3->set('admin', 'membership');
+                }
             }
-
             $group = $this->facade->findByPk('group', str_replace("_", ":", $groupID));
             $countAdmin = $this->facade->count('groupMember', array('groupID' => $groupID, 'role' => 'admin'));
             $count = $this->facade->count('groupMember', array('groupID' => $groupID));
@@ -189,7 +223,7 @@ class GroupController extends AppController
         }
     }
 
-    public function groupDetail($viewPath)
+    public function groupdetail($viewPath)
     {
         if ($this->isLogin())
         {
