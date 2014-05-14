@@ -169,39 +169,9 @@ class PhotoController extends AppController
 
                 if (!is_array($_FILES["myfile"]['name'])) //single file
                 {
-                    $allowed_formats = array("jpg", "png", "gif", "bmp");
                     $fileName = $_FILES["myfile"]["name"];
-                    $tmpname = $_FILES['myfile']['tmp_name'];
-                    $size = $_FILES['myfile']['size'];
-                    list($name, $ext) = explode(".", $fileName);
-                    if (!in_array($ext, $allowed_formats))
-                    {
-                        $err = "<strong>Oh snap!</strong>Invalid file formats only use jpg,png,gif";
-                        return false;
-                    }
-                    if ($ext == "jpg" || $ext == "jpeg")
-                        $src = imagecreatefromjpeg($tmpname);
-                    else if ($ext == "png")
-                        $src = imagecreatefrompng($tmpname);
-                    else
-                        $src = imagecreatefromgif($tmpname);
-
-                    list($width, $height) = getimagesize($tmpname);
-                    if ($width > 750)
-                    {
-                        $newwidth = 750;
-                        $newheight = ($height / $width) * $newwidth;
-                        $tmp = imagecreatetruecolor($newwidth, $newheight);
-                        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-                        $image = $outPutDir . $fileName;
-                        imagejpeg($tmp, $outPutDir . $fileName, 100);
-                        move_uploaded_file($image, $outPutDir . $fileName);
-                    }
-                    else
-                    {
-                        move_uploaded_file($_FILES["myfile"]["tmp_name"], $outPutDir . $fileName);
-                    }
-
+                    $path = $outPutDir . $fileName;
+                    move_uploaded_file($_FILES["myfile"]["tmp_name"], $path);
 
                     $entry = array(
                         'actor' => $currentUser->recordID,
@@ -215,10 +185,8 @@ class PhotoController extends AppController
                         'statusUpload' => 'uploaded',
                         'published' => ''
                     );
-
-                    $photoID = $this->facade->save('photo', $entry);
-
-                    $infoPhotoRC = $this->facade->findByPk('photo', $photoID);
+                    $this->facade->save('photo',$entry);
+                    $infoPhotoRC = $this->facade->findByAttributes('photo', array('actor' => $currentUser->recordID, 'statusUpload' => 'uploaded'));
 
                     $data['results'][] = array(
                         'photoID' => str_replace(':', '_', $infoPhotoRC->recordID),
@@ -254,11 +222,27 @@ class PhotoController extends AppController
                             'fileName' => $photo->data->fileName,
                             'url' => $photo->data->url,
                         );
+//                        $infoPhotoRC = $this->facade->findAllAttributes('photo', array('actor' => $currentUser->recordID, 'statusUpload' => 'uploaded'));
+//                        foreach ($infoPhotoRC as $infoPhoto)
+//                        {
+//                            $data['results'][] = array(
+//                                'photoID' => str_replace(':', '_', $infoPhoto->recordID),
+//                                'fileName' => $infoPhoto->data->fileName,
+//                                'url' => $infoPhoto->data->url,
+//                            );
+//                        }
                     }
                 }
                 header("Content-Type: application/json; charset=UTF-8");
                 $jsonData = json_encode((object) $data);
                 echo $jsonData;
+                if ($jsonData)
+                {
+                    $updateEntry = array(
+                        'statusUpload' => 'uploaded',
+                    );
+                    $this->facade->updateByAttributes('photo', $updateEntry, array('actor'=>$currentUser->recordID, 'statusUpload'=>'uploaded'));
+                }
             }
         }
     }

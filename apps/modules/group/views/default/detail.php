@@ -28,41 +28,7 @@ $members = $this->f3->get('member');
         $('#typeActivity').html('<input type=hidden id=type name=type value=group >');
         $('#typeActivityID').html('<input type=hidden id=typeID name=typeID value=<?php echo $group->recordID ?>>');
     })
-    $(document).ready(function() {
-        $("#myPhotoGroup").click(function() {
-            var title = $(this).attr('title');
-            var id = $(this).attr('rel');
-            $("#dialog").dialog({
-                width: "700",
-                height: "400",
-                position: ['top', 100],
-                title: title,
-                resizable: false,
-                modal: true,
-                open: function(event, ui) {
-                    $(".ui-dialog-titlebar-close").hide();
-                    $('body').css('overflow', 'hidden'); //this line does the actual hiding
-                    $('#dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
-                }
-            });
 
-            $.ajax({
-                type: "POST",
-                url: "/content/group/myphotos",
-                data: {id: id},
-                success: function(data) {
-                    $("#dialog").html(data);
-
-                }
-            });
-        });
-    });
-    $("body").on('click', '.closeDialog', function(e) {
-        // prevent the default action, e.g., following a link
-        e.preventDefault();
-        $("#dialog").dialog("close");
-        $('body').css('overflow', 'scroll'); //this line does the actual hiding
-    });
     $("body").on('click', '.choosePhoto', function(e) {
         e.preventDefault();
         var photoID = $(this).attr('rel');
@@ -81,30 +47,38 @@ $members = $this->f3->get('member');
 </script>
 
 <div class="large-100">
+    <form id="coverPhotoGroup">
+        <input type="hidden" name="groupID" value="<?php echo $group->recordID ?>">
+        <div class="column-group" id="displayPhotoGroup">
+            <?php
+            if (!empty($group->data->urlCover))
+            {
+                $urlCover = $group->data->urlCover;
+                $groupID = $group->recordID;
+                $f3 = require('cover.php');
+                ?>
 
-    <div class="column-group" id="displayPhotoGroup">
-        <?php
-//        if (!empty($group->data->urlCover))
-//        {
-//            $urlCover = $group->data->urlCover;
-//            $f3 = require('cover.php');
-//        }
-//        else
-//        {
-        ?>
-        <div  style="border: 1px solid #ccc; padding: 70px 0; overflow:  ">
-            <div class="large-30"></div>
-            <div class="large-20">
-                <div id="singleFile">Upload Photo</div>
-            </div>
-            <div class="large-20"><div style="padding: 5px 0">    
-                    <a href="#" id="myPhotoGroup" rel="<?php echo $group->recordID ?>" title="My Photos">Choose from My Photos</a>
+                <?php
+            }
+            else
+            {
+                ?>
+
+                <div  style="border: 1px solid #ccc; padding: 70px 0; overflow:  ">
+                    <div class="large-30"></div>
+                    <div class="large-20">
+                        <div id="uploadPhotoGroup">Upload Photo</div>
+                    </div>
+                    <div class="large-20"><div style="padding: 5px 0">    
+                            <a href="#" id="myPhotoGroup" rel="<?php echo $group->recordID ?>" title="My Photos">Choose from My Photos</a>
+                        </div>
+                    </div>
+                    <div class="large-40"></div>
                 </div>
-            </div>
-            <div class="large-40"></div>
+            <?php } ?>
+
         </div>
-        <?php // } ?>
-    </div>
+    </form>
     <?php $f3 = require('groupBar.php'); ?>
     <div class="uiMainColProfile uiMainContainer large-70">
         <?php
@@ -118,7 +92,21 @@ $members = $this->f3->get('member');
         </div> 
 
     </div>
+    <script>
+        $(function() {
 
-    <div id="dialog">
+            $("#coverPhotoGroup").submit(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "/content/group/ajax/comfirmcover",
+                    data: $("#coverPhotoGroup").serialize(), // serializes the form's elements.
+                    success: function(data)
+                    {
+                        $(".submit").html(data);
+                    }
+                });
 
-    </div>
+                return false; // avoid to execute the actual submit of the form.
+            });
+        });
+    </script>

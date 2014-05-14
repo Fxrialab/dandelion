@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by fxrialab team
  * Author: Uchiha
@@ -11,7 +12,9 @@ require_once FACADE . "DataFacade.php";
 require_once MODEL_UTILS . "ObjectHandler.php";
 require_once FACTORY_UTILS . "FactoryUtils.php";
 
-class Controller {
+class Controller
+{
+
     protected $f3;
     protected $uses = array("");
     protected $helpers = array("");
@@ -22,7 +25,7 @@ class Controller {
         $f3 = Base::instance();
         $facade = new DataFacade();
 
-        $this->f3=$f3;
+        $this->f3 = $f3;
         $this->facade = $facade;
         $this->_mergeVars(array("uses", "helpers"));
         $this->loadHelpers();
@@ -33,8 +36,7 @@ class Controller {
     {
         $parent = get_class($this);
 
-        while ($parent != '')
-        {
+        while ($parent != '') {
             $appVars = get_class_vars($parent);
             $parent = get_parent_class($parent);
 
@@ -42,9 +44,7 @@ class Controller {
             {
                 $this->$merges[$i] = array_merge($this->$merges[$i], array_diff($appVars[$merges[$i]], $this->$merges[$i]));
             }
-
         }
-
     }
 
     protected function loadHelpers()
@@ -55,10 +55,10 @@ class Controller {
             $helperFile = lcfirst($helper);
             $helper = $helper . 'Helper';
 
-            if (file_exists(HELPERS . $helperFile  . '_helper.php'))
+            if (file_exists(HELPERS . $helperFile . '_helper.php'))
             {
                 require_once(HELPERS . $helperFile . '_helper.php');
-                $this->$helper= new $helper;
+                $this->$helper = new $helper;
             }
         }
     }
@@ -68,24 +68,26 @@ class Controller {
         return $this->f3->get("SESSION.loggedUser");
     }
 
-    public function render($page,$type)
+    public function render($page, $type)
     {
         if ($this->layout != '')
         {
             require_once(UI . LAYOUTS . $this->layout . '.php');
-        }else {
+        }
+        else
+        {
             echo View::instance()->render($page);
         }
     }
 
-    public function renderModule($action,$type)
+    public function renderModule($action, $type)
     {
         $postInfo = Register::getModule($type);
         //var_dump($pathInfo);
         $themePath = $postInfo[0]['viewPath'];
-        require_once(MODULES.$themePath.$action.".php");
+        require_once(MODULES . $themePath . $action . ".php");
     }
 
-
 }
+
 ?>

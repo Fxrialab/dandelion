@@ -14,8 +14,10 @@ class RouteModuleConfig
         'groupSuccess_POST' => "GroupController",
         'myphotos_POST' => "GroupController",
         'cover_POST' => "GroupController",
+        'uploadphoto_POST' => "GroupController",
         'search_POST' => "GroupController",
         'leave_POST' => "GroupController",
+        'crop_GET' => "GroupController",
         'addFriend_POST' => "AjaxController",
         'searchFriends_POST' => "AjaxController",
         'addMemberGroup_POST' => "AjaxController",
@@ -24,6 +26,7 @@ class RouteModuleConfig
         'rolegroup_POST' => "AjaxController",
         'removeAdmin_POST' => "AjaxController",
         'comfirmrole_POST' => "AjaxController",
+        'comfirmcover_POST' => "AjaxController",
     );
 
 }

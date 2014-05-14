@@ -9,7 +9,7 @@
         <div class="topBarGroup">
             <nav class="ink-navigation">
                 <ul class="horizontal menu">
-                    <li><a href="/content/group/groupDetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><?php echo $group->data->name ?></a></li>
+                    <li><a href="/content/group/groupdetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><?php echo $group->data->name ?></a></li>
                     <li><a href="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>&act=membership">Members</a></li>
                     <li><a href="#">Event</a></li>
                     <li><a href="#">Photo</a></li>

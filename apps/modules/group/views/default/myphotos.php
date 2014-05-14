@@ -4,13 +4,6 @@
  * and open the template in the editor.
  */
 ?>
-<script>
-
-
-</script>
-<style>
-
-</style>
 <div class=" column-group">
     <?php
     $photos = $this->f3->get('photos');

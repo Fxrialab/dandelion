@@ -216,6 +216,7 @@ class GroupController extends AppController
             {
                 $this->f3->set('url', $photo->data->url);
                 $this->f3->set('photoID', $photoID);
+                $this->f3->set('photo', $photo);
             }
             $this->f3->set('groupID', $_POST['groupID']);
 
@@ -236,6 +237,85 @@ class GroupController extends AppController
             $this->f3->set('group', $group);
             $this->f3->set('member', $member);
             $this->render($viewPath . 'detail.php', 'modules');
+        }
+    }
+
+    public function uploadphoto()
+    {
+        if ($this->isLogin())
+        {
+            $outPutDir = UPLOAD . "test/";
+            $data = array(
+                'results' => array(),
+                'success' => false,
+                'error' => ''
+            );
+
+            if (isset($_FILES["myfile"]))
+            {
+                $currentUser = $this->getCurrentUser();
+
+                $data['success'] = true;
+                $data['error'] = $_FILES["myfile"]["error"];
+
+                if (!is_array($_FILES["myfile"]['name'])) //single file
+                {
+                    $allowed_formats = array("jpg", "png", "gif", "bmp");
+                    $fileName = $_FILES["myfile"]["name"];
+                    $tmpname = $_FILES['myfile']['tmp_name'];
+                    $size = $_FILES['myfile']['size'];
+                    list($name, $ext) = explode(".", $fileName);
+                    if (!in_array($ext, $allowed_formats))
+                    {
+                        $err = "<strong>Oh snap!</strong>Invalid file formats only use jpg,png,gif";
+                        return false;
+                    }
+                    if ($ext == "jpg" || $ext == "jpeg")
+                        $src = imagecreatefromjpeg($tmpname);
+                    else if ($ext == "png")
+                        $src = imagecreatefrompng($tmpname);
+                    else
+                        $src = imagecreatefromgif($tmpname);
+
+                    list($width, $height) = getimagesize($tmpname);
+                    if ($width > 750)
+                    {
+                        $newwidth = 750;
+                        $newheight = ($height / $width) * $newwidth;
+                        $tmp = imagecreatetruecolor($newwidth, $newheight);
+                        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+                        $image = $outPutDir . $fileName;
+                        imagejpeg($tmp, $outPutDir . $fileName, 100);
+                        move_uploaded_file($image, $outPutDir . $fileName);
+                    }
+                    else
+                    {
+                        move_uploaded_file($_FILES["myfile"]["tmp_name"], $outPutDir . $fileName);
+                    }
+                    $entry = array(
+                        'actor' => $currentUser->recordID,
+                        'album' => '',
+                        'fileName' => $fileName,
+                        'url' => UPLOAD_URL . "test/" . $fileName,
+                        'thumbnail_url' => '',
+                        'description' => '',
+                        'numberLike' => '0',
+                        'numberComment' => '0',
+                        'statusUpload' => 'uploaded',
+                        'published' => time(),
+                        'type' => 'group'
+                    );
+                    $photoID = $this->facade->save('photo', $entry);
+                    $photo = $this->facade->findByPk('photo', $photoID);
+                    
+                    $this->f3->set('photo', $photo);
+                    $this->renderModule('cover', 'Group');
+                }
+
+//                header("Content-Type: application/json; charset=UTF-8");
+//                $jsonData = json_encode((object) $data);
+//                echo $jsonData;
+            }
         }
     }
 
@@ -283,7 +363,6 @@ class GroupController extends AppController
                     }
                     $model = Model::get('group')->find($group);
                     $this->f3->set('group', $model);
-                    $this->f3->set('name', $_POST['groupName']);
                 }
                 $this->renderModule('viewGroup', 'Group');
             }
@@ -304,6 +383,20 @@ class GroupController extends AppController
             $this->f3->set('group', $group);
             $this->render($viewPath . 'detail.php', 'modules');
         }
+    }
+
+    public function crop()
+    {
+        $outPutDir = UPLOAD . "test/";
+        $image = $outPutDir . 'Koala.jpg'; // the image to crop
+        $dest_image = $outPutDir . time() . '.jpg'; // make sure the directory is writeable
+        $img = imagecreatetruecolor('1024', '250');
+        $org_img = imagecreatefromjpeg($image);
+        $ims = getimagesize($image);
+        imagecopy($img, $org_img, 0, 0, 0, 0, 1024, 250);
+        imagejpeg($img, $dest_image, 400);
+        imagedestroy($img);
+        echo '<img src="' . $dest_image . '" ><p>';
     }
 
 }

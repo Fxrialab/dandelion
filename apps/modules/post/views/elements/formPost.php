@@ -95,7 +95,7 @@ $rand = rand(100, 100000);
                                     </li>
                                     <li class="lineGapPostOption">|</li>
                                     <li><a href="#" title="Paste a video link"><img src="<?php echo IMAGES; ?>uploadVideoIcon.png"></a></li>
-                                    <li class="fixRightFloat"><button class="uiMediumButton blue">Post</button></li>
+                                    <li class="fixRightFloat"><button class="uiMediumButton ink-button green-button">Post</button></li>
                                 </ul>
                             </nav>
                         </div>

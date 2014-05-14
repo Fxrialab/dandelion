@@ -109,12 +109,12 @@ $(document).ready(function() {
 
 //layout photo like pinterest
 /*$(window).load(function() {
-    $('.uiPhotoPinCol').BlocksIt({
-        numOfCol: 3,
-        offsetX: -5,
-        offsetY: 5
-    });
-});*/
+ $('.uiPhotoPinCol').BlocksIt({
+ numOfCol: 3,
+ offsetX: -5,
+ offsetY: 5
+ });
+ });*/
 
 function showPopUpOver($click, $popUpOver) {
     $('body').on('click', $click, function() {
@@ -211,8 +211,8 @@ function hoverShowPopUpOver($click, $popUpOver) {
             type: 'POST',
             url: '/content/post/delete',
             data: {objectID: objectID},
-            success: function(){
-                $('.postItem-'+objectID).fadeOut('slow');
+            success: function() {
+                $('.postItem-' + objectID).fadeOut('slow');
             }
         });
     }
@@ -347,6 +347,24 @@ $(function() {
 
 $(document).ready(function()
 {
+    var uploadPhotoGroup = {
+        url: "/content/group/uploadphoto",
+        method: "POST",
+        allowedTypes: "jpg,png,gif",
+        fileName: "myfile",
+        multiple: false,
+        onSuccess: function(files, data, xhr)
+        {
+            $('.ajax-file-upload-statusbar').fadeOut('slow');
+            $('#displayPhotoGroup').html(data);
+
+        },
+        onError: function(files, status, errMsg)
+        {
+            $("#status").html("<font color='red'>Upload is Failed</font>");
+        }
+    };
+
     var settingSingleFile = {
         url: "/content/photo/loadingPhoto",
         method: "POST",
@@ -443,6 +461,8 @@ $(document).ready(function()
             $("#status").html("<font color='red'>Upload is Failed</font>");
         }
     };
+
+    $("#uploadPhotoGroup").uploadFile(uploadPhotoGroup);
     $("#singleFile").uploadFile(settingSingleFile);
     $("#multiFiles").uploadFile(settingMultiFiles);
     $("#multiFiles2").uploadFile(settingMultiFiles2);
@@ -589,8 +609,36 @@ $("body").on('click', '.roleGroup', function(e) {
         }
     });
 });
+$("body").on('click', '.myPhotoGroup', function(e) {
+    var title = $(this).attr('title');
+    var id = $(this).attr('rel');
+    $(".dialog").dialog({
+        width: "700",
+        height: "400",
+        position: ['top', 100],
+        title: title,
+        resizable: false,
+        modal: true,
+        open: function(event, ui) {
+            $(".ui-dialog-titlebar-close").hide();
+            $('body').css('overflow', 'hidden'); //this line does the actual hiding
+            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: "/content/group/myphotos",
+        data: {id: id},
+        success: function(data) {
+            $(".dialog").html(data);
+
+        }
+    });
+});
 $("body").on('click', '.closeDialog', function(e) {
     e.preventDefault();
+    $(".dialog form").remove();
     $(".dialog").dialog("close");
     $('body').css('overflow', 'scroll'); //this line does the actual hiding
 });

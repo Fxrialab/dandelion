@@ -55,26 +55,7 @@
         {
             foreach ($this->f3->get('groupMember') as $key => $value)
             {
-                $group = GroupController::findGroup(str_replace(":", "_", $value->data->groupID));
-                ?>
-                <div style ="padding:10px 5px; border-bottom: 1px solid #ccc;" id="groupBrowse_<?php echo str_replace(":", "_", $value->data->groupID) ?>">
-                    <div class="column-group">
-
-                        <div class=" large-90">
-                            <a href="/content/group/groupDetail?id=<?php echo str_replace(":", "_", $value->data->groupID) ?>"><?php echo $group->data->name ?></a>
-                        </div>
-                        <div class="large-10">
-                            <a href="#" class="ink-button" data-dropdown="#dropdown-<?php echo str_replace(":", "_", $value->data->groupID) ?>">Setting</a>
-                            <div id="dropdown-<?php echo str_replace(":", "_", $value->data->groupID) ?>" class="dropdown dropdown-tip dropdown-anchor-right">
-                                <ul class="dropdown-menu">
-                                    <li><a href="#1">Edit Notification Settings</a></li>
-                                    <li><a id="leaveGroup" rel="<?php echo str_replace(":", "_", $value->data->groupID) ?>" href="/content/group/leave" title="<?php echo $group->data->name ?>">Leave Group</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <?php
+                $f3 = require('viewGroup.php');
             }
         }
         ?>

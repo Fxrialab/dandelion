@@ -193,6 +193,20 @@ class AjaxController extends AppController
         }
     }
 
+    public function comfirmcover()
+    {
+        $updateGroup = array(
+            'urlCover' => $_POST['urlCover']
+        );
+        $update = $this->facade->updateByAttributes('group', $updateGroup, array('@rid' => '#' . $_POST['groupID']));
+        if ($update == 1)
+        {
+            $group = $this->facade->findByPk('group', $_POST['groupID']);
+            $this->f3->set('group', $group);
+            $this->renderModule('editCover', 'Group');
+        }
+    }
+
 }
 
 ?>
