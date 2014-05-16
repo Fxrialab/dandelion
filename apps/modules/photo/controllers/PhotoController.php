@@ -12,7 +12,7 @@ class PhotoController extends AppController
     }
 
     // @todo: ask client for album page
-    public function myPhoto($viewPath)
+    public function photo($viewPath)
     {
         if ($this->isLogin())
         {

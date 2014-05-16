@@ -364,7 +364,28 @@ $(document).ready(function()
             $("#status").html("<font color='red'>Upload is Failed</font>");
         }
     };
+    var uploadPhotoSingleFile = {
+        url: "/uploadPhoto",
+        method: "POST",
+        allowedTypes: "jpg,png,gif",
+        fileName: "myfile",
+        multiple: false,
+        onSuccess: function(files, data, xhr)
+        {
+            $('.ajax-file-upload-statusbar').fadeOut('slow');
+            $('.displayPhoto').html(data);
+            $('.editdropdown').css('display', 'none');
+            $('.timeLineMenuNav').html('<nav class="ink-navigation "><ul class="menu horizontal uiTimeLineHeadLine float-right">\n\
+                            <li><button type="submit" class="ink-button closeDialog">Cancel</button></li>\n\
+                            <li><button type="submit" class="ink-button green-button">Save Changes</button></li>\n\
+                            </ul></nav>');
 
+        },
+        onError: function(files, status, errMsg)
+        {
+            $("#status").html("<font color='red'>Upload is Failed</font>");
+        }
+    };
     var settingSingleFile = {
         url: "/content/photo/loadingPhoto",
         method: "POST",
@@ -461,11 +482,12 @@ $(document).ready(function()
             $("#status").html("<font color='red'>Upload is Failed</font>");
         }
     };
-
+    $("#uploadPhotoCover").uploadFile(uploadPhotoSingleFile);
     $("#uploadPhotoGroup").uploadFile(uploadPhotoGroup);
     $("#singleFile").uploadFile(settingSingleFile);
     $("#multiFiles").uploadFile(settingMultiFiles);
     $("#multiFiles2").uploadFile(settingMultiFiles2);
+
 
 });
 $("body").on('click', '#createGroup', function(e) {
@@ -473,27 +495,25 @@ $("body").on('click', '#createGroup', function(e) {
     var title = $(this).attr('title');
     var href = $(this).attr('href');
     $('.ui-dialog').html('<div class="loadingGroup">Loading...</div>');
-    $(".dialog").dialog({
-        width: "400",
-        height: "280",
-        position: ['top', 120],
-        title: title,
-        resizable: false,
-        modal: true,
-        open: function(event, ui) {
-            $(".ui-dialog-titlebar-close").hide();
-            $('body').css('overflow', 'hidden');
-
-
-        }
-    });
-
     $.ajax({
         type: "POST",
         url: href,
         success: function(data) {
             $(".dialog").html(data);
+            $(".dialog").dialog({
+                width: "400",
+                height: "280",
+                position: ['top', 120],
+                title: title,
+                resizable: false,
+                modal: true,
+                open: function(event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    $('body').css('overflow', 'hidden');
 
+
+                }
+            });
         }
     });
 });
@@ -530,24 +550,24 @@ $("body").on('click', '#addMember', function(e) {
     var title = $(this).attr('title');
     var href = $(this).attr('href');
     var groupID = $(this).attr('rel');
-    $(".dialog").dialog({
-        width: "500",
-        height: "160",
-        position: ['top', 120],
-        title: title,
-        resizable: false,
-        modal: true,
-        open: function(event, ui) {
-            $(".ui-dialog-titlebar-close").hide();
-            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
-        }
-    });
     $.ajax({
         type: "POST",
         url: href,
         data: {groupID: groupID},
         success: function(data) {
-            $(".dialog").html(data);
+            $(".dialog").dialog({
+                width: "500",
+                height: "160",
+                position: ['top', 120],
+                title: title,
+                resizable: false,
+                modal: true,
+                open: function(event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".dialog").html(data);
+                }
+            });
+
 
         }
     });
@@ -559,23 +579,24 @@ $("body").on('click', '.removeGroup', function(e) {
     var href = $(this).attr('href');
     var userID = $(this).attr('rel');
     var groupID = $("#group_id").val();
-    $(".dialog").dialog({
-        width: "500",
-        height: "160",
-        position: ['top', 120],
-        title: title,
-        resizable: false,
-        modal: true,
-        open: function(event, ui) {
-            $(".ui-dialog-titlebar-close").hide();
-            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
-        }
-    });
+
     $.ajax({
         type: "POST",
         url: href,
         data: {groupID: groupID, userID: userID},
         success: function(data) {
+            $(".dialog").dialog({
+                width: "500",
+                height: "160",
+                position: ['top', 120],
+                title: title,
+                resizable: false,
+                modal: true,
+                open: function(event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
+                }
+            });
             $(".dialog").html(data);
 
         }
@@ -587,23 +608,23 @@ $("body").on('click', '.roleGroup', function(e) {
     var href = $(this).attr('href');
     var userID = $(this).attr('rel');
     var groupID = $("#group_id").val();
-    $(".dialog").dialog({
-        width: "500",
-        height: "160",
-        position: ['top', 120],
-        title: title,
-        resizable: false,
-        modal: true,
-        open: function(event, ui) {
-            $(".ui-dialog-titlebar-close").hide();
-            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
-        }
-    });
     $.ajax({
         type: "POST",
         url: href,
         data: {groupID: groupID, userID: userID},
         success: function(data) {
+            $(".dialog").dialog({
+                width: "500",
+                height: "160",
+                position: ['top', 120],
+                title: title,
+                resizable: false,
+                modal: true,
+                open: function(event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
+                }
+            });
             $(".dialog").html(data);
 
         }
@@ -612,9 +633,38 @@ $("body").on('click', '.roleGroup', function(e) {
 $("body").on('click', '.myPhotoGroup', function(e) {
     var title = $(this).attr('title');
     var id = $(this).attr('rel');
+    $.ajax({
+        type: "POST",
+        url: "/content/group/myphotos",
+        data: {id: id},
+        success: function(data) {
+            $(".ui-widget-overlay").append('<p>Loading...</p>');
+            $(".dialog").dialog({
+                width: "700",
+                height: "400",
+                position: ['top', 100],
+                title: title,
+                resizable: false,
+                modal: true,
+                open: function(event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    $('body').css('overflow', 'hidden'); //this line does the actual hiding
+                    $(".dialog").html(data);
+                }
+            });
+
+        }
+    });
+});
+
+$("body").on('click', '.removercover', function(e) {
+    var title = $(this).attr('title');
+    var data = [
+        {role: $(this).attr('role')},
+    ];
     $(".dialog").dialog({
-        width: "700",
-        height: "400",
+        width: "500",
+        height: "160",
         position: ['top', 100],
         title: title,
         resizable: false,
@@ -622,16 +672,30 @@ $("body").on('click', '.myPhotoGroup', function(e) {
         open: function(event, ui) {
             $(".ui-dialog-titlebar-close").hide();
             $('body').css('overflow', 'hidden'); //this line does the actual hiding
-            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
+//            $(".dialog").html(data);
+            $("#comfirmTemplate").tmpl(data).appendTo(".dialog");
         }
     });
-
+});
+$("body").on('click', '.photoBrowse', function(e) {
+    var title = $(this).attr('title');
     $.ajax({
         type: "POST",
-        url: "/content/group/myphotos",
-        data: {id: id},
+        url: "/photobrowser",
         success: function(data) {
-            $(".dialog").html(data);
+            $(".dialog").dialog({
+                width: "700",
+                height: "400",
+                position: ['top', 100],
+                title: title,
+                resizable: false,
+                modal: true,
+                open: function(event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    $('body').css('overflow', 'hidden'); //this line does the actual hiding
+                    $(".dialog").html(data);
+                }
+            });
 
         }
     });
@@ -641,4 +705,36 @@ $("body").on('click', '.closeDialog', function(e) {
     $(".dialog form").remove();
     $(".dialog").dialog("close");
     $('body').css('overflow', 'scroll'); //this line does the actual hiding
+});
+$("body").on('click', '.comfirmCover', function(e) {
+    e.preventDefault();
+    var role = $("#role").val();
+    $.ajax({
+        type: "POST",
+        url: "/removecover",
+        data: {role: role},
+        success: function(data) {
+            $('.displayPhoto').html(data);
+            $(".dialog").dialog("close");
+            $('body').css('overflow', 'scroll'); //this line does the actual hiding
+        }
+    });
+});
+$("body").on('click', '#chooseItem', function(e) {
+    e.preventDefault();
+    var id = $(this).attr('rel');
+    $.ajax({
+        type: "POST",
+        url: "/choosephoto",
+        data: {id: id},
+        success: function(data) {
+            $('.displayPhoto').html(data);
+            $(".dialog").dialog("close");
+            $('body').css('overflow', 'scroll'); //this line does the actual hiding
+            $('.timeLineMenuNav').html('<nav class="ink-navigation "><ul class="menu horizontal uiTimeLineHeadLine float-right">\n\
+                            <li><button type="submit" class="ink-button closeDialog">Cancel</button></li>\n\
+                            <li><button type="submit" class="ink-button green-button">Save Changes</button></li>\n\
+                            </ul></nav>');
+        }
+    });
 });

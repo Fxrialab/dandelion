@@ -1,3 +1,4 @@
+<div class="dialog"></div>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>infinitescroll.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.uploadfile.min.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/init.js"></script>
@@ -13,4 +14,5 @@
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery.oembed.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tokeninput.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.dropdown.js"></script>
+
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/general.js"></script>

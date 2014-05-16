@@ -6,7 +6,8 @@
  * Date: 7/30/13 - 10:02 AM
  * Project: UserWired Network - Version: beta
  */
-class RouteConfig {
+class RouteConfig
+{
 
     //Notice: Put controller contain function is first
     public $default = array(
@@ -48,19 +49,24 @@ class RouteConfig {
         'about_GET' => "UserController",
         'loadBasicInfo_POST' => "UserController",
         'editBasicInfo_POST' => "UserController",
-        'loadEduWork_POST'      => "UserController",
-        'addWork_POST'          => "UserController",
-        'editEduWork_POST'      => "UserController",
-        'searchWork_POST'       => "UserController",
+        'loadEduWork_POST' => "UserController",
+        'addWork_POST' => "UserController",
+        'editEduWork_POST' => "UserController",
+        'searchWork_POST' => "UserController",
         /* Route config for friends page */
         'friends_GET' => "FriendController",
+        /* Route config for ajax page */
+        'photobrowser_POST' => "AjaxController",
+        'uploadPhoto_POST' => "AjaxController",
+        'comfirmphoto_POST' => "AjaxController",
+        'removecover_POST' => "AjaxController",
+        'choosephoto_POST' => "AjaxController",
     );
-
     public $modules = array(
         /* Route config for modules */
         'post_post' => "PostController",
         'group_group' => "GroupController",
-        'myPhoto_photo' => "photoController",
+        'photo_photo' => "PhotoController",
     );
 
 }

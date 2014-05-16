@@ -1596,7 +1596,15 @@ body {
 }
 
 .uiCoverTimeLine {
+    min-height: 150px;
+    border: 1px solid #e4e4e4;
+    border-bottom: none;
+    background-color:#F6F7F8;
+}
+.uiProfilePicTimeLine .coverEmptyWrap{
+    min-height: 150px;
     position: relative;
+    width: 100%;
 }
 
 .uiCoverTimeLine:hover > div.editCoverTimeLine {
@@ -1630,15 +1638,29 @@ body {
     height: 50px;
 }
 
+
 .profilePic {
     position: absolute;
-    top: -40px;
+    bottom: -20px;
     left: 15px;
     border: 1px solid #e4e4e4;
     padding: 2px;
     background-color: white;
 }
-
+.uiProfilePicTimeLine a.name{
+    overflow: hidden;
+    position: absolute;
+    left: 180px;
+    bottom: 15px;
+    font-weight: bold;
+    font-size: 24px;
+}
+.uiProfilePicTimeLine .firendRequest{
+    overflow: hidden;
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
+}
 .editProfilePic {
     display: none;
     position: absolute;
@@ -1686,6 +1708,7 @@ body {
 .timeLineMenuNav {
     border: 1px solid #e4e4e4;
     background-color: #f6f7f8;
+    width: 100%;
 }
 
 .uiTimeLineHeadLine {
@@ -2295,7 +2318,7 @@ body {
 .ajax-file-upload-percent{position:absolute;display:inline-block;top:3px;left:48%}
 .ajax-file-upload-red{-moz-box-shadow:inset 0 39px 0 -24px #e67a73;-webkit-box-shadow:inset 0 39px 0 -24px #e67a73;box-shadow:inset 0 39px 0 -24px #e67a73;background-color:#e4685d;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;display:inline-block;color:#fff;font-family:arial;font-size:13px;font-weight:normal;padding:4px 15px;text-decoration:none;text-shadow:0 1px 0 #b23e35;cursor:pointer;vertical-align:top}
 .ajax-file-upload-green{background-color:#77b55a;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;margin:0;padding:0;display:inline-block;color:#fff;font-family:arial;font-size:13px;font-weight:normal;padding:4px 15px;text-decoration:none;cursor:pointer;text-shadow:0 1px 0 #5b8a3c;vertical-align:top}
-.ajax-file-upload{cursor:pointer;line-height:20px;margin:0 10px 10px 0;display:inline-block;color:#888;text-decoration:none;}
+.ajax-file-upload{cursor:pointer;line-height:20px;display:inline-block;color:#888;text-decoration:none;}
 .ajax-upload-dragdrop{color:#000;vertical-align:middle;}
 .ajax-upload-dragdrop label{
     width: 100%;

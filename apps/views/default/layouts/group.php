@@ -22,8 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="dialog"></div>
-    </div>
-    <?php require_once 'footer.php'; ?>
-</body>
+
+        <?php require_once 'footer.php'; ?>
+    </body>
 </html>

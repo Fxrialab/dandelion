@@ -1,6 +1,6 @@
 
 <div class="ink-grid">
-    <div class="column-group fixMarginTopBottom-10">
+    <div class="column-group">
         <div class="large-80">
             <div class="large-20">
                 <a href="/"><i class="topNavIcon1-logo"></i></a>
@@ -158,9 +158,9 @@
                                 <div class="uiPostOption control-group">
                                     <nav class="ink-navigation">
                                         <ul class="menu horizontal">
-                                            <li><a href="#" title="Choose a file to upload"><img src="<?php /*echo $this->f3->get('IMG'); */?>uploadPhotoIcon.png"></a></li>
+                                            <li><a href="#" title="Choose a file to upload"><img src="<?php /* echo $this->f3->get('IMG'); */ ?>uploadPhotoIcon.png"></a></li>
                                             <li class="lineGapPostOption">|</li>
-                                            <li><a href="#" title="Paste a video link"><img src="<?php /*echo $this->f3->get('IMG'); */?>uploadVideoIcon.png"></a></li>
+                                            <li><a href="#" title="Paste a video link"><img src="<?php /* echo $this->f3->get('IMG'); */ ?>uploadVideoIcon.png"></a></li>
                                             <li class="fixRightFloat">
                                                 <span>
                                                     <a href="#" class="postStatusNavBtn uiSmallButton blue">Post</a>
@@ -175,7 +175,7 @@
                     </div>-->
                 </div>
                 <div class="large-55 content-center fixMarginTop-12 uiTimeLineNav">
-                    <a class="linkColor-9aa9c8" href="/content/post"><?php echo $this->f3->get('SESSION.username'); ?></a>
+                    <a class="linkColor-9aa9c8" href="/content/post?user=<?php echo $this->f3->get('SESSION.username'); ?>"><?php echo $this->f3->get('SESSION.username'); ?></a>
                 </div>
                 <div class="large-10 uiSettingOptions content-right">
                     <a href="" class="settingOption"><i class="topNavIcon2-settingOptions"></i></a>

@@ -1,24 +1,47 @@
 <?php
-$otherUser      = $this->f3->get('otherUser');
-$currentUser    = $this->f3->get('currentUser');
-$statusFriendShip   = $this->f3->get('statusFriendShip');
+$otherUser = $this->f3->get('otherUser');
+$currentUser = $this->f3->get('currentUser');
+$statusFriendShip = $this->f3->get('statusFriendShip');
 //prepare data
-$otherUserID    = $otherUser->recordID;
-$currentUserID  = $currentUser->recordID;
-$otherUserName  = ucfirst($otherUser->data->firstName)." ".ucfirst($otherUser->data->lastName);
-$currentUserName= ucfirst($currentUser->data->firstName)." ".ucfirst($currentUser->data->lastName);
-//var_dump($otherUser);
-if($otherUserID != $currentUserID)
-{
-    $rpOtherUserID  = str_replace(':', '_', $otherUserID);
+$otherUserID = $otherUser->recordID;
+$currentUserID = $currentUser->recordID;
+$otherUserName = ucfirst($otherUser->data->firstName) . " " . ucfirst($otherUser->data->lastName);
+$currentUserName = ucfirst($currentUser->data->firstName) . " " . ucfirst($currentUser->data->lastName);
+
+$rpOtherUserID = str_replace(':', '_', $otherUserID);
 ?>
-    <div class="uiCoverTimeLineContainer">
-        <div class="uiCoverTimeLine">
-            <div class="imageCoverTimeLine">
-                <a href=""><img src="<?php echo $this->f3->get('IMG');?>testImage.jpg"></a>
-            </div>
-            <div class="editCoverTimeLine">
-                <a href="" class="uiMediumButton"><i class="customIcon-editAvatar"></i>Change Cover</a>
+<div class="uiCoverTimeLineContainer">
+    <form id="submitCover">
+        <?php
+        if (!empty($otherUser->data->urlCover))
+        {
+            $style = 'height:250px; background-image: url(' . $otherUser->data->urlCover . ')';
+            $a = 'Edit a cover';
+        }
+        else
+        {
+            $style = '';
+            $a = 'Add a cover';
+        }
+        ?>
+        <div class="column-group uiCoverTimeLine displayPhoto">
+            <div style="<?php echo $style ?>">
+                <div class="large-85"></div>
+                <div class="large-15 dropdown-editcover float-right">
+                    <a href="#" class="ink-button edit" data-dropdown="#dropdown-editcover"><?php echo $a ?></a>
+                    <div id="dropdown-editcover" class="dropdown dropdown-notip dropdown-anchor-right">
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="photoBrowse" title="My Photos">Choose from My Photos</a></li>
+                            <li><a id="uploadPhotoCover">Upload Photo</a></li>
+                            <?php
+                            if (!empty($otherUser->data->urlCover))
+                            {
+                                ?>
+                                <li><a class="removercover" role="remove" title="Remove">Remove</a></li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="uiTimeLineNav">
@@ -26,24 +49,8 @@ if($otherUserID != $currentUserID)
                 <div class="profilePic">
                     <a href=""><img src="<?php echo $otherUser->data->profilePic; ?>"></a>
                 </div>
-                <div class="editProfilePic">
-                    <a href="" class="uiMediumButton"><i class="customIcon-editAvatar"></i>Edit Avatar</a>
-                </div>
-            </div>
-            <div class="timeLineMenuNav column-right">
-                <nav class="ink-navigation uiTimeLineHeadLine">
-                    <ul class="menu horizontal">
-                        <li><a href="/content/post?username=<?php echo $otherUser->data->username; ?>">TimeLine</a></li>
-                        <li><a href="/about?username=<?php echo $otherUser->data->username; ?>">About</a></li>
-                        <li><a href="/friends?username=<?php echo $otherUser->data->username; ?>">Friends</a></li>
-                        <li><a href="/content/myPhoto?username=<?php echo $otherUser->data->username; ?>">Photos</a></li>
-                        <li><a href="#">More</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="uiProfileInfoTimeLine column-group">
-                <div class="profileInfoDiv large-50">
-                    <p class="profileName"><a class="tlProfileLink large-100" href=""><?php echo $otherUserName; ?></a></p>
+                <a class="name" href="#"><?php echo $otherUserName; ?></a>
+                <div class="firendRequest profileInfoDiv">
                     <div class="uiActionUser">
                         <?php
                         if ($statusFriendShip == 'request' || $statusFriendShip == 'later' || $statusFriendShip == 'addFriend')
@@ -60,13 +67,17 @@ if($otherUserID != $currentUserID)
                                         </ul>
                                     </nav>
                                 </div>
-                            <?php
-                            }else {
+                                <?php
+                            }
+                            else
+                            {
                                 ?>
                                 <a class="addFriend uiMediumButton orange linkHover-fffff" id="<?php echo $rpOtherUserID; ?>">Add Friend</a>
-                            <?php
+                                <?php
                             }
-                        }elseif ($statusFriendShip == 'respondRequest') {
+                        }
+                        elseif ($statusFriendShip == 'respondRequest')
+                        {
                             ?>
                             <a class="respondFriendRequest uiMediumButton orange linkHover-fffff">Respond to Friend Request</a>
                             <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
@@ -77,10 +88,12 @@ if($otherUserID != $currentUserID)
                                     </ul>
                                 </nav>
                             </div>
-                        <?php
-                        }else {
+                            <?php
+                        }
+                        else
+                        {
                             ?>
-                            <a class="isFriend uiMediumButton orange linkHover-fffff">Friend</a>
+                            <a class="isFriend uiMediumButton orange linkHover-fffff ink-button">Friend</a>
                             <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
                                 <nav class="ink-navigation">
                                     <ul class="menu vertical">
@@ -89,136 +102,84 @@ if($otherUserID != $currentUserID)
                                     </ul>
                                 </nav>
                             </div>
-                        <?php
+                            <?php
                         }
                         ?>
                     </div>
                 </div>
-                <div class="viewBox large-50 push-right">
-                    <div class="friendsBox">
-                        <div class="uiImageBox">
-                            <div class="column-group firstRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                            <div class="column-group secondRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                        </div>
-                        <div class="uiTargetBox">Friends (213)</div>
-                    </div>
-                    <div class="photosBox">
-                        <div class="uiImageBox">
-                            <div class="column-group firstRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                            <div class="column-group secondRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                        </div>
-                        <div class="uiTargetBox">Photos (103)</div>
-                    </div>
-                    <div class="groupsBox">
-                        <div class="uiImageBox">
-                            <div class="column-group firstRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                            <div class="column-group secondRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                        </div>
-                        <div class="uiTargetBox">Groups (17)</div>
-                    </div>
-                </div>
             </div>
+            <div class="timeLineMenuNav float-right">
+                <?php
+                $username = $otherUser->data->username;
+                $f3 = require('navTimeLine.php');
+                ?>
+            </div>
+
         </div>
+    </form>
+</div>
+<script>
+    $(function() {
+
+        $("#submitCover").submit(function() {
+            $.ajax({
+                type: "POST",
+                url: "/comfirmphoto",
+                data: $("#submitCover").serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    $('.dropdown-editcover').remove();
+                    $('.timeLineMenuNav').html(data);
+                    $('.editdropdown').css('display', 'block');
+                }
+            });
+
+            return false; // avoid to execute the actual submit of the form.
+        });
+//        $('form').live('submit', '#formRemoveCover', function() {
+//            $.ajax({
+//                type: "POST",
+//                url: "/comfirmphoto",
+//                data: $("#formRemoveCover").serialize(), // serializes the form's elements.
+//                success: function(data)
+//                {
+//                    $('.dropdown-editcover').remove();
+//                    $('.timeLineMenuNav').html(data);
+//                    $('.editdropdown').css('display', 'block');
+//                }
+//            });
+//
+//            return false;
+//        })
+//        $("#formRemoveCover").submit(function() {
+//            $.ajax({
+//                type: "POST",
+//                url: "/comfirmphoto",
+//                data: $("#formRemoveCover").serialize(), // serializes the form's elements.
+//                success: function(data)
+//                {
+//                    $('.dropdown-editcover').remove();
+//                    $('.timeLineMenuNav').html(data);
+//                    $('.editdropdown').css('display', 'block');
+//                }
+//            });
+//
+//            return false; // avoid to execute the actual submit of the form.
+//        });
+    });
+    // Create an array of books
+
+</script>
+
+<script id="comfirmTemplate" type="text/x-jQuery-tmpl">
+    <div class="control-group">
+    <div class="control">
+    <div class="statusDialog">Are you sure you want to remove </div>
     </div>
-<?php
-}else {
-?>
-    <div class="uiCoverTimeLineContainer">
-        <div class="uiCoverTimeLine">
-            <div class="imageCoverTimeLine">
-                <a href=""><img src="<?php echo $this->f3->get('IMG');?>testImage.jpg"></a>
-            </div>
-            <div class="editCoverTimeLine">
-                <a href="" class="uiMediumButton"><i class="customIcon-editAvatar"></i>Change Cover</a>
-            </div>
-        </div>
-        <div class="uiTimeLineNav">
-            <div class="uiProfilePicTimeLine">
-                <div class="profilePic">
-                    <a href=""><img src="<?php echo $currentUser->data->profilePic;?>"></a>
-                </div>
-                <div class="editProfilePic">
-                    <a href="" class="uiMediumButton"><i class="customIcon-editAvatar"></i>Edit Avatar</a>
-                </div>
-            </div>
-            <div class="timeLineMenuNav column-right">
-                <nav class="ink-navigation uiTimeLineHeadLine">
-                    <ul class="menu horizontal">
-                        <li><a href="/content/post">TimeLine</a></li>
-                        <li><a href="/about">About</a></li>
-                        <li><a href="/friends">Friends</a></li>
-                        <li><a href="/content/myPhoto">Photos</a></li>
-                        <li><a href="#">More</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="uiProfileInfoTimeLine column-group">
-                <div class="profileInfoDiv large-50">
-                    <p class="profileName"><a class="tlProfileLink large-100" href=""><?php echo $currentUserName;?></a></p>
-                    <a href="" class="uiMediumButton orange linkHover-fffff"><i></i>Update Info</a>
-                </div>
-                <div class="viewBox large-50 push-right">
-                    <div class="friendsBox">
-                        <div class="uiImageBox">
-                            <div class="column-group firstRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                            <div class="column-group secondRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                        </div>
-                        <div class="uiTargetBox">Friends (213)</div>
-                    </div>
-                    <div class="photosBox">
-                        <div class="uiImageBox">
-                            <div class="column-group firstRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                            <div class="column-group secondRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                        </div>
-                        <div class="uiTargetBox">Photos (103)</div>
-                    </div>
-                    <div class="groupsBox">
-                        <div class="uiImageBox">
-                            <div class="column-group firstRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                            <div class="column-group secondRow">
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                                <div class="large-50"><a href=""><img src="<?php echo $this->f3->get('IMG');?>avar.jpg"></a></div>
-                            </div>
-                        </div>
-                        <div class="uiTargetBox">Groups (17)</div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-<?php
-}
-?>
+    <input type="hidden" id="role" name="role" value="${role}">
+    <div class="footerDialog" >
+    <button type="submit" class="ink-button green-button comfirmCover">Comfirm</button>
+    <button class=" closeDialog ink-button ">Cancel</a>
+    </div>
+</script>
