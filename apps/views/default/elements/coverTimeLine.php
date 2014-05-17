@@ -15,8 +15,8 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
         <?php
         if (!empty($otherUser->data->urlCover))
         {
-            $style = 'height:250px; background-image: url(' . $otherUser->data->urlCover . ')';
             $a = 'Edit a cover';
+            $style = 'height:250px; background-image: url(' . $otherUser->data->urlCover . ')';
         }
         else
         {
@@ -24,88 +24,22 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
             $a = 'Add a cover';
         }
         ?>
-        <div class="column-group uiCoverTimeLine displayPhoto">
+        <div class="column-group uiCoverTimeLine displayPhoto" style="position: relative">
             <div style="<?php echo $style ?>">
-                <div class="large-85"></div>
-                <div class="large-15 dropdown-editcover float-right">
-                    <a href="#" class="ink-button edit" data-dropdown="#dropdown-editcover"><?php echo $a ?></a>
-                    <div id="dropdown-editcover" class="dropdown dropdown-notip dropdown-anchor-right">
-                        <ul class="dropdown-menu">
-                            <li><a href="#" class="photoBrowse" title="My Photos">Choose from My Photos</a></li>
-                            <li><a id="uploadPhotoCover">Upload Photo</a></li>
+                <div  style=" position: absolute; top: 10px; right: 10px">
+                    <div class="dropdown">
+                        <a href="#" class="button"><span class="icon icon148"></span><span class="label"><?php echo $a ?></span></a>
+                        <div class="dropdown-slider w175">
+                            <a href="#" class="photoBrowse ddm" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a>
+                            <a href="#" class="ddm"><div id="uploadPhotoCover"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a>
                             <?php
                             if (!empty($otherUser->data->urlCover))
                             {
                                 ?>
-                                <li><a class="removercover" role="remove" title="Remove">Remove</a></li>
+                                <a class="removercover ddm" role="remove" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a>
                             <?php } ?>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="uiTimeLineNav">
-            <div class="uiProfilePicTimeLine">
-                <div class="profilePic">
-                    <a href=""><img src="<?php echo $otherUser->data->profilePic; ?>"></a>
-                </div>
-                <a class="name" href="#"><?php echo $otherUserName; ?></a>
-                <div class="firendRequest profileInfoDiv">
-                    <div class="uiActionUser">
-                        <?php
-                        if ($statusFriendShip == 'request' || $statusFriendShip == 'later' || $statusFriendShip == 'addFriend')
-                        {
-                            if ($statusFriendShip == 'request' || $statusFriendShip == 'later')
-                            {
-                                ?>
-                                <a class="requestFriend uiMediumButton orange linkHover-fffff">Friend Request Sent</a>
-                                <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
-                                    <nav class="ink-navigation">
-                                        <ul class="menu vertical">
-                                            <li><a>Report/Block</a></li>
-                                            <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Cancel Request</a></li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <?php
-                            }
-                            else
-                            {
-                                ?>
-                                <a class="addFriend uiMediumButton orange linkHover-fffff" id="<?php echo $rpOtherUserID; ?>">Add Friend</a>
-                                <?php
-                            }
-                        }
-                        elseif ($statusFriendShip == 'respondRequest')
-                        {
-                            ?>
-                            <a class="respondFriendRequest uiMediumButton orange linkHover-fffff">Respond to Friend Request</a>
-                            <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
-                                <nav class="ink-navigation">
-                                    <ul class="menu vertical">
-                                        <li><a class="confirmFriend" id="<?php echo $rpOtherUserID; ?>">Confirm Friend</a></li>
-                                        <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unaccept Request</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                            <?php
-                        }
-                        else
-                        {
-                            ?>
-                            <a class="isFriend uiMediumButton orange linkHover-fffff ink-button">Friend</a>
-                            <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
-                                <nav class="ink-navigation">
-                                    <ul class="menu vertical">
-                                        <li><a>Report/Block</a></li>
-                                        <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unfriend</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                            <?php
-                        }
-                        ?>
-                    </div>
+                        </div> <!-- /.dropdown-slider -->
+                    </div> <!-- /.dropdown -->
                 </div>
             </div>
             <div class="timeLineMenuNav float-right">
@@ -114,10 +48,86 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
                 $f3 = require('navTimeLine.php');
                 ?>
             </div>
-
         </div>
     </form>
+    <div class="uiProfilePicTimeLine imgAvatar">
+        <div id="imgAvatar">
+            <div class="profilePic">
+                <a href=""><img src="<?php echo $otherUser->data->profilePic; ?>"></a>
+                <div class="profileInfo" >
+                    <div class="dropdown">
+                        <a href="#" class="button"><span class="icon icon148"></span><span class="label">Update Avatar</span></a>
+                        <div class="dropdown-slider left w175">
+                            <a href="#" class="photoBrowse ddm" role="avatar" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a>
+                            <a href="#" class="ddm"><div id="uploadAvatar"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a>
+                            <a href="#" class="ddm"><span class="icon icon58"></span><span class="label">Remove</span></a>
+                        </div> <!-- /.dropdown-slider -->
+                    </div> <!-- /.dropdown -->
+                </div>
+            </div>
+        </div>
+        <a class="name" href="#"><?php echo $otherUserName; ?></a>
+        <div class="firendRequest profileInfoDiv">
+            <div class="uiActionUser">
+                <?php
+                if ($statusFriendShip == 'request' || $statusFriendShip == 'later' || $statusFriendShip == 'addFriend')
+                {
+                    if ($statusFriendShip == 'request' || $statusFriendShip == 'later')
+                    {
+                        ?>
+                        <a class="requestFriend uiMediumButton orange linkHover-fffff">Friend Request Sent</a>
+                        <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
+                            <nav class="ink-navigation">
+                                <ul class="menu vertical">
+                                    <li><a>Report/Block</a></li>
+                                    <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Cancel Request</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <?php
+                    }
+                    else
+                    {
+                        ?>
+                        <a class="addFriend uiMediumButton orange linkHover-fffff" id="<?php echo $rpOtherUserID; ?>">Add Friend</a>
+                        <?php
+                    }
+                }
+                elseif ($statusFriendShip == 'respondRequest')
+                {
+                    ?>
+                    <a class="respondFriendRequest uiMediumButton orange linkHover-fffff">Respond to Friend Request</a>
+                    <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
+                        <nav class="ink-navigation">
+                            <ul class="menu vertical">
+                                <li><a class="confirmFriend" id="<?php echo $rpOtherUserID; ?>">Confirm Friend</a></li>
+                                <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unaccept Request</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <?php
+                }
+                else
+                {
+                    ?>
+                    <a class="isFriend uiMediumButton orange linkHover-fffff ink-button">Friend</a>
+                    <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
+                        <nav class="ink-navigation">
+                            <ul class="menu vertical">
+                                <li><a>Report/Block</a></li>
+                                <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unfriend</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+
 </div>
+
 <script>
     $(function() {
 
@@ -136,38 +146,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
 
             return false; // avoid to execute the actual submit of the form.
         });
-//        $('form').live('submit', '#formRemoveCover', function() {
-//            $.ajax({
-//                type: "POST",
-//                url: "/comfirmphoto",
-//                data: $("#formRemoveCover").serialize(), // serializes the form's elements.
-//                success: function(data)
-//                {
-//                    $('.dropdown-editcover').remove();
-//                    $('.timeLineMenuNav').html(data);
-//                    $('.editdropdown').css('display', 'block');
-//                }
-//            });
-//
-//            return false;
-//        })
-//        $("#formRemoveCover").submit(function() {
-//            $.ajax({
-//                type: "POST",
-//                url: "/comfirmphoto",
-//                data: $("#formRemoveCover").serialize(), // serializes the form's elements.
-//                success: function(data)
-//                {
-//                    $('.dropdown-editcover').remove();
-//                    $('.timeLineMenuNav').html(data);
-//                    $('.editdropdown').css('display', 'block');
-//                }
-//            });
-//
-//            return false; // avoid to execute the actual submit of the form.
-//        });
-    });
-    // Create an array of books
+    })
 
 </script>
 

@@ -215,7 +215,7 @@ class GroupController extends AppController
             if ($group == 1)
             {
                 $this->f3->set('url', $photo->data->url);
-                $this->f3->set('photoID', $photoID);
+                $this->f3->set('photoID', $_POST['photoID']);
                 $this->f3->set('photo', $photo);
             }
             $this->f3->set('groupID', $_POST['groupID']);
@@ -244,7 +244,7 @@ class GroupController extends AppController
     {
         if ($this->isLogin())
         {
-            $outPutDir = UPLOAD . "test/";
+            $outPutDir = UPLOAD;
             $data = array(
                 'results' => array(),
                 'success' => false,
@@ -296,7 +296,7 @@ class GroupController extends AppController
                         'actor' => $currentUser->recordID,
                         'album' => '',
                         'fileName' => $fileName,
-                        'url' => UPLOAD_URL . "test/" . $fileName,
+                        'url' => UPLOAD_URL . $fileName,
                         'thumbnail_url' => '',
                         'description' => '',
                         'numberLike' => '0',
@@ -307,7 +307,7 @@ class GroupController extends AppController
                     );
                     $photoID = $this->facade->save('photo', $entry);
                     $photo = $this->facade->findByPk('photo', $photoID);
-                    
+
                     $this->f3->set('photo', $photo);
                     $this->renderModule('cover', 'Group');
                 }

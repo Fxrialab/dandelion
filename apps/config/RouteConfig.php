@@ -58,9 +58,11 @@ class RouteConfig
         /* Route config for ajax page */
         'photobrowser_POST' => "AjaxController",
         'uploadPhoto_POST' => "AjaxController",
+        'uploadavatar_POST' => "AjaxController",
         'comfirmphoto_POST' => "AjaxController",
         'removecover_POST' => "AjaxController",
         'choosephoto_POST' => "AjaxController",
+        'chooseavatar_POST' => "AjaxController",
     );
     public $modules = array(
         /* Route config for modules */

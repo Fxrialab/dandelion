@@ -15,7 +15,7 @@ else
     $groupID = 11;
 }
 ?>
-<div class="cover" style="background-image: url(<?php echo $background ?>)">
+<div class="cover" style="background-image: url(<?php echo $background ?>); position: relative">
     <input type="hidden" name="urlCover" value="<?php echo $background ?>">
 
     <?php
@@ -30,9 +30,7 @@ else
     else
     {
         ?>
-        <div class="large-85"></div>
-        <div class="large-15">
-            <?php $f3 = require('editCover.php'); ?>
-        </div>
-        <?php } ?>
+        <?php $f3 = require('editCover.php'); ?>
+
+    <?php } ?>
 </div>

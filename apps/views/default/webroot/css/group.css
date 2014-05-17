@@ -24,12 +24,18 @@
 }
 .userItem{
     margin: 0 5px;
+    position: relative;
 }
-.fullName{
+.userItem .fullName{
     font-weight: bold;
 }
+.userItem .action{
+    position: absolute;
+    top: 20px;
+    right: 55px;
+}
 .topBarGroup{
-    padding:10px 5px; border: 1px solid #ccc; border-top: none;
+    border: 1px solid #ccc; border-top: none;
 }
 .profileCover li a{
     padding: 0 !important;
@@ -54,20 +60,7 @@
     margin: 0;
 }
 
-.footerDialog{
-    text-align: right;
-    padding: 8px;
-    position: absolute; bottom: 0; left: 0; width: 100%;
-    background-image: -webkit-linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
-    background-image: -moz-linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
-    background-image: -o-linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
-    background-image: -ms-linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
-    background-image: linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f9f9f9', EndColorStr='#e9e9e9');
 
-    border-top:1px solid #bababa;
-
-}
 .statusDialog{
     padding: 10px;
     line-height: 20px;

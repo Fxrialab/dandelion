@@ -20,5 +20,5 @@
 </div>
 
 <div class="footerDialog">
-    <button type="button" class="closeDialog ink-button red">Cancel</button>
+    <button type="button" class="closeDialog ink-button">Cancel</button>
 </div>

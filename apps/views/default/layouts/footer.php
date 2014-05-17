@@ -2,6 +2,7 @@
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>infinitescroll.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.uploadfile.min.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/init.js"></script>
+<script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/upload.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/pretty.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/holder.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink.min.js"></script>
@@ -13,6 +14,9 @@
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/dropDownStyle.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery.oembed.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tokeninput.js"></script>
-<script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.dropdown.js"></script>
-
+<!--<script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.dropdown.js"></script>-->
+<script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tiptip.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/general.js"></script>
+<script>
+    $('.tiptip a.button, .tiptip button').tipTip();
+</script>

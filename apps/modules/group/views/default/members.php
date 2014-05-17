@@ -24,27 +24,40 @@ $countAdmin = $this->f3->get('countAdmin');
                         else
                             $act = 'All members (' . $countMember . ')';
                         ?>
-                        <a href="#" class="ink-button" data-dropdown="#dropdown-select"><?php echo $act ?></a>
-                        <div id="dropdown-select" class="dropdown dropdown-notip">
-                            <ul class="dropdown-menu">
-                                <li class="<?php if ($admin == 'membership') echo 'active'; ?>"><a href="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>">All members (<?php echo $countMember ?>)</a></li>
-                                <li class="<?php if ($admin == 'admin') echo 'active'; ?>"><a href="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>&act=admin">Admins (<?php echo $countAdmin ?>)</a></li>
-                            </ul>
-                        </div>
+                        <div class="dropdown">
+                            <button title="<?php echo $act ?>" class="button"><span class="label"><?php echo $act ?></span></button>
+                            <div class="dropdown-slider left w150">
+                                <a class="ddm" href="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>&act=membership"><span class="icon <?php
+                                    if ($admin == 'membership')
+                                        echo ' icon43';
+                                    else
+                                        echo 'icon0';
+                                    ?> "></span><span class="label">All members (<?php echo $countMember ?>)</span></a>
+                                <a  class="ddm" href="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>&act=admin"><span class="icon <?php
+                                    if ($admin == 'admin')
+                                        echo ' icon43';
+                                    else
+                                        echo 'icon0';
+                                    ?>"></span><span class="label">Admins (<?php echo $countAdmin ?>)</span></a>
+                            </div> <!-- /.dropdown-slider -->
+                        </div> <!-- /.dropdown -->
+
                     </div>
                     <div class="large-75">
                         <div style ="padding-left: 20px;">
                             <nav class="ink-navigation">
-                                <ul class="horizontal menu">
-                                    <li>
+                                <ul class="horizontal">
+                                    <li class="large-60">
                                         <form class="ink-form" action="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>&act=<?php echo $admin ?>" method="post">
                                             <div class="control-group">
-                                                <input type="text" id="search" name="search" style="height: 26px">
+                                                <input type="text" id="search" name="search" style="height: 30px">
                                             </div>
                                             <input type="hidden">
                                         </form>
                                     </li>
-                                    <a rel="<?php echo str_replace(":", "_", $group->recordID) ?>" class="ink-button float-right add" title="Add People to Group" id="addMember" href="/content/group/ajax/addFriend">Add people</a>
+                                    <li class="large-40">
+                                        <a rel="<?php echo str_replace(":", "_", $group->recordID) ?>" class="button" title="Add People to Group" id="addMember" href="/content/group/ajax/addFriend"><span class="icon icon3"></span><span class="label">Add people</span></a>
+                                    </li>
                                 </ul>
                             </nav>
                         </div>
@@ -56,9 +69,8 @@ $countAdmin = $this->f3->get('countAdmin');
         <?php
         if (!empty($members))
         {
-              
+
             foreach ($members as $key => $value)
-              
             {
                 if (!empty($value->data->member))
                 {
@@ -80,35 +92,38 @@ $countAdmin = $this->f3->get('countAdmin');
                     </div>
                     <div class="large-65">
                         <div class="userItem">
-                            <a class="fullName" href="/content/myPost?username=<?php echo $user->data->username ?>"><?php echo $user->data->fullName; ?></a><br>
-                            <a href="#" data-dropdown="#dropdown-<?php echo str_replace(":", "_", $user->recordID) ?>" class=" topNavIcon2-settingGroup"></a>
-                            <div id="dropdown-<?php echo str_replace(":", "_", $user->recordID) ?>" class="dropdown dropdown-tip">
-                                <ul class="dropdown-menu">
-                                    <?php
-                                    if ($action == 0)
-                                    {
-                                        ?>
-                                        <li><a rel="<?php echo $user->recordID ?>" title="Remove as admin" class="removeGroup" href="/content/group/ajax/removeAdmin"> Remove as admin</a></li>
-                                        <li><a id="leaveGroup" rel="<?php echo str_replace(":", "_", $group->recordID) ?>" href="/content/group/leave" title="<?php echo $groupName ?>">Leave Group</a></li>
+                            <a class="fullName" href="/content/myPost?username=<?php echo $user->data->username ?>"><?php echo $user->data->fullName; ?></a>
+                            <div class="tiptip action">
+                                <div class="dropdown">
+                                    <button title="Setting"><span class="icon icon96"></span></button>
+                                    <div class="dropdown-slider left w120">
                                         <?php
-                                    }
-                                    else
-                                    {
-                                        if ($role == 'admin')
+                                        if ($action == 0)
                                         {
                                             ?>
-                                            <li><a class="roleGroup" rel="<?php echo $user->recordID ?>" title="Remove as admin" href="/content/group/ajax/rolegroup">Remove as admin</a></li>
+                                            <a rel="<?php echo $user->recordID ?>" title="Remove as admin" class="removeGroup ddm" href="/content/group/ajax/removeAdmin"><span class="label"> Remove as admin</span></a>
+                                            <a id="leaveGroup" class="ddm" rel="<?php echo str_replace(":", "_", $group->recordID) ?>" href="/content/group/leave" title="<?php echo $groupName ?>"><span class="label"> Leave Group</span></a>
                                             <?php
                                         }
                                         else
                                         {
-                                            ?>
-                                            <li><a class="roleGroup" rel="<?php echo $user->recordID ?>" title="Add Group Admin" href="/content/group/ajax/rolegroup">Make Admin</a></li>
+                                            if ($role == 'admin')
+                                            {
+                                                ?>
+                                                <a class="roleGroup ddm" rel="<?php echo $user->recordID ?>" title="Remove as admin" href="/content/group/ajax/rolegroup"><span class="label"> Remove as admin</span></a>
+                                                <?php
+                                            }
+                                            else
+                                            {
+                                                ?>
+                                                <a class="roleGroup ddm" rel="<?php echo $user->recordID ?>" title="Add Group Admin" href="/content/group/ajax/rolegroup"><span class="label"> Make Admin</span></a>
+                                            <?php } ?>
+                                            <a rel="<?php echo $user->recordID ?>" title="Remove" role="remove" class="removeGroup ddm" href="/content/group/ajax/removeGroup"><span class="label">  Remove as group</span></a>
                                         <?php } ?>
-                                        <li><a rel="<?php echo $user->recordID ?>" title="Remove" role="remove" class="removeGroup" href="/content/group/ajax/removeGroup"> Remove as group</a></li>
-                                    <?php } ?>
-                                </ul>
-                            </div>
+
+                                    </div> <!-- /.dropdown-slider -->
+                                </div> <!-- /.dropdown -->
+                            </div>    
                         </div>
                     </div>
 
