@@ -1600,6 +1600,17 @@ body {
     border: 1px solid #e4e4e4;
     border-bottom: none;
     background-color:#F6F7F8;
+    position: relative;
+}
+.uiCoverTimeLine .imgCover{
+    overflow: hidden; width: 745px; height: 300px;
+}
+.uiCoverTimeLine .actionCover{
+    position: absolute; top: 10px; right: 10px;
+    display: none;
+}
+.uiCoverTimeLine:hover .actionCover{
+    display: block;
 }
 .uiProfilePicTimeLine .coverEmptyWrap{
     min-height: 150px;
@@ -1640,25 +1651,36 @@ body {
 
 
 .profilePic {
+    overflow: hidden;
     position: absolute;
-    bottom: 35px;
+    bottom: -20px;
     left: 15px;
     border: 1px solid #e4e4e4;
     padding: 2px;
     background-color: white;
+    min-width: 150px;
+    min-height: 150px;
 }
-.profilePic .profileInfo{
-    position: absolute; bottom: 5px; left: 10px;
+.profilePic img{
+    height: 150px;
+    width: 150px;
+}
+#imgAvatar .profileInfo{
+    position: absolute;
+    bottom:-10px;
+    left:30px;
     display: none;
 }
-.profilePic:hover .profileInfo{
+
+#imgAvatar:hover .profileInfo{
     display: block;
 }
-.uiProfilePicTimeLine a.name{
+
+.name{
     overflow: hidden;
     position: absolute;
     left: 180px;
-    bottom: 70px;
+    bottom: 15px;
     font-weight: bold;
     font-size: 24px;
 }
@@ -1716,6 +1738,7 @@ body {
     border: 1px solid #e4e4e4;
     background-color: #f6f7f8;
     width: 100%;
+    float: left;
 }
 
 .uiTimeLineHeadLine {

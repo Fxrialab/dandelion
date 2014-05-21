@@ -25,13 +25,9 @@ $(document).ready(function()
         multiple: false,
         onSuccess: function(files, data, xhr)
         {
-            $('.ajax-file-upload-statusbar').fadeOut('slow');
             $('.displayPhoto').html(data);
-            $('.editdropdown').css('display', 'none');
-            $('.timeLineMenuNav').html('<nav class="ink-navigation "><ul class="menu horizontal uiTimeLineHeadLine float-right">\n\
-                            <li><button type="submit" class="ink-button closeDialog">Cancel</button></li>\n\
-                            <li><button type="submit" class="ink-button green-button">Save Changes</button></li>\n\
-                            </ul></nav>');
+            $('.timeLineMenuNav div').remove();
+            $("#navCoverUserTemplate").tmpl(data).appendTo(".timeLineMenuNav");
 
         },
         onError: function(files, status, errMsg)
@@ -45,10 +41,16 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: false,
+        beforeSend: function() {
+            //Lets add a loading image
+            $('.infoUser').addClass('loading');
+        },
         onSuccess: function(files, data, xhr)
         {
             $('.ajax-file-upload-statusbar').fadeOut('slow');
-            $('#imgAvatar').html(data);
+            $('.infoUser').html(data);
+            $('.profileInfo .dropdown').css('display', 'none');
+            $('.profilePic .profileInfo').css('display', 'none');
 
         },
         onError: function(files, status, errMsg)

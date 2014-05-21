@@ -3,36 +3,39 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-if (!empty($url))
+if (!empty($photo))
 {
-    $style = 'height: 250px; width:100%; border:1px;  background: url(' . $url . ');';
-    $url = $url;
-    $remove = '<li><a href="#" title="Remove">Remove</a></li>';
+    $remove = '<a href="#" class="ddm"><span class="icon icon58"></span><span class="label">Remove</span></a>';
     $lable = 'Edit a cover';
 }
 else
 {
-    $style = '';
-    $url = '';
-    $remove = '';
+    $remove = '  <a href="#" class="ddm"><span class="icon icon58"></span><span class="label">Remove</span></a>';
     $lable = 'Add a cover';
 }
+$p = AjaxController::findPhoto($photo->recordID);
 ?>
 
-<div class="colum-group">
-    <div style="<?php echo $style ?>)">
-        <div class="large-85">
-            <input type="hidden" name="urlCover" value="<?php echo $url ?>">
-        </div>
-        <div class="large-15 editdropdown float-right">
-            <a href="#" class="ink-button edit" data-dropdown="#dropdown-editcover"><?php echo $lable ?></a>
-            <div id="dropdown-editcover" class="dropdown dropdown-notip dropdown-anchor-right">
-                <ul class="dropdown-menu">
-                    <li><a href="#" class="photoBrowse" rel="" title="My Photos">Choose from My Photos</a></li>
-                    <li><a id="uploadPhotoCover">Upload Photo</a></li>
-                        <?php echo $remove ?>
-                </ul>
-            </div>
-        </div>
+<div class="imgCover">
+    <div class="userCover">
+        <input type="hidden" name="drapx" value="0">
+        <input type="hidden" name="drapy" value="0">
     </div>
+    <input type="hidden" name="cover" value="<?php echo $photo->recordID ?>">
+    <div class="dragCover" style="width:<?php if (!empty($p->data->width)) echo $p->data->width ?>px; height:<?php if (!empty($p->data->height)) echo $p->data->height ?>px; cursor: move">
+        <img src="<?php echo UPLOAD_URL . $p->data->fileName ?>" style="width:100%;">
+    </div>
+    <script>
+        $('.dragCover').draggable({
+            stop: function(event, ui) {
+
+                // Show dropped position.
+                var Stoppos = $(this).position();
+                var left = Math.abs(Stoppos.left);
+                var top = Math.abs(Stoppos.top);
+                $('.userCover').html('<input type="hidden" name=drapx value="' + left + '"><input type="hidden" name=drapy  value="' + top + '">');
+            }
+
+        });
+    </script>
 </div>

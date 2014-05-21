@@ -60,9 +60,11 @@ class RouteConfig
         'uploadPhoto_POST' => "AjaxController",
         'uploadavatar_POST' => "AjaxController",
         'comfirmphoto_POST' => "AjaxController",
-        'removecover_POST' => "AjaxController",
+        'remove_POST' => "AjaxController",
         'choosephoto_POST' => "AjaxController",
         'chooseavatar_POST' => "AjaxController",
+        'reposition_POST' => "AjaxController",
+        'cancel_POST' => "AjaxController",
     );
     public $modules = array(
         /* Route config for modules */

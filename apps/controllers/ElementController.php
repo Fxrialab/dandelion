@@ -14,6 +14,7 @@ class ElementController extends Controller
         parent::__construct();
     }
 
+//    find Member of group
     static public function groupMember()
     {
         $facade = new DataFacade;
@@ -26,6 +27,20 @@ class ElementController extends Controller
 
         $facade = new DataFacade;
         $model = $facade->findByPk('group', $id);
+        return $model;
+    }
+
+    static public function findPhoto($id)
+    {
+        $facade = new DataFacade;
+        $model = $facade->findByPk('photo', $id);
+        return $model;
+    }
+
+    static public function findRs($id)
+    {
+        $facade = new DataFacade;
+        $model = $facade->findByPk('reposition', $id);
         return $model;
     }
 

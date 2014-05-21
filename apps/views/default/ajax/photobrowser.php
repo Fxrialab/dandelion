@@ -16,7 +16,7 @@
             else
                 $id = 'chooseItem';
             ?>
-            <div class=" large-20"><a href="#" id="<?php echo $id ?>" role="<?php echo $role ?>" rel="<?php echo $value->recordID ?>"><img src="<?php echo $find->data->url ?>" style="padding: 5px"></a></div>
+            <div class=" large-20"><a href="#" id="<?php echo $id ?>" role="<?php echo $role ?>" rel="<?php echo $value->recordID ?>"><img src="<?php echo UPLOAD_URL . $find->data->fileName ?>" style="padding: 5px"></a></div>
             <?php
         }
     }

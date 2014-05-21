@@ -10,63 +10,104 @@ $currentUserName = ucfirst($currentUser->data->firstName) . " " . ucfirst($curre
 
 $rpOtherUserID = str_replace(':', '_', $otherUserID);
 ?>
-<div class="uiCoverTimeLineContainer">
+
+<div class="uiCoverTimeLineContainer" style=" position: relative">
     <form id="submitCover">
         <?php
-        if (!empty($otherUser->data->urlCover))
+        $photo = ElementController::findPhoto($otherUser->data->cover);
+        if (!empty($photo))
         {
-            $a = 'Edit a cover';
-            $style = 'height:250px; background-image: url(' . $otherUser->data->urlCover . ')';
+            $a = 'Change cover';
         }
         else
         {
-            $style = '';
             $a = 'Add a cover';
         }
         ?>
-        <div class="column-group uiCoverTimeLine displayPhoto" style="position: relative">
-            <div style="<?php echo $style ?>">
-                <div  style=" position: absolute; top: 10px; right: 10px">
-                    <div class="dropdown">
-                        <a href="#" class="button"><span class="icon icon148"></span><span class="label"><?php echo $a ?></span></a>
-                        <div class="dropdown-slider w175">
-                            <a href="#" class="photoBrowse ddm" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a>
-                            <a href="#" class="ddm"><div id="uploadPhotoCover"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a>
+        <div class="column-group uiCoverTimeLine">
+            <div class="displayPhoto">
+                <?php
+                if (!empty($photo))
+                {
+                    ?>
+                    <div class="imgCover">
+                        <div style="width:<?php echo $photo->data->width ?>px; height:<?php echo $photo->data->height ?>px;  position: relative; <?php if (!empty($otherUser->data->drapx)) echo 'left: -' . $otherUser->data->drapx . 'px' ?>; <?php if (!empty($otherUser->data->drapy)) echo 'top: -' . $otherUser->data->drapy . 'px' ?>">
+                            <img src="<?php echo UPLOAD_URL . $photo->data->fileName ?>" style="width:100%;">
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+            <div class="actionCover">
+                <div class="dropdown">
+                    <a href="#" class="button"><span class="icon icon148"></span><span class="label"><?php echo $a ?></span></a>
+                    <div class="dropdown-slider w175">
+                        <a href="javascript:void(0)" role="cover" class="photoBrowse ddm" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a>
+                        <a href="javascript:void(0)" class="ddm"><div id="uploadPhotoCover"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a>
+                        <?php
+                        if (!empty($photo))
+                        {
+                            ?>
+                            <a href="javascript:void(0)" class="ddm rCoverUser" rel="<?php echo $photo->recordID ?>"><span class="icon icon61"></span><span class="label">Reposition...</span></a>
                             <?php
-                            if (!empty($otherUser->data->urlCover))
+                        }
+                        if (!empty($otherUser->data->cover))
+                        {
+                            ?>
+                            <a href="javascript:void(0)" class="removeImgUser ddm" id="removeCover" role="cover" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div style=" position: relative;">
+            <div id="imgAvatar">
+                <div class="profilePic">
+                    <a class="infoUser" href="/content/post?user=<?php echo $this->f3->get('SESSION.username') ?>">
+                        <?php
+                        if ($otherUser->data->profilePic != 'none')
+                        {
+                            $src = UPLOAD_URL . '150/' . $otherUser->data->profilePic;
+                            $lableavatar = 'Change avatar';
+                        }
+                        else
+                        {
+                            $src = IMAGES . "avatarMenDefault.png";
+                            $lableavatar = 'Add avatar';
+                        }
+                        ?>
+                        <img src="<?php echo $src; ?>">
+                    </a>
+                </div>
+                <div class="profileInfo">
+                    <div class="dropdown">
+                        <a href="#" class="button"><span class="icon icon148"></span><span class="label"><?php echo $lableavatar ?></span></a>
+                        <div class="dropdown-slider left w175">
+                            <a href="#" class="photoBrowse ddm" role="avatar" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a>
+                            <a href="#" class="ddm"><div id="uploadAvatar"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a>
+                            <?php
+                            if ($otherUser->data->profilePic != 'none')
                             {
                                 ?>
-                                <a class="removercover ddm" role="remove" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a>
+                                <a href="#" class="ddm removeImgUser" id="removeAvatar" role="avatar" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a>
                             <?php } ?>
                         </div> <!-- /.dropdown-slider -->
                     </div> <!-- /.dropdown -->
                 </div>
             </div>
-            <div class="timeLineMenuNav float-right">
-                <?php
-                $username = $otherUser->data->username;
-                $f3 = require('navTimeLine.php');
-                ?>
+            <a class="name" href="#"><?php echo $otherUserName; ?></a>
+            <div class="timeLineMenuNav ">
+                <div>
+                    <?php
+                    $username = $otherUser->data->username;
+                    $f3 = require('navTimeLine.php');
+                    ?>
+                </div>
             </div>
         </div>
     </form>
     <div class="uiProfilePicTimeLine imgAvatar">
-        <div id="imgAvatar">
-            <div class="profilePic">
-                <a href=""><img src="<?php echo $otherUser->data->profilePic; ?>"></a>
-                <div class="profileInfo" >
-                    <div class="dropdown">
-                        <a href="#" class="button"><span class="icon icon148"></span><span class="label">Update Avatar</span></a>
-                        <div class="dropdown-slider left w175">
-                            <a href="#" class="photoBrowse ddm" role="avatar" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a>
-                            <a href="#" class="ddm"><div id="uploadAvatar"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a>
-                            <a href="#" class="ddm"><span class="icon icon58"></span><span class="label">Remove</span></a>
-                        </div> <!-- /.dropdown-slider -->
-                    </div> <!-- /.dropdown -->
-                </div>
-            </div>
-        </div>
-        <a class="name" href="#"><?php echo $otherUserName; ?></a>
+
         <div class="firendRequest profileInfoDiv">
             <div class="uiActionUser">
                 <?php
@@ -110,7 +151,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
                 else
                 {
                     ?>
-                    <a class="isFriend uiMediumButton orange linkHover-fffff ink-button">Friend</a>
+                    <!--<a class="isFriend uiMediumButton orange linkHover-fffff ink-button">Friend</a>-->
                     <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
                         <nav class="ink-navigation">
                             <ul class="menu vertical">
@@ -132,15 +173,24 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
     $(function() {
 
         $("#submitCover").submit(function() {
+
             $.ajax({
                 type: "POST",
                 url: "/comfirmphoto",
                 data: $("#submitCover").serialize(), // serializes the form's elements.
                 success: function(data)
                 {
-                    $('.dropdown-editcover').remove();
-                    $('.timeLineMenuNav').html(data);
-                    $('.editdropdown').css('display', 'block');
+                    var obj = jQuery.parseJSON(data);
+                    var user = [
+                        {username: obj.username},
+                    ];
+                    $("#navInfoUserTemplate").tmpl(user).appendTo(".timeLineMenuNav");
+                    $('.profilePic a img').css('display', 'block');
+                    $('.profilePic .profileInfo').css('display', 'block ');
+                    $('.dropdown').css('display', '');
+                    $('.name').css('display', 'block');
+                    $('.actionCover').css('display', 'block');
+                    $('.cancelCover').remove();
                 }
             });
 
@@ -148,8 +198,16 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
         });
     })
 
-</script>
 
+
+</script>
+<script id="photoCoverUserTemplate" type="text/x-jQuery-tmpl">
+    <div class="imgCover">
+    <div style="width:${width}px; height:${height}px;  position: relative; left: ${left}px; top: ${top}px">
+    <img src="<?php echo UPLOAD_URL ?>${src}" style="width:100%;">
+    </div>
+    </div>
+</script>
 <script id="comfirmTemplate" type="text/x-jQuery-tmpl">
     <div class="control-group">
     <div class="control">
@@ -158,7 +216,31 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
     </div>
     <input type="hidden" id="role" name="role" value="${role}">
     <div class="footerDialog" >
-    <button type="submit" class="ink-button green-button comfirmCover">Comfirm</button>
+    <button type="submit" class="ink-button green-button comfirmDialog">Comfirm</button>
     <button class=" closeDialog ink-button ">Cancel</a>
+    </div>
+</script>
+
+<script id="navInfoUserTemplate" type="text/x-jQuery-tmpl">
+    <div>
+    <nav class="ink-navigation uiTimeLineHeadLine">
+    <ul class="menu horizontal">
+    <li><a href="/content/post?username=${username}">TimeLine</a></li>
+    <li><a href="/about?username=${username}">About</a></li>
+    <li><a href="/friends?username=${username}">Friends</a></li>
+    <li><a href="/content/photo?username=${username}">Photos</a></li>
+    <li><a href="#">More</a></li>
+    </ul>
+    </nav>
+    </div>
+</script>
+<script id="navCoverUserTemplate" type="text/x-jQuery-tmpl">
+    <div class="cancelCover">
+    <nav class="ink-navigation uiTimeLineHeadLine">
+    <ul class="menu horizontal uiTimeLineHeadLine float-right">
+    <li><button type="button" class="ink-button cancel">Cancel</button></li>
+    <li><button type="submit" class="ink-button green-button">Save Changes</button></li>
+    </ul>
+    </nav>
     </div>
 </script>

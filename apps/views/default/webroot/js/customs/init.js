@@ -513,7 +513,7 @@ $("body").on('click', '.myPhotoGroup', function(e) {
     });
 });
 
-$("body").on('click', '.removercover', function(e) {
+$("body").on('click', '.removeImgUser', function(e) {
     var title = $(this).attr('title');
     var data = [
         {role: $(this).attr('role')},
@@ -550,7 +550,6 @@ $("body").on('click', '.photoBrowse', function(e) {
                 modal: true,
                 open: function(event, ui) {
                     $(".ui-dialog-titlebar-close").hide();
-                    $('body').css('overflow', 'hidden'); //this line does the actual hiding
                     $(".dialog").html(data);
                 }
             });
@@ -578,21 +577,30 @@ $("body").on('click', '.comfirmCover', function(e) {
         }
     });
 });
+
 $("body").on('click', '#chooseItem', function(e) {
     e.preventDefault();
     var id = $(this).attr('rel');
+    var role = $(this).attr('role');
     $.ajax({
         type: "POST",
         url: "/choosephoto",
-        data: {id: id},
+        data: {id: id, role: role},
         success: function(data) {
             $('.displayPhoto').html(data);
             $(".dialog").dialog("close");
             $('body').css('overflow', 'scroll'); //this line does the actual hiding
-            $('.timeLineMenuNav').html('<nav class="ink-navigation "><ul class="menu horizontal uiTimeLineHeadLine float-right">\n\
-                            <li><button type="submit" class="ink-button closeDialog">Cancel</button></li>\n\
-                            <li><button type="submit" class="ink-button green-button">Save Changes</button></li>\n\
-                            </ul></nav>');
+            $('.profilePic img').css('display', 'none');
+            $('.dropdown').css('display', 'none');
+            $('.profilePic .profileInfo').css('display', 'none ');
+            $('.name').css('display', 'none');
+            $('.actionCover').css('display', 'none');
+            $('.timeLineMenuNav div').remove();
+            $("#navCoverUserTemplate").tmpl(data).appendTo(".timeLineMenuNav");
+//            $('.timeLineMenuNav').html('<nav class="ink-navigation "><ul class="menu horizontal uiTimeLineHeadLine float-right">\n\
+//                            <li><button type="submit" class="ink-button cancel">Cancel</button></li>\n\
+//                            <li><button type="submit" class="ink-button green-button">Save Changes</button></li>\n\
+//                            </ul></nav>');
         }
     });
 });
@@ -605,9 +613,10 @@ $("body").on('click', '#chooseAvatar', function(e) {
         url: "/choosephoto",
         data: {id: id, role: role},
         success: function(data) {
-            $('#imgAvatar').html(data);
+            $('.infoUser').html(data);
+            $('.profileInfo .dropdown').css('display', 'none');
+            $('.profilePic .profileInfo').css('display', 'none');
             $(".dialog").dialog("close");
-            $('body').css('overflow', 'scroll'); //this line does the actual hiding
         }
     });
 });
@@ -634,4 +643,79 @@ $("body").bind('click', function(e) {
         $('.dropdown-slider').slideUp();
         $('span.toggle').removeClass('active');
     }
+});
+
+$("body").on('click', '.rCoverUser', function(e) {
+    e.preventDefault();
+    var id = $(this).attr('rel');
+    $.ajax({
+        type: "POST",
+        url: "/reposition",
+        data: {id: id},
+        success: function(data) {
+            $('.imgCover').html(data);
+            $('.profilePic img').css('display', 'none');
+            $('.profilePic .profileInfo').css('display', 'none');
+            $('.name').css('display', 'none');
+            $('.actionCover').css('display', 'none');
+            $('.timeLineMenuNav div').css('display', 'none');
+            $("#navCoverUserTemplate").tmpl(data).appendTo(".timeLineMenuNav");
+        }
+    });
+});
+//Remove ajax
+$("body").on('click', '.comfirmDialog', function(e) {
+    e.preventDefault();
+    var role = $('#role').val();
+    $.ajax({
+        type: "POST",
+        data: {role: role},
+        url: "/remove",
+        success: function(data) {
+            var obj = jQuery.parseJSON(data);
+            if (obj.role == 'avatar') {
+                $('.infoUser').html('<img src="' + obj.url + 'avatarMenDefault.png">');
+                $('#removeAvatar').remove();
+            } else {
+                $('.imgCover').remove();
+                $('#removeCover').remove();
+                $('.rCoverUser').remove();
+            }
+
+
+        }
+    });
+});
+
+$("body").on('click', '.cancel', function(e) {
+    $.ajax({
+        type: "POST",
+        url: "/cancel",
+        success: function(data) {
+            var obj = jQuery.parseJSON(data);
+            var user = [
+                {username: obj.username},
+            ];
+            var photo = [
+                {src: obj.src},
+                {width: obj.width},
+                {height: obj.height},
+                {left: obj.left},
+                {top: obj.top},
+            ];
+            $('.displayPhoto .imgCover').html('<div style="width:' + obj.width + 'px; height:' + obj.height + 'px;  position: relative; left: -' + obj.left + 'px; top: -' + obj.top + 'px" > \n\
+            <img src="' + obj.src + '" style="width:100%;"> \n\
+            </div>');
+            $('.timeLineMenuNav .cancelCover').remove();
+            $('.profilePic img').css('display', 'block');
+            $('.profilePic .profileInfo').css('display', 'block ');
+            $('.dropdown').css('display', '');
+            $('.name').css('display', 'block');
+            $('.actionCover').css('display', 'block');
+            $("#navInfoUserTemplate").tmpl(user).appendTo(".timeLineMenuNav");
+            return false;
+
+        }
+    });
+
 });

@@ -449,14 +449,13 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
     position: absolute; 
     overflow: hidden;   
     border: 8px solid rgba(0,0,0,.3);
-
     background:#fff;
-
     -webkit-border-radius:8px;
     -moz-border-radius:8px;
     border-radius:8px;
+    padding: 0;
 }
-.ui-dialog .ui-dialog-titlebar { padding: 8px 1em; position: relative;  }
+.ui-dialog .ui-dialog-titlebar { padding: 8px 1em; position: relative;   background-color:#0D84C7 !important;}
 .ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .1em 0; } 
 .ui-dialog .ui-dialog-titlebar-close { position: absolute; right: .3em; top: 50%; width: 19px; margin: -10px 0 0 0; padding: 1px; height: 18px; }
 .ui-dialog .ui-dialog-titlebar-close span { display: block; margin: 1px; }
