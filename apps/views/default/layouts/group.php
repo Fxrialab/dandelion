@@ -1,7 +1,9 @@
 <html lang="en">
     <?php require_once 'head.php'; ?>
     <body>
-        <?php // require_once 'topBar.php'; ?>
+        <div id="topBar">
+            <?php $this->element('topBarElement'); ?>
+        </div>
         <div id="uiContainerWrapper" class="ink-grid">
             <div class="column-group">
                 <div class="large-80 borderLineRight">

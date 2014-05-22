@@ -350,7 +350,6 @@ $("body").on('click', '#createGroup', function(e) {
     e.preventDefault();
     var title = $(this).attr('title');
     var href = $(this).attr('href');
-    $('.ui-dialog').html('<div class="loadingGroup">Loading...</div>');
     $.ajax({
         type: "POST",
         url: href,
@@ -358,7 +357,7 @@ $("body").on('click', '#createGroup', function(e) {
             $(".dialog").html(data);
             $(".dialog").dialog({
                 width: "400",
-                height: "280",
+                height: "320",
                 position: ['top', 120],
                 title: title,
                 resizable: false,
@@ -504,7 +503,7 @@ $("body").on('click', '.myPhotoGroup', function(e) {
                 modal: true,
                 open: function(event, ui) {
                     $(".ui-dialog-titlebar-close").hide();
-                    $('body').css('overflow', 'hidden'); //this line does the actual hiding
+//                    $('body').css('overflow', 'hidden'); //this line does the actual hiding
                     $(".dialog").html(data);
                 }
             });
@@ -533,6 +532,8 @@ $("body").on('click', '.removeImgUser', function(e) {
         }
     });
 });
+
+
 $("body").on('click', '.photoBrowse', function(e) {
     var title = $(this).attr('title');
     var role = $(this).attr('role');
@@ -574,6 +575,22 @@ $("body").on('click', '.comfirmCover', function(e) {
             $('.displayPhoto').html(data);
             $(".dialog").dialog("close");
             $('body').css('overflow', 'scroll'); //this line does the actual hiding
+        }
+    });
+});
+
+$("body").on('click', '.comfirmDialogGroup', function(e) {
+    e.preventDefault();
+    var photoID = $("#photoID").val();
+    var groupID = $("#groupID").val();
+    $.ajax({
+        type: "POST",
+        url: "/content/group/ajax/remove",
+        data: {photoID: photoID, groupID: groupID},
+        success: function(data) {
+            $('.imgCover').remove();
+            $("#removeCoverGroupTemplate").tmpl(data).appendTo(".displayPhoto");
+            $(".dialog").dialog("close");
         }
     });
 });
@@ -681,7 +698,7 @@ $("body").on('click', '.comfirmDialog', function(e) {
                 $('#removeCover').remove();
                 $('.rCoverUser').remove();
             }
-
+            $(".dialog").dialog("close");
 
         }
     });
@@ -718,4 +735,33 @@ $("body").on('click', '.cancel', function(e) {
         }
     });
 
+});
+
+$("body").on('click', '.choosePhoto', function(e) {
+    e.preventDefault();
+    var photoID = $(this).attr('rel');
+    var groupID = $(this).attr('id');
+    $.ajax({
+        type: "POST",
+        url: "/content/group/cover",
+        data: {groupID: groupID, photoID: photoID},
+        success: function(data) {
+            $(".displayPhoto").html(data);
+            $(".dialog").dialog("close");
+            $('.actionCover').css('display', 'none');
+        }
+    });
+});
+$("body").on('click', '.rCoverGroup', function(e) {
+    e.preventDefault();
+    var id = $(this).attr('rel');
+    $.ajax({
+        type: "POST",
+        url: "/content/group/ajax/reposition",
+        data: {id: id},
+        success: function(data) {
+            $('.displayPhoto').html(data);
+            $('.actionCover').css('display', 'none');
+        }
+    });
 });

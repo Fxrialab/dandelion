@@ -46,9 +46,12 @@
                             foreach ($memberGroup as $value)
                             {
                                 $group = ElementController::findGroup($value->data->groupID);
-                                ?>
-                                <li><a href="/content/group/groupdetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><?php echo $group->data->name ?></a></li>
-                                <?php
+                                if (!empty($group))
+                                {
+                                    ?>
+                                    <li><a href="/content/group/groupdetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><?php echo $group->data->name ?></a></li>
+                                    <?php
+                                }
                             }
                         }
                         ?>

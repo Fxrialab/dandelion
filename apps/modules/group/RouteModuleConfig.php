@@ -27,6 +27,8 @@ class RouteModuleConfig
         'removeAdmin_POST' => "AjaxController",
         'comfirmrole_POST' => "AjaxController",
         'comfirmcover_POST' => "AjaxController",
+        'reposition_POST' => "AjaxController",
+        'remove_POST' => "AjaxController",
     );
 
 }

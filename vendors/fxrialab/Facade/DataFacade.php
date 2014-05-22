@@ -1,5 +1,7 @@
 <?php
-class DataFacade {
+
+class DataFacade
+{
 
     /**
      * Save data to record
@@ -69,16 +71,19 @@ class DataFacade {
     {
         if (!empty($model) && is_array($array) && count($array) > 0)
         {
-            $condition  = "";
-            $operator   = " AND ";
-            foreach ($array as $key => $v) {
-                $condition = $condition.$operator.$key." = ?";
+            $condition = "";
+            $operator = " AND ";
+            foreach ($array as $key => $v)
+            {
+                $condition = $condition . $operator . $key . " = ?";
                 $value[] = $v;
             }
-            $condition = substr($condition,strlen($operator));
+            $condition = substr($condition, strlen($operator));
 
             return Model::get($model)->findOne($condition, $value);
-        }else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -100,16 +105,19 @@ class DataFacade {
     {
         if (!empty($model) && is_array($array) && count($array) > 0)
         {
-            $condition  = "";
-            $operator   = " AND ";
-            foreach ($array as $key => $v) {
-                $condition = $condition.$operator.$key." = ?";
+            $condition = "";
+            $operator = " AND ";
+            foreach ($array as $key => $v)
+            {
+                $condition = $condition . $operator . $key . " = ?";
                 $value[] = $v;
             }
-            $condition = substr($condition,strlen($operator));
+            $condition = substr($condition, strlen($operator));
 
             return Model::get($model)->findByCondition($condition, $value);
-        }else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -134,28 +142,33 @@ class DataFacade {
     {
         if (!empty($model) && is_object($object))
         {
-            $array  = get_object_vars($object);
+            $array = get_object_vars($object);
             if (count($array) > 1)
             {
                 $select = $array['select'];
                 array_shift($array);
                 $conditions = "";
-                $operator   = " AND ";
-                foreach ($array as $key => $v) {
-                    $conditions = $conditions.$operator.$key." = ?";
+                $operator = " AND ";
+                foreach ($array as $key => $v)
+                {
+                    $conditions = $conditions . $operator . $key . " = ?";
                     $value[] = $v;
                 }
-                $conditions = substr($conditions,strlen($operator));
-                $conditions = $conditions . (!isset($select) ? "" : " " .$select);
+                $conditions = substr($conditions, strlen($operator));
+                $conditions = $conditions . (!isset($select) ? "" : " " . $select);
 
                 return Model::get($model)->findByCondition($conditions, $value);
-            }else {
+            }
+            else
+            {
                 $select = $array['select'];
-                $conditions = (!isset($select) ? "" : " " .$select);
+                $conditions = (!isset($select) ? "" : " " . $select);
 
                 return Model::get($model)->findCustomers($conditions);
             }
-        }else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -199,18 +212,24 @@ class DataFacade {
      */
     public function updateByAttributes($model, $data, $array)
     {
+
         if (!empty($model) && is_array($data) && is_array($array) && count($array) > 0)
         {
-            $condition  = "";
-            $operator   = " AND ";
-            foreach ($array as $key => $v) {
-                $condition = $condition.$operator.$key." = ?";
+            $condition = "";
+            $operator = " AND ";
+            foreach ($array as $key => $v)
+            {
+
+                $condition = $condition . $operator . $key . " = ?";
                 $value[] = $v;
             }
-            $condition = substr($condition,strlen($operator));
-
-            return Model::get($model)->updateByCondition($data, $condition, $value);
-        }else {
+            $condition = substr($condition, strlen($operator));
+            $update = Model::get($model)->updateByCondition($data, $condition, $value);
+            if ($update == 1)
+                return str_replace(array('!', '@', '#', '$', '%'), '', $value[0]);
+        }
+        else
+        {
             return false;
         }
     }
@@ -253,16 +272,19 @@ class DataFacade {
     {
         if (!empty($model) && is_array($array) && count($array) > 0)
         {
-            $condition  = "";
-            $operator   = " AND ";
-            foreach ($array as $key => $v) {
-                $condition = $condition.$operator.$key." = ?";
+            $condition = "";
+            $operator = " AND ";
+            foreach ($array as $key => $v)
+            {
+                $condition = $condition . $operator . $key . " = ?";
                 $value[] = $v;
             }
-            $condition = substr($condition,strlen($operator));
+            $condition = substr($condition, strlen($operator));
 
             return Model::get($model)->deleteByCondition($condition, $value);
-        }else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -271,17 +293,21 @@ class DataFacade {
     {
         if (!empty($model) && is_array($array) && count($array) > 0)
         {
-            $condition  = "";
-            $operator   = " AND ";
-            foreach ($array as $key => $v) {
-                $condition = $condition.$operator.$key." = ?";
+            $condition = "";
+            $operator = " AND ";
+            foreach ($array as $key => $v)
+            {
+                $condition = $condition . $operator . $key . " = ?";
                 $value[] = $v;
             }
-            $condition = substr($condition,strlen($operator));
+            $condition = substr($condition, strlen($operator));
 
             return Model::get($model)->countByCondition($condition, $value);
-        }else {
+        }
+        else
+        {
             return false;
         }
     }
+
 }

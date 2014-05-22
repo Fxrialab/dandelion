@@ -6,6 +6,7 @@
 
 </style>
 <form class="ink-form formGroup" id="submitForm">
+    <div class="error"></div>
     <div class="control-group column-group ">
         <label for="groupName" class="large-30 align-right">Group Name</label>
         <div class="control large-70">
@@ -16,6 +17,7 @@
         <label for="groupMember" class="large-30 align-right">Members</label>
         <div class="control large-70">
             <input type="text" id="groupMember" name="groupMember"  class="large-100">
+
         </div>
     </div>
     <div class="control-group column-group">
@@ -27,24 +29,36 @@
         </ul>
     </div>
     <div class="footerDialog" >
-        <button type="submit" id="groupSubmit" class="ink-button green-button">Add</button>
-        <button type="button" id="dialogCreateGroup" class="closeDialog ink-button">Cancel</button>
+        <div class="float-right">
+            <button type="submit" id="groupSubmit" class="ink-button green-button">Add</button>
+            <button type="button" id="dialogCreateGroup" class="closeDialog ink-button">Cancel</button>
+        </div>
     </div>
 </form>
 <script>
     $(function() {
-
         $("#submitForm").submit(function() {
-            $.ajax({
-                type: "POST",
-                url: "/content/group/create",
-                data: $("#submitForm").serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    $(".dialog").dialog("close");
-                    $("#viewGroup").prepend(data);
-                }
-            });
+            var groupName = $('#groupName').val();
+            var groupMember = $('#groupMember').val();
+            if (groupName == '') {
+                $(".error").html('<div class="ink-alert"><button class="ink-dismiss">×</button><p>Error Group Name</p></div>');
+            }
+            else if (groupMember == '') {
+                $(".error").html('<div class="ink-alert"><button class="ink-dismiss">×</button><p>Error Group Member</p></div>');
+            }
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "/content/group/create",
+                    data: $("#submitForm").serialize(), // serializes the form's elements.
+                    success: function(data)
+                    {
+                        $(".dialog").dialog("close");
+                        $("#viewGroup").prepend(data);
+                    }
+                });
+            }
 
             return false; // avoid to execute the actual submit of the form.
         });

@@ -36,6 +36,7 @@
 }
 .topBarGroup{
     border: 1px solid #ccc; border-top: none;
+    padding: 10px 0;
 }
 .profileCover li a{
     padding: 0 !important;
@@ -86,4 +87,15 @@
     width:100%; 
     height:100%;
     display:block;
+}
+.coverGroup{
+    position: relative
+}
+.coverGroup .actionCover, .displayPhoto .ink-button{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+.uploadCoverGroup {
+    border: 1px solid #ccc; padding: 70px 0;
 }

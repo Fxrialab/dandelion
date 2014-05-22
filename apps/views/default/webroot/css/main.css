@@ -1602,7 +1602,7 @@ body {
     background-color:#F6F7F8;
     position: relative;
 }
-.uiCoverTimeLine .imgCover{
+.imgCover{
     overflow: hidden; width: 745px; height: 300px;
 }
 .uiCoverTimeLine .actionCover{

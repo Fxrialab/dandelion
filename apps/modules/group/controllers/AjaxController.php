@@ -170,7 +170,7 @@ class AjaxController extends AppController
             else
                 $updateGroup = array('role' => 'admin');
             $admin = $this->facade->updateByAttributes('groupMember', $updateGroup, array('member' => $_POST['userID'], 'groupID' => $_POST['groupID']));
-            if ($admin == 1)
+            if (!empty($admin))
                 echo json_encode(array('groupID' => str_replace(":", "_", $_POST['groupID'])));
         }
     }
@@ -195,15 +195,43 @@ class AjaxController extends AppController
 
     public function comfirmcover()
     {
-        $updateGroup = array(
-            'urlCover' => $_POST['urlCover']
-        );
-        $update = $this->facade->updateByAttributes('group', $updateGroup, array('@rid' => '#' . $_POST['groupID']));
-        if ($update == 1)
+        if (!empty($_POST['cover']))
         {
-            $group = $this->facade->findByPk('group', $_POST['groupID']);
-            $this->f3->set('group', $group);
-            $this->renderModule('editCover', 'Group');
+            $updateGroup = array(
+                'cover' => $_POST['cover'],
+                'drapx' => $_POST['drapx'],
+                'drapy' => $_POST['drapy'],
+            );
+            $update = $this->facade->updateByAttributes('group', $updateGroup, array('@rid' => '#' . $_POST['groupID']));
+            if ($update == 1)
+            {
+                $group = $this->facade->findByPk('group', $_POST['groupID']);
+                $this->f3->set('group', $group);
+                $this->renderModule('editCover', 'Group');
+            }
+        }
+    }
+
+    public function reposition()
+    {
+        $photo = $this->facade->findByPk('photo', $_POST['id']);
+        $group = $this->facade->findByAttributes('group', array('cover' => $_POST['id']));
+        $this->f3->set('photo', $photo);
+        $this->f3->set('group', $group);
+        $this->renderModule('cover', 'Group');
+    }
+
+    public function remove()
+    {
+        if (!empty($_POST['groupID']))
+        {
+
+            $updateUser = array(
+                'cover' => '0',
+                'drapx' => '0',
+                'drapy' => '0'
+            );
+            $update = $this->facade->updateByAttributes('group', $updateUser, array('@rid' => '#' . $_POST['groupID']));
         }
     }
 

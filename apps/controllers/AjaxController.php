@@ -35,51 +35,17 @@ class AjaxController extends AppController
 
                 if (!is_array($_FILES["myfile"]['name'])) //single file
                 {
-                    $allowed_formats = array("jpg", "png", "gif", "bmp");
-                    $fileName = $_FILES["myfile"]["name"];
-                    $tmpname = $_FILES['myfile']['tmp_name'];
-                    $size = $_FILES['myfile']['size'];
-                    list($name, $ext) = explode(".", $fileName);
-                    if (!in_array($ext, $allowed_formats))
-                    {
-                        $err = "<strong>Oh snap!</strong>Invalid file formats only use jpg,png,gif";
-                        return false;
-                    }
-                    if ($ext == "jpg" || $ext == "jpeg")
-                        $src = imagecreatefromjpeg($tmpname);
-                    else if ($ext == "png")
-                        $src = imagecreatefrompng($tmpname);
-                    else
-                        $src = imagecreatefromgif($tmpname);
-
-                    list($width, $height) = getimagesize($tmpname);
-
-                    $thumbName = time() . '.' . $ext;
-                    if ($width > 350)
-                    {
-//                        imges width 350px
-                        $newwidth = 350;
-                        $newheight = ($height / $width) * $newwidth;
-                        $tmp = imagecreatetruecolor($newwidth, $newheight);
-                        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-                        $image = $outPutDir . $fileName;
-                        imagejpeg($tmp, $outPutDir . '350/' . $thumbName, 100);
-
-                        //                        imges width 150px
-                        $newwidth150 = 150;
-                        $newheight150 = ($height / $width) * $newwidth150;
-                        $tmp = imagecreatetruecolor($newwidth150, $newheight150);
-                        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth150, $newheight150, $width, $height);
-                        $image = $outPutDir . $fileName;
-                        imagejpeg($tmp, $outPutDir . '150/' . $thumbName, 100);
-                    }
-                    move_uploaded_file($_FILES["myfile"]["tmp_name"], $outPutDir . $thumbName);
+                    $file = $_FILES["myfile"];
+                    $newName = time();
+                    $this->resizeImages($file, 350, $outPutDir, $newName);
+                    $this->resizeImages($file, 150, $outPutDir, $newName);
+                    $image = $this->move_uploaded_file($file, $outPutDir, $newName);
                     $entry = array(
                         'actor' => $currentUser->recordID,
                         'album' => '',
-                        'fileName' => $thumbName,
-                        'width' => $width,
-                        'height' => $height,
+                        'fileName' => $image['name'],
+                        'width' => $image['width'],
+                        'height' => $$image['height'],
                         'drapx' => 0,
                         'drapy' => 0,
                         'thumbnail_url' => '',
@@ -120,50 +86,17 @@ class AjaxController extends AppController
 
                 if (!is_array($_FILES["myfile"]['name'])) //single file
                 {
-                    $allowed_formats = array("jpg", "png", "gif", "bmp");
-                    $fileName = $_FILES["myfile"]["name"];
-                    $tmpname = $_FILES['myfile']['tmp_name'];
-                    $size = $_FILES['myfile']['size'];
-                    list($name, $ext) = explode(".", $fileName);
-                    if (!in_array($ext, $allowed_formats))
-                    {
-                        $err = "<strong>Oh snap!</strong>Invalid file formats only use jpg,png,gif";
-                        return false;
-                    }
-                    if ($ext == "jpg" || $ext == "jpeg")
-                        $src = imagecreatefromjpeg($tmpname);
-                    else if ($ext == "png")
-                        $src = imagecreatefrompng($tmpname);
-                    else
-                        $src = imagecreatefromgif($tmpname);
-
-                    list($width, $height) = getimagesize($tmpname);
-                    $thumbName = time() . '.' . $ext;
-                    if ($width > 350)
-                    {
-                        //                        imges width 350px
-                        $newwidth = 350;
-                        $newheight = ($height / $width) * $newwidth;
-                        $tmp = imagecreatetruecolor($newwidth, $newheight);
-                        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-                        $image = $outPutDir . $fileName;
-                        imagejpeg($tmp, $outPutDir . '350/' . $thumbName, 100);
-
-                        //                        imges width 150px
-                        $newwidth150 = 150;
-                        $newheight150 = ($height / $width) * $newwidth150;
-                        $tmp = imagecreatetruecolor($newwidth150, $newheight150);
-                        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth150, $newheight150, $width, $height);
-                        $image = $outPutDir . $fileName;
-                        imagejpeg($tmp, $outPutDir . '150/' . $thumbName, 100);
-                    }
-                    move_uploaded_file($_FILES["myfile"]["tmp_name"], $outPutDir . $thumbName);
+                    $file = $_FILES["myfile"];
+                    $newName = time();
+                    $this->resizeImages($file, 350, $outPutDir, $newName);
+                    $this->resizeImages($file, 150, $outPutDir, $newName);
+                    $image = $this->move_uploaded_file($file, $outPutDir, $newName);
                     $entry = array(
                         'actor' => $currentUser->recordID,
                         'album' => '',
-                        'fileName' => $fileName,
-                        'width' => $width,
-                        'height' => $height,
+                        'fileName' => $image['name'],
+                        'width' => $image['width'],
+                        'height' => $image['height'],
                         'drapx' => 0,
                         'drapy' => 0,
                         'description' => '',
@@ -211,7 +144,7 @@ class AjaxController extends AppController
                 );
             }
             $update = $this->facade->updateByAttributes('user', $updateUser, array('@rid' => '#' . $this->f3->get('SESSION.userID')));
-            if ($update == 1)
+            if (!empty($update))
             {
                 echo json_encode(array('role' => $_POST['role'], 'url' => IMAGES));
             }
@@ -236,7 +169,7 @@ class AjaxController extends AppController
             );
         }
         $update = $this->facade->updateByAttributes('user', $updateUser, array('@rid' => '#' . $this->f3->get('SESSION.userID')));
-        if ($update == 1)
+        if (!empty($update))
         {
             $user = $this->facade->findByPk('user', $this->f3->get('SESSION.userID'));
             $this->f3->set('username', $user->data->username);

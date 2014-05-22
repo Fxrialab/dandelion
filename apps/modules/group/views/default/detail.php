@@ -29,54 +29,69 @@ $members = $this->f3->get('member');
         $('#typeActivityID').html('<input type=hidden id=typeID name=typeID value=<?php echo $group->recordID ?>>');
     })
 
-    $("body").on('click', '.choosePhoto', function(e) {
-        e.preventDefault();
-        var photoID = $(this).attr('rel');
-        var groupID = $(this).attr('id');
-        $.ajax({
-            type: "POST",
-            url: "/content/group/cover",
-            data: {groupID: groupID, photoID: photoID},
-            success: function(data) {
-                $("#displayPhotoGroup").html(data);
-                $("#dialog").dialog("close");
-                $('body').css('overflow', 'scroll');
-            }
-        });
-    });
 </script>
-
 <div class="large-100">
     <form id="coverPhotoGroup">
-        <input type="hidden" name="groupID" value="<?php echo $group->recordID ?>">
-        <div class="column-group" id="displayPhotoGroup">
-            <?php
-            if (!empty($group->data->urlCover))
-            {
-                $urlCover = $group->data->urlCover;
-                $groupID = $group->recordID;
-                $f3 = require('cover.php');
-                ?>
-
+        <input type="hidden" id="groupID" name="groupID" value="<?php echo $group->recordID ?>">
+        <div class="column-group coverGroup">
+            <div class="displayPhoto">
                 <?php
-            }
-            else
-            {
-                ?>
-
-                <div  style="border: 1px solid #ccc; padding: 70px 0; overflow:  ">
-                    <div class="large-30"></div>
-                    <div class="large-20">
-                        <div id="uploadPhotoGroup">Upload Photo</div>
-                    </div>
-                    <div class="large-20"><div style="padding: 5px 0">    
-                            <a href="#" id="myPhotoGroup" rel="<?php echo $group->recordID ?>" title="My Photos">Choose from My Photos</a>
+                if (!empty($group->data->cover))
+                {
+                    $photo = GroupController::findPhoto($group->data->cover);
+                    if (!empty($photo))
+                    {
+                        ?>
+                        <div class="imgCover">
+                            <div style="width:<?php echo $photo->data->width ?>px; height:<?php echo $photo->data->height ?>px;  position: relative; <?php if (!empty($group->data->drapx)) echo 'left: -' . $group->data->drapx . 'px' ?>; <?php if (!empty($group->data->drapy)) echo 'top: -' . $group->data->drapy . 'px' ?>">
+                                <img src="<?php echo UPLOAD_URL . $photo->data->fileName ?>" style="width:100%;">
+                            </div>
                         </div>
+                        <?php
+                    }
+                }
+                else
+                {
+                    ?>
+                    <div class="uploadCoverGroup">
+                        <div class="large-30"></div>
+                        <div class="large-20">
+                            <div id="uploadPhotoGroup">Upload Photo</div>
+                        </div>
+                        <div class="large-20"><div style="padding: 5px 0">    
+                                <a href="#" class="myPhotoGroup" rel="<?php echo $group->recordID ?>" title="My Photos">Choose from My Photos</a>
+                            </div>
+                        </div>
+                        <div class="large-40"></div>
                     </div>
-                    <div class="large-40"></div>
-                </div>
-            <?php } ?>
-
+                <?php } ?>
+            </div>
+            <div class="actionCover">
+                <?php
+                if (!empty($group->data->cover))
+                {
+                    ?>
+                    <div class="dropdown">
+                        <a href="#" class="button"><span class="icon icon148"></span><span class="label">Change cover</span></a>
+                        <div class="dropdown-slider w175">
+                            <a href="#" class="myPhotoGroup ddm"  rel="<?php echo $group->recordID ?>" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a>
+                            <a href="#" class="ddm"><div id="uploadPhotoGroup"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a>
+                            <?php
+                            if (!empty($photo))
+                            {
+                                ?>
+                                <a href="javascript:void(0)" class="ddm rCoverGroup" rel="<?php echo $photo->recordID ?>"><span class="icon icon61"></span><span class="label">Reposition...</span></a>
+                                <?php
+                            }
+                            if (!empty($group->data->cover))
+                            {
+                                ?>
+                                <a href="javascript:void(0)" class="removeImgGroup ddm" rel="<?php echo $photo->recordID ?>" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a>
+                            <?php } ?>
+                        </div> <!-- /.dropdown-slider -->
+                    </div> <!-- /.dropdown -->
+                <?php } ?>
+            </div>
         </div>
     </form>
     <?php $f3 = require('groupBar.php'); ?>
@@ -94,7 +109,6 @@ $members = $this->f3->get('member');
     </div>
     <script>
         $(function() {
-
             $("#coverPhotoGroup").submit(function() {
                 $.ajax({
                     type: "POST",
@@ -102,6 +116,7 @@ $members = $this->f3->get('member');
                     data: $("#coverPhotoGroup").serialize(), // serializes the form's elements.
                     success: function(data)
                     {
+                        $('.actionCover').css('display', 'block');
                         $(".submit").html(data);
                     }
                 });
@@ -109,4 +124,52 @@ $members = $this->f3->get('member');
                 return false; // avoid to execute the actual submit of the form.
             });
         });
+        $("body").on('click', '.removeImgGroup', function(e) {
+            var title = $(this).attr('title');
+            var data = [
+                {rel: $(this).attr('rel'), groupID: $('#groupID').val()},
+            ];
+            $(".dialog").dialog({
+                width: "500",
+                height: "160",
+                position: ['top', 100],
+                title: title,
+                resizable: true,
+                modal: true,
+                open: function(event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    $("#alertTemplate").tmpl(data).appendTo(".dialog");
+                }
+            });
+        });
+
+    </script>
+    <script id="removeCoverGroupTemplate" type="text/x-jQuery-tmpl">
+        <div class="uploadCoverGroup">
+        <div class="large-30"></div>
+        <div class="large-20">
+        <div id="uploadPhotoGroup">Upload Photo</div>
+        </div>
+        <div class="large-20"><div style="padding: 5px 0">    
+        <a href="#" class="myPhotoGroup" rel="<?php echo $group->recordID ?>" title="My Photos">Choose from My Photos</a>
+        </div>
+        </div>
+        <div class="large-40"></div>
+        </div>
+    </script>
+
+    <script id="alertTemplate" type="text/x-jQuery-tmpl">
+        <div class="control-group">
+        <div class="control">
+        <div class="statusDialog">Are you sure you want to remove </div>
+        </div>
+        </div>
+        <input type="hidden" name="photoID" value="${rel}">
+        <input type="hidden"  name="groupID" value="${groupID}">
+        <div class="footerDialog" >
+        <div class="float-right">
+        <button type="submit" class="ink-button green-button comfirmDialogGroup">Comfirm</button>
+        <button class=" closeDialog ink-button ">Cancel</a>
+        </div>
+        </div>
     </script>

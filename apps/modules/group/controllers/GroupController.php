@@ -32,6 +32,11 @@ class GroupController extends AppController
         return Model::get('user')->find($id);
     }
 
+    static public function findPhoto($id)
+    {
+        return Model::get('photo')->find($id);
+    }
+
     public function group($viewPath)
     {
         if ($this->isLogin())
@@ -208,16 +213,7 @@ class GroupController extends AppController
         if (!empty($_POST['photoID']))
         {
             $photo = $this->facade->findByPk('photo', str_replace("_", ":", $_POST['photoID']));
-            $updateGroup = array(
-                'urlCover' => $photo->data->url,
-            );
-            $group = $this->facade->updateByAttributes('group', $updateGroup, array('@rid' => '#' . $_POST['groupID']));
-            if ($group == 1)
-            {
-                $this->f3->set('url', $photo->data->url);
-                $this->f3->set('photoID', $_POST['photoID']);
-                $this->f3->set('photo', $photo);
-            }
+            $this->f3->set('photo', $photo);
             $this->f3->set('groupID', $_POST['groupID']);
 
             $this->renderModule('cover', 'Group');
@@ -260,61 +256,35 @@ class GroupController extends AppController
 
                 if (!is_array($_FILES["myfile"]['name'])) //single file
                 {
-                    $allowed_formats = array("jpg", "png", "gif", "bmp");
-                    $fileName = $_FILES["myfile"]["name"];
-                    $tmpname = $_FILES['myfile']['tmp_name'];
-                    $size = $_FILES['myfile']['size'];
-                    list($name, $ext) = explode(".", $fileName);
-                    if (!in_array($ext, $allowed_formats))
+                    $file = $_FILES["myfile"];
+                    $newName = time();
+                    $this->resizeImages($file, 350, $outPutDir, $newName);
+                    $this->resizeImages($file, 150, $outPutDir, $newName);
+                    $image = $this->move_uploaded_file($file, $outPutDir, $newName);
+                    if (!empty($image))
                     {
-                        $err = "<strong>Oh snap!</strong>Invalid file formats only use jpg,png,gif";
-                        return false;
+                        $entry = array(
+                            'actor' => $this->f3->get('SESSION.userID'),
+                            'album' => '',
+                            'fileName' => $image['name'],
+                            'width' => $image['width'],
+                            'height' => $image['height'],
+                            'drapx' => 0,
+                            'drapy' => 0,
+                            'thumbnail_url' => '',
+                            'description' => '',
+                            'numberLike' => '0',
+                            'numberComment' => '0',
+                            'statusUpload' => 'uploaded',
+                            'published' => $newName,
+                            'type' => 'group'
+                        );
+                        $photoID = $this->facade->save('photo', $entry);
+                        $photo = $this->facade->findByPk('photo', $photoID);
+                        $this->f3->set('photo', $photo);
                     }
-                    if ($ext == "jpg" || $ext == "jpeg")
-                        $src = imagecreatefromjpeg($tmpname);
-                    else if ($ext == "png")
-                        $src = imagecreatefrompng($tmpname);
-                    else
-                        $src = imagecreatefromgif($tmpname);
-
-                    list($width, $height) = getimagesize($tmpname);
-                    if ($width > 750)
-                    {
-                        $newwidth = 750;
-                        $newheight = ($height / $width) * $newwidth;
-                        $tmp = imagecreatetruecolor($newwidth, $newheight);
-                        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-                        $image = $outPutDir . $fileName;
-                        imagejpeg($tmp, $outPutDir . $fileName, 100);
-                        move_uploaded_file($image, $outPutDir . $fileName);
-                    }
-                    else
-                    {
-                        move_uploaded_file($_FILES["myfile"]["tmp_name"], $outPutDir . $fileName);
-                    }
-                    $entry = array(
-                        'actor' => $currentUser->recordID,
-                        'album' => '',
-                        'fileName' => $fileName,
-                        'url' => UPLOAD_URL . $fileName,
-                        'thumbnail_url' => '',
-                        'description' => '',
-                        'numberLike' => '0',
-                        'numberComment' => '0',
-                        'statusUpload' => 'uploaded',
-                        'published' => time(),
-                        'type' => 'group'
-                    );
-                    $photoID = $this->facade->save('photo', $entry);
-                    $photo = $this->facade->findByPk('photo', $photoID);
-
-                    $this->f3->set('photo', $photo);
                     $this->renderModule('cover', 'Group');
                 }
-
-//                header("Content-Type: application/json; charset=UTF-8");
-//                $jsonData = json_encode((object) $data);
-//                echo $jsonData;
             }
         }
     }

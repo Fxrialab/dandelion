@@ -9,7 +9,8 @@ $(document).ready(function()
         onSuccess: function(files, data, xhr)
         {
             $('.ajax-file-upload-statusbar').fadeOut('slow');
-            $('#displayPhotoGroup').html(data);
+            $('.displayPhoto').html(data);
+            $('.actionCover').css('display', 'none');
 
         },
         onError: function(files, status, errMsg)

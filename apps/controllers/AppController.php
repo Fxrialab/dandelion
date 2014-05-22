@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by fxrialab team
  * Author: Uchiha
@@ -6,8 +7,10 @@
  * Project: UserWired Network - Version: beta
  */
 require_once("Controller.php");
+
 class AppController extends Controller
 {
+
     protected $helpers = array();
     protected $layout = '';
 
@@ -48,10 +51,10 @@ class AppController extends Controller
         return false;
     }
 
-    /*public function getCurrentUser()
-    {
-        return F3::get("SESSION.loggedUser");
-    }*/
+    /* public function getCurrentUser()
+      {
+      return F3::get("SESSION.loggedUser");
+      } */
 
     public function getCurrentUserName()
     {
@@ -60,14 +63,15 @@ class AppController extends Controller
 
     public function element($element)
     {
-        if (file_exists(UI . ELEMENTS . $element . '.php')) {
-            if (method_exists($this->Elements, $element)) {
+        if (file_exists(UI . ELEMENTS . $element . '.php'))
+        {
+            if (method_exists($this->Elements, $element))
+            {
                 $this->Elements->$element();
             }
             require(UI . ELEMENTS . $element . '.php');
         }
     }
-
 
     public function getMacAddress()
     {
@@ -102,12 +106,16 @@ class AppController extends Controller
     static function elementModules($element, $modules)
     {
         include MODULES . $modules . '/info.php';
-        if (file_exists(MODULES . $path . $element . '.php')) {
-            foreach (glob(MODULES . $modules . '/controllers/' . $modules . 'controller.php') as $elementController) {
-                if (file_exists($elementController)) {
+        if (file_exists(MODULES . $path . $element . '.php'))
+        {
+            foreach (glob(MODULES . $modules . '/controllers/' . $modules . 'controller.php') as $elementController)
+            {
+                if (file_exists($elementController))
+                {
                     $elementControllers = $modules . 'Controller';
                     $newElement = new $elementControllers;
-                    if (method_exists($newElement, $element)) {
+                    if (method_exists($newElement, $element))
+                    {
                         $newElement->$element();
                     }
                 }
@@ -118,7 +126,7 @@ class AppController extends Controller
 
     public function getFriendsStt($actor)
     {
-        return $this->facade->findAllAttributes('friendship', array('userA'=>$actor, 'relationship'=>'friend', 'status'=>'ok'));
+        return $this->facade->findAllAttributes('friendship', array('userA' => $actor, 'relationship' => 'friend', 'status' => 'ok'));
     }
 
     public function getStatusFriendShip($userA, $userB)
@@ -153,10 +161,11 @@ class AppController extends Controller
     // **********************************
     public function trackActivity($actor, $verb, $object, $type, $typeID, $published)
     {
-        $checkActivity = $this->facade->findAllAttributes('activity', array('owner'=>$actor->recordID, 'object'=>$object));
+        $checkActivity = $this->facade->findAllAttributes('activity', array('owner' => $actor->recordID, 'object' => $object));
         $findUserBOfFollow = $this->facade->findByPk('follow', $actor->recordID);
         $actorID = ($findUserBOfFollow) ? $findUserBOfFollow->data->userB : $actor->recordID;
-        if (!$checkActivity) {
+        if (!$checkActivity)
+        {
             // prepare activity data
             $activity = array(
                 'owner' => $actor->recordID,
@@ -177,13 +186,14 @@ class AppController extends Controller
             {
                 for ($i = 0; $i < count($friends); $i++)
                 {
-                    $checkActivityFriend = $this->facade->findAllAttributes('activity', array('owner'=>$friends[$i]->data->userB, 'object'=>$object));
+                    $checkActivityFriend = $this->facade->findAllAttributes('activity', array('owner' => $friends[$i]->data->userB, 'object' => $object));
                     //var_dump($checkActivityFriend);
                     //@todo handling follow after: HN
                     if ($findUserBOfFollow)
                     {
-                        $checkFriends = $this->facade->findAllAttributes('friendship', array('userA'=>$friends[$i]->data->userB, 'userB'=>$findUserBOfFollow->data->userB, 'status'=>'ok'));
-                        if ($checkFriends == null) {
+                        $checkFriends = $this->facade->findAllAttributes('friendship', array('userA' => $friends[$i]->data->userB, 'userB' => $findUserBOfFollow->data->userB, 'status' => 'ok'));
+                        if ($checkFriends == null)
+                        {
                             $activity = array(
                                 'owner' => $actor->recordID,
                                 'actor' => $findUserBOfFollow->data->userB,
@@ -194,11 +204,11 @@ class AppController extends Controller
                                 'published' => $published
                             );
                             $this->facade->save('activity', $activity);
-
                         }
                     }
                     // prepare activity for each followers
-                    if (!$checkActivityFriend) {
+                    if (!$checkActivityFriend)
+                    {
                         $activity = array(
                             'owner' => $friends[$i]->data->userB,
                             'actor' => $actor->recordID,
@@ -209,11 +219,9 @@ class AppController extends Controller
                             'published' => $published
                         );
                         $this->facade->save('activity', $activity);
-
                     }
                 }
             }
-
         }
     }
 
@@ -224,9 +232,11 @@ class AppController extends Controller
 
         $findUserBOfFollow = Model::get('follow')->findByPk($actor->recordID);
         $actorID = ($findUserBOfFollow) ? $findUserBOfFollow->data->userB : $actor->recordID;
-        if (!$checkActivity) {
-            /* Insert in to Activity for user posted this status.*/
-            if ($owner != $actor->recordID) {
+        if (!$checkActivity)
+        {
+            /* Insert in to Activity for user posted this status. */
+            if ($owner != $actor->recordID)
+            {
                 $userStatus = array(
                     'owner' => $owner,
                     'actor' => $actor->recordID,
@@ -242,12 +252,16 @@ class AppController extends Controller
 
             $friends = $this->getFriendsStt($actor->recordID);
             /* dupicate activities for followers */
-            if (!empty($friends) && !$checkActivity) {
-                for ($i = 0; $i < count($friends); $i++) {
+            if (!empty($friends) && !$checkActivity)
+            {
+                for ($i = 0; $i < count($friends); $i++)
+                {
                     //@todo handling follow after: HN
-                    if ($findUserBOfFollow) {
+                    if ($findUserBOfFollow)
+                    {
                         $checkFriends = Model::get('friendship')->findByCondition("userA = '" . $friends[$i]->data->userB . "' AND status = 'ok' userB = '" . $findUserBOfFollow->data->userB . "'");
-                        if ($checkFriends == null) {
+                        if ($checkFriends == null)
+                        {
                             $activity = array(
                                 'owner' => $actor->recordID,
                                 'actor' => $findUserBOfFollow->data->userB,
@@ -262,13 +276,18 @@ class AppController extends Controller
                     }
                 }
             }
-            /* Insert Activity for user join comment in this status .*/
-            if ($findUser) {
-                foreach ($findUser as $userCmt) {
-                    if ($userCmt) {
+            /* Insert Activity for user join comment in this status . */
+            if ($findUser)
+            {
+                foreach ($findUser as $userCmt)
+                {
+                    if ($userCmt)
+                    {
                         $checkActivityComment = Model::get('activity')->findByCondition("owner = '" . $userCmt->data->actor . "' AND object = '" . $object . "'");
-                        if (!$checkActivityComment) {
-                            if ($userCmt->data->actor != $this->getCurrentUser()->recordID) {
+                        if (!$checkActivityComment)
+                        {
+                            if ($userCmt->data->actor != $this->getCurrentUser()->recordID)
+                            {
                                 $userComment = array(
                                     'owner' => $userCmt->data->actor,
                                     'actor' => $this->getCurrentUser()->recordID,
@@ -291,7 +310,8 @@ class AppController extends Controller
     {
         $result = array();
         $length = count($array);
-        switch ($for) {
+        switch ($for)
+        {
             case 'randomSuggestElement':
                 $result = ($array && $length > 2) ? array_rand($array, 2) : array_keys($array);
                 break;
@@ -306,36 +326,44 @@ class AppController extends Controller
     {
         $current = array();
         $loggedUser = $this->getCurrentUser()->recordID;
-        $findSuggestFriends = Model::get('user')->callGremlin("current.out.both", array('@rid'=>'#' . $loggedUser));
+        $findSuggestFriends = Model::get('user')->callGremlin("current.out.both", array('@rid' => '#' . $loggedUser));
         if (!empty($findSuggestFriends))
         {
             $groupFriend = array_keys(array_count_values($findSuggestFriends));
             array_push($current, $loggedUser);
             $yourFriends = array_diff($groupFriend, $current);
-            $neighborCurrentUser = Model::get('user')->callGremlin("current.in", array('@rid'=>'#' . $loggedUser));
+            $neighborCurrentUser = Model::get('user')->callGremlin("current.in", array('@rid' => '#' . $loggedUser));
             $yourFriendArrays = array();
-            if (current($yourFriends) != '') {
-                foreach ($yourFriends as $yourFriend) {
-                    $relationShipAtoB[$yourFriend] = $this->facade->findAllAttributes('friendship', array('userA'=>$loggedUser, 'userB'=>$yourFriend));
-                    $relationShipBtoA[$yourFriend] = $this->facade->findAllAttributes('friendship', array('userA'=>$yourFriend, 'userB'=>$loggedUser));
-                    if (!$relationShipAtoB[$yourFriend] && !$relationShipBtoA[$yourFriend]) {
+            if (current($yourFriends) != '')
+            {
+                foreach ($yourFriends as $yourFriend)
+                {
+                    $relationShipAtoB[$yourFriend] = $this->facade->findAllAttributes('friendship', array('userA' => $loggedUser, 'userB' => $yourFriend));
+                    $relationShipBtoA[$yourFriend] = $this->facade->findAllAttributes('friendship', array('userA' => $yourFriend, 'userB' => $loggedUser));
+                    if (!$relationShipAtoB[$yourFriend] && !$relationShipBtoA[$yourFriend])
+                    {
                         array_push($yourFriendArrays, $yourFriend);
                     }
                 }
 
                 $randomKeys = $this->randomKeys($yourFriendArrays, 'randomFriendID');
-                if ($randomKeys) {
-                    foreach ($randomKeys as $key) {
+                if ($randomKeys)
+                {
+                    foreach ($randomKeys as $key)
+                    {
                         $randYourFriend = $yourFriendArrays[$key];
-                        $infoYourFriend[$randYourFriend] = Model::get('user')->callGremlin("current.map", array('@rid'=>'#' . $randYourFriend));
-                        $neighborFriends[$randYourFriend] = Model::get('user')->callGremlin("current.in", array('@rid'=>'#' . $randYourFriend));
+                        $infoYourFriend[$randYourFriend] = Model::get('user')->callGremlin("current.map", array('@rid' => '#' . $randYourFriend));
+                        $neighborFriends[$randYourFriend] = Model::get('user')->callGremlin("current.in", array('@rid' => '#' . $randYourFriend));
 
-                        if (current($neighborCurrentUser) != '') {
+                        if (current($neighborCurrentUser) != '')
+                        {
                             $mutualFriends[$randYourFriend] = array_intersect($neighborCurrentUser, $neighborFriends[$randYourFriend]);
                             $this->f3->set('numMutualFriends', $mutualFriends);
-                            if ($mutualFriends[$randYourFriend]) {
-                                foreach ($mutualFriends[$randYourFriend] as $mutualFriend) {
-                                    $infoMutualFriend[$mutualFriend] = Model::get('user')->callGremlin("current.map", array('@rid'=>'#' . $mutualFriend));
+                            if ($mutualFriends[$randYourFriend])
+                            {
+                                foreach ($mutualFriends[$randYourFriend] as $mutualFriend)
+                                {
+                                    $infoMutualFriend[$mutualFriend] = Model::get('user')->callGremlin("current.map", array('@rid' => '#' . $mutualFriend));
                                 }
                                 $this->f3->set('infoMutualFriend', $infoMutualFriend);
                             }
@@ -354,31 +382,37 @@ class AppController extends Controller
     public function friendRequest()
     {
         $loggedUser = $this->getCurrentUser()->recordID;
-        $neighborCurrentUser = Model::get('user')->callGremlin("current.in", array('@rid'=>'#' . $loggedUser));
-        if ($neighborCurrentUser) {
+        $neighborCurrentUser = Model::get('user')->callGremlin("current.in", array('@rid' => '#' . $loggedUser));
+        if ($neighborCurrentUser)
+        {
             $requestUserArrays = array();
             //var_dump($neighborCurrentUser);
-            if (current($neighborCurrentUser) != '') {
-                foreach ($neighborCurrentUser as $neighbor) {
-                    $requestRelationShip[$neighbor] = $this->facade->findAllAttributes('friendship', array('userA'=>$neighbor, 'userB'=>$loggedUser, 'relationship'=>'request'));
+            if (current($neighborCurrentUser) != '')
+            {
+                foreach ($neighborCurrentUser as $neighbor)
+                {
+                    $requestRelationShip[$neighbor] = $this->facade->findAllAttributes('friendship', array('userA' => $neighbor, 'userB' => $loggedUser, 'relationship' => 'request'));
 
-                    if ($requestRelationShip[$neighbor]) {
+                    if ($requestRelationShip[$neighbor])
+                    {
                         array_push($requestUserArrays, $neighbor);
                     }
                 }
                 $randomKeys = $this->randomKeys($requestUserArrays, 'randomFriendID');
-                foreach ($randomKeys as $key) {
+                foreach ($randomKeys as $key)
+                {
                     $randYourFriend = $requestUserArrays[$key];
-                    $infoRequestUser[$randYourFriend] = Model::get('user')->callGremlin("current.map", array('@rid'=>'#' . $randYourFriend));
-                    $neighborRequestUser[$randYourFriend] = Model::get('user')->callGremlin("current.in", array('@rid'=>'#' . $randYourFriend));
+                    $infoRequestUser[$randYourFriend] = Model::get('user')->callGremlin("current.map", array('@rid' => '#' . $randYourFriend));
+                    $neighborRequestUser[$randYourFriend] = Model::get('user')->callGremlin("current.in", array('@rid' => '#' . $randYourFriend));
                     if (!empty($neighborRequestUser[$randYourFriend]))
                     {
                         $mutualFriends[$randYourFriend] = array_intersect($neighborCurrentUser, $neighborRequestUser[$randYourFriend]);
                         $this->f3->set('numMutualFriends', $mutualFriends);
                         if ($mutualFriends[$randYourFriend])
                         {
-                            foreach ($mutualFriends[$randYourFriend] as $mutualFriend) {
-                                $infoMutualFriend[$mutualFriend] = Model::get('user')->callGremlin("current.map", array('@rid'=>'#' . $mutualFriend));
+                            foreach ($mutualFriends[$randYourFriend] as $mutualFriend)
+                            {
+                                $infoMutualFriend[$mutualFriend] = Model::get('user')->callGremlin("current.map", array('@rid' => '#' . $mutualFriend));
                             }
 
                             $this->f3->set('infoMutualFriend', $infoMutualFriend);
@@ -393,13 +427,13 @@ class AppController extends Controller
 
                 $this->render("elements/friendRequestElement.php", 'default');
             }
-
         }
     }
 
     public function suggest($for)
     {
-        switch ($for) {
+        switch ($for)
+        {
             case 'peopleYouMayKnow':
                 $this->peopleYouMayKnow();
                 break;
@@ -416,7 +450,8 @@ class AppController extends Controller
     public function getSearchCommand($properties, $searchText)
     {
         $command = "current.or(";
-        for ($i = 0; $i < count($properties); $i++) {
+        for ($i = 0; $i < count($properties); $i++)
+        {
             $command = $command . "_().filter{it.getProperty('" . $properties[$i] . "').contains('" . strtolower($searchText) . "')},";
         }
         $command = $command . ")";
@@ -427,9 +462,12 @@ class AppController extends Controller
     {
         $info = getimagesize($source_url);
 
-        if ($info['mime'] == 'image/jpeg') $image = imagecreatefromjpeg($source_url);
-        elseif ($info['mime'] == 'image/gif') $image = imagecreatefromgif($source_url);
-        elseif ($info['mime'] == 'image/png') $image = imagecreatefrompng($source_url);
+        if ($info['mime'] == 'image/jpeg')
+            $image = imagecreatefromjpeg($source_url);
+        elseif ($info['mime'] == 'image/gif')
+            $image = imagecreatefromgif($source_url);
+        elseif ($info['mime'] == 'image/png')
+            $image = imagecreatefrompng($source_url);
 
         //save it
         imagejpeg($image, $destination_url, $quality);
@@ -444,10 +482,13 @@ class AppController extends Controller
         /* The width and the height of the image also the getimagesize retrieve other information as well   */
         $imgRatio = $width / $height;
 
-        if ($imgRatio > 1) {
+        if ($imgRatio > 1)
+        {
             $newWidth = $thumbSize;
             $newHeight = $thumbSize / $imgRatio;
-        } else {
+        }
+        else
+        {
             $newHeight = $thumbSize;
             $newWidth = $thumbSize * $imgRatio;
         }
@@ -457,12 +498,69 @@ class AppController extends Controller
         imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
         imagejpeg($thumb, $desImgFile, 100);
         /*
-        Out put of image
-        if the $savePath is null then it will display the image in the browser
-        */
+          Out put of image
+          if the $savePath is null then it will display the image in the browser
+         */
         imagedestroy($thumb);
         /*
-            Destroy the image
-        */
+          Destroy the image
+         */
     }
+
+    public function resizeImages($file, $size = 0, $dir, $newName)
+    {
+        $allowed_formats = array("jpg", "png", "gif", "bmp");
+        $fileName = $file["name"];
+        $tmpname = $file['tmp_name'];
+
+        list($name, $ext) = explode(".", $fileName);
+        if (!in_array($ext, $allowed_formats))
+        {
+            $err = "<strong>Oh snap!</strong>Invalid file formats only use jpg,png,gif";
+            return false;
+        }
+        if ($ext == "jpg" || $ext == "jpeg")
+            $src = imagecreatefromjpeg($tmpname);
+        else if ($ext == "png")
+            $src = imagecreatefrompng($tmpname);
+        else
+            $src = imagecreatefromgif($tmpname);
+
+        $thumbName = $newName . '.' . $ext;
+        list($width, $height) = getimagesize($tmpname);
+        $newwidth = $size;
+        $newheight = ($height / $width) * $newwidth;
+        $tmp = imagecreatetruecolor($newwidth, $newheight);
+        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+        $image = $dir . $fileName;
+        imagejpeg($tmp, $dir . $size . '/' . $thumbName, 100);
+        /*
+          Destroy the image
+         */
+    }
+
+    public function move_uploaded_file($file, $dir, $newName)
+    {
+        $allowed_formats = array("jpg", "png", "gif", "bmp");
+        $fileName = $file["name"];
+        $tmpname = $file['tmp_name'];
+        $size = $file['size'];
+        list($name, $ext) = explode(".", $fileName);
+        if (!in_array($ext, $allowed_formats))
+        {
+            $err = "<strong>Oh snap!</strong>Invalid file formats only use jpg,png,gif";
+            return false;
+        }
+        if ($ext == "jpg" || $ext == "jpeg")
+            $src = imagecreatefromjpeg($tmpname);
+        else if ($ext == "png")
+            $src = imagecreatefrompng($tmpname);
+        else
+            $src = imagecreatefromgif($tmpname);
+
+        list($width, $height) = getimagesize($tmpname);
+        if (move_uploaded_file($_FILES["myfile"]["tmp_name"], $dir . $newName . '.' . $ext))
+            return array('name' => $newName . '.' . $ext, 'width' => $width, 'height' => $height);
+    }
+
 }
