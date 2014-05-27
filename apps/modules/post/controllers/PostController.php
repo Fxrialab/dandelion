@@ -187,73 +187,31 @@ class PostController extends AppController
     {
         if ($this->isLogin())
         {
-            $facade = new OrientDBFacade();
             $currentUser = $this->getCurrentUser();
-            $postID = str_replace("_", ":", $this->f3->get('POST.postID'));
-            $actorName = $this->getCurrentUserName();
-            $published = time();
-            $existCommentRC = $facade->findAllAttributes('comment', array("actor" => $currentUser->recordID, "post" => $postID));
+            $postID     = str_replace("_", ":", $this->f3->get('POST.postID'));
+            $published  = time();
+
             //prepare data
             $content = $this->f3->get('POST.comment');
-            $URL = $this->f3->get('POST.fullURL');
-            $tagged = ($URL == 'undefined') ? 'none' : $URL;
-            if ($tagged != 'none')
-            {
-                $countChar = strlen($tagged);
-                $countCharFirst = strpos($content, $tagged);
-                $content1 = substr($content, 0, $countCharFirst);
-                $content2 = substr($content, $countChar + $countCharFirst);
-                $content = $content1 . "_linkWith_" . $content2;
-            }
             //target for count who comments to post on notification, will check later
-
-            if ($existCommentRC)
-            {
-                $commentEntryCase = array(
-                    "actor" => $currentUser->recordID,
-                    "actor_name" => $actorName,
-                    "content" => $content,
-                    "post" => $postID,
-                    "status_post" => "later",
-                    "published" => $published,
-                    "tagged" => $tagged
-                );
-            }
-            else
-            {
-                $commentEntryCase = array(
-                    "actor" => $currentUser->recordID,
-                    "actor_name" => $actorName,
-                    "content" => $content,
-                    "post" => $postID,
-                    "status_post" => "first",
-                    "published" => $published,
-                    "tagged" => $tagged
-                );
-            }
-            $commentRC = Model::get('comment')->create($commentEntryCase);
-            $commentID = $commentRC;
+            $commentEntryCase = array(
+                "actor"         => $currentUser->recordID,
+                "content"       => $content,
+                "post"          => $postID,
+                "published"     => $published,
+            );
+            $commentID = $this->facade->save('comment',$commentEntryCase);
+            $commentRC = $this->facade->findByPk('comment', $commentID);
             /* Update number comment */
-            $status_update = Model::get('status')->findOne('@rid = ?', array('#' . $postID));
+            $status_update = $this->facade->findByAttributes('status', array('@rid'=>'#' . $postID));
             $dataCountNumberComment = array(
                 'numberComment' => $status_update->data->numberComment + 1
             );
-            Model::get('status')->updateByCondition($dataCountNumberComment, "@rid = ?", array("#" . $postID));
+            $this->facade->updateByAttributes('status', $dataCountNumberComment, array('@rid'=>"#" . $postID));
+            $this->f3->set('comments', $commentRC);
 
-            // track activity
-            $userPostID = Model::get('status')->findOne("@rid = ?", array($postID));
-            $this->trackComment($currentUser, "post" . $commentID, $commentID, $postID, $userPostID->data->actor, $published); //commentHoc SAVE Activity follow object is ID comment
-            // data for ajax
-            $this->f3->set('published', $published);
-            $this->f3->set('content', $content);
-            $this->f3->set('currentUser', $currentUser);
-            $this->f3->set('postID', $postID);
-            $this->f3->set('tagged', $tagged);
-
-            $this->renderModule('postComment', 'post');
-        }
-        else
-        {
+            $this->renderModule('viewComment', 'post');
+        }else {
             
         }
     }
@@ -266,16 +224,7 @@ class PostController extends AppController
             $statusID = str_replace("_", ":", $this->f3->get('POST.statusID'));
             if (!empty($statusID))
             {
-                $comments = Model::get('comment')->findByCondition("post = '" . $statusID . "'  ORDER BY published DESC");
-//                if (!empty($comments)) {
-//                    $pos = (count($comments) < 50 ? count($comments) : 50);
-//                    for ($j = $pos - 1; $j >= 0; $j--) {
-//                        $commentActor[$comments[$j]->data->actor] = Model::get('user')->load($comments[$j]->data->actor);
-//                    }
-//                } else {
-//                    $commentActor = null;
-//                }
-//                $this->f3->set("commentActor", $commentActor);
+                $comments = $this->facade->findAllAttributes('comment', array('post'=>$statusID));
                 $this->f3->set("comments", $comments);
                 $this->renderModule('moreComment', 'post');
             }

@@ -39,4 +39,3 @@
     </div>
 </div>
 
-<script type="text/javascript" src="<?php echo $this->f3->get('STATIC_MOD'); ?>post/webroot/js/socialewired.post.js"></script>

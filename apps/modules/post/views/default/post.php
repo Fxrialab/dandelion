@@ -30,5 +30,6 @@ if (!empty($listStatus))
                     autoplay: false
                 }
         );
+        $('.taPostComment').autosize();
     });
 </script>

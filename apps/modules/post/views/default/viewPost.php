@@ -169,9 +169,8 @@ $status_published       = $status->data->published;
                     }
                     if ($activity->numberComment > 3) {
                         ?>
-                        <div class="whoCommentThisPost verGapBox">
-                            <span><i class="statusCounterIcon-comment"></i><a class="viewAll" href ="javascript:void(0)" onclick="moreComment('<?php echo $rpStatusID; ?>')">View all <?php echo $activity->numberComment; ?> comments</a></span>
-                            <span class="numberComments"><?php echo $activity->numberComment; ?></span>
+                        <div class="whoCommentThisPost verGapBox" id="viewComments-<?php echo $rpStatusID; ?>">
+                            <span><i class="statusCounterIcon-comment"></i><a class="viewAllComments" id="<?php echo $rpStatusID; ?>">View all <?php echo $activity->numberComment; ?> comments</a></span>
                         </div>
                         <?php
                     }
@@ -191,8 +190,8 @@ $status_published       = $status->data->published;
                                 <fieldset>
                                     <div class="control-group">
                                         <div class="control">
-                                            <input name="postID" type="hidden" value="<?php echo $rpStatusID ?>" />
-                                            <textarea name="comment" class="taPostComment submitComment" id="textComment-<?php echo $rpStatusID ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
+                                            <input name="postID" type="hidden" value="<?php echo $rpStatusID; ?>" />
+                                            <textarea name="comment" class="taPostComment submitComment" id="textComment-<?php echo $rpStatusID; ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
                                         </div>
                                     </div>
                                 </fieldset>

@@ -39,7 +39,6 @@ $(".autoloadModuleElement").ready(function()
 
 $(document).ready(function() {
     $('.taPostStatus').autosize();
-    $('.taPostComment').autosize();
     //target show popUp
     new showPopUpOver('a.settingOption', '.uiSettingOptionPopUpOver');
     new showPopUpOver('a.quickPostStatusNav', '.uiQuickPostStatusPopUpOver');
@@ -86,6 +85,10 @@ $(document).ready(function() {
     $('body').on('click', '.deleteAction', function() {
         var objectID = $(this).attr('id');
         $(this).deleteEntry(objectID);
+    });
+    $('body').on('click', '.viewAllComments', function() {
+        var objectID = $(this).attr('id');
+        $(this).moreComment(objectID);
     });
     $('body').on('click', '.addFriend', function() {
         var objectID = $(this).attr('id');
@@ -157,8 +160,8 @@ function hoverShowPopUpOver($click, $popUpOver) {
                     $("<span>You and </span>").prependTo("#likeSentence-" + objectID);
                 } else {
                     $(".tempLike-" + objectID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + objectID + "'>" +
-                            "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
-                            "</div>");
+                        "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
+                        "</div>");
                 }
             }
         });
@@ -294,13 +297,13 @@ $(document).ready(function()
                             $.each(data.results, function()
                             {
                                 $('#resultsList').append("<li rel='" + this.recordID + "'>" +
-                                        "<a href='/content/myPost?username=" + this.username + "'>" +
-                                        "<span>" +
-                                        "<img class='imgFindPeople' src='" + this.profilePic + "' width='30' height='30'/>" +
-                                        "<span class='infoPeople'>" + this.firstName + " " + this.lastName + "</span>" +
-                                        "</span>" +
-                                        "</a>" +
-                                        "</li>");
+                                    "<a href='/content/myPost?username=" + this.username + "'>" +
+                                    "<span>" +
+                                    "<img class='imgFindPeople' src='" + this.profilePic + "' width='30' height='30'/>" +
+                                    "<span class='infoPeople'>" + this.firstName + " " + this.lastName + "</span>" +
+                                    "</span>" +
+                                    "</a>" +
+                                    "</li>");
                             });
                             $('#resultsList').append("<li class='moreSearch'><a href='/moreSearch?search=" + searchText + "'><span class='moreSearchText'>See more results for '" + searchText + "'</span></a></li>");
                         } else {
@@ -318,33 +321,55 @@ $(document).ready(function()
         }
     });
 });
-function moreComment(id) {
-    $.ajax({
-        type: "POST",
-        url: "/content/post/moreComment",
-        data: {statusID: id},
-        cache: false,
-        success: function(html) {
-            $('#' + id).css('display', 'none');
-            $('.moreComment-' + id).html(html);
 
+(function($) {
+    $.fn.moreComment = function(objectID)
+    {
+        $.ajax({
+            type: "POST",
+            url: "/content/post/moreComment",
+            data: {statusID: objectID},
+            cache: false,
+            success: function(html) {
+                $('#viewComments-' + objectID).css('display', 'none');
+                $('.moreComment-' + objectID).before(html);
+                updateTime();
+            }
+        })
+    };
+})(jQuery);
+
+/*Comment Function*/
+$(document).on('keypress', '.submitComment', function(event) {
+    var code = (event.keyCode ? event.keyCode : event.which);
+    if (code == '13' && !event.shiftKey)
+    {
+        var statusID = $(this).attr('id').replace('textComment-', '');
+        console.log('statusID: ', statusID);
+        var comment = $("#textComment-" + statusID).val();
+        var numComment = parseInt($("#numCommentValue-" + statusID).val());
+        console.log('cm: ', comment);
+        if (comment == '')
+        {
+            return false;
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "/content/post/postComment",
+                data: $('#fmComment-' + statusID).serialize(),
+                cache: false,
+                success: function(html) {
+                    $("#numC-" + statusID).html(numComment + 1);
+                    $("#commentBox-" + statusID).before(html);
+                    $("#textComment-" + statusID).val('');
+                    updateTime();
+                }
+            });
+            //exit();
         }
-    })
-}
-
-$(function() {
-    $("body").on("click", "a.commentBtn", function(e) {
-        e.preventDefault();
-        var getId = $(this).attr('id').replace('stream-', '');
-        $('.postItem-' + getId).fadeIn("slow");
-        $('#commentBox-' + getId).fadeIn("slow");
-        $('#textComment-' + getId).focus();
     }
-    );
-
-
+    //return false;
 });
-
 
 $("body").on('click', '#createGroup', function(e) {
     e.preventDefault();

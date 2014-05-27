@@ -1928,7 +1928,7 @@ body {
     transition: all .2s ease;
 }
 
-.photoItems {
+.photoItems, .viewAllComments {
     cursor: pointer;
 }
 

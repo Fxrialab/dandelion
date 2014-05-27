@@ -16,7 +16,6 @@
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tokeninput.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tinyscrollbar.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tiptip.js"></script>
-<script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/general.js"></script>
 <script>
     $('.tiptip a.button, .tiptip button').tipTip();
 </script>
