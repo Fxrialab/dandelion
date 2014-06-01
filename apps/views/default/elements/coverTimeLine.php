@@ -14,13 +14,12 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
 <div class="uiCoverTimeLineContainer" style=" position: relative">
     <form id="submitCover">
         <?php
-        $photo = ElementController::findPhoto($otherUser->data->cover);
+        if ($otherUser->data->coverPhoto != 'none')
+            $photo = ElementController::findPhoto($otherUser->data->coverPhoto);
         if (!empty($photo))
         {
             $a = 'Change cover';
-        }
-        else
-        {
+        }else {
             $a = 'Add a cover';
         }
         ?>
@@ -31,8 +30,8 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
                 {
                     ?>
                     <div class="imgCover">
-                        <div style="width:<?php echo $photo->data->width ?>px; height:<?php echo $photo->data->height ?>px;  position: relative; <?php if (!empty($otherUser->data->drapx)) echo 'left: -' . $otherUser->data->drapx . 'px' ?>; <?php if (!empty($otherUser->data->drapy)) echo 'top: -' . $otherUser->data->drapy . 'px' ?>">
-                            <img src="<?php echo UPLOAD_URL . $photo->data->fileName ?>" style="width:100%;">
+                        <div style="width:<?php echo $photo->data->width; ?>px; height:<?php echo $photo->data->height; ?>px;  position: relative; <?php if (!empty($photo->data->dragX)) echo 'left: -' . $photo->data->dragX . 'px' ?>; <?php if (!empty($photo->data->dragY)) echo 'top: -' . $photo->data->dragY . 'px' ?>">
+                            <img src="<?php echo UPLOAD_URL ."cover/750px/". $photo->data->fileName ?>" style="width:100%;">
                         </div>
                     </div>
                 <?php } ?>
@@ -50,7 +49,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
                             <a href="javascript:void(0)" class="ddm rCoverUser" rel="<?php echo $photo->recordID ?>"><span class="icon icon61"></span><span class="label">Reposition...</span></a>
                             <?php
                         }
-                        if (!empty($otherUser->data->cover))
+                        if (!empty($otherUser->data->coverPhoto) && $otherUser->data->coverPhoto != 'none')
                         {
                             ?>
                             <a href="javascript:void(0)" class="removeImgUser ddm" id="removeCover" role="cover" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a>
@@ -67,7 +66,8 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
                         <?php
                         if ($otherUser->data->profilePic != 'none')
                         {
-                            $src = UPLOAD_URL . '150/' . $otherUser->data->profilePic;
+                            $photo = ElementController::findPhoto($otherUser->data->profilePic);
+                            $src = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
                             $lableavatar = 'Change avatar';
                         }
                         else
@@ -176,7 +176,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
 
             $.ajax({
                 type: "POST",
-                url: "/comfirmphoto",
+                url: "/savePhoto",
                 data: $("#submitCover").serialize(), // serializes the form's elements.
                 success: function(data)
                 {
@@ -191,6 +191,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
                     $('.name').css('display', 'block');
                     $('.actionCover').css('display', 'block');
                     $('.cancelCover').remove();
+                    $('.dragCover').css('cursor', 'pointer');
                 }
             });
 
@@ -203,44 +204,44 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
 </script>
 <script id="photoCoverUserTemplate" type="text/x-jQuery-tmpl">
     <div class="imgCover">
-    <div style="width:${width}px; height:${height}px;  position: relative; left: ${left}px; top: ${top}px">
-    <img src="<?php echo UPLOAD_URL ?>${src}" style="width:100%;">
-    </div>
+        <div style="width:${width}px; height:${height}px;  position: relative; left: ${left}px; top: ${top}px">
+            <img src="<?php echo UPLOAD_URL.'cover/750px/'; ?>${src}" style="width:100%;">
+        </div>
     </div>
 </script>
 <script id="comfirmTemplate" type="text/x-jQuery-tmpl">
     <div class="control-group">
-    <div class="control">
-    <div class="statusDialog">Are you sure you want to remove </div>
-    </div>
-    </div>
-    <input type="hidden" id="role" name="role" value="${role}">
-    <div class="footerDialog" >
-    <button type="submit" class="ink-button green-button comfirmDialog">Comfirm</button>
-    <button class=" closeDialog ink-button ">Cancel</a>
+        <div class="control">
+            <div class="statusDialog">Are you sure you want to remove </div>
+        </div>
+        <input type="hidden" id="role" name="role" value="${role}">
+        <div class="footerDialog" >
+            <button type="submit" class="ink-button green-button comfirmDialog">Comfirm</button>
+            <button class=" closeDialog ink-button ">Cancel</a>
+        </div>
     </div>
 </script>
 
 <script id="navInfoUserTemplate" type="text/x-jQuery-tmpl">
     <div>
-    <nav class="ink-navigation uiTimeLineHeadLine">
-    <ul class="menu horizontal">
-    <li><a href="/content/post?username=${username}">TimeLine</a></li>
-    <li><a href="/about?username=${username}">About</a></li>
-    <li><a href="/friends?username=${username}">Friends</a></li>
-    <li><a href="/content/photo?username=${username}">Photos</a></li>
-    <li><a href="#">More</a></li>
-    </ul>
-    </nav>
+        <nav class="ink-navigation uiTimeLineHeadLine">
+            <ul class="menu horizontal">
+                <li><a href="/content/post?username=${username}">TimeLine</a></li>
+                <li><a href="/about?username=${username}">About</a></li>
+                <li><a href="/friends?username=${username}">Friends</a></li>
+                <li><a href="/content/photo?username=${username}">Photos</a></li>
+                <li><a href="#">More</a></li>
+            </ul>
+        </nav>
     </div>
 </script>
 <script id="navCoverUserTemplate" type="text/x-jQuery-tmpl">
     <div class="cancelCover">
-    <nav class="ink-navigation uiTimeLineHeadLine">
-    <ul class="menu horizontal uiTimeLineHeadLine float-right">
-    <li><button type="button" class="ink-button cancel">Cancel</button></li>
-    <li><button type="submit" class="ink-button green-button">Save Changes</button></li>
-    </ul>
-    </nav>
+        <nav class="ink-navigation uiTimeLineHeadLine">
+            <ul class="menu horizontal uiTimeLineHeadLine float-right">
+                <li><button type="button" class="ink-button cancel" id="coverPhoto">Cancel</button></li>
+                <li><button type="submit" class="ink-button green-button">Save Changes</button></li>
+            </ul>
+        </nav>
     </div>
 </script>

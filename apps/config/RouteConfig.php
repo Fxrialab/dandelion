@@ -56,13 +56,12 @@ class RouteConfig
         /* Route config for friends page */
         'friends_GET' => "FriendController",
         /* Route config for ajax page */
-        'photobrowser_POST' => "AjaxController",
-        'uploadPhoto_POST' => "AjaxController",
-        'uploadavatar_POST' => "AjaxController",
-        'comfirmphoto_POST' => "AjaxController",
+        'photoBrowser_POST' => "AjaxController",
+        'uploadCover_POST' => "AjaxController",
+        'uploadAvatar_POST' => "AjaxController",
+        'savePhoto_POST' => "AjaxController",
         'remove_POST' => "AjaxController",
-        'choosephoto_POST' => "AjaxController",
-        'chooseavatar_POST' => "AjaxController",
+        'choosePhoto_POST' => "AjaxController",
         'reposition_POST' => "AjaxController",
         'cancel_POST' => "AjaxController",
     );

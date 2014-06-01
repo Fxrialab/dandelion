@@ -13,9 +13,12 @@ if (!empty($listStatus))
         $curUserID = $user->recordID;
         $like = $likeStatus[$statusID];
         if ($user->data->profilePic == 'none')
-            $avatar = IMAGES . 'avatarMenDefault.png';
-        else
-            $avatar = UPLOAD_URL . '150/' . $mod['avatar'];
+            //check man or woman later
+            $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+        else {
+            $photo = ElementController::findPhoto($user->data->profilePic);
+            $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
+        }
         $f3 = require('viewPost.php');
     }
 }

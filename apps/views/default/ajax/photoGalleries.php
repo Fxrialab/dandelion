@@ -16,7 +16,11 @@
             else
                 $id = 'chooseItem';
             ?>
-            <div class=" large-20"><a href="#" id="<?php echo $id ?>" role="<?php echo $role ?>" rel="<?php echo $value->recordID ?>"><img src="<?php echo UPLOAD_URL . $find->data->fileName ?>" style="padding: 5px"></a></div>
+            <div class="large-20">
+                <a href="#" id="<?php echo $id ?>" role="<?php echo $role ?>" rel="<?php echo $value->recordID ?>">
+                    <img src="<?php echo UPLOAD_URL ."thumbnails/150px/". $find->data->fileName ?>" width="140" height="100" style="padding: 5px">
+                </a>
+            </div>
             <?php
         }
     }

@@ -40,6 +40,7 @@ class UserController extends AppController
                     // set signUp status
                     $data['status'] = 'pending';
                     $data['role'] = 'user';
+                    $data['coverPhoto'] = 'none';
                     // and create time
                     $data['created'] = time();
                     //generate confirmation code

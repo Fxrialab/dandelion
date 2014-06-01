@@ -565,7 +565,7 @@ $("body").on('click', '.photoBrowse', function(e) {
     $.ajax({
         type: "POST",
         data: {role: role},
-        url: "/photobrowser",
+        url: "/photoBrowser",
         success: function(data) {
             $(".dialog").dialog({
                 width: "700",
@@ -626,7 +626,7 @@ $("body").on('click', '#chooseItem', function(e) {
     var role = $(this).attr('role');
     $.ajax({
         type: "POST",
-        url: "/choosephoto",
+        url: "/choosePhoto",
         data: {id: id, role: role},
         success: function(data) {
             $('.displayPhoto').html(data);
@@ -652,7 +652,7 @@ $("body").on('click', '#chooseAvatar', function(e) {
     var role = $(this).attr('role');
     $.ajax({
         type: "POST",
-        url: "/choosephoto",
+        url: "/choosePhoto",
         data: {id: id, role: role},
         success: function(data) {
             $('.infoUser').html(data);
@@ -724,37 +724,44 @@ $("body").on('click', '.comfirmDialog', function(e) {
                 $('.rCoverUser').remove();
             }
             $(".dialog").dialog("close");
-
         }
     });
 });
 
 $("body").on('click', '.cancel', function(e) {
+    e.preventDefault();
+    var target = $(this).attr('id');
     $.ajax({
         type: "POST",
         url: "/cancel",
+        data: {target: target},
         success: function(data) {
             var obj = jQuery.parseJSON(data);
-            var user = [
-                {username: obj.username},
-            ];
-            var photo = [
-                {src: obj.src},
-                {width: obj.width},
-                {height: obj.height},
-                {left: obj.left},
-                {top: obj.top},
-            ];
-            $('.displayPhoto .imgCover').html('<div style="width:' + obj.width + 'px; height:' + obj.height + 'px;  position: relative; left: -' + obj.left + 'px; top: -' + obj.top + 'px" > \n\
-            <img src="' + obj.src + '" style="width:100%;"> \n\
-            </div>');
-            $('.timeLineMenuNav .cancelCover').remove();
-            $('.profilePic img').css('display', 'block');
-            $('.profilePic .profileInfo').css('display', 'block ');
-            $('.dropdown').css('display', '');
-            $('.name').css('display', 'block');
-            $('.actionCover').css('display', 'block');
-            $("#navInfoUserTemplate").tmpl(user).appendTo(".timeLineMenuNav");
+            if (target == 'coverPhoto')
+            {
+                var user = [
+                    {username: obj.username},
+                ];
+                if (obj.src)
+                {
+                    $('.displayPhoto .imgCover').html('<div style="width:' + obj.width + 'px; height:' + obj.height + 'px;  position: relative; left: -' + obj.left + 'px; top: -' + obj.top + 'px" > \n\
+                    <img src="' + obj.src + '" style="width:100%;"> \n\
+                    </div>');
+                }else {
+                    $('.displayPhoto .imgCover').remove();
+                }
+                $('.timeLineMenuNav .cancelCover').remove();
+                $('.profilePic img').css('display', 'block');
+                $('.profilePic .profileInfo').css('display', 'block ');
+                $('.dropdown').css('display', '');
+                $('.name').css('display', 'block');
+                $('.actionCover').css('display', 'block');
+                $("#navInfoUserTemplate").tmpl(user).appendTo(".timeLineMenuNav");
+            }else if (target == 'profilePic') {
+                $('.profilePic').html('<a class="infoUser" href="/content/post?user='+obj.username+'">'+
+                    +'<img src="'+obj.src+'" style="display: block;">'+
+                    +'</a>')
+            }
             return false;
 
         }

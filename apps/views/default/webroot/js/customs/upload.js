@@ -12,14 +12,10 @@ $(document).ready(function()
             $('.displayPhoto').html(data);
             $('.actionCover').css('display', 'none');
 
-        },
-        onError: function(files, status, errMsg)
-        {
-            $("#status").html("<font color='red'>Upload is Failed</font>");
         }
     };
     var uploadPhotoSingleFile = {
-        url: "/uploadPhoto",
+        url: "/uploadCover",
         method: "POST",
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
@@ -29,15 +25,10 @@ $(document).ready(function()
             $('.displayPhoto').html(data);
             $('.timeLineMenuNav div').remove();
             $("#navCoverUserTemplate").tmpl(data).appendTo(".timeLineMenuNav");
-
-        },
-        onError: function(files, status, errMsg)
-        {
-            $("#status").html("<font color='red'>Upload is Failed</font>");
         }
     };
     var uploadAvatar = {
-        url: "/uploadavatar",
+        url: "/uploadAvatar",
         method: "POST",
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
@@ -53,10 +44,6 @@ $(document).ready(function()
             $('.profileInfo .dropdown').css('display', 'none');
             $('.profilePic .profileInfo').css('display', 'none');
 
-        },
-        onError: function(files, status, errMsg)
-        {
-            $("#status").html("<font color='red'>Upload is Failed</font>");
         }
     };
     var settingSingleFile = {

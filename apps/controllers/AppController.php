@@ -476,27 +476,50 @@ class AppController extends Controller
         return $destination_url;
     }
 
-    public function resizeImage($sourceImgFile, $thumbSize = 0, $desImgFile)
+    /**
+     * This function will resize, compress and return image info
+     *
+     * @param $file
+     * @param int $thumbSize
+     * @param $desImgFile
+     * @param $newImgName
+     * @param $quality
+     * @param bool $returnInfo
+     * @return array|bool
+     */
+    public function changeImage($file, $thumbSize = 0, $desImgFile, $newImgName, $quality, $returnInfo=false)
     {
-        list($width, $height) = getimagesize($sourceImgFile);
+        $fileName   = $file["name"];
+        $tmpName    = $file['tmp_name'];
+        $formats    = $file['type'];
+
+        list($width, $height) = getimagesize($tmpName);
         /* The width and the height of the image also the getimagesize retrieve other information as well   */
         $imgRatio = $width / $height;
 
         if ($imgRatio > 1)
         {
             $newWidth = $thumbSize;
-            $newHeight = $thumbSize / $imgRatio;
+            $newHeight = (int)($thumbSize / $imgRatio);
         }
         else
         {
             $newHeight = $thumbSize;
-            $newWidth = $thumbSize * $imgRatio;
+            $newWidth = (int)($thumbSize * $imgRatio);
         }
+        list($name, $ext) = explode(".", $fileName);
+
+        if ($formats == 'image/jpeg')// Now it will create a new image from the source
+            $source = imagecreatefromjpeg($tmpName);
+        elseif ($formats == 'image/gif')
+            $source = imagecreatefromgif($tmpName);
+        elseif ($formats == 'image/png')
+            $source = imagecreatefrompng($tmpName);
 
         $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
-        $source = imagecreatefromjpeg($sourceImgFile); // Now it will create a new image from the source
+        $newImage = $newImgName . '.' . $ext;
         imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
-        imagejpeg($thumb, $desImgFile, 100);
+        imagejpeg($thumb, $desImgFile.'/' . $newImage, $quality);
         /*
           Out put of image
           if the $savePath is null then it will display the image in the browser
@@ -505,6 +528,10 @@ class AppController extends Controller
         /*
           Destroy the image
          */
+        if (!empty($returnInfo))
+            return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
+        else
+            return false;
     }
 
     public function resizeImages($file, $size = 0, $dir, $newName)

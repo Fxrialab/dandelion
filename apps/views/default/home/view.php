@@ -14,9 +14,12 @@ if (!empty($activities))
             $activity   = $mod['actions']->data;
             //$curUserID  = $mod['currentUser']->recordID;
             if ($mod['avatar'] == 'none')
-                $avatar = IMAGES . 'avatarMenDefault.png';
-            else
-                $avatar = UPLOAD_URL . '150/' . $mod['avatar'];
+                //check man or woman later
+                $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+            else {
+                $photo = ElementController::findPhoto($mod['avatar']);
+                $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
+            }
             require $views;
         }
     }
