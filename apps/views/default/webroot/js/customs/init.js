@@ -375,6 +375,7 @@ $("body").on('click', '#createGroup', function(e) {
     e.preventDefault();
     var title = $(this).attr('title');
     var href = $(this).attr('href');
+    console.log('href ',href);
     $.ajax({
         type: "POST",
         url: href,
@@ -390,8 +391,6 @@ $("body").on('click', '#createGroup', function(e) {
                 open: function(event, ui) {
                     $(".ui-dialog-titlebar-close").hide();
                     $('body').css('overflow', 'hidden');
-
-
                 }
             });
         }
@@ -515,7 +514,7 @@ $("body").on('click', '.myPhotoGroup', function(e) {
     var id = $(this).attr('rel');
     $.ajax({
         type: "POST",
-        url: "/content/group/myphotos",
+        url: "/content/group/photoBrowsers",
         data: {id: id},
         success: function(data) {
             $(".ui-widget-overlay").append('<p>Loading...</p>');
@@ -589,32 +588,18 @@ $("body").on('click', '.closeDialog', function(e) {
     $(".dialog").dialog("close");
     $('body').css('overflow', 'scroll'); //this line does the actual hiding
 });
-$("body").on('click', '.comfirmCover', function(e) {
-    e.preventDefault();
-    var role = $("#role").val();
-    $.ajax({
-        type: "POST",
-        url: "/removecover",
-        data: {role: role},
-        success: function(data) {
-            $('.displayPhoto').html(data);
-            $(".dialog").dialog("close");
-            $('body').css('overflow', 'scroll'); //this line does the actual hiding
-        }
-    });
-});
 
 $("body").on('click', '.comfirmDialogGroup', function(e) {
     e.preventDefault();
-    var photoID = $("#photoID").val();
     var groupID = $("#groupID").val();
     $.ajax({
         type: "POST",
-        url: "/content/group/ajax/remove",
-        data: {photoID: photoID, groupID: groupID},
-        success: function(data) {
-            $('.imgCover').remove();
-            $("#removeCoverGroupTemplate").tmpl(data).appendTo(".displayPhoto");
+        url: "/content/group/remove",
+        data: {groupID: groupID},
+        success: function() {
+            $('.imgCoverGroup').remove();
+            $('.rCoverGroup').remove();
+            $('.removeImgGroup').remove();
             $(".dialog").dialog("close");
         }
     });
@@ -639,10 +624,6 @@ $("body").on('click', '#chooseItem', function(e) {
             $('.actionCover').css('display', 'none');
             $('.timeLineMenuNav div').remove();
             $("#navCoverUserTemplate").tmpl(data).appendTo(".timeLineMenuNav");
-//            $('.timeLineMenuNav').html('<nav class="ink-navigation "><ul class="menu horizontal uiTimeLineHeadLine float-right">\n\
-//                            <li><button type="submit" class="ink-button cancel">Cancel</button></li>\n\
-//                            <li><button type="submit" class="ink-button green-button">Save Changes</button></li>\n\
-//                            </ul></nav>');
         }
     });
 });
@@ -663,7 +644,7 @@ $("body").on('click', '#chooseAvatar', function(e) {
     });
 });
 // Toggle the dropdown menu's
-$("body").on('click', '.dropdown .button, .dropdown button', function(e) {
+$("body").on('click', '.dropdown .button', function(e) {
     e.preventDefault();
     if (!$(this).find('span.toggle').hasClass('active')) {
         $('.dropdown-slider').slideUp();
@@ -769,13 +750,42 @@ $("body").on('click', '.cancel', function(e) {
 
 });
 
+$("body").on('click', '.cancelCoverGroup', function(e) {
+    e.preventDefault();
+    var target = $(this).attr('id');
+    var groupID= $('#groupID').attr('value');
+    $.ajax({
+        type: "POST",
+        url: "/content/group/cancelCover",
+        data: {target: target, groupID: groupID},
+        success: function(data) {
+            var obj = jQuery.parseJSON(data);
+            if (target == 'coverGroup')
+            {
+                if (obj.src)
+                {
+                    $('.displayPhoto .imgCoverGroup').html('<div style="width:' + obj.width + 'px; height:' + obj.height + 'px;  position: relative; left: -' + obj.left + 'px; top: -' + obj.top + 'px" > \n\
+                    <img src="' + obj.src + '" style="width:100%;"> \n\
+                    </div>');
+                }else {
+                    $('.displayPhoto .imgCoverGroup').remove();
+                }
+                $('.actionCover').css('display', 'block');
+                $('.actionCoverGroup').css('display', 'none');
+            }
+            return false;
+        }
+    });
+
+});
+
 $("body").on('click', '.choosePhoto', function(e) {
     e.preventDefault();
     var photoID = $(this).attr('rel');
     var groupID = $(this).attr('id');
     $.ajax({
         type: "POST",
-        url: "/content/group/cover",
+        url: "/content/group/choosePhoto",
         data: {groupID: groupID, photoID: photoID},
         success: function(data) {
             $(".displayPhoto").html(data);
@@ -789,10 +799,10 @@ $("body").on('click', '.rCoverGroup', function(e) {
     var id = $(this).attr('rel');
     $.ajax({
         type: "POST",
-        url: "/content/group/ajax/reposition",
+        url: "/content/group/reposition",
         data: {id: id},
         success: function(data) {
-            $('.displayPhoto').html(data);
+            $('.imgCoverGroup').html(data);
             $('.actionCover').css('display', 'none');
         }
     });

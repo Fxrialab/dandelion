@@ -15,7 +15,9 @@ if (!empty($group))
         <div class="column-group">
 
             <div class=" large-95">
-                <a href="/content/group/groupdetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><?php echo $group->data->name ?></a>
+                <div class="groupName">
+                    <a href="/content/group/groupdetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><?php echo $group->data->name ?></a>
+                </div>
             </div>
             <div class="large-5">
                 <div class="tiptip">

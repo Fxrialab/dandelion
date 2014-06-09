@@ -69,7 +69,6 @@
             placeholder: "Add Members",
             hintText: "",
             noResultsText: "Nothin' found.",
-            searchingText: "Gaming...",
             preventDuplicates: true
         });
     });

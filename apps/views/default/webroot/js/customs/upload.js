@@ -11,7 +11,7 @@ $(document).ready(function()
             $('.ajax-file-upload-statusbar').fadeOut('slow');
             $('.displayPhoto').html(data);
             $('.actionCover').css('display', 'none');
-
+            //$("#navCoverPhotoGroupTemplate").tmpl(data).appendTo(".displayPhoto");
         }
     };
     var uploadPhotoSingleFile = {

@@ -13,7 +13,7 @@ class AjaxController extends AppController
         if (!empty($_POST['groupID']))
         {
             $this->f3->set('groupID', $_POST['groupID']);
-            $this->renderModule('addFriend', 'Group');
+            $this->renderModule('addFriend', 'group');
         }
     }
 
@@ -100,7 +100,7 @@ class AjaxController extends AppController
             $json = json_encode($data);
             $obj = json_decode($json);
             $this->f3->set('members', $obj);
-            $this->renderModule('viewMember', 'Group');
+            $this->renderModule('viewMember', 'group');
         }
     }
 
@@ -112,7 +112,7 @@ class AjaxController extends AppController
             $group = $this->facade->findByPk('group', $_POST['groupID']);
             $this->f3->set('user', $user);
             $this->f3->set('group', $group);
-            $this->renderModule('removeGroup', 'Group');
+            $this->renderModule('removeGroup', 'group');
         }
     }
 
@@ -156,7 +156,7 @@ class AjaxController extends AppController
             }
 
             $this->f3->set('button', $button);
-            $this->renderModule('rolegroup', 'Group');
+            $this->renderModule('rolegroup', 'group');
         }
     }
 
@@ -189,49 +189,7 @@ class AjaxController extends AppController
                 $name = $user->data->fullName;
             $this->f3->set('message', 'You are about to remove ' . $name . ' as a group admin.');
             $this->f3->set('button', 'Remove Admin');
-            $this->renderModule('makeAdmin', 'Group');
-        }
-    }
-
-    public function comfirmcover()
-    {
-        if (!empty($_POST['cover']))
-        {
-            $updateGroup = array(
-                'cover' => $_POST['cover'],
-                'drapx' => $_POST['drapx'],
-                'drapy' => $_POST['drapy'],
-            );
-            $update = $this->facade->updateByAttributes('group', $updateGroup, array('@rid' => '#' . $_POST['groupID']));
-            if ($update == 1)
-            {
-                $group = $this->facade->findByPk('group', $_POST['groupID']);
-                $this->f3->set('group', $group);
-                $this->renderModule('editCover', 'Group');
-            }
-        }
-    }
-
-    public function reposition()
-    {
-        $photo = $this->facade->findByPk('photo', $_POST['id']);
-        $group = $this->facade->findByAttributes('group', array('cover' => $_POST['id']));
-        $this->f3->set('photo', $photo);
-        $this->f3->set('group', $group);
-        $this->renderModule('cover', 'Group');
-    }
-
-    public function remove()
-    {
-        if (!empty($_POST['groupID']))
-        {
-
-            $updateUser = array(
-                'cover' => '0',
-                'drapx' => '0',
-                'drapy' => '0'
-            );
-            $update = $this->facade->updateByAttributes('group', $updateUser, array('@rid' => '#' . $_POST['groupID']));
+            $this->renderModule('makeAdmin', 'group');
         }
     }
 

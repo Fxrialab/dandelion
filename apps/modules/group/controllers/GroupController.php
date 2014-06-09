@@ -80,7 +80,7 @@ class GroupController extends AppController
                 $this->f3->set('groupMember', $model);
             else
                 $this->f3->set('groupMember', 'null');
-            $this->renderModule('groupmember', 'Group');
+            $this->renderModule('groupmember', 'group');
         }
     }
 
@@ -174,7 +174,7 @@ class GroupController extends AppController
             $this->f3->set('groupID', $_POST['id']);
             $group = $this->facade->findByPk('group', str_replace("_", ":", $_POST['id']));
             $this->f3->set('group', $group);
-            $this->renderModule('formDescription', 'Group');
+            $this->renderModule('formDescription', 'group');
         }
         elseif (!empty($_POST['groupDescription']))
         {
@@ -184,14 +184,6 @@ class GroupController extends AppController
             $this->facade->updateByAttributes('group', $updateGroup, array('@rid' => '#' . str_replace("_", ":", $_POST['groupID'])));
             echo json_encode(array('groupID' => $_POST['groupID'], 'description' => $_POST['groupDescription']));
         }
-    }
-
-    public function myphotos()
-    {
-        $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
-        $this->f3->set('photos', $photos);
-        $this->f3->set('groupID', $_POST['id']);
-        $this->renderModule('myphotos', 'Group');
     }
 
     public function leave()
@@ -204,19 +196,7 @@ class GroupController extends AppController
         else
         {
             $this->f3->set('groupID', $_POST['groupID']);
-            $this->renderModule('leave', 'Group');
-        }
-    }
-
-    public function cover()
-    {
-        if (!empty($_POST['photoID']))
-        {
-            $photo = $this->facade->findByPk('photo', str_replace("_", ":", $_POST['photoID']));
-            $this->f3->set('photo', $photo);
-            $this->f3->set('groupID', $_POST['groupID']);
-
-            $this->renderModule('cover', 'Group');
+            $this->renderModule('leave', 'group');
         }
     }
 
@@ -229,10 +209,36 @@ class GroupController extends AppController
             $group = $this->facade->findByPk('group', str_replace("_", ":", $groupID));
             $member = $this->facade->findAllAttributes('groupMember', array('groupID' => str_replace("_", ":", $groupID)));
             $photo = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
+            $count = $this->facade->count('groupMember', array('groupID' => $groupID));
             $this->f3->set('photo', $photo);
             $this->f3->set('group', $group);
             $this->f3->set('member', $member);
+            $this->f3->set('countMember', $count);
             $this->render($viewPath . 'detail.php', 'modules');
+        }
+    }
+
+    public function photoBrowsers()
+    {
+        if ($this->isLogin())
+        {
+            $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
+            $this->f3->set('photos', $photos);
+            $this->f3->set('groupID', $_POST['id']);
+            $this->renderModule('photoGalleries', 'group');
+        }
+    }
+
+    public function choosePhoto()
+    {
+        if ($this->isLogin())
+        {
+            $photoID    = $_POST['photoID'];
+            $photo = $this->facade->findByPk('photo', $photoID);
+            $image = array('name'=>$photo->data->fileName, 'width'=>$photo->data->width, 'height'=>$photo->data->height);
+            $this->f3->set('image', $image);
+            $this->f3->set('target', 'choosePhoto');
+            $this->renderModule('cover', 'group');
         }
     }
 
@@ -240,52 +246,144 @@ class GroupController extends AppController
     {
         if ($this->isLogin())
         {
-            $outPutDir = UPLOAD;
-            $data = array(
-                'results' => array(),
-                'success' => false,
-                'error' => ''
-            );
+            $coverDir   = UPLOAD . "cover/750px";
+            $avatarDir  = UPLOAD . "avatar/170px";
+            $thumbnailDir   = UPLOAD. "thumbnails/150px";//The folder will display like gallery images on "Choose from my photos"
 
             if (isset($_FILES["myfile"]))
             {
-                $currentUser = $this->getCurrentUser();
-
-                $data['success'] = true;
-                $data['error'] = $_FILES["myfile"]["error"];
-
                 if (!is_array($_FILES["myfile"]['name'])) //single file
                 {
                     $file = $_FILES["myfile"];
                     $newName = time();
-                    $this->resizeImages($file, 350, $outPutDir, $newName);
-                    $this->resizeImages($file, 150, $outPutDir, $newName);
-                    $image = $this->move_uploaded_file($file, $outPutDir, $newName);
-                    if (!empty($image))
-                    {
-                        $entry = array(
-                            'actor' => $this->f3->get('SESSION.userID'),
-                            'album' => '',
-                            'fileName' => $image['name'],
-                            'width' => $image['width'],
-                            'height' => $image['height'],
-                            'drapx' => 0,
-                            'drapy' => 0,
-                            'thumbnail_url' => '',
-                            'description' => '',
-                            'numberLike' => '0',
-                            'numberComment' => '0',
-                            'statusUpload' => 'uploaded',
-                            'published' => $newName,
-                            'type' => 'group'
-                        );
-                        $photoID = $this->facade->save('photo', $entry);
-                        $photo = $this->facade->findByPk('photo', $photoID);
-                        $this->f3->set('photo', $photo);
-                    }
-                    $this->renderModule('cover', 'Group');
+                    $this->changeImage($file, 150, $thumbnailDir, $newName, 80, false);
+                    $this->changeImage($file, 170, $avatarDir, $newName, 100, false);
+                    $image  = $this->changeImage($file, 750, $coverDir, $newName, 100, true);
+                    $this->f3->set('image', $image);
+                    $this->f3->set('target', 'uploadCover');
+                    $this->renderModule('cover', 'group');
                 }
             }
+        }
+    }
+
+    public function saveCover()
+    {
+        if ($this->isLogin())
+        {
+            $currentUser = $this->getCurrentUser();
+            $target     = $_POST['target'];
+            $file       = $_POST['coverFile'];
+            $width      = $_POST['width'];
+            $height     = $_POST['height'];
+            $dragX      = $_POST['dragX'];
+            $dragY      = $_POST['dragY'];
+            $groupID    = $_POST['groupID'];
+            switch ($target)
+            {
+                case 'uploadCover':
+                    $entry = array(
+                        'actor'     => $currentUser->recordID,
+                        'album'     => '',
+                        'fileName'  => $file,
+                        'width'     => $width,
+                        'height'    => $height,
+                        'dragX'     => $dragX,
+                        'dragY'     => $dragY,
+                        'thumbnail_url' => '',
+                        'description'   => '',
+                        'numberLike'    => '0',
+                        'numberComment' => '0',
+                        'statusUpload'  => 'uploaded',
+                        'published'     => time(),
+                        'type'          => 'cover'
+                    );
+                    $photoID = $this->facade->save('photo', $entry);
+                    $updateGroup = array(
+                        'coverGroup' => $photoID,
+                    );
+                    break;
+                case 'choosePhoto':
+                    $photo = $this->facade->findByAttributes('photo', array('fileName'=>$file));
+                    $photoID= $photo->recordID;
+                    $entry  = array(
+                        'dragX'     => $dragX,
+                        'dragY'     => $dragY
+                    );
+                    $this->facade->updateByAttributes('photo', $entry, array('@rid'=>'#'.$photoID));
+                    $updateGroup = array(
+                        'coverGroup' => $photoID,
+                    );
+                    break;
+                case 'isReposition':
+                    $photoID= $file;
+                    $entry  = array(
+                        'dragX'     => $dragX,
+                        'dragY'     => $dragY,
+                        'type'      => 'cover'
+                    );
+                    $this->facade->updateByAttributes('photo', $entry, array('@rid'=>'#'.$photoID));
+                    $updateGroup = array(
+                        'coverGroup' => $photoID,
+                    );
+                    break;
+            }
+            $this->facade->updateByAttributes('group', $updateGroup, array('@rid' => '#' . $groupID));
+        }
+    }
+
+    public function cancelCover()
+    {
+        if ($this->isLogin())
+        {
+            $groupID= $_POST['groupID'];
+            $target = $_POST['target'];
+            $group  = $this->facade->findByPk('group', $groupID);
+            if (!empty($target))
+            {
+                if ($target == 'coverGroup')
+                {
+                    if ($group->data->coverGroup != 'none')
+                    {
+                        $photo  = $this->facade->findByPk('photo', $group->data->coverGroup);
+                        echo json_encode(array(
+                            'src'       => UPLOAD_URL ."cover/750px/". $photo->data->fileName,
+                            'width'     => $photo->data->width,
+                            'height'    => $photo->data->height,
+                            'left'      => $photo->data->dragX,
+                            'top'       => $photo->data->dragY,
+                            'photoID'   => $photo->recordID,
+                        ));
+                    }else {
+                        echo json_encode(array(
+                            'src'       => false
+                        ));
+                    }
+                }
+            }
+        }
+    }
+
+    public function reposition()
+    {
+        if ($this->isLogin())
+        {
+            $photoID= $_POST['id'];
+            $photo  = $this->facade->findByPk('photo', $photoID);
+            $this->f3->set('photo', $photo);
+            $this->renderModule('reposition', 'group');
+        }
+    }
+
+    public function remove()
+    {
+        if (!empty($_POST['groupID']))
+        {
+            $groupID = $_POST['groupID'];
+            $updateGroup = array(
+                'coverGroup' => 'none',
+            );
+            $this->facade->updateByAttributes('group', $updateGroup, array('@rid' => '#' . $groupID));
         }
     }
 
@@ -302,6 +400,7 @@ class GroupController extends AppController
                     'owner' => $this->f3->get('SESSION.userID'),
                     'numMember' => count($actor),
                     'privacy' => $_POST['groupPrivacy'],
+                    'coverGroup'    => 'none',
                     'published' => time(),
                 );
                 $group = $this->facade->save('group', $array);
@@ -334,41 +433,14 @@ class GroupController extends AppController
                     $model = Model::get('group')->find($group);
                     $this->f3->set('group', $model);
                 }
-                $this->renderModule('viewGroup', 'Group');
+                $this->renderModule('viewGroup', 'group');
             }
             else
             {
-                $this->renderModule('form', 'Group');
+                $this->renderModule('form', 'group');
             }
         }
     }
-
-    public function detail($viewPath)
-    {
-        if ($this->isLogin())
-        {
-            $groupID = $this->f3->get('GET.id');
-            $this->layout = 'group';
-            $group = Model::get('group')->findByPk($groupID);
-            $this->f3->set('group', $group);
-            $this->render($viewPath . 'detail.php', 'modules');
-        }
-    }
-
-    public function crop()
-    {
-        $outPutDir = UPLOAD . "test/";
-        $image = $outPutDir . 'Koala.jpg'; // the image to crop
-        $dest_image = $outPutDir . time() . '.jpg'; // make sure the directory is writeable
-        $img = imagecreatetruecolor('1024', '250');
-        $org_img = imagecreatefromjpeg($image);
-        $ims = getimagesize($image);
-        imagecopy($img, $org_img, 0, 0, 0, 0, 1024, 250);
-        imagejpeg($img, $dest_image, 400);
-        imagedestroy($img);
-        echo '<img src="' . $dest_image . '" ><p>';
-    }
-
 }
 
 ?>

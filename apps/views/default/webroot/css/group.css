@@ -89,13 +89,17 @@
     display:block;
 }
 .coverGroup{
-    position: relative
+    position: relative;
+    min-height: 150px;
+    border: 1px solid #e4e4e4;
+    border-bottom: none;
+    background-color: #F6F7F8;
 }
-.coverGroup .actionCover, .displayPhoto .ink-button{
+/*.coverGroup .actionCover, .displayPhoto .ink-button{
     position: absolute;
     top: 20px;
     right: 20px;
-}
+}*/
 .uploadCoverGroup {
     border: 1px solid #ccc; padding: 70px 0;
 }

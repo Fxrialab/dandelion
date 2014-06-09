@@ -8,7 +8,7 @@
 $pathElement = 'group/views/elements';
 $path = 'group/views/default/';
 // Info viewPath
-$viewPath[] = array('type' => 'Group', 'viewPath' => $path);
+$viewPath[] = array('type' => 'group', 'viewPath' => $path);
 // Info Home page
 $module[] = array('func' => 'group', 'controller' => 'GroupController', 'viewPath' => $path, 'icon' => 'module_post.png');
 // Info myPost page
