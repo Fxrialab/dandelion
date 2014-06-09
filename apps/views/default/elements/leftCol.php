@@ -2,12 +2,6 @@
 <div class="uiLeftCol large-20">
     <div class="uiBoxProfile column-group">
         <div class="uiProfilePic large-30"><a href="">
-                <?php
-                if ($this->f3->get('SESSION.avatar') == 'none')
-                    $avatar = IMAGES . 'avatarMenDefault.png';
-                else
-                    $avatar = UPLOAD_URL . '150/' . $this->f3->get('SESSION.avatar');;
-                ?>
                 <img src="<?php echo $this->f3->get('SESSION.avatar'); ?>" width="50" height="50"></a></div>
         <div class="uiProfileInfo large-70">
             <p class="fixMarginBottom-5"><a href=""><?php echo $this->f3->get('SESSION.fullname'); ?></a></p>

@@ -77,6 +77,7 @@ class PostController extends AppController
                 $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
                 $obj = new ObjectHandler();
                 $obj->owner = $currentProfileID;
+                $obj->type  = 'post';
                 $obj->active = 1;
                 $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
                 $statusRC = $this->facade->findAll('status', $obj);

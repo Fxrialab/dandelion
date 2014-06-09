@@ -131,26 +131,31 @@ class AppController extends Controller
 
     public function getStatusFriendShip($userA, $userB)
     {
-        $friendShipAtoB = $this->facade->findByAttributes('friendship', array('userA' => $userA, 'userB' => $userB));
-        $friendShipBtoA = $this->facade->findByAttributes('friendship', array('userA' => $userB, 'userB' => $userA));
-        if (!empty($friendShipAtoB) && !empty($friendShipBtoA))
+        if ($userA != $userB)
         {
-            $statusFriendShip = $friendShipBtoA->data->relationship;
-        }
-        else
-        {
-            if (!empty($friendShipAtoB) && !$friendShipBtoA)
+            $friendShipAtoB = $this->facade->findByAttributes('friendship', array('userA' => $userA, 'userB' => $userB));
+            $friendShipBtoA = $this->facade->findByAttributes('friendship', array('userA' => $userB, 'userB' => $userA));
+            if (!empty($friendShipAtoB) && !empty($friendShipBtoA))
             {
-                $statusFriendShip = 'request';
-            }
-            elseif (!$friendShipAtoB && !empty($friendShipBtoA))
-            {
-                $statusFriendShip = 'respondRequest';
+                $statusFriendShip = $friendShipBtoA->data->relationship;
             }
             else
             {
-                $statusFriendShip = 'addFriend';
+                if (!empty($friendShipAtoB) && !$friendShipBtoA)
+                {
+                    $statusFriendShip = 'request';
+                }
+                elseif (!$friendShipAtoB && !empty($friendShipBtoA))
+                {
+                    $statusFriendShip = 'respondRequest';
+                }
+                else
+                {
+                    $statusFriendShip = 'addFriend';
+                }
             }
+        }else {
+            $statusFriendShip = 'updateInfo';
         }
 
         return $statusFriendShip;

@@ -166,12 +166,22 @@ class UserController extends AppController
                             setcookie('password', $password, time() - 3600);
                         }
                         //$this->f3->clear('SESSION');
+                        if ($existUser->data->profilePic != 'none')
+                        {
+                            $photo = $this->facade->findByPk('photo', $existUser->data->profilePic);
+                            $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
+                        }else {
+                            //check men or women later
+                            $profilePic = UPLOAD_URL . "avatar/170px/avatarMenDefault.png";
+                        }
+                        $fullName = ucfirst($existUser->data->firstName)." ".ucfirst($existUser->data->lastName);
                         $this->f3->set('SESSION.loggedUser', $existUser);
                         $this->f3->set('SESSION.username', $existUser->data->username);
+                        $this->f3->set('SESSION.firstname', ucfirst($existUser->data->firstName));
                         $this->f3->set('SESSION.email', $existUser->data->email);
-                        $this->f3->set('SESSION.fullname', $existUser->data->fullName);
+                        $this->f3->set('SESSION.fullname', $fullName);
                         $this->f3->set('SESSION.birthday', $existUser->data->birthday);
-                        $this->f3->set('SESSION.avatar', $existUser->data->profilePic);
+                        $this->f3->set('SESSION.avatar', $profilePic);
                         $this->f3->set('SESSION.userID', $existUser->recordID);
                         // start initial sessions.
                         $sessionID = rand(1000, 10000000);
@@ -493,10 +503,16 @@ class UserController extends AppController
         {
             $this->layout = "other";
 
-
+            $username = $this->f3->get('GET.user');
+            $currentUser = $this->getCurrentUser();
+            $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $username));
+            $currentProfileID = $currentProfileRC->recordID;
+            //get status friendship
+            $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
             //set currentUser and otherUser for check in profile element and header
             $this->f3->set('currentUser', $this->getCurrentUser());
             $this->f3->set('otherUser', $this->getCurrentUser());
+            $this->f3->set('statusFriendShip', $statusFriendShip);
             $this->render('user/about.php', 'default');
         }
     }

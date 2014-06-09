@@ -14,11 +14,19 @@ if (!empty($records))
             $content    = $records[$j]->data->content;
             $published  = $records[$j]->data->published;
             $profile    = PostController::getUser(str_replace(":", "_", $records[$j]->data->actor));
+            if ($profile->data->profilePic != 'none')
+            {
+                $photo = ElementController::findPhoto($profile->data->profilePic);
+                $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
+            }else {
+                //check men or women later
+                $profilePic = UPLOAD_URL . "avatar/170px/avatarMenDefault.png";
+            }
             $actorComment = ucfirst($profile->data->firstName)." ".ucfirst($profile->data->lastName);
             ?>
             <div class="eachCommentItem verGapBox column-group">
                 <div class="large-10 uiActorCommentPicCol">
-                    <a href="/content/post?user=<?php echo $profile->data->username; ?>"><img src="<?php echo $profile->data->profilePic; ?>"></a>
+                    <a href="/content/post?user=<?php echo $profile->data->username; ?>"><img src="<?php echo $profilePic; ?>"></a>
                 </div>
                 <div class="large-85 uiCommentContent">
                     <p>
@@ -33,12 +41,20 @@ if (!empty($records))
     }elseif (is_object($records)) {
         $profile    = PostController::getUser(str_replace(":", "_", $records->data->actor));
         $actorComment = ucfirst($profile->data->firstName)." ".ucfirst($profile->data->lastName);
+        if ($profile->data->profilePic != 'none')
+        {
+            $photo = ElementController::findPhoto($profile->data->profilePic);
+            $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
+        }else {
+            //check men or women later
+            $profilePic = UPLOAD_URL . "avatar/170px/avatarMenDefault.png";
+        }
         $content    = $records->data->content;
         $published  = $records->data->published;
         ?>
         <div class="eachCommentItem verGapBox column-group">
             <div class="large-10 uiActorCommentPicCol">
-                <a href="/content/post?user=<?php echo $profile->data->username; ?>"><img src="<?php echo $profile->data->profilePic; ?>"></a>
+                <a href="/content/post?user=<?php echo $profile->data->username; ?>"><img src="<?php echo $profilePic; ?>"></a>
             </div>
             <div class="large-85 uiCommentContent">
                 <p>

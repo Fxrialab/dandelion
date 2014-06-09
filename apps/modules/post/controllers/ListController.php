@@ -46,52 +46,6 @@ class ListController extends AppController
         }
     }
 
-    //has implement and fix logic
-    public function moreInHome($entry, $key) {
-        if ($entry) {
-            $currentUser = $this->getCurrentUser();
-            $activityID = $entry->recordID;
-            $statusRC = Model::get('status')->load($entry->data->object);
-            if ($statusRC) {
-                $statusID = $statusRC->recordID;
-                if ($currentUser->recordID != $statusRC->data->actor)
-                    $userRC = $this->facade->findByPk("user", $statusRC->data->actor);
-                else
-                    $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
-                $commentsOfStatus[$statusID] = $this->facade->findAllAttributes('comment', array("post" => $statusID));
-                $numberOfCommentsStatus[$statusID] = $this->facade->count("comment", array('post'=>$statusID));
-
-                $likeStatus[$statusID] = $this->getLikeStatus($statusID, $currentUser->recordID);
-                $statusFollow[$statusID] = $this->getFollowStatus($statusID, $currentUser->recordID);
-
-                if ($commentsOfStatus[$statusID]) {
-                    $comments = $commentsOfStatus[$statusID];
-                    $pos = (count($comments) < 4 ? count($comments) : 4);
-                    for ($j = $pos - 1; $j >= 0; $j--) {
-                        $userComment[$comments[$j]->data->actor] = $this->facade->load('user', $comments[$j]->data->actor);
-                    }
-                } else {
-                    $userComment = null;
-                }
-                $entry = array(
-                    "type" => 'post',
-                    "key" => $key,
-                    "activityID" => $activityID,
-                    "comment" => $commentsOfStatus,
-                    "numberComments" => $numberOfCommentsStatus,
-                    "statusFollow" => $statusFollow,
-                    'likeStatus' => $likeStatus,
-                    "actions" => $statusRC,
-                    "actor" => $statusRC->data->actor,
-                    "statusID" => $statusID,
-                    "otherUser" => $userRC,
-                    'userComment' => $userComment,
-                );
-            }
-            return $entry;
-        }
-    }
-
 }
 
 ?>

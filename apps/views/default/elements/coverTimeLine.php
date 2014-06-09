@@ -1,5 +1,6 @@
 <?php
 $otherUser = $this->f3->get('otherUser');
+//var_dump($otherUser);
 $currentUser = $this->f3->get('currentUser');
 $statusFriendShip = $this->f3->get('statusFriendShip');
 //prepare data
@@ -148,10 +149,16 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
                     </div>
                     <?php
                 }
+                elseif ($statusFriendShip == 'updateInfo')
+                {
+                    ?>
+                    <a class="uiMediumButton orange linkHover-fffff" href="/about?user=<?php echo $currentUser->data->username; ?>">Update Info</a>
+                <?php
+                }
                 else
                 {
                     ?>
-                    <!--<a class="isFriend uiMediumButton orange linkHover-fffff ink-button">Friend</a>-->
+                    <a class="isFriend uiMediumButton orange linkHover-fffff">Friend</a>
                     <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
                         <nav class="ink-navigation">
                             <ul class="menu vertical">
@@ -198,9 +205,6 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
             return false; // avoid to execute the actual submit of the form.
         });
     })
-
-
-
 </script>
 <script id="photoCoverUserTemplate" type="text/x-jQuery-tmpl">
     <div class="imgCover">

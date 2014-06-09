@@ -10,11 +10,11 @@ $status_published       = $status->data->published;
 <div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
     <div class="uiBoxPostContainer column-group">
         <div class="large-10 uiActorPicCol">
-            <a href="/content/post?username=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+            <a href="/content/post?user=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
         </div>
         <div class="large-85 uiPostContent">
             <div class="articleActorName fixMarginBottom-5">
-                <a href="/content/post?username=<?php echo $username ?>" class="timeLineLink"><?php echo $status->data->actorName; ?></a>
+                <a href="/content/post?user=<?php echo $username ?>" class="timeLineLink"><?php echo $status->data->actorName; ?></a>
             </div>
             <div class="articleContentWrapper">
                 <div class="column-group">
@@ -180,10 +180,9 @@ $status_published       = $status->data->published;
                         $f3 = require('viewComment.php');
                         ?>
                     </div>
-
                     <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID ?>">
                         <div class="large-10 uiActorCommentPicCol">
-                            <a href="/content/post?username=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+                            <a href="/content/post?user=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
                         </div>
                         <div class="large-90 uiTextCommentArea">
                             <form class="ink-form" id="fmComment-<?php echo $rpStatusID ?>">

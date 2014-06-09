@@ -7,7 +7,7 @@ $start = $time;
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php $this->element('head'); ?>
+<?php require_once 'head.php'; ?>
 <body>
 <div id="topBar">
     <?php $this->element('topBarElement'); ?>
@@ -32,6 +32,7 @@ $start = $time;
     <div id="sideBar" style="display: none">
         Chat UI
     </div>
+    <?php require_once 'footer.php'; ?>
 </div>
 </body>
 </html>
