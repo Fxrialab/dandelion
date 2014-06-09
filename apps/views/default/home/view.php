@@ -12,11 +12,15 @@ if (!empty($activities))
             $like       = $mod['like'];
             $statusID   = $mod['statusID'];
             $activity   = $mod['actions']->data;
-            //$curUserID  = $mod['currentUser']->recordID;
+            $userID     = $mod['userID']->recordID;
             if ($mod['avatar'] == 'none')
-                //check man or woman later
-                $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-            else {
+            {
+                $gender = ElementController::findGender($userID);
+                if ($gender =='male')
+                    $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+                else
+                    $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+            }else {
                 $photo = ElementController::findPhoto($mod['avatar']);
                 $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
             }

@@ -33,7 +33,7 @@ class ListController extends AppController
                     'like'      => $like,
                     'username'  => $userRC->data->username,
                     'avatar'    => $userRC->data->profilePic,
-                    /*'currentUser'   => $userRC,*/
+                    'userID'      => $userRC,
                     'actions'   => $statusRC,
                     'statusID'  => $statusID,
                     'path'      => Register::getPathModule('post'),

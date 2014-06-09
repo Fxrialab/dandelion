@@ -19,8 +19,11 @@ if (!empty($records))
                 $photo = ElementController::findPhoto($profile->data->profilePic);
                 $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
             }else {
-                //check men or women later
-                $profilePic = UPLOAD_URL . "avatar/170px/avatarMenDefault.png";
+                $gender = ElementController::findGender($profile->recordID);
+                if ($gender == 'male')
+                    $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+                else
+                    $profilePic = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
             }
             $actorComment = ucfirst($profile->data->firstName)." ".ucfirst($profile->data->lastName);
             ?>

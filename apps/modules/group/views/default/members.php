@@ -88,8 +88,11 @@ $countAdmin = $this->f3->get('countAdmin');
                         $photo = ElementController::findPhoto($user->data->profilePic);
                         $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
                     }else {
-                        //check men or women later
-                        $profilePic = UPLOAD_URL . "avatar/170px/avatarMenDefault.png";
+                        $gender = ElementController::findGender($user->recordID);
+                        if ($gender =='male')
+                            $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+                        else
+                            $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
                     }
                     ?>
                     <div class="large-30" id="user_<?php echo str_replace(":", "_", $user->recordID) ?>">

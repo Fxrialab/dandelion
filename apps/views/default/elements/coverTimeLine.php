@@ -69,12 +69,16 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
                         {
                             $photo = ElementController::findPhoto($otherUser->data->profilePic);
                             $src = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
-                            $lableavatar = 'Change avatar';
+                            $labelStt = 'Change avatar';
                         }
                         else
                         {
-                            $src = IMAGES . "avatarMenDefault.png";
-                            $lableavatar = 'Add avatar';
+                            $gender = ElementController::findGender($otherUser->recordID);
+                            if ($gender =='male')
+                                $src = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+                            else
+                                $src = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+                            $labelStt = 'Add avatar';
                         }
                         ?>
                         <img src="<?php echo $src; ?>">
@@ -82,7 +86,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUserID);
                 </div>
                 <div class="profileInfo">
                     <div class="dropdown">
-                        <a href="#" class="button"><span class="icon icon148"></span><span class="label"><?php echo $lableavatar ?></span></a>
+                        <a href="#" class="button"><span class="icon icon148"></span><span class="label"><?php echo $labelStt ?></span></a>
                         <div class="dropdown-slider left w175">
                             <a href="#" class="photoBrowse ddm" role="avatar" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a>
                             <a href="#" class="ddm"><div id="uploadAvatar"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a>

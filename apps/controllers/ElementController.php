@@ -37,6 +37,13 @@ class ElementController extends Controller
         return $model;
     }
 
+    static public function findGender($id)
+    {
+        $facade = new DataFacade;
+        $model = $facade->findByAttributes('information', array('user'=>$id));
+        return $model->data->gender;
+    }
+
     static public function findRs($id)
     {
         $facade = new DataFacade;
