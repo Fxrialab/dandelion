@@ -77,7 +77,7 @@ class PostController extends AppController
                 $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
                 $obj = new ObjectHandler();
                 $obj->owner = $currentProfileID;
-                $obj->type  = 'post';
+                $obj->type = 'post';
                 $obj->active = 1;
                 $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
                 $statusRC = $this->facade->findAll('status', $obj);
@@ -129,8 +129,31 @@ class PostController extends AppController
             {
                 if ($embedType == 'photo')
                 {
-                    $images = $this->f3->get("POST.imgID");
-                    $embedSource = implode(',', $images);
+                    $images = $_POST["imgID"];
+                    foreach ($images as $value)
+                    {
+                        list($name, $width, $height) = explode(",", $value);
+                        $entry = array(
+                            'actor' => $currentUser->recordID,
+                            'album' => '',
+                            'fileName' => $name,
+                            'width' => $width,
+                            'height' => $height,
+                            'dragX' => 0,
+                            'dragY' => 0,
+                            'thumbnail_url' => '',
+                            'description' => '',
+                            'numberLike' => '0',
+                            'numberComment' => '0',
+                            'statusUpload' => 'uploaded',
+                            'published' => time(),
+                            'type' => 'post'
+                        );
+                        $photoID = $this->facade->save('photo', $entry);
+                        if (!empty($photoID))
+                            $id[] = $photoID;
+                    }
+                    $embedSource = implode(',', $id);
                 }
                 else
                 {
@@ -189,30 +212,32 @@ class PostController extends AppController
         if ($this->isLogin())
         {
             $currentUser = $this->getCurrentUser();
-            $postID     = str_replace("_", ":", $this->f3->get('POST.postID'));
-            $published  = time();
+            $postID = str_replace("_", ":", $this->f3->get('POST.postID'));
+            $published = time();
 
             //prepare data
             $content = $this->f3->get('POST.comment');
             //target for count who comments to post on notification, will check later
             $commentEntryCase = array(
-                "actor"         => $currentUser->recordID,
-                "content"       => $content,
-                "post"          => $postID,
-                "published"     => $published,
+                "actor" => $currentUser->recordID,
+                "content" => $content,
+                "post" => $postID,
+                "published" => $published,
             );
-            $commentID = $this->facade->save('comment',$commentEntryCase);
+            $commentID = $this->facade->save('comment', $commentEntryCase);
             $commentRC = $this->facade->findByPk('comment', $commentID);
             /* Update number comment */
-            $status_update = $this->facade->findByAttributes('status', array('@rid'=>'#' . $postID));
+            $status_update = $this->facade->findByAttributes('status', array('@rid' => '#' . $postID));
             $dataCountNumberComment = array(
                 'numberComment' => $status_update->data->numberComment + 1
             );
-            $this->facade->updateByAttributes('status', $dataCountNumberComment, array('@rid'=>"#" . $postID));
+            $this->facade->updateByAttributes('status', $dataCountNumberComment, array('@rid' => "#" . $postID));
             $this->f3->set('comments', $commentRC);
 
             $this->renderModule('viewComment', 'post');
-        }else {
+        }
+        else
+        {
             
         }
     }
@@ -225,7 +250,7 @@ class PostController extends AppController
             $statusID = str_replace("_", ":", $this->f3->get('POST.statusID'));
             if (!empty($statusID))
             {
-                $comments = $this->facade->findAllAttributes('comment', array('post'=>$statusID));
+                $comments = $this->facade->findAllAttributes('comment', array('post' => $statusID));
                 $this->f3->set("comments", $comments);
                 $this->renderModule('moreComment', 'post');
             }
@@ -303,6 +328,21 @@ class PostController extends AppController
             F3::set('comment', $comment);
             F3::set('status_detail', $status);
             $this->render(Register::getPathModule('post') . 'detailStatus.php', 'modules');
+        }
+    }
+
+    public function deleteImage()
+    {
+        if ($this->isLogin())
+        {
+
+            $filename = $_POST['name'];
+            $link = UNLINK . $filename;
+            if (!empty($link))
+            {
+                unlink($link);
+                echo $_POST['id'];
+            }
         }
     }
 

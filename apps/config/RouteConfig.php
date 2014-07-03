@@ -55,6 +55,8 @@ class RouteConfig
         'searchWork_POST' => "UserController",
         /* Route config for friends page */
         'friends_GET' => "FriendController",
+        'loadFriend_POST' => "FriendController",
+        'searchFriend_POST' => "FriendController",
         /* Route config for ajax page */
         'photoBrowser_POST' => "AjaxController",
         'uploadCover_POST' => "AjaxController",
@@ -64,6 +66,7 @@ class RouteConfig
         'choosePhoto_POST' => "AjaxController",
         'reposition_POST' => "AjaxController",
         'cancel_POST' => "AjaxController",
+        'upload_POST' => "AjaxController"
     );
     public $modules = array(
         /* Route config for modules */

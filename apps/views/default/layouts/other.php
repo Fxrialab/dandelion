@@ -17,7 +17,7 @@ $start = $time;
         <div class="large-80 borderLineRight">
             <?php $this->element('leftCol'); ?>
             <div class="uiMainColTimeLine large-80 borderLineLeft">
-                <?php $this->element('coverTimeLine'); ?>
+                <?php // $this->element('coverTimeLine'); ?>
                 <div class="mainColWrapper">
                     <?php
                     if($type =='modules')

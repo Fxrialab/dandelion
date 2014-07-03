@@ -160,8 +160,8 @@ function hoverShowPopUpOver($click, $popUpOver) {
                     $("<span>You and </span>").prependTo("#likeSentence-" + objectID);
                 } else {
                     $(".tempLike-" + objectID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + objectID + "'>" +
-                        "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
-                        "</div>");
+                            "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
+                            "</div>");
                 }
             }
         });
@@ -297,13 +297,13 @@ $(document).ready(function()
                             $.each(data.results, function()
                             {
                                 $('#resultsList').append("<li rel='" + this.recordID + "'>" +
-                                    "<a href='/content/myPost?username=" + this.username + "'>" +
-                                    "<span>" +
-                                    "<img class='imgFindPeople' src='" + this.profilePic + "' width='30' height='30'/>" +
-                                    "<span class='infoPeople'>" + this.firstName + " " + this.lastName + "</span>" +
-                                    "</span>" +
-                                    "</a>" +
-                                    "</li>");
+                                        "<a href='/content/myPost?username=" + this.username + "'>" +
+                                        "<span>" +
+                                        "<img class='imgFindPeople' src='" + this.profilePic + "' width='30' height='30'/>" +
+                                        "<span class='infoPeople'>" + this.firstName + " " + this.lastName + "</span>" +
+                                        "</span>" +
+                                        "</a>" +
+                                        "</li>");
                             });
                             $('#resultsList').append("<li class='moreSearch'><a href='/moreSearch?search=" + searchText + "'><span class='moreSearchText'>See more results for '" + searchText + "'</span></a></li>");
                         } else {
@@ -375,7 +375,7 @@ $("body").on('click', '#createGroup', function(e) {
     e.preventDefault();
     var title = $(this).attr('title');
     var href = $(this).attr('href');
-    console.log('href ',href);
+    console.log('href ', href);
     $.ajax({
         type: "POST",
         url: href,
@@ -728,7 +728,7 @@ $("body").on('click', '.cancel', function(e) {
                     $('.displayPhoto .imgCover').html('<div style="width:' + obj.width + 'px; height:' + obj.height + 'px;  position: relative; left: -' + obj.left + 'px; top: -' + obj.top + 'px" > \n\
                     <img src="' + obj.src + '" style="width:100%;"> \n\
                     </div>');
-                }else {
+                } else {
                     $('.displayPhoto .imgCover').remove();
                 }
                 $('.timeLineMenuNav .cancelCover').remove();
@@ -738,10 +738,10 @@ $("body").on('click', '.cancel', function(e) {
                 $('.name').css('display', 'block');
                 $('.actionCover').css('display', 'block');
                 $("#navInfoUserTemplate").tmpl(user).appendTo(".timeLineMenuNav");
-            }else if (target == 'profilePic') {
-                $('.profilePic').html('<a class="infoUser" href="/content/post?user='+obj.username+'">'+
-                    +'<img src="'+obj.src+'" style="display: block;">'+
-                    +'</a>')
+            } else if (target == 'profilePic') {
+                $('.profilePic').html('<a class="infoUser" href="/content/post?user=' + obj.username + '">' +
+                        +'<img src="' + obj.src + '" style="display: block;">' +
+                        +'</a>')
             }
             return false;
 
@@ -753,7 +753,7 @@ $("body").on('click', '.cancel', function(e) {
 $("body").on('click', '.cancelCoverGroup', function(e) {
     e.preventDefault();
     var target = $(this).attr('id');
-    var groupID= $('#groupID').attr('value');
+    var groupID = $('#groupID').attr('value');
     $.ajax({
         type: "POST",
         url: "/content/group/cancelCover",
@@ -767,7 +767,7 @@ $("body").on('click', '.cancelCoverGroup', function(e) {
                     $('.displayPhoto .imgCoverGroup').html('<div style="width:' + obj.width + 'px; height:' + obj.height + 'px;  position: relative; left: -' + obj.left + 'px; top: -' + obj.top + 'px" > \n\
                     <img src="' + obj.src + '" style="width:100%;"> \n\
                     </div>');
-                }else {
+                } else {
                     $('.displayPhoto .imgCoverGroup').remove();
                 }
                 $('.actionCover').css('display', 'block');
@@ -804,6 +804,58 @@ $("body").on('click', '.rCoverGroup', function(e) {
         success: function(data) {
             $('.imgCoverGroup').html(data);
             $('.actionCover').css('display', 'none');
+        }
+    });
+});
+$("body").on('click', '.dialogAlbum', function(e) {
+
+    $.ajax({
+        type: "POST",
+        url: "/content/photo/createAlbum",
+        success: function(data) {
+            $(".dialog").dialog({
+                width: "1000",
+                height: "650",
+                position: ['top', 100],
+                resizable: false,
+                modal: true,
+                open: function(event, ui) {
+                    $(".ui-dialog-titlebar").hide();
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".dialog").append(data);
+                }
+            });
+        }
+
+    });
+
+});
+$(document).ready(function() {
+    $("body").on('click', '.menuClick a', function(e) {
+        var clickedId = "#" + this.id.replace(/^link/, "div");
+        $(".menuClick div").not(clickedId).hide();
+        $('.ajax-upload-dragdrop').css('display', 'block');
+        $(clickedId).toggle();
+        if ($(clickedId).css("display") == "none") {
+            $(this).removeClass("selected");
+        } else {
+            $(this).addClass("selected");
+        }
+
+    });
+
+    $("body").on('click', '.open', function(e) {
+        var a = $('.action').find('a');
+        e.preventDefault();
+        var $this = $(this),
+                speed = 500;
+        if ($this.hasClass('active') === true) {
+            $this.removeClass('active').next('.box').slideUp(speed);
+        } else if (a.hasClass('active') === false) {
+            $this.addClass('active').next('.box').slideDown(speed);
+        } else {
+            a.removeClass('active').next('.box').slideUp(speed);
+            $this.addClass('active').next('.box').delay(speed).slideDown(speed);
         }
     });
 });

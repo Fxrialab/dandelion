@@ -92,6 +92,8 @@
     position: relative;
     min-height: 150px;
     border: 1px solid #e4e4e4;
+    border-left: none;
+    border-top: none;
     border-bottom: none;
     background-color: #F6F7F8;
 }

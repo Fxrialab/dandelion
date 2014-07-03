@@ -1,41 +1,49 @@
 <?php
+
 class FriendController extends AppController
 {
+
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public static function findUser($id)
+    {
+        $facade = new DataFacade();
+        return $this->facade->findByPk('user', $id);
     }
 
     public function sentFriendRequest()
     {
         if ($this->isLogin())
         {
-            $currentUser= $this->getCurrentUser();
-            $toUser     = $this->f3->get("POST.toUser");
-            $userB      = str_replace('_', ':', $toUser);
-            $existRequestRC = $this->facade->findByAttributes('friendship', array('userA'=>$currentUser->recordID, 'relationship'=>'request', 'userB'=>$userB));
+            $currentUser = $this->getCurrentUser();
+            $toUser = $this->f3->get("POST.toUser");
+            $userB = str_replace('_', ':', $toUser);
+            $existRequestRC = $this->facade->findByAttributes('friendship', array('userA' => $currentUser->recordID, 'relationship' => 'request', 'userB' => $userB));
             if (!$existRequestRC)
             {
                 //prepare data
-                $relationship   = array(
-                    'userA'         => $currentUser->recordID,
-                    'relationship'  => 'request',
-                    'status'        => 'new',
-                    'userB'         => $userB,
-                    'published'     => time()
+                $relationship = array(
+                    'userA' => $currentUser->recordID,
+                    'relationship' => 'request',
+                    'status' => 'new',
+                    'userB' => $userB,
+                    'published' => time()
                 );
                 //save data
-                Model::get('friendship')->createEdge('#'.$currentUser->recordID, '#'.$userB, $relationship);
+                Model::get('friendship')->createEdge('#' . $currentUser->recordID, '#' . $userB, $relationship);
             }
             //After friend request is sent. The friendRequests action will be create
-            $existFriendRequestAction   = $this->facade->findByAttributes('actions', array('actionElement'=>'friendRequests'));
+            $existFriendRequestAction = $this->facade->findByAttributes('actions', array('actionElement' => 'friendRequests'));
             if (!$existFriendRequestAction)
             {
-                $actionRC   = array(
-                    'actionName'    => 'Friend Requests',
+                $actionRC = array(
+                    'actionName' => 'Friend Requests',
                     'actionElement' => 'friendRequests',
-                    'isSearch'      => 'no',
-                    'isSuggest'     => 'yes',
+                    'isSearch' => 'no',
+                    'isSuggest' => 'yes',
                 );
                 $this->facade->save('actions', $actionRC);
             }
@@ -51,34 +59,34 @@ class FriendController extends AppController
     {
         if ($this->isLogin())
         {
-            $currentUser= $this->getCurrentUser();
-            $toUser     = $this->f3->get("POST.toUser");
-            $userB      = str_replace('_', ':', $toUser);
+            $currentUser = $this->getCurrentUser();
+            $toUser = $this->f3->get("POST.toUser");
+            $userB = str_replace('_', ':', $toUser);
             //update a record
-            $updateRecord   = array(
-                'relationship'  => 'friend',
-                'status'        => 'ok'
+            $updateRecord = array(
+                'relationship' => 'friend',
+                'status' => 'ok'
             );
-            $this->facade->updateByAttributes('friendship', $updateRecord, array('userA'=>$userB, 'userB'=>$currentUser->recordID));
+            $this->facade->updateByAttributes('friendship', $updateRecord, array('userA' => $userB, 'userB' => $currentUser->recordID));
             //prepare data
-            $relationship   = array(
-                'userA'         => $currentUser->recordID,
-                'relationship'  => 'friend',
-                'status'        => 'ok',
-                'userB'         => $userB,
-                'published'     => time()
+            $relationship = array(
+                'userA' => $currentUser->recordID,
+                'relationship' => 'friend',
+                'status' => 'ok',
+                'userB' => $userB,
+                'published' => time()
             );
             //save data
-            Model::get('friendship')->createEdge('#'.$currentUser->recordID, '#'.$userB, $relationship);
+            Model::get('friendship')->createEdge('#' . $currentUser->recordID, '#' . $userB, $relationship);
             //After friend is accept. The peopleYouMayKnow action will be create
-            $existPeopleYouMayKnowAction   = $this->facade->findByAttributes('actions', array('actionElement'=>'peopleYouMayKnow'));
+            $existPeopleYouMayKnowAction = $this->facade->findByAttributes('actions', array('actionElement' => 'peopleYouMayKnow'));
             if (!$existPeopleYouMayKnowAction)
             {
-                $actionRC       = array(
-                    'actionName'    => 'People You May Know',
+                $actionRC = array(
+                    'actionName' => 'People You May Know',
                     'actionElement' => 'peopleYouMayKnow',
-                    'isSearch'      => 'yes',
-                    'isSuggest'     => 'yes',
+                    'isSearch' => 'yes',
+                    'isSuggest' => 'yes',
                 );
                 $this->facade->save('actions', $actionRC);
             }
@@ -94,20 +102,24 @@ class FriendController extends AppController
     {
         if ($this->isLogin())
         {
-            $currentUser= $this->getCurrentUser();
-            $toUser     = str_replace('_', ':', $this->f3->get("POST.toUser"));
-            $existRequestAtoB = $this->facade->findByAttributes('friendship', array('userA'=>$currentUser->recordID, 'userB'=>$toUser));
-            $existRequestBtoA = $this->facade->findByAttributes('friendship', array('userA'=>$toUser, 'userB'=>$currentUser->recordID));
+            $currentUser = $this->getCurrentUser();
+            $toUser = str_replace('_', ':', $this->f3->get("POST.toUser"));
+            $existRequestAtoB = $this->facade->findByAttributes('friendship', array('userA' => $currentUser->recordID, 'userB' => $toUser));
+            $existRequestBtoA = $this->facade->findByAttributes('friendship', array('userA' => $toUser, 'userB' => $currentUser->recordID));
             if (!empty($existRequestAtoB) && !empty($existRequestBtoA))
             {
-                Model::get('friendship')->deleteEdge('#'.$currentUser->recordID, '#'.$toUser, array('userA'=>$currentUser->recordID, 'relationship'=>'friend', 'userB'=>$toUser));
-                Model::get('friendship')->deleteEdge('#'.$toUser, '#'.$currentUser->recordID, array('userA'=>$toUser, 'relationship'=>'friend', 'userB'=>$currentUser->recordID));
-            }else {
+                Model::get('friendship')->deleteEdge('#' . $currentUser->recordID, '#' . $toUser, array('userA' => $currentUser->recordID, 'relationship' => 'friend', 'userB' => $toUser));
+                Model::get('friendship')->deleteEdge('#' . $toUser, '#' . $currentUser->recordID, array('userA' => $toUser, 'relationship' => 'friend', 'userB' => $currentUser->recordID));
+            }
+            else
+            {
                 if (!empty($existRequestAtoB) && !$existRequestBtoA)
                 {
-                    Model::get('friendship')->deleteEdge('#'.$currentUser->recordID, '#'.$toUser, array('userA'=>$currentUser->recordID, 'relationship'=>'request', 'userB'=>$toUser));
-                }elseif (!$existRequestAtoB && !empty($existRequestBtoA)) {
-                    Model::get('friendship')->deleteEdge('#'.$toUser, '#'.$currentUser->recordID, array('userA'=>$toUser, 'relationship'=>'request', 'userB'=>$currentUser->recordID));
+                    Model::get('friendship')->deleteEdge('#' . $currentUser->recordID, '#' . $toUser, array('userA' => $currentUser->recordID, 'relationship' => 'request', 'userB' => $toUser));
+                }
+                elseif (!$existRequestAtoB && !empty($existRequestBtoA))
+                {
+                    Model::get('friendship')->deleteEdge('#' . $toUser, '#' . $currentUser->recordID, array('userA' => $toUser, 'relationship' => 'request', 'userB' => $currentUser->recordID));
                 }
             }
             $this->f3->set('requestFriend', false);
@@ -122,45 +134,100 @@ class FriendController extends AppController
     {
         if ($this->isLogin())
         {
-            $this->layout = 'other';
-
-            $currentUser = $this->getCurrentUser();
-            $requestCurrentProfile = $this->f3->get('GET.username');
-
-            if (!empty($requestCurrentProfile))
-            {
-                $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $requestCurrentProfile));
-                if (!empty($currentProfileRC))
-                {
-                    $currentProfileID = $currentProfileRC->recordID;
-                }else {
-                    //@TODO: add layout return page not found in later
-                    echo "page not found";
-                }
-            }else
-                $currentProfileID = $this->getCurrentUser()->recordID;
-            $currentProfileRC = $this->facade->load('user', $currentProfileID);
-            $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
-            $this->f3->set('statusFriendShip', $statusFriendShip);
-
-            $friendsCurrentUser = Model::get('user')->callGremlin("current.out", array('@rid'=>'#' . $currentProfileID));
-            if (!empty($friendsCurrentUser))
-            {
-                foreach ($friendsCurrentUser as $friend)
-                {
-                    $infoFriends[$friend] = Model::get('user')->callGremlin("current.map", array('@rid'=>'#' . $friend));
-                    $friendsShip[$friend] = $this->getStatusFriendShip($currentUser->recordID, $friend);
-                }
-                $this->f3->set('friendsCurrentUser', $friendsCurrentUser);
-                $this->f3->set('infoFriends', $infoFriends);
-                $this->f3->set('friendsShip', $friendsShip);
-            }
-
-            $this->f3->set('currentUser', $currentUser);
-            $this->f3->set('otherUser', $currentProfileRC);
+            $this->layout = 'timeline';
+            $username = $this->f3->get('GET.user');
+            $user = $this->facade->findByAttributes('user', array('username' => $username));
+            $this->f3->set('user', $user);
+            $this->f3->set('username', $username);
             $this->render('user/friends.php', 'default');
         }
     }
+
+    public function loadFriend()
+    {
+        if ($this->isLogin())
+        {
+            if (!empty($_POST['userID']))
+            {
+                $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
+                $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
+                $obj = new ObjectHandler();
+                $obj->userA = $_POST['userID'];
+                $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
+                $friends = $this->facade->findAll('friendship', $obj);
+                if (!empty($friends))
+                {
+                    $array = array();
+                    foreach ($friends as $value)
+                    {
+                        $user = $this->facade->findByPk('user', $value->data->userB);
+                        $array[] = array(
+                            'recordID' => $user->recordID,
+                            'username' => $user->data->username,
+                            'fullName' => $user->data->fullName,
+                            'avatar' => $user->data->profilePic
+                        );
+                    }
+                    $this->f3->set("friends", $array);
+                    $this->render('user/viewFriend.php', 'default');
+                }
+            }
+        }
+    }
+
+    public function searchFriend()
+    {
+        if ($this->isLogin())
+        {
+            $key = $_POST['key'];
+            $data = array();
+            if (!empty($key))
+            {
+                $command = $this->getSearchCommand(array('fullName'), $key);
+                $result = Model::get('user')->callGremlin($command);
+                if (!empty($result))
+                {
+                    foreach ($result as $people)
+                    {
+                        $friend = Model::get('friendship')->callGremlin("current.map", array('userB' => $people));
+                        if (!empty($friend))
+                        {
+                            $user = $this->facade->findByPk('user', $people);
+                            $data[] = array(
+                                'recordID' => $user->recordID,
+                                'username' => $user->data->username,
+                                'fullName' => $user->data->fullName,
+                                'avatar' => $user->data->profilePic
+                            );
+                        }
+                    }
+                }
+            }
+            else
+            {
+                $obj = new ObjectHandler();
+                $obj->userA = $_POST['userID'];
+                $obj->select = "ORDER BY published DESC LIMIT 20";
+                $friends = $this->facade->findAll('friendship', $obj);
+                if (!empty($friends))
+                {
+                    foreach ($friends as $value)
+                    {
+                        $user = $this->facade->findByPk('user', $value->data->userB);
+                        $data[] = array(
+                            'recordID' => $user->recordID,
+                            'username' => $user->data->username,
+                            'fullName' => $user->data->fullName,
+                            'avatar' => $user->data->profilePic
+                        );
+                    }
+                }
+            }
+            $this->f3->set("friends", $data);
+            $this->render('user/viewFriend.php', 'default');
+        }
+    }
+
 }
 
 ?>

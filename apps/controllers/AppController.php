@@ -154,7 +154,9 @@ class AppController extends Controller
                     $statusFriendShip = 'addFriend';
                 }
             }
-        }else {
+        }
+        else
+        {
             $statusFriendShip = 'updateInfo';
         }
 
@@ -492,11 +494,11 @@ class AppController extends Controller
      * @param bool $returnInfo
      * @return array|bool
      */
-    public function changeImage($file, $thumbSize = 0, $desImgFile, $newImgName, $quality, $returnInfo=false)
+    public function changeImage($file, $thumbSize = 0, $desImgFile, $newImgName, $quality, $returnInfo = false)
     {
-        $fileName   = $file["name"];
-        $tmpName    = $file['tmp_name'];
-        $formats    = $file['type'];
+        $fileName = $file["name"];
+        $tmpName = $file['tmp_name'];
+        $formats = $file['type'];
 
         list($width, $height) = getimagesize($tmpName);
         /* The width and the height of the image also the getimagesize retrieve other information as well   */
@@ -505,12 +507,12 @@ class AppController extends Controller
         if ($imgRatio > 1)
         {
             $newWidth = $thumbSize;
-            $newHeight = (int)($thumbSize / $imgRatio);
+            $newHeight = (int) ($thumbSize / $imgRatio);
         }
         else
         {
             $newHeight = $thumbSize;
-            $newWidth = (int)($thumbSize * $imgRatio);
+            $newWidth = (int) ($thumbSize * $imgRatio);
         }
         list($name, $ext) = explode(".", $fileName);
 
@@ -524,7 +526,7 @@ class AppController extends Controller
         $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
         $newImage = $newImgName . '.' . $ext;
         imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
-        imagejpeg($thumb, $desImgFile.'/' . $newImage, $quality);
+        imagejpeg($thumb, $desImgFile . '/' . $newImage, $quality);
         /*
           Out put of image
           if the $savePath is null then it will display the image in the browser
@@ -571,12 +573,16 @@ class AppController extends Controller
          */
     }
 
-    public function move_uploaded_file($file, $dir, $newName)
+    public function move_uploaded_file($file, $i, $dir, $newName)
     {
+        if (!empty($i))
+            $i = $i;
+        else
+            $i = 0;
         $allowed_formats = array("jpg", "png", "gif", "bmp");
-        $fileName = $file["name"];
-        $tmpname = $file['tmp_name'];
-        $size = $file['size'];
+        $fileName = $file["name"][$i];
+        $tmpname = $file['tmp_name'][$i];
+        $size = $file['size'][$i];
         list($name, $ext) = explode(".", $fileName);
         if (!in_array($ext, $allowed_formats))
         {
@@ -591,7 +597,7 @@ class AppController extends Controller
             $src = imagecreatefromgif($tmpname);
 
         list($width, $height) = getimagesize($tmpname);
-        if (move_uploaded_file($_FILES["myfile"]["tmp_name"], $dir . $newName . '.' . $ext))
+        if (move_uploaded_file($tempname, $dir . $newName . '.' . $ext))
             return array('name' => $newName . '.' . $ext, 'width' => $width, 'height' => $height);
     }
 

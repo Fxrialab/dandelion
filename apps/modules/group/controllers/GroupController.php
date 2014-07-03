@@ -247,7 +247,6 @@ class GroupController extends AppController
         if ($this->isLogin())
         {
             $coverDir   = UPLOAD . "cover/750px";
-            $avatarDir  = UPLOAD . "avatar/170px";
             $thumbnailDir   = UPLOAD. "thumbnails/150px";//The folder will display like gallery images on "Choose from my photos"
 
             if (isset($_FILES["myfile"]))
@@ -257,7 +256,6 @@ class GroupController extends AppController
                     $file = $_FILES["myfile"];
                     $newName = time();
                     $this->changeImage($file, 150, $thumbnailDir, $newName, 80, false);
-                    $this->changeImage($file, 170, $avatarDir, $newName, 100, false);
                     $image  = $this->changeImage($file, 750, $coverDir, $newName, 100, true);
                     $this->f3->set('image', $image);
                     $this->f3->set('target', 'uploadCover');

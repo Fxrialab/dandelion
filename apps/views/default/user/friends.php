@@ -1,124 +1,97 @@
-<?php
-$numberFriends = (!empty($friendsCurrentUser))?count($friendsCurrentUser):false;
-?>
+<script>
+    $(document).ready(function() {
+        $('#scrollFriends').scrollPaginationFriend({
+            nop: 20, // The number of posts per scroll to be loaded
+            offset: 0, // Initial offset, begins at 0 in this case
+            error: '', // When the user reaches the end this is the message that is
+            // displayed. You can change this if you want.
+            delay: 500, // When you scroll down the posts will load after a delayed amount of time.
+            // This is mainly for usability concerns. You can alter this as you see fit
+            scroll: true // The main bit, if set to false posts will not load as the user scrolls.
+                    // but will still load if the user clicks.
+        });
+    });
+
+</script>
+
+<input type="hidden" id="userID" name="userID" value="<?php echo $user->recordID ?>">
+<div class="arrow_timeLineMenuNav">
+    <div class="arrow_timeLine" style="left: 19%"></div>
+</div>
+
+
 <div class="uiMainColAbout">
+
     <div class="uiPhotoWrapper">
-        <div class="uiBoxTitle large-100 column-group">
-            <div class="uiLeftPhotoBreadcrumbs large-50 medium-100 small-100">
-                <nav class="ink-navigation">
-                    <ul class="breadcrumbs">
-                        <li><a href="#">Friends</a></li>
-                        <li class="active"><a href="#">All Friends</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="uiRightPhotoTab large-50 medium-100 small-100">
-                <nav class="ink-navigation">
-                    <ul class="menu horizontal push-right">
-                        <li>
-                            <a href="" class="uiMediumButton white">All Friends
-                                <?php
-                                if (!empty($numberFriends))
-                                {
-                                    ?>
-                                    <span class="ink-badge grey"><?php echo $numberFriends; ?></span>
-                                <?php
-                                }
-                                ?>
-                            </a>
-                        </li>
-                        <li><a href="" class="uiMediumButton white">Following</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-        <div class="uiPhotoContainer uiBox-PopUp albumBoxArrow">
-            <ul class="menu horizontal large-100 medium-100 small-100 uiFriendsWrapper">
-                <?php
-                if (!empty($friendsCurrentUser))
-                {
-                    foreach ($friendsCurrentUser as $friend)
-                    {
-                        $fullName   = ucfirst($infoFriends[$friend][0]->firstName)." ".ucfirst($infoFriends[$friend][0]->lastName);
-                        $avatar     = $infoFriends[$friend][0]->profilePic;
-                        $username   = $infoFriends[$friend][0]->username;
-                        $statusFriendsShip = $friendsShip[$friend];
-                        $rpFriendsID=  str_replace(':', '_', $friend);
-                    ?>
-                    <li class="large-50 medium-100 small-100">
-                        <div class="friendItemWrapper column-group">
-                            <a class="large-30 medium-60 small-100" href="">
-                                <img src="<?php echo $avatar; ?>">
-                            </a>
-                            <div class="large-40 medium-80 small-100 infoFriends">
-                                <p class="fontSize-14"><a href="/content/myPost?username=<?php echo $username; ?>"><?php echo $fullName; ?></a></p>
-                                <?php
-                                if (!empty($numberFriends))
-                                {
-                                    ?>
-                                    <span><a class="fixcolor-adabab" href=""><?php echo $numberFriends; ?> friends</a></span>
-                                    <?php
-                                }
-                                ?>
-                            </div>
-                            <div class="large-30 medium-60 small-100 actionFriends">
-                                <?php
-                                if ($statusFriendsShip == 'request' || $statusFriendsShip == 'later' || $statusFriendsShip == 'addFriend')
-                                {
-                                    if ($statusFriendsShip == 'request' || $statusFriendsShip == 'later')
-                                    {
-                                        ?>
-                                        <a class="requestFriend uiSmallButton orange linkHover-fffff">Friend Request Sent</a>
-                                        <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
-                                            <nav class="ink-navigation">
-                                                <ul class="menu vertical">
-                                                    <li><a>Report/Block</a></li>
-                                                    <li><a class="cancelRequestFriend" id="<?php echo $rpFriendsID; ?>">Cancel Request</a></li>
-                                                </ul>
-                                            </nav>
-                                        </div>
-                                    <?php
-                                    }else {
-                                        if ($currentUser->recordID != $friend){
-                                        ?>
-                                        <a class="addFriend uiSmallButton orange linkHover-fffff" id="<?php echo $rpFriendsID; ?>">Add Friend</a>
-                                    <?php
-                                        }
-                                    }
-                                }elseif ($statusFriendsShip == 'respondRequest') {
-                                    ?>
-                                    <a class="respondFriendRequest uiSmallButton orange linkHover-fffff">Respond to Friend Request</a>
-                                    <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
-                                        <nav class="ink-navigation">
-                                            <ul class="menu vertical">
-                                                <li><a class="confirmFriend" id="<?php echo $rpFriendsID; ?>">Confirm Friend</a></li>
-                                                <li><a class="cancelRequestFriend" id="<?php echo $rpFriendsID; ?>">Unaccept Request</a></li>
-                                            </ul>
-                                        </nav>
-                                    </div>
-                                <?php
-                                }else {
-                                    ?>
-                                    <a class="isFriend uiSmallButton orange linkHover-fffff">Friend</a>
-                                    <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
-                                        <nav class="ink-navigation">
-                                            <ul class="menu vertical">
-                                                <li><a>Report/Block</a></li>
-                                                <li><a class="cancelRequestFriend" id="<?php echo $rpFriendsID; ?>">Unfriend</a></li>
-                                            </ul>
-                                        </nav>
-                                    </div>
-                                <?php
-                                }
-                                ?>
+        <div class="uiBoxTitle">
+            <div class="column-group">
+                <div style="padding: 13px">
+                    <div class="large-60 ">
+                        <h2>Friends</h2>
+                    </div>
+                    <div class="large-35">
+                        <a href="#" class="button dialogAlbum">Friends Requests</span></a>
+                        <a href="#" class="button icon add"><span class="label">Find Friends</span></a>
+                    </div>
+                    <div class="large-5 ">
+                        <div class="menuClick">
+                            <a id="linkglobal" class="button icon edit"></a>
+                            <div style="display: none;" id="divglobal" class="divmenu">
+                                <nav class="ink-navigation">
+                                    <ul class="menu vertical ">
+                                        <li><a href="#">Mange Sections</a></li>
+                                        <li><a href="#">Edit privacy</a></li>
+                                    </ul>
+                                </nav>
                             </div>
                         </div>
-                    </li>
-                <?php
-                    }
-                }
-                ?>
-            </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="column-group">
+                <div class="large-75">
+                    <div style="margin-top: 15px;">
+                        <nav class="ink-navigation">
+                            <ul class="menu horizontal">
+                                <li><a href="/content/friends?user=<?php echo $username ?>&f=friend_all">All friends (2)</a></li>
+                                <li><a href="/content/friends?user=<?php echo $username ?>&f=friend_recent">Recently Added</a></li>
+                                <li><a href="/content/friends?user=<?php echo $username ?>&f=following">Following</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="large-25">
+                    <div style="margin-top: 10px; margin-right: 12px;">
+                        <form class="ink-form">
+                            <div class="control-group">
+                                <div class="control">
+                                    <input type="text" name="search" id="searchFriend" placeholder="Search friends?">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="arrow_firend_all"></div>
+        <div class="column-group">
+            <div class="photoAll" id="scrollFriends">
+
+            </div>
         </div>
     </div>
-</div>
+    <script>
+        $('#searchFriend').keyup(function() {
+            var key = $(this).val();
+            var userID = $("#userID").val();
+            $.ajax({
+                type: "POST",
+                data: {key: key,userID:userID},
+                url: "/searchFriend",
+                success: function(data) {
+                    $('#scrollFriends').html(data);
+                }
+
+            });
+        });
+    </script>

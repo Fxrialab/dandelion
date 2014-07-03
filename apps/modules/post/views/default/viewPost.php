@@ -1,11 +1,11 @@
 <?php
-$rpOwnerID  = str_replace(':', '_', $status->data->owner);
+$rpOwnerID = str_replace(':', '_', $status->data->owner);
 $rpStatusID = str_replace(":", "_", $statusID);
-$embedType      = $status->data->embedType;
+$embedType = $status->data->embedType;
 $status_content = $status->data->content;
-$numberLikes    = $status->data->numberLike;
-$status_contentShare    = $status->data->contentShare;
-$status_published       = $status->data->published;
+$numberLikes = $status->data->numberLike;
+$status_contentShare = $status->data->contentShare;
+$status_published = $status->data->published;
 ?>
 <div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
     <div class="uiBoxPostContainer column-group">
@@ -19,10 +19,10 @@ $status_published       = $status->data->published;
             <div class="articleContentWrapper">
                 <div class="column-group">
                     <?php
-                    if($status_contentShare == 'none')
+                    if ($status_contentShare == 'none')
                     {
-                        $existLink = strpos($status_content,"http");
-                        if(!empty($status->data->embedType) && $status->data->embedType == 'none' || $status->data->embedType == 'photo')
+                        $existLink = strpos($status_content, "http");
+                        if (!empty($status->data->embedType) && $status->data->embedType == 'none' || $status->data->embedType == 'photo')
                         {
                             if (is_bool($existLink))
                             {
@@ -31,47 +31,57 @@ $status_published       = $status->data->published;
                                     <span class="textPost"><?php echo $status_content; ?></span>
                                 </div>
                                 <?php
-                            }else {
+                            }
+                            else
+                            {
                                 $existSpace = strpos(substr($status_content, $existLink), ' ');
-                                $link = !empty($existSpace)?substr($status_content, $existLink, $existSpace):substr($status_content, $existLink);
-                                $htmlLink = "<a href='".$link."'>".$link."</a>";
+                                $link = !empty($existSpace) ? substr($status_content, $existLink, $existSpace) : substr($status_content, $existLink);
+                                $htmlLink = "<a href='" . $link . "'>" . $link . "</a>";
                                 ?>
                                 <div class="textPostContainer fixMarginBottom-5">
                                     <span class="textPost"><?php echo str_replace($link, $htmlLink, $status_content); ?></span>
                                 </div>
                                 <?php
                             }
-                        } else {  ?>
+                        }
+                        else
+                        {
+                            ?>
                             <div class="textPostContainer fixMarginBottom-5">
                                 <span class="textPost">
                                     <?php
                                     if (!is_bool($existLink))
                                     {
                                         $existSpace = strpos(substr($status_content, $existLink), ' ');
-                                        $link       = !empty($existSpace)?substr($status_content, $existLink, $existSpace):substr($status_content, $existLink);
-                                        $htmlLink   = "<a href='".$link."'>".$link."</a>";
-                                        $rpLink     = str_replace($link, $htmlLink, $status_content);
-                                        $linkEmbed  = "<a href='".$status->data->embedSource."'>".$status->data->embedSource."</a>";
-                                        echo str_replace('_linkWith_',$linkEmbed, $rpLink);
-                                    }else {
-                                        $link = '<a href="'.$status->data->embedSource.'">'.$status->data->embedSource.'</a>';
-                                        echo str_replace('_linkWith_',$link, $status_content);
+                                        $link = !empty($existSpace) ? substr($status_content, $existLink, $existSpace) : substr($status_content, $existLink);
+                                        $htmlLink = "<a href='" . $link . "'>" . $link . "</a>";
+                                        $rpLink = str_replace($link, $htmlLink, $status_content);
+                                        $linkEmbed = "<a href='" . $status->data->embedSource . "'>" . $status->data->embedSource . "</a>";
+                                        echo str_replace('_linkWith_', $linkEmbed, $rpLink);
+                                    }
+                                    else
+                                    {
+                                        $link = '<a href="' . $status->data->embedSource . '">' . $status->data->embedSource . '</a>';
+                                        echo str_replace('_linkWith_', $link, $status_content);
                                     }
                                     ?>
                                     <a href="<?php echo $status->data->embedSource; ?>" class="oembed<?php echo $rand; ?>"></a>
                                 </span>
                             </div>
-                        <?php
+                            <?php
                         }
-                    } else { ?>
+                    }
+                    else
+                    {
+                        ?>
                         <div class="textPostContainer fixMarginBottom-5">
                             <span class="textPost"><?php echo $status_contentShare; ?></span>
                             <div class="attachmentStatus">
                                 <span class="textPost"><?php echo $status_content; ?></span>
                             </div>
                         </div>
-                    <?php
-                    } ?>
+                    <?php }
+                    ?>
                     <?php
                     if (!empty($status->data->embedType) && $status->data->embedType == 'photo')
                     {
@@ -80,12 +90,14 @@ $status_published       = $status->data->published;
                         foreach ($imagesID as $value)
                         {
                             $findImg = PostController::getPhoto($value);
-                            if ($countImg == 1) {
-                                echo '<div class="large-100"><img src=' . $findImg->data->url . '></div>';
-                            } elseif ($countImg == 3) {
-                                echo '<div class="large-30"><div class="imgPost"><img src=' . $findImg->data->url . '></div></div>';
-                            } else {
-                                echo '<div class="large-50"><div class="imgPost"><img src=' . $findImg->data->url . '></div></div>';
+                            if (!empty($findImg))
+                            {
+                                if ($countImg == 1)
+                                    echo '<div class="large-100"><img src=' . UPLOAD_URL . $findImg->data->fileName . '></div>';
+                                elseif ($countImg == 3)
+                                    echo '<div class="large-30"><div class="imgPost"><img src=' . UPLOAD_URL . $findImg->data->fileName . '></div></div>';
+                                else
+                                    echo '<div class="large-50"><div class="imgPost"><img src=' . UPLOAD_URL . $findImg->data->fileName . '></div></div>';
                             }
                         }
                     }
@@ -99,10 +111,15 @@ $status_published       = $status->data->published;
                             <!--Like Segments-->
                             <li class="like-<?php echo $rpStatusID ?>">
                                 <?php
-                                if ($like == TRUE) {
+                                if ($like == TRUE)
+                                {
                                     ?>
                                     <a class="unlikeAction" id="<?php echo $rpStatusID; ?>" title="Unlike post">Unlike</a>
-                                <?php } else { ?>
+                                    <?php
+                                }
+                                else
+                                {
+                                    ?>
                                     <a class="likeAction" id="<?php echo $rpStatusID; ?>" title="Like post">Like</a>
                                 <?php } ?>
                             </li>
@@ -113,13 +130,16 @@ $status_published       = $status->data->published;
                             </li>
                             <li class="gapArticleActions">.</li>
                             <?php
-                            if ($status->data->contentShare == 'none') {
+                            if ($status->data->contentShare == 'none')
+                            {
                                 ?>
                                 <!--Share Segments-->
                                 <li ><a class="shareStatus" id="<?php echo str_replace(":", "_", $statusID); ?>" title="Share">Share</a></li>
                                 <li class="gapArticleActions">.</li>
                                 <?php
-                            } else {
+                            }
+                            else
+                            {
                                 ?>
                                 <!--Share Segments-->
                                 <li ><a class="shareStatus" id="<?php echo str_replace(":", "_", $status->data->mainStatus); ?>" title="Share">Share</a></li>
@@ -144,21 +164,28 @@ $status_published       = $status->data->published;
                 <div class="postActionWrapper postItem-<?php echo $rpStatusID; ?> uiBox-PopUp boxLikeTopLeftArrow tempLike-<?php echo $rpStatusID; ?>">
                     <?php
 //                    $records = $mod['comment'][$statusID];
-                    if ($status->data->numberLike > 0) {
-                        if ($status->data->numberLike == 'null') {
+                    if ($status->data->numberLike > 0)
+                    {
+                        if ($status->data->numberLike == 'null')
+                        {
                             ?>
                             <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID; ?>">
                                 <span><i class="statusCounterIcon-like"></i><a href=""><?php echo $status->data->numberLike; ?></a> people like this.</span>
                             </div>
                             <?php
-                        } else {
-                            if ($status->data->numberLike == 1) {
+                        }
+                        else
+                        {
+                            if ($status->data->numberLike == 1)
+                            {
                                 ?>
                                 <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID; ?>">
                                     <span><i class="statusCounterIcon-like"></i>You like this</span>
                                 </div>
                                 <?php
-                            } else {
+                            }
+                            else
+                            {
                                 ?>
                                 <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID; ?>">
                                     <span><i class="statusCounterIcon-like"></i>You and <a href=""><?php echo $status->data->numberLike - 1; ?></a> people like this</span>
@@ -167,7 +194,8 @@ $status_published       = $status->data->published;
                             }
                         }
                     }
-                    if ($activity->numberComment > 3) {
+                    if ($activity->numberComment > 3)
+                    {
                         ?>
                         <div class="whoCommentThisPost verGapBox" id="viewComments-<?php echo $rpStatusID; ?>">
                             <span><i class="statusCounterIcon-comment"></i><a class="viewAllComments" id="<?php echo $rpStatusID; ?>">View all <?php echo $activity->numberComment; ?> comments</a></span>

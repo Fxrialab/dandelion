@@ -454,6 +454,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
     -moz-border-radius:8px;
     border-radius:8px;
     padding: 0;
+    z-index: 99999;
 }
 .ui-dialog .ui-dialog-titlebar { padding: 8px 1em; position: relative;   background-color:#0D84C7 !important;}
 .ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .1em 0; } 

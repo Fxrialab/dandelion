@@ -6,21 +6,22 @@ if (!empty($activities))
     {
         foreach (glob(MODULES . $mod['type'] . '/views/default/viewPost.php') as $views)
         {
-            $status     = $mod["actions"];
-            $username   = $mod['username'];
-            $avatar     = $mod['avatar'];
-            $like       = $mod['like'];
-            $statusID   = $mod['statusID'];
-            $activity   = $mod['actions']->data;
-            $userID     = $mod['userID']->recordID;
+            $status = $mod["actions"];
+            $username = $mod['username'];
+            $avatar = $mod['avatar'];
+            $like = $mod['like'];
+            $statusID = $mod['statusID'];
+            $activity = $mod['actions']->data;
+            $userID = $mod['userID']->recordID;
             if ($mod['avatar'] == 'none')
             {
                 $gender = ElementController::findGender($userID);
-                if ($gender =='male')
+                if ($gender == 'male')
                     $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                 else
                     $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
-            }else {
+            }else
+            {
                 $photo = ElementController::findPhoto($mod['avatar']);
                 $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
             }
@@ -30,14 +31,14 @@ if (!empty($activities))
     ?>
     <script type="text/javascript">
         $(".oembed<?php echo $rand; ?>").oembed(null,
-            {
-                embedMethod: "append",
-                maxWidth: 1024,
-                maxHeight: 400,
-                autoplay: false
-            });
+                {
+                    embedMethod: "append",
+                    maxWidth: 1024,
+                    maxHeight: 400,
+                    autoplay: false
+                });
         $('.taPostComment').autosize();
     </script>
-<?php
+    <?php
 }
 ?>

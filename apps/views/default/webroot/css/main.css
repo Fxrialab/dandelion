@@ -9,7 +9,9 @@ body {
     border: 1px solid;
 }
 
-
+h1,h2,h3,h4,h5,h6{
+    font-weight: bold;
+}
 
 #uiGlobalContainer {
     width: 100%;
@@ -248,10 +250,10 @@ body {
 #topBar {
     z-index: 5;
     position: fixed;
+    padding: 5px 0;
     top: 0;
     left: 0;
     right: 0;
-    padding: 5px 0;
     display: block;
     background: rgb(0,91,159); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(0,91,159,1) 0%, rgba(13,132,199,1) 100%); /* FF3.6+ */
@@ -286,8 +288,7 @@ body {
 }
 
 #uiContainerWrapper {
-    margin-top: 42px;
-    padding: 0;
+    margin-top: 38px;
 }
 
 #sideBar {
@@ -304,6 +305,7 @@ body {
 
 .borderLineRight {
     border-right: 1px solid #CCCCCC;
+    margin-top: 5px;
 }
 
 .borderLineLeft {
@@ -331,6 +333,7 @@ body {
     padding: 0;
     border: none;
 }
+
 /*Nav*/
 .uiVerticalNav {
     overflow: hidden;
@@ -456,6 +459,7 @@ body {
 
 .topNavIcon1-logo {
     background-position: 0 0;
+    width: 165px;
 }
 
 .topNavIcon1-home {
@@ -1013,7 +1017,7 @@ body {
 }
 
 .uiMainContainer .ink-tabs .tabs-content {
-    padding-top: 1.5em;
+    padding-top: 1em;
     border-left: 1px solid #cccccc;
     border-right: 1px solid #cccccc;
     border-bottom: 1px solid #cccccc;
@@ -1026,7 +1030,7 @@ body {
 }
 
 .uiPostArea {
-    padding: 0 20px;
+    padding: 0 10px 5px;
 }
 
 .uiPostStatusArea .ink-form fieldset {
@@ -1037,9 +1041,11 @@ body {
     margin-bottom: 0;
 }
 
-.uiPostStatusArea textarea {
+.uiPostStatusArea textarea, .uiPostPhotoArea textarea {
     border-radius: 0;
     border: none;
+    box-shadow: none !important;
+    width: 100%;
 }
 
 .uiPostStatusArea .uiBox-PopUp {
@@ -1790,13 +1796,15 @@ body {
 }
 
 .uiMainColAbout {
-    margin-top: 10px;
+    margin-top: 50px;
 }
 
 .uiBoxTitle {
-    background-color: #f6f7f8;
     font-size: 14px;
-    border: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+}
+.uiBoxTitle h2{
+    font-size: 24px;
 }
 
 .leftAboutCol {
@@ -1862,7 +1870,16 @@ body {
 .uiRightPhotoTab {
     padding: 2px 0;
 }
-
+.uiPhotoWrapper{
+    background-color:#F6F7F8;
+    border:1px solid #E4E4E4;
+}
+.uiPhotoWrapper .photoAll{
+    float: left;
+    background-color: #fff;
+    padding: 5px;
+    width:100%;
+}
 .uiPhotoWrapper .uiPhotoContainer {
     margin-top: 10px;
     box-shadow: none;
@@ -1895,20 +1912,21 @@ body {
     margin: 10px;
 }
 
-.uiPostPhotoArea .uiPhotoActionsBox {
+/*.uiPostPhotoArea .uiPhotoActionsBox {
     height: 65px;
     margin: 0 0 10px;
     box-shadow: none;
     padding: 5px;
+}*/
+.photoBoxArrow div:hover{
+    background-color: #ddd;
 }
 
-.uiUploadPhotoBox:hover, .uiCreateAlbumBox:hover {
-    background-color: #DEE4F0;
-}
 
 .uiUploadPhotoBox, .uiCreateAlbumBox {
-    padding: 20px;
-    font-size: 14px;
+    padding: 30px ;
+    margin-top: 5px;
+    font-size: 13px;
     cursor: pointer;
 }
 
@@ -1930,21 +1948,52 @@ body {
     -moz-column-break-inside: avoid;
     column-break-inside: avoid;
     padding: 10px;
-    padding-bottom: 5px;
     background: -webkit-linear-gradient(45deg, #FFF, #F9F9F9);
     opacity: 1;
     -webkit-transition: all .2s ease;
     -moz-transition: all .2s ease;
     -o-transition: all .2s ease;
     transition: all .2s ease;
+    width:95%;
 }
 
 .photoItems, .viewAllComments {
     cursor: pointer;
 }
+.photoItems{
+    margin: 5px;
+    position: relative;
+}
+.photoItems .action{
 
+}
+.photoItems .num{
+    position: absolute;
+    right:10px;
+    bottom:10px;
+    color: #fff;
+}
+.photoItems .num div{
+    float: left;
+    margin-left: 10px;
+}
+.photoItems .action a.likePhoto{
+    position: absolute;
+    left:5px;
+    bottom:10px;
+}
+.photoItems .action a.commentPhoto{
+    position: absolute;
+    left:50px;
+    bottom:10px;
+}
+.photoItems .action a{
+    margin-left: 10px;
+    color: #fff;
+}
 .photoItems img {
     width: 100%;
+    height: 200px;
 }
 
 .pinItems p {
@@ -2035,8 +2084,7 @@ body {
     /*width: 100%;
     height: 100%;*/
     position: relative;
-    border: 1px solid #E4E4E4;
-    box-shadow: 2px 2px 2px #ECECEC;
+    border-top: 1px solid #E4E4E4;
 }
 
 .uiBox-PopUp:after {
@@ -2054,7 +2102,6 @@ body {
     position: absolute;
     width: 0;
 }
-
 .bottomCenterArrow:after {
     border-width: 10px;
     border-top-color: #fff;
@@ -2326,7 +2373,7 @@ body {
 
 .photoWrap {
     float: left;
-    padding: 0px 10px 10px;
+    padding: 0px;
 }
 
 .loadedPhoto {
@@ -2699,7 +2746,7 @@ body {
     pointer-events: auto;
 }
 .float-right{
-    float: right
+    float: right !important;
 }
 .float-left{
     float: left
@@ -2712,11 +2759,17 @@ body {
 }
 .loading-bar{
     margin-top: 10px;
-    background-color: #ddd;
     cursor: inherit;
-    border:1px solid #ccc;
-    text-align:center; 
     padding:10px 0;
+    position: relative;
+}
+.loading-bar div{
+    background: url(../images/iconloading.gif);
+    width:98px;
+    height: 15px;
+    position: absolute;
+    top:0;
+    left:43%;
 }
 .footerDialog{
     padding: 8px;
@@ -2748,16 +2801,126 @@ body {
     font-size: 14px;
 }
 
-.topBarGroup .button span.icon {
-    margin: 0 3px;
-}
-
-.topBarGroup .button {
-    padding: 5px 2px 4px 2px;
-}
 
 .actionCoverGroup {
     position: absolute;
     top: 20px;
     right: 20px;
+}
+.loadingUpload{
+    background: url(../images/iconloading.gif);
+    width:98px;
+    height: 15px;
+
+}
+.viewUpload{
+    padding: 10px 0;
+}
+.album{
+    margin: 20px 0;
+}
+.box {
+    display:none;
+    width: 130%;
+    z-index: 9999;
+    border: 1px solid #ddd;
+    background: #fff;
+    position: absolute;
+    left:-30px;
+}
+
+
+.viewComment{
+    max-height: 170px;
+    padding:0 5px;
+}
+.viewComment .mCSB_draggerRail{
+    display: none
+}
+.viewComment:hover .mCSB_draggerRail{
+    display: block
+}
+.viewComment li{
+    overflow: hidden;
+    width: 100%;
+}
+.viewComment li div.avatar{
+    width:30px; height: 30px; float: left; margin-right: 5px
+}
+.viewComment li div.content{
+    line-height: 15px;
+    overflow: hidden;
+}
+.viewComment li .fullName{
+    color:#0069D6; margin-left: 0; font-weight: bold; font-size: 12px
+}
+.viewComment li div.content p{
+    padding:3px 0;
+}
+.viewComment li div.content p a{
+    color:rgba(0,0,0,0.4); margin-left: 0
+}
+.menuClick{
+    float: left;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+.menuClick a {
+    float: left;
+    width: 100%;
+    display:block;
+    cursor:pointer; 
+    text-decoration:none;
+}
+.menuClick div.divmenu { 
+    display:none;
+    list-style:none;
+    position:absolute;
+    min-width:150px; 
+    left:auto;
+    right:0; 
+    top:27px;
+    border:1px solid #ccc;
+    cursor:pointer;
+    z-index: 999999;
+    background-color: #fff;
+}
+.menuClick div.divarrow { 
+    display:none;
+    position:absolute;
+    min-width:150px; 
+    left:auto;
+    right:0; 
+    top:27px;
+    cursor:pointer;
+    z-index: 999999;
+}
+
+.friendButton
+{
+    display: inline;
+    float: left;
+}
+.friendButton div div.info{
+    display:none;
+    position:absolute;
+    top: 27px;
+    right: 0;
+    color:#fff;
+    z-index: 999999;
+    margin: 0;
+    padding: 0;
+
+}
+.friendButton div:hover div.info{
+    display:block;
+    padding:0 10px;
+}
+.menu_arrow{
+    border: 1px solid #d4d4d4;
+    background-color: #fff;
+    margin-top: 10px !important;
+    margin-right: -10px !important; 
+    min-width: 150px
 }

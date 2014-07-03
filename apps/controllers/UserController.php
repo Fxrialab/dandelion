@@ -504,7 +504,7 @@ class UserController extends AppController
     {
         if ($this->isLogin())
         {
-            $this->layout = "other";
+            $this->layout = "timeline";
 
             $username = $this->f3->get('GET.user');
             $currentUser = $this->getCurrentUser();

@@ -58,15 +58,15 @@ class HomeController extends AppController
             $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
             $obj = new ObjectHandler();
             $obj->owner = $this->getCurrentUser()->recordID;
-            if ($_POST['type'] == 'group')
-            {
-                $obj->type = $_POST['type'];
-                $obj->typeID = $_POST['typeID'];
-            }
-            else
-            {
-                $obj->type = 'post';
-            }
+//            if ($_POST['type'] == 'group')
+//            {
+//                $obj->type = $_POST['type'];
+//                $obj->typeID = $_POST['typeID'];
+//            }
+//            else
+//            {
+//                $obj->type = 'post';
+//            }
 
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);

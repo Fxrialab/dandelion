@@ -1,4 +1,7 @@
 <script type="text/javascript" src="<?php echo $JS; ?>customs/about.js"></script>
+<div class="arrow_timeLineMenuNav">
+    <div class="arrow_timeLine" style="left: 10%"></div>
+</div>
 <div class="uiMainColAbout">
     <div class="uiAboutBox">
         <div class="uiBoxTitle large-100">

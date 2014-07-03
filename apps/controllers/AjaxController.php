@@ -14,24 +14,51 @@ class AjaxController extends AppController
         return Model::get('photo')->find($id);
     }
 
-    //Upload image cover User
+    //Upload image Post and Comment
+    public function upload()
+    {
+        if ($this->isLogin())
+        {
+            $outPutDir = UPLOAD;
+            $data = array(
+                'results' => array(),
+                'success' => false,
+                'error' => ''
+            );
+            if (!empty($_FILES["myfile"]))
+            {
+                $fileName = $_FILES["myfile"]["name"][0];
+                $tmpname = $_FILES["myfile"]['tmp_name'][0];
+                $size = $_FILES["myfile"]['size'][0];
+                list($name, $ext) = explode(".", $fileName);
+                $newName = uniqid();
+                list($width, $height) = getimagesize($tmpname);
+                if (move_uploaded_file($_FILES["myfile"]["tmp_name"][0], $outPutDir . $newName . '.' . $ext))
+                    $data['results'][] = array('imgID' => $newName, 'url' => UPLOAD_URL . $newName . '.' . $ext, 'name' => $newName . '.' . $ext, 'width' => $width, 'height' => $height);
+            }
+            header("Content-Type: application/json; charset=UTF-8");
+            echo json_encode((object) $data);
+        }
+    }
+
+//Upload image cover User
     public function uploadCover()
     {
         if ($this->isLogin())
         {
-            $coverDir   = UPLOAD . "cover/750px";
-            $avatarDir  = UPLOAD . "avatar/170px";
-            $thumbnailDir   = UPLOAD. "thumbnails/150px";//The folder will display like gallery images on "Choose from my photos"
+            $coverDir = UPLOAD . "cover/750px";
+            $avatarDir = UPLOAD . "avatar/170px";
+            $thumbnailDir = UPLOAD . "thumbnails/150px"; //The folder will display like gallery images on "Choose from my photos"
 
             if (isset($_FILES["myfile"]))
             {
                 if (!is_array($_FILES["myfile"]['name'])) //single file
                 {
-                    $file   = $_FILES["myfile"];
-                    $newName= time();
+                    $file = $_FILES["myfile"];
+                    $newName = time();
                     $this->changeImage($file, 150, $thumbnailDir, $newName, 80, false);
                     $this->changeImage($file, 170, $avatarDir, $newName, 100, false);
-                    $image  = $this->changeImage($file, 750, $coverDir, $newName, 100, true);
+                    $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true);
 
                     $this->f3->set('image', $image);
                     $this->f3->set('target', 'uploadCover');
@@ -46,19 +73,19 @@ class AjaxController extends AppController
     {
         if ($this->isLogin())
         {
-            $coverDir   = UPLOAD . "cover/750px";
-            $avatarDir  = UPLOAD . "avatar/170px";
-            $thumbnailDir   = UPLOAD. "thumbnails/150px";//The folder will display like gallery images on "Choose from my photos"
+            $coverDir = UPLOAD . "cover/750px";
+            $avatarDir = UPLOAD . "avatar/170px";
+            $thumbnailDir = UPLOAD . "thumbnails/150px"; //The folder will display like gallery images on "Choose from my photos"
 
             if (isset($_FILES["myfile"]))
             {
                 if (!is_array($_FILES["myfile"]['name'])) //single file
                 {
-                    $file   = $_FILES["myfile"];
-                    $newName= time();
+                    $file = $_FILES["myfile"];
+                    $newName = time();
                     $this->changeImage($file, 150, $thumbnailDir, $newName, 80, false);
                     $this->changeImage($file, 750, $coverDir, $newName, 100, false);
-                    $image  = $this->changeImage($file, 170, $avatarDir, $newName, 100, true);
+                    $image = $this->changeImage($file, 170, $avatarDir, $newName, 100, true);
 
                     $this->f3->set('image', $image);
                     $this->f3->set('target', 'uploadAvatar');
@@ -92,7 +119,9 @@ class AjaxController extends AppController
                     $updateUser = array(
                         'profilePic' => 'none',
                     );
-                }else {
+                }
+                else
+                {
                     $updateUser = array(
                         'coverPhoto' => 'none',
                     );
@@ -117,23 +146,25 @@ class AjaxController extends AppController
                 $updateUser = array(
                     'profilePic' => $_POST['avatar']
                 );
-            }else {
-                $target     = $_POST['target'];
-                $file       = $_POST['coverFile'];
-                $width      = $_POST['width'];
-                $height     = $_POST['height'];
-                $dragX      = $_POST['dragX'];
-                $dragY      = $_POST['dragY'];
+            }
+            else
+            {
+                $target = $_POST['target'];
+                $file = $_POST['coverFile'];
+                $width = $_POST['width'];
+                $height = $_POST['height'];
+                $dragX = $_POST['dragX'];
+                $dragY = $_POST['dragY'];
                 switch ($target)
                 {
                     case 'isReposition':
-                        $photoID= $file;
-                        $entry  = array(
-                            'dragX'     => $dragX,
-                            'dragY'     => $dragY,
-                            'type'      => 'cover'
+                        $photoID = $file;
+                        $entry = array(
+                            'dragX' => $dragX,
+                            'dragY' => $dragY,
+                            'type' => 'cover'
                         );
-                        $this->facade->updateByAttributes('photo', $entry, array('@rid'=>'#'.$photoID));
+                        $this->facade->updateByAttributes('photo', $entry, array('@rid' => '#' . $photoID));
                         $updateUser = array(
                             'coverPhoto' => $photoID,
                         );
@@ -142,19 +173,21 @@ class AjaxController extends AppController
                         if ($_POST['chooseBy'])
                         {
                             $type = $_POST['chooseBy'];
-                            $photo = $this->facade->findByAttributes('photo', array('fileName'=>$file));
-                            $photoID= $photo->recordID;
-                            $entry  = array(
-                                'dragX'     => $dragX,
-                                'dragY'     => $dragY
+                            $photo = $this->facade->findByAttributes('photo', array('fileName' => $file));
+                            $photoID = $photo->recordID;
+                            $entry = array(
+                                'dragX' => $dragX,
+                                'dragY' => $dragY
                             );
-                            $this->facade->updateByAttributes('photo', $entry, array('@rid'=>'#'.$photoID));
+                            $this->facade->updateByAttributes('photo', $entry, array('@rid' => '#' . $photoID));
                             if ($type == 'cover')
                             {
                                 $updateUser = array(
                                     'coverPhoto' => $photoID,
                                 );
-                            }else {
+                            }
+                            else
+                            {
                                 $updateUser = array(
                                     'profilePic' => $photoID,
                                 );
@@ -163,20 +196,20 @@ class AjaxController extends AppController
                         break;
                     case 'uploadCover':
                         $entry = array(
-                            'actor'     => $currentUser->recordID,
-                            'album'     => '',
-                            'fileName'  => $file,
-                            'width'     => $width,
-                            'height'    => $height,
-                            'dragX'     => $dragX,
-                            'dragY'     => $dragY,
+                            'actor' => $currentUser->recordID,
+                            'album' => '',
+                            'fileName' => $file,
+                            'width' => $width,
+                            'height' => $height,
+                            'dragX' => $dragX,
+                            'dragY' => $dragY,
                             'thumbnail_url' => '',
-                            'description'   => '',
-                            'numberLike'    => '0',
+                            'description' => '',
+                            'numberLike' => '0',
                             'numberComment' => '0',
-                            'statusUpload'  => 'uploaded',
-                            'published'     => time(),
-                            'type'          => 'cover'
+                            'statusUpload' => 'uploaded',
+                            'published' => time(),
+                            'type' => 'cover'
                         );
                         $photoID = $this->facade->save('photo', $entry);
                         $updateUser = array(
@@ -185,20 +218,20 @@ class AjaxController extends AppController
                         break;
                     case 'uploadAvatar':
                         $entry = array(
-                            'actor'     => $currentUser->recordID,
-                            'album'     => '',
-                            'fileName'  => $file,
-                            'width'     => $width,
-                            'height'    => $height,
-                            'dragX'     => $dragX,
-                            'dragY'     => $dragY,
+                            'actor' => $currentUser->recordID,
+                            'album' => '',
+                            'fileName' => $file,
+                            'width' => $width,
+                            'height' => $height,
+                            'dragX' => $dragX,
+                            'dragY' => $dragY,
                             'thumbnail_url' => '',
-                            'description'   => '',
-                            'numberLike'    => '0',
+                            'description' => '',
+                            'numberLike' => '0',
                             'numberComment' => '0',
-                            'statusUpload'  => 'uploaded',
-                            'published'     => time(),
-                            'type'          => 'avatar'
+                            'statusUpload' => 'uploaded',
+                            'published' => time(),
+                            'type' => 'avatar'
                         );
                         $photoID = $this->facade->save('photo', $entry);
                         $updateUser = array(
@@ -218,15 +251,17 @@ class AjaxController extends AppController
     {
         if ($this->isLogin())
         {
-            $photoID    = $_POST['id'];
+            $photoID = $_POST['id'];
             $photo = $this->facade->findByPk('photo', $photoID);
-            $image = array('name'=>$photo->data->fileName, 'width'=>$photo->data->width, 'height'=>$photo->data->height);
+            $image = array('name' => $photo->data->fileName, 'width' => $photo->data->width, 'height' => $photo->data->height);
             $this->f3->set('image', $image);
             $this->f3->set('target', 'choosePhoto');
             if ($_POST['role'] == 'avatar')
             {
                 $this->render('ajax/confirmAvatar.php', 'ajax');
-            }else{//when role such as cover
+            }
+            else
+            {//when role such as cover
                 $this->render('ajax/confirmPhoto.php', 'ajax');
             }
         }
@@ -243,12 +278,12 @@ class AjaxController extends AppController
         }
     }
 
-    //    Cancel
+//    Cancel
     public function cancel()
     {
         if ($this->isLogin())
         {
-            $user   = $this->facade->findByPk('user', $this->f3->get('SESSION.userID'));
+            $user = $this->facade->findByPk('user', $this->f3->get('SESSION.userID'));
             $target = $_POST['target'];
             if (!empty($target))
             {
@@ -256,39 +291,44 @@ class AjaxController extends AppController
                 {
                     if ($user->data->coverPhoto != 'none')
                     {
-                        $photo  = $this->facade->findByPk('photo', $user->data->coverPhoto);
+                        $photo = $this->facade->findByPk('photo', $user->data->coverPhoto);
                         echo json_encode(array(
-                            'username'  => $user->data->username,
-                            'src'       => UPLOAD_URL ."cover/750px/". $photo->data->fileName,
-                            'width'     => $photo->data->width,
-                            'height'    => $photo->data->height,
-                            'left'      => $photo->data->dragX,
-                            'top'       => $photo->data->dragY,
-                            'photoID'   => $photo->recordID,
-                        ));
-                    }else {
-                        echo json_encode(array(
-                            'username'  => $user->data->username,
-                            'src'       => false
+                            'username' => $user->data->username,
+                            'src' => UPLOAD_URL . "cover/750px/" . $photo->data->fileName,
+                            'width' => $photo->data->width,
+                            'height' => $photo->data->height,
+                            'left' => $photo->data->dragX,
+                            'top' => $photo->data->dragY,
+                            'photoID' => $photo->recordID,
                         ));
                     }
-                }elseif ($target == 'profilePic') {
+                    else
+                    {
+                        echo json_encode(array(
+                            'username' => $user->data->username,
+                            'src' => false
+                        ));
+                    }
+                }
+                elseif ($target == 'profilePic')
+                {
                     if ($user->data->profilePic != 'none')
                     {
-                        $photo  = $this->facade->findByPk('photo', $user->data->profilePic);
+                        $photo = $this->facade->findByPk('photo', $user->data->profilePic);
                         echo json_encode(array(
-                            'username'  => $user->data->username,
-                            'src'       => UPLOAD_URL ."avatar/170px/". $photo->data->fileName,
+                            'username' => $user->data->username,
+                            'src' => UPLOAD_URL . "avatar/170px/" . $photo->data->fileName,
                         ));
-                    }else {
+                    }
+                    else
+                    {
                         echo json_encode(array(
-                            'username'  => $user->data->username,
-                            'src'       => UPLOAD_URL ."avatar/170px/avatarMenDefault.png",
+                            'username' => $user->data->username,
+                            'src' => UPLOAD_URL . "avatar/170px/avatarMenDefault.png",
                         ));
                     }
                 }
             }
-
         }
     }
 

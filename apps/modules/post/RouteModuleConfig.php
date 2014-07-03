@@ -11,6 +11,7 @@ class RouteModuleConfig {
         'moreComment_POST' => "PostController",
         'shareStatus_POST' => "PostController",
         'insertStatus_POST' => "PostController",
+        'deleteImage_POST' => "PostController",
         'detailStatus_GET' => "PostController",
         'delete_POST' => "PostController",
         'postWrap_POST' => "ElementController",

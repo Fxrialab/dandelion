@@ -20,18 +20,19 @@ if (!empty($group))
                 </div>
             </div>
             <div class="large-5">
-                <div class="tiptip">
-                    <div class="dropdown">
-                        <a title="Setting" class="button"><span class="icon icon96"></span></a>
-                        <div class="dropdown-slider w120">
-                            <a href="#1" class="ddm"><span class="label">Edit Notification Settings</span></a>
-                            <a class="ddm" id="leaveGroup" rel="<?php echo str_replace(":", "_", $group->recordID) ?>" href="/content/group/leave" title="<?php echo $group->data->name ?>"><span class="label"> Leave Group</span></a>
-                        </div> <!-- /.dropdown-slider -->
-                    </div> <!-- /.dropdown -->
-                </div>   
-
+                <div class="menuClick">
+                    <a id="linkSetting<?php echo $key ?>" class="button icon settings"></a>
+                    <div id="divSetting<?php echo $key ?>" class="divmenu">
+                        <nav class="ink-navigation">
+                            <ul class="menu vertical ">
+                                <li><a href="#1">Edit Notification Settings</a></li>
+                                <li><a id="leaveGroup" rel="<?php echo str_replace(":", "_", $value->data->groupID) ?>" href="/content/group/leave" title="<?php echo $group->data->name ?>">Leave Group</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-<?php
+    <?php
 }?>

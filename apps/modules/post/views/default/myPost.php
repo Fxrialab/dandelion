@@ -8,11 +8,15 @@
             delay: 500, // When you scroll down the posts will load after a delayed amount of time.
             // This is mainly for usability concerns. You can alter this as you see fit
             scroll: true // The main bit, if set to false posts will not load as the user scrolls.
-            // but will still load if the user clicks.
+                    // but will still load if the user clicks.
         });
         $('#typeActivity').html('<input type=hidden id=type name=type value=post >');
     });
 </script>
+<div class="arrow_timeLineMenuNav">
+    <div class="arrow_timeLine"></div>
+</div>
+
 <div class="uiMainColProfile large-70">
     <div class="uiMainContainer">
         <?php
@@ -22,7 +26,7 @@
         <input name="profileID" id="profileID" type="hidden" value="<?php echo $this->f3->get('SESSION.userID'); ?>">
         <div class="wrapperContainer">
             <div id="contentContainer">
-            <!--Loading all post on here-->
+                <!--Loading all post on here-->
             </div>
         </div>
     </div>

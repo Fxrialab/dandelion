@@ -1,7 +1,7 @@
 
 <div class="uiLeftCol large-20">
     <div class="uiBoxProfile column-group">
-        <div class="uiProfilePic large-30"><a href="">
+        <div class="uiProfilePic large-30"><a href="/content/post?user=<?php echo $this->f3->get('SESSION.username'); ?>">
                 <img src="<?php echo $this->f3->get('SESSION.avatar'); ?>" width="50" height="50"></a></div>
         <div class="uiProfileInfo large-70">
             <p class="fixMarginBottom-5"><a href=""><?php echo $this->f3->get('SESSION.fullname'); ?></a></p>

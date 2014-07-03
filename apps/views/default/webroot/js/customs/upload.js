@@ -6,9 +6,13 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: false,
+        onBeforeSend: function() {
+            $('.ajax-file-upload-statusbar').hide();
+            $(".msg").html("<div class='loadingUpload'></div>");
+        },
         onSuccess: function(files, data, xhr)
         {
-            $('.ajax-file-upload-statusbar').fadeOut('slow');
+            $(".msg").html("");
             $('.displayPhoto').html(data);
             $('.actionCover').css('display', 'none');
             //$("#navCoverPhotoGroupTemplate").tmpl(data).appendTo(".displayPhoto");
@@ -52,9 +56,12 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: false,
+        onBeforeSend: function() {
+            $('.ajax-file-upload-statusbar').hide();
+            $(".msg").html("<div class='loadingUpload'></div>");
+        },
         onSuccess: function(files, data, xhr)
         {
-            $('.ajax-file-upload-statusbar').fadeOut('slow');
             $.each(data.results, function() {
                 console.log(this.url);
                 $('#displayPhotoGroup').html("<div id='photoItem-" + this.photoID + "'>" +
@@ -70,84 +77,65 @@ $(document).ready(function()
         }
     };
     var settingMultiFiles = {
-        url: "/content/photo/loadingPhoto",
+        url: "/upload",
         method: "POST",
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: true,
+        onBeforeSend: function() {
+            $('.ajax-file-upload-statusbar').hide();
+            $(".msg").html("<div class='loadingUpload'></div>");
+        },
         onSuccess: function(files, data, xhr)
         {
             $('.ajax-file-upload-statusbar').fadeOut('slow');
+            $(".msg").html('');
             $.each(data.results, function() {
-                console.log(this.url);
-                $('#embedPhotos').append("<div class='photoWrap' id='photoItem-" + this.photoID + "'>" +
-                        "<input type='hidden' id ='imgID' name='imgID[]' value='" + this.photoID + "'/>" +
-                        "<img src='" + this.url + "' title='" + this.fileName + "'/>" +
-                        "</div>");
-                $('#removePhoto' + this.photoID).click(function() {
-                    var photoID = $(this).attr('id').replace('removePhoto', '');
-                    console.log(photoID);
-                    $.ajax({
-                        type: 'POST',
-                        url: '/content/photo/removePhoto',
-                        data: {photoID: photoID},
-                        cache: false,
-                        success: function() {
-                            $('#photoItems-' + photoID).detach();
-                        }
-                    });
-                });
+                $("#imgTemplate").tmpl(data.results).appendTo("#embedPhotos");
             });
             new Hover();
         },
         onError: function(files, status, errMsg)
         {
-            $("#status").html("<font color='red'>Upload is Failed</font>");
+            $("#status").html("Upload is Failed");
         }
     };
     var settingMultiFiles2 = {
-        url: "/content/photo/loadingPhoto",
+        url: "/upload",
         method: "POST",
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: true,
+        onBeforeSend: function() {
+            $(".viewUpload").show();
+            $('.ajax-file-upload-statusbar').hide();
+            $(".msg").html("<div class='loadingUpload'></div>");
+            $(".photoBoxArrow").hide();
+            $(".postPhoto").show();
+            $("#statusPhoto").show();
+        },
         onSuccess: function(files, data, xhr)
         {
-            $('.ajax-file-upload-statusbar').fadeOut('slow');
+            $(".msg").html("");
             $.each(data.results, function() {
-                console.log(this.url);
-                $('#displayPhotos').append("<div class='photoWrap' id='photoItem" + this.photoID + "'>" +
-                        "<div class='loadedPhoto' id='photo" + this.photoID + "'>" +
-                        "<img src='" + this.url + "' title='" + this.fileName + "'/>" +
-                        "</div> " +
-                        "</div>");
-                $('#removePhoto' + this.photoID).click(function() {
-                    var photoID = $(this).attr('id').replace('removePhoto', '');
-                    console.log(photoID);
-                    $.ajax({
-                        type: 'POST',
-                        url: '/content/photo/removePhoto',
-                        data: {photoID: photoID},
-                        cache: false,
-                        success: function() {
-                            $('#photoItems-' + photoID).detach();
-                        }
-                    });
-                });
+                $("#imgTemplate2").tmpl(data.results).appendTo(".viewUpload");
             });
             new Hover();
         },
         onError: function(files, status, errMsg)
         {
-            $("#status").html("<font color='red'>Upload is Failed</font>");
+            $(".imgUpload").html("Upload is Failed");
         }
     };
+
+
+
     $("#uploadAvatar").uploadFile(uploadAvatar);
     $("#uploadPhotoCover").uploadFile(uploadPhotoSingleFile);
     $("#uploadPhotoGroup").uploadFile(uploadPhotoGroup);
     $("#singleFile").uploadFile(settingSingleFile);
     $("#multiFiles").uploadFile(settingMultiFiles);
     $("#multiFiles2").uploadFile(settingMultiFiles2);
-
-
+    $("#multiFiles3").uploadFile(settingMultiFiles2);
+   
 });
