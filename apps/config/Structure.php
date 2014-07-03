@@ -42,9 +42,10 @@ define ('UPLOAD_URL', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS . 'w
 define ('VENDORS', DOCUMENT_ROOT . 'vendors' . DS);
 define ('MODEL_UTILS', VENDORS . 'fxrialab' . DS . 'ModelUtils' . DS);
 define ('FACTORY_UTILS', VENDORS . 'fxrialab' . DS . 'FactoryUtils' . DS);
+define ('SERVICE_UTILS', VENDORS . 'fxrialab' . DS . 'ServiceUtils' . DS);
 define ('FACADE', VENDORS . 'fxrialab' . DS . 'Facade' . DS);
 define ('ORIENTDB', VENDORS . 'OrientDB' . DS);
-//define ('AMQP', VENDORS . 'PhpAmqpLib' . DS);
+define ('AMQP', VENDORS . 'Amqp' . DS);
 define ('SYMFONY_LOADER', VENDORS . "Symfony/Component/ClassLoader" . DS);
 //define ('AMQCONFIG', DOCUMENT_ROOT. 'vendors' . DS . 'php-amqplib' . DS. 'vendor'.DS);
 
