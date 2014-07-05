@@ -9,6 +9,7 @@
 require_once dirname(__DIR__) . "/config/Structure.php";
 
 require_once FACADE . "DataFacade.php";
+require_once FACADE . "AMQFacade.php";
 require_once MODEL_UTILS . "ObjectHandler.php";
 require_once FACTORY_UTILS . "FactoryUtils.php";
 
@@ -24,9 +25,11 @@ class Controller
     {
         $f3 = Base::instance();
         $facade = new DataFacade();
+        $amq    = new AMQFacade();
 
         $this->f3 = $f3;
         $this->facade = $facade;
+        $this->service = $amq;
         $this->_mergeVars(array("uses", "helpers"));
         $this->loadHelpers();
         //$this->loadModels();
