@@ -12,10 +12,10 @@
     background: #FFF;
     border: solid 1px #DDD;
     border: solid 1px rgba(0, 0, 0, .2);
-    border-radius: 6px;
+    border-radius: 3px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
     overflow: visible;
-    padding: 4px 0;
+    padding: 0;
     margin: 0;
 }
 
@@ -43,8 +43,18 @@
     left: auto;
     right: 9px;
 }
-
-
+.dropdown.dropdown-tip.dropdown-right-option:before {
+    right: 14px !important;
+}
+.dropdown.dropdown-tip.dropdown-comment:before {
+    left: 80px !important;
+}
+.dropdown.dropdown-tip.dropdown-comment-right:before {
+    left: 140px !important;
+}
+.dropdown.dropdown-tip.dropdown-friend:before {
+    left: 262px !important;
+}
 .dropdown.dropdown-tip:after {
     position: absolute;
     top: -5px;
@@ -60,12 +70,33 @@
     left: auto;
     right: 10px;
 }
-
-.dropdown.dropdown-tip.dropdown-anchor-center:after {
-    left: auto;
-    right: 45%;
+.dropdown.dropdown-tip.dropdown-right-option:after {
+    right: 15px !important;
 }
-
+.dropdown.dropdown-tip.dropdown-comment:after {
+    left: 81px !important;
+}
+.dropdown.dropdown-tip.dropdown-comment-right:after {
+    left: 141px !important;
+}
+.dropdown.dropdown-tip.dropdown-friend:before {
+    left: 262px !important;
+}
+.dropdown.dropdown-tip.dropdown-friend:after {
+    left: 263px !important;
+}
+.dropdown.dropdown-tip.dropdown-message:before {
+    left: 311px !important;
+}
+.dropdown.dropdown-tip.dropdown-message:after {
+    left: 312px !important;
+}
+.dropdown.dropdown-tip.dropdown-notification:before {
+    left: 360px !important;
+}
+.dropdown.dropdown-tip.dropdown-notification:after {
+    left: 361px !important;
+}
 .dropdown.dropdown-scroll .dropdown-menu,
 .dropdown.dropdown-scroll .dropdown-panel {
     max-height: 358px;
@@ -108,4 +139,7 @@
     padding-left: 30px;
     background-position: 8px center;
     background-repeat: no-repeat;
+}
+.dropdown-menu li a div.ajax-upload-dragdrop label{
+    padding: 0 !important;
 }

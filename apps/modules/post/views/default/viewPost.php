@@ -12,11 +12,9 @@ $status_published = $status->data->published;
         <div class="large-10 uiActorPicCol">
             <a href="/content/post?user=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
         </div>
-        <div class="large-85 uiPostContent">
-            <div class="articleActorName fixMarginBottom-5">
+        <div class="large-85">
+            <div class="postContent">
                 <a href="/content/post?user=<?php echo $username ?>" class="timeLineLink"><?php echo $status->data->actorName; ?></a>
-            </div>
-            <div class="articleContentWrapper">
                 <div class="column-group">
                     <?php
                     if ($status_contentShare == 'none')
@@ -27,7 +25,7 @@ $status_published = $status->data->published;
                             if (is_bool($existLink))
                             {
                                 ?>
-                                <div class="textPostContainer fixMarginBottom-5">
+                                <div class="textPostContainer">
                                     <span class="textPost"><?php echo $status_content; ?></span>
                                 </div>
                                 <?php
@@ -38,7 +36,7 @@ $status_published = $status->data->published;
                                 $link = !empty($existSpace) ? substr($status_content, $existLink, $existSpace) : substr($status_content, $existLink);
                                 $htmlLink = "<a href='" . $link . "'>" . $link . "</a>";
                                 ?>
-                                <div class="textPostContainer fixMarginBottom-5">
+                                <div class="textPostContainer ">
                                     <span class="textPost"><?php echo str_replace($link, $htmlLink, $status_content); ?></span>
                                 </div>
                                 <?php
@@ -47,7 +45,7 @@ $status_published = $status->data->published;
                         else
                         {
                             ?>
-                            <div class="textPostContainer fixMarginBottom-5">
+                            <div class="textPostContainer">
                                 <span class="textPost">
                                     <?php
                                     if (!is_bool($existLink))
@@ -74,7 +72,7 @@ $status_published = $status->data->published;
                     else
                     {
                         ?>
-                        <div class="textPostContainer fixMarginBottom-5">
+                        <div class="textPostContainer">
                             <span class="textPost"><?php echo $status_contentShare; ?></span>
                             <div class="attachmentStatus">
                                 <span class="textPost"><?php echo $status_content; ?></span>
@@ -103,9 +101,7 @@ $status_published = $status->data->published;
                     }
                     ?>
                 </div>
-            </div>
-            <div class="articleSelectOption">
-                <div class="articleActions">
+                <div class="articleSelectOption">
                     <nav class="ink-navigation">
                         <ul class="menu horizontal">
                             <!--Like Segments-->
@@ -160,88 +156,83 @@ $status_published = $status->data->published;
                             </li>
                         </ul>
                     </nav>
-                </div>
-                <div class="postActionWrapper postItem-<?php echo $rpStatusID; ?> uiBox-PopUp boxLikeTopLeftArrow tempLike-<?php echo $rpStatusID; ?>">
-                    <?php
+                    <div class="postItem-<?php echo $rpStatusID; ?> uiBox-PopUp boxLikeTopLeftArrow tempLike-<?php echo $rpStatusID; ?> postItem">
+                        <?php
 //                    $records = $mod['comment'][$statusID];
-                    if ($status->data->numberLike > 0)
-                    {
-                        if ($status->data->numberLike == 'null')
+                        if ($status->data->numberLike > 0)
                         {
-                            ?>
-                            <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID; ?>">
-                                <span><i class="statusCounterIcon-like"></i><a href=""><?php echo $status->data->numberLike; ?></a> people like this.</span>
-                            </div>
-                            <?php
-                        }
-                        else
-                        {
-                            if ($status->data->numberLike == 1)
+                            if ($status->data->numberLike == 'null')
                             {
                                 ?>
                                 <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID; ?>">
-                                    <span><i class="statusCounterIcon-like"></i>You like this</span>
+                                    <span><i class="statusCounterIcon-like"></i><a href=""><?php echo $status->data->numberLike; ?></a> people like this.</span>
                                 </div>
                                 <?php
                             }
                             else
                             {
-                                ?>
-                                <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID; ?>">
-                                    <span><i class="statusCounterIcon-like"></i>You and <a href=""><?php echo $status->data->numberLike - 1; ?></a> people like this</span>
-                                </div>
-                                <?php
+                                if ($status->data->numberLike == 1)
+                                {
+                                    ?>
+                                    <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID; ?>">
+                                        <span><i class="statusCounterIcon-like"></i>You like this</span>
+                                    </div>
+                                    <?php
+                                }
+                                else
+                                {
+                                    ?>
+                                    <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID; ?>">
+                                        <span><i class="statusCounterIcon-like"></i>You and <a href=""><?php echo $status->data->numberLike - 1; ?></a> people like this</span>
+                                    </div>
+                                    <?php
+                                }
                             }
                         }
-                    }
-                    if ($activity->numberComment > 3)
-                    {
+                        if ($activity->numberComment > 3)
+                        {
+                            ?>
+                            <div class="whoCommentThisPost verGapBox" id="viewComments-<?php echo $rpStatusID; ?>">
+                                <span><i class="statusCounterIcon-comment"></i><a class="viewAllComments" id="<?php echo $rpStatusID; ?>">View all <?php echo $activity->numberComment; ?> comments</a></span>
+                            </div>
+                            <?php
+                        }
                         ?>
-                        <div class="whoCommentThisPost verGapBox" id="viewComments-<?php echo $rpStatusID; ?>">
-                            <span><i class="statusCounterIcon-comment"></i><a class="viewAllComments" id="<?php echo $rpStatusID; ?>">View all <?php echo $activity->numberComment; ?> comments</a></span>
+                        <div class="commentContentWrapper moreComment-<?php echo $rpStatusID ?>">
+                            <?php
+                            $f3 = require('viewComment.php');
+                            ?>
                         </div>
-                        <?php
-                    }
-                    ?>
-                    <div class="commentContentWrapper moreComment-<?php echo $rpStatusID ?>">
-                        <?php
-                        $f3 = require('viewComment.php');
-                        ?>
-                    </div>
-                    <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID ?>">
-                        <div class="large-10 uiActorCommentPicCol">
-                            <a href="/content/post?user=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
-                        </div>
-                        <div class="large-90 uiTextCommentArea">
-                            <form class="ink-form" id="fmComment-<?php echo $rpStatusID ?>">
-                                <fieldset>
-                                    <div class="control-group">
-                                        <div class="control">
-                                            <input name="postID" type="hidden" value="<?php echo $rpStatusID; ?>" />
-                                            <textarea name="comment" class="taPostComment submitComment" id="textComment-<?php echo $rpStatusID; ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
+                        <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID ?>">
+                            <div class="large-10 uiActorCommentPicCol">
+                                <a href="/content/post?user=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+                            </div>
+                            <div class="large-90 uiTextCommentArea">
+                                <form class="ink-form" id="fmComment-<?php echo $rpStatusID ?>">
+                                    <fieldset>
+                                        <div class="control-group">
+                                            <div class="control">
+                                                <input name="postID" type="hidden" value="<?php echo $rpStatusID; ?>" />
+                                                <textarea name="comment" class="taPostComment submitComment" id="textComment-<?php echo $rpStatusID; ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
+                                            </div>
                                         </div>
-                                    </div>
-                                </fieldset>
-                            </form>
+                                    </fieldset>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="large-5 uiPostOption">
-            <a href="" class="postOption info-<?php echo $rpStatusID; ?>" data-action=".optionPopUp"><i class="optionIcon-articlePost"></i></a>
-            <div class="uiPostOptionPopUpOver uiBox-PopUp topRightArrow infoOver-<?php echo $rpStatusID; ?>" data-target=".optionPopUp">
-                <nav class="ink-navigation">
-                    <ul class="menu vertical">
-                        <li><a class="test" href="#">Report this post</a></li>
-                        <li><a class="deleteAction" id="<?php echo $rpStatusID; ?>">Delete this post</a></li>
-                    </ul>
-                </nav>
+        <div class="large-5">
+            <a data-dropdown="#dropdown-<?php echo $rpStatusID; ?>"><i class="optionIcon-articlePost"></i></a>
+            <div id="dropdown-<?php echo $rpStatusID; ?>" class="dropdown dropdown-tip dropdown-anchor-right dropdown-right-option">
+                <ul class="dropdown-menu">
+                    <li><a class="test" href="#">Report this post</a></li>
+                    <li><a class="deleteAction" id="<?php echo $rpStatusID; ?>">Delete this post</a></li>
+                </ul>
             </div>
         </div>
+
     </div>
 </div>
-<script type="text/javascript">
-    //target show popUp
-    new showPopUpOver('a.info-<?php echo $rpStatusID; ?>', '.infoOver-<?php echo $rpStatusID; ?>');
-</script>

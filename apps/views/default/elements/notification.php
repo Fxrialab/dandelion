@@ -1,10 +1,10 @@
 <a data-dropdown="#dropdown-notification"><i class="icon30-setting"></i></a>
-<div id="dropdown-notification" class="dropdown dropdown-tip dropdown-anchor-right">
-    <ul class="dropdown-menu " style="width: 380px;" >
-        <li style="overflow: hidden; border-bottom: 1px solid #ccc; padding: 5px 10px">
+<div id="dropdown-notification" class="dropdown dropdown-tip dropdown-notification dropdown-topbar">
+    <ul class="dropdown-menu dropdown-menu-topbar">
+        <li class="top">
             <div class="control-group">
                 <div class="large-65">
-                    <h3>Notifications</h3>
+                    <h5>Notifications</h5>
                 </div>
                 <div class="large-35">
                     <div>
@@ -14,8 +14,8 @@
                 </div>
             </div>
         </li>
-        <div class="mCustomScrollbar" style="max-height: 390px">
-            <li style="overflow: hidden; border-bottom: 1px solid #ccc; padding: 5px 10px">
+        <div class="mCustomScrollbar scroll">
+            <li>
                 <div class="control-group">
                     <div class="large-15">
                         <img src="<?php echo $this->f3->get('SESSION.avatar'); ?>" width="50" height="50">
@@ -34,7 +34,7 @@
             </li>
 
         </div>
-        <li style="text-align: center">
+        <li class="bottom">
             <div>
                 <a href="#">See all</a>
             </div>

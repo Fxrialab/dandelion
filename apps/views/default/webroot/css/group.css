@@ -20,7 +20,7 @@
     padding: 0 !important;
 }
 .groupItem{
-    padding:5px; border-bottom: 1px solid #ccc
+    padding:5px 15px; border-bottom: 1px solid #ccc
 }
 .userItem{
     margin: 0 5px;
@@ -36,7 +36,7 @@
 }
 .topBarGroup{
     border: 1px solid #ccc; border-top: none;
-    padding: 10px 0;
+    padding: 10px 10px 10px 0;
 }
 .profileCover li a{
     padding: 0 !important;
@@ -66,12 +66,28 @@
     padding: 10px;
     line-height: 20px;
 }
+.permision{
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.permision li{
+    line-height: 15px !important;
+    margin: 0 !important;
+}
+.permision li label{
+    margin-top: -22px !important;
+    margin-left: 20px !important;
+    font-weight: bold;
+}
+.permision li label p{
+    margin-left: -20px !important;
+    line-height: 15px;
+    font-weight: normal;
+}
 .ink-form select, .ink-form textarea, .ink-form input[type="text"], .ink-form input[type="password"], .ink-form input[type="datetime"], .ink-form input[type="datetime-local"], .ink-form input[type="date"], .ink-form input[type="month"], .ink-form input[type="time"], .ink-form input[type="week"], .ink-form input[type="number"], .ink-form input[type="email"], .ink-form input[type="url"], .ink-form input[type="search"], .ink-form input[type="tel"], .ink-form input[type="color"] {
     padding: 5px !important;
 }
-.ink-form .control-group input[type="radio"] + label, .ink-form .control-group input[type="checkbox"] + label {
-    margin-top: -4px !important;
-}
+
 .loadingGroup{
     width: 50px;
     background-image: url('../images/loadingIcon.gif');

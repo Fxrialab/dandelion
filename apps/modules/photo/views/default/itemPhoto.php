@@ -7,16 +7,16 @@
         <div class="num"><div class="like_<?php echo $postPhotoID ?>"> 12 </div>  <div class="comment_<?php echo $postPhotoID ?>"> <?php echo $count ?> </div></div>
         <div class="action" id="<?php echo $photoID; ?>">
             <a href="javascript:void(0)" class="likePhoto">Like</a>
-            <a href="javascript:void(0)" rel="<?php echo $postPhotoID ?>" class="open commentPhoto" >Comment</a>
+            <a data-dropdown="#dropdown-c<?php echo $postPhotoID ?>" rel="<?php echo $postPhotoID ?>" class="open commentPhoto" >Comment</a>
             <?php
-            if ($count >= 4)
-                $height = 4 * 40 + 50;
+            if (($k + 1) % 3 == 0)
+                $right = 'dropdown-comment-right';
             else
-                $height = $count * 40 + 50;
+                $right = '';
             ?>
-            <div style=" height: <?php echo $height ?>px; bottom: -<?php echo $height ?>px" class="box" id="box_<?php echo $postPhotoID ?>">
-                <div class="arrow_box">
-                    <ul class="viewComment_<?php echo $postPhotoID ?> mCustomScrollbar viewComment">
+            <div id="dropdown-c<?php echo $postPhotoID ?>" class="dropdown dropdown-tip dropdown-comment <?php echo $right ?>">
+                <ul class="viewComment_<?php echo $postPhotoID ?>  viewComment dropdown-menu" style="width: 300px">
+                    <div class="mCustomScrollbar" style="max-height: 170px;">
                         <?php
                         if (!empty($comment))
                         {
@@ -39,18 +39,20 @@
                             }
                         }
                         ?>
-
-                    </ul>
-                    <div style="padding:0 5px 5px; margin: 0">
-                        <form id="form_<?php echo $postPhotoID; ?>">
-                            <div  style="width:30px; height: 30px; float: left;  margin-right: 5px">
-                                <img src="<?php echo IMAGES ?>/avatarMenDefault.png">
-                            </div>
-                            <input name="photoID" type="hidden" value="<?php echo $recordID; ?>" />
-                            <textarea style="width:255px; height: 30px" name="comment" class="submitCommentPhoto" id="photoComment-<?php echo $postPhotoID; ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
-                        </form>
                     </div>
-                </div>
+                    <li>
+                        <div style="padding:5px 0; margin: 0">
+                            <form id="form_<?php echo $postPhotoID; ?>">
+                                <div  style="width:30px; height: 30px; float: left;  margin-right: 5px">
+                                    <img src="<?php echo IMAGES ?>/avatarMenDefault.png">
+                                </div>
+                                <input name="photoID" type="hidden" value="<?php echo $recordID; ?>" />
+                                <textarea style="width:250px; height: 30px" name="comment" class="submitCommentPhoto" id="photoComment-<?php echo $postPhotoID; ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+
 
             </div>
         </div>

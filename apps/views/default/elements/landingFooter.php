@@ -1,11 +1,10 @@
 <div id="footerWrapper">
     <div class="ink-grid uiRelatedInfo">
         <div class="column-group">
-            <div class="large-80 medium-100 small-100 push-center">
-                <div class="large-40 medium-80 small-100 uiCopyRightDiv">
+                <div class="large-60 medium-80 small-100 uiCopyRightDiv">
                     <span class="">Copyright &copy; 2013 Dandelion</span>
                 </div>
-                <div class="large-50 medium-100 small-100 push-right">
+                <div class="large-40 push-right">
                     <nav class="ink-navigation">
                         <ul class="menu horizontal">
                             <li><a href="">Feedback</a></li>
@@ -22,7 +21,6 @@
                         </ul>
                     </nav>
                 </div>
-            </div>
         </div>
     </div>
 </div>

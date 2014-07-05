@@ -71,7 +71,6 @@ $rand = rand(100, 100000);
         <div class="uiPostArea column-group">
             <div class="uiPostStatusArea">
                 <form class="ink-form" id="submitFormStatus">
-                    <fieldset>
                         <div class="control-group">
                             <div class="uiBox-PopUp topLeftArrow control">
                                 <div id="typeActivity"></div>
@@ -104,14 +103,12 @@ $rand = rand(100, 100000);
                                 </ul>
                             </nav>
                         </div>
-                    </fieldset>
                 </form>
             </div>
         </div>
     </div>
     <div id="item2" class="tabs-content"> <!-- Item 2 -->
         <form id="submitFormPhoto">
-            <fieldset>
                 <div class="uiPostArea column-group">
                     <div class="uiPostPhotoArea">
                         <div class="content-center uiBox-PopUp photoBoxArrow">
@@ -148,7 +145,6 @@ $rand = rand(100, 100000);
                     </div>
 
                 </div>
-            </fieldset>
         </form>
     </div>
 </div>

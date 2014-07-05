@@ -10,7 +10,7 @@
     <div class="control-group column-group ">
         <label for="groupName" class="large-30 align-right">Group Name</label>
         <div class="control large-70">
-            <input type="text" id="groupName" name="groupName" class="large-100">
+            <input type="text" id="groupName" name="groupName" class="large-100" style="line-height:22px">
         </div>
     </div>
     <div class="control-group column-group" id="friends">
@@ -22,10 +22,18 @@
     </div>
     <div class="control-group column-group">
         <label for="groupPrivacy" class="large-30 align-right">Privacy</label>
-        <ul class="control unstyled large-70">
-            <li><input type="radio" id="privacy1" name="groupPrivacy" checked value="open"><label for="privacy1">Open</label></li>
-            <li><input type="radio" id="privacy2" name="groupPrivacy" value="closed"><label for="privacy2">Closed</label></li>
-            <li><input type="radio" id="privacy3" name="groupPrivacy" value="Secret"><label for="privacy3">Secret</label></li>
+        <ul class="control unstyled permision large-70">
+            <li><input type="radio" id="privacy1" name="groupPrivacy" checked value="open">
+                <label for="privacy1"> Open 
+                    <p>Anyone can see the group, who's in it, and what members post.</p>
+                </label>
+            </li>
+            <li><input type="radio" id="privacy2" name="groupPrivacy" value="closed"><label for="privacy2">Closed
+                    <p>Anyone can see the group and who's in it. Only members see posts</p>
+                </label></li>
+            <li><input type="radio" id="privacy3" name="groupPrivacy" value="Secret"><label for="privacy3">Secret
+                    <p>Only members see the group, who's in it, and what members post.</p></label></li>
+
         </ul>
     </div>
     <div class="footerDialog" >

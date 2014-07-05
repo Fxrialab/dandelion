@@ -112,26 +112,50 @@ if (jQuery)
                     trigger = dropdown.data('dropdown-trigger'),
                     hOffset = trigger ? parseInt(trigger.attr('data-horizontal-offset') || 0, 10) : null,
                     vOffset = trigger ? parseInt(trigger.attr('data-vertical-offset') || 0, 10) : null;
-
             if (dropdown.length === 0 || !trigger)
                 return;
-
             // Position the dropdown relative-to-parent...
             if (dropdown.hasClass('dropdown-relative')) {
                 dropdown.css({
                     left: dropdown.hasClass('dropdown-anchor-right') ?
-                            trigger.position().left - (dropdown.outerWidth(true) - trigger.outerWidth(true)) - parseInt(trigger.css('margin-right'), 15) + hOffset :
-                            trigger.position().left + parseInt(trigger.css('margin-left'), 15) + hOffset
+                            trigger.position().left - (dropdown.outerWidth(true) - trigger.outerWidth(true)) - parseInt(trigger.css('margin-right'), 10) + hOffset :
+                            trigger.position().left + parseInt(trigger.css('margin-left'), 10) + hOffset
                 });
             } else {
                 // ...or relative to document
-                dropdown.css({
-                    left: dropdown.hasClass('dropdown-anchor-right') ?
-                            trigger.offset().left - (dropdown.outerWidth() - trigger.outerWidth()) + hOffset : trigger.offset().left + hOffset
-                });
+                if (dropdown.hasClass('dropdown-topbar') == true) {
+                    dropdown.css({
+                        left: 605.5
+                    });
+
+                } else if (dropdown.hasClass('dropdown-comment-right') == true) {
+                    dropdown.css({
+                        left: -65
+                    });
+
+                } else {
+                    if (dropdown.hasClass('dropdown-anchor-right') == false) {
+                        dropdown.css({
+                            left: 0
+                        });
+                    } else {
+                        if (trigger.outerWidth() == 0) {
+                            dropdown.css({
+                                left: 683
+                            });
+                        } else {
+                            dropdown.css({
+                                left: dropdown.hasClass('dropdown-anchor-right') ?
+                                        trigger.offset().left - (dropdown.outerWidth() - trigger.outerWidth()) + hOffset : trigger.offset().left + hOffset
+                            });
+                        }
+                    }
+                }
+
+
             }
 
-          
+
         }
 
         $(document).on('click.dropdown', '[data-dropdown]', show);

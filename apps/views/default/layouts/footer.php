@@ -11,12 +11,9 @@
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/autoload.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery.autosize.min.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/blocksit.min.js"></script>
-<script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/popover.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery.timers-1.2.js"></script>
-<script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/dropDownStyle.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery.oembed.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tokeninput.js"></script>
-<script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tinyscrollbar.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tiptip.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.dropdown.js"></script>

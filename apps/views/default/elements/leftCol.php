@@ -1,4 +1,3 @@
-
 <div class="uiLeftCol large-20">
     <div class="uiBoxProfile column-group">
         <div class="uiProfilePic large-30"><a href="/content/post?user=<?php echo $this->f3->get('SESSION.username'); ?>">

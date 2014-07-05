@@ -32,8 +32,8 @@ foreach ($friends as $k => $value)
                         <div class="button icon approve"><span class="label">Friends</span></div>
                         <div class="info">
                             <nav class="ink-navigation">
-                                <ul class="menu vertical menu_arrow">
-                                    <div class="arrow_timeLine" style="left: 55%"></div>
+                                <ul class="menu vertical menu_arrow shadow">
+                                    <div class="arrow_menu" style="left: 50%"></div>
                                     <li><a href="#">Get Notifications</a></li>
                                     <li><a href="#">Close Friends</a></li>
                                     <li><a href="#">Suguest</a></li>
@@ -42,14 +42,6 @@ foreach ($friends as $k => $value)
                         </div>
                     </div>
                 </div>
-                <!--                <div class="menu" >
-                                    <a id="linkglobal<?php echo $k ?>" class="button icon approve">Friends</a>
-                                    <ul style="display: none;" id="ulglobal<?php echo $k ?>">
-                                        <li><a href="#">Get Notifications</a></li>
-                                        <li><a href="#">Close Friends</a></li>
-                                        <li><a href="#">Suguest</a></li>
-                                    </ul>
-                                </div>-->
             </div>
         </div>
     </div>

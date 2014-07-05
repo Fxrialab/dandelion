@@ -15,7 +15,7 @@ $photos = $this->f3->get('photos');
                 <?php
                 if (!empty($photos))
                 {
-                    foreach ($photos as $item)
+                    foreach ($photos as $k => $item)
                     {
                         $recordID = $item['recordID'];
                         $photoURL = $item['fileName'];
@@ -34,7 +34,7 @@ $photos = $this->f3->get('photos');
 <script>
     $(document).ready(function() {
         $('textarea').autosize();
- 
+
     });
     $(document).on('keypress', '.submitCommentPhoto', function(event) {
         var code = (event.keyCode ? event.keyCode : event.which);

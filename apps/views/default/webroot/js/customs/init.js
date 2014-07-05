@@ -373,17 +373,16 @@ $(document).on('keypress', '.submitComment', function(event) {
 
 $("body").on('click', '#createGroup', function(e) {
     e.preventDefault();
-    var title = $(this).attr('title');
+    var title = $(this).attr('rel');
     var href = $(this).attr('href');
-    console.log('href ', href);
     $.ajax({
         type: "POST",
         url: href,
         success: function(data) {
             $(".dialog").html(data);
             $(".dialog").dialog({
-                width: "400",
-                height: "320",
+                width: "450",
+                height: "400",
                 position: ['top', 120],
                 title: title,
                 resizable: false,

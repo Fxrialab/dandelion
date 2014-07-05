@@ -1,6 +1,6 @@
 <div style ="padding:5px; border: 1px solid #ccc; margin-bottom: 10px">
     <div class="column-group">
-        <div class="large-80">
+        <div class="large-85">
             <nav class="ink-navigation">
                 <ul class="horizontal menu">
                     <li><a href="#">Suggested Groups</a></li>
@@ -11,23 +11,37 @@
                 </ul>
             </nav>
         </div>
-        <div class="large-20 tiptip">
-            <a title="Create Group" class="button" id="createGroup" href="/content/group/create"><span class="icon icon3"></span><span class="label">Create Group</span></a>
+        <div class="large-15 tiptip">
+            <a class="button" rel="Greate New Group" title="Greate Group" id="createGroup" href="/content/group/create">Create Group</a>
         </div>
 
     </div>
 </div>
 
 <div class="uiMainColProfile groupWrapper large-100">
+    <input type="hidden" id="roleGroup" value="<?php echo $this->f3->get('role') ?>">
+    <div style="padding: 10px 15px; background-color: #ddd;">
+        <h5> 
+            <?php
+            if ($this->f3->get('role') == 'admin')
+                echo 'ADMIN GROUPS';
+            else
+                echo 'MEMBERSHIP GROUPS';
+            ?>
+        </h5>
+    </div>
     <div id="viewGroup" class="viewMoreGroups">
-        <?php
-        if ($this->f3->get('groupMember') != 'null')
-        {
-            foreach ($this->f3->get('groupMember') as $key => $value)
-            {
-                $f3 = require('viewGroup.php');
-            }
-        }
-        ?>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('#viewGroup').scrollPaginationGroup({
+            nop: 20,
+            offset: 0,
+            error: '',
+            delay: 500,
+            scroll: true
+        });
+    });
+
+</script>

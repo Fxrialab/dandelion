@@ -1,14 +1,15 @@
-/* 
-    Document   : arrow
-    Created on : Jun 28, 2014, 11:03:44 AM
-    Author     : Asus
-    Description:
-        Purpose of the stylesheet follows.
-*/
+
+.menu_arrow{
+    border: 1px solid #d4d4d4;
+    background-color: #fff;
+    margin-top: 10px !important;
+    margin-right: -10px !important; 
+    min-width: 150px
+}
 .arrow_timeLineMenuNav {
     border:1px solid #FFFFFF; margin:38px 0 -40px;
 }
-.arrow_photo, .arrow_album,.arrow_box, .arrow_phototab, .arrow_timeLine, .arrow_firend_all {
+.arrow_photo, .arrow_album,.arrow_box, .arrow_phototab, .arrow_timeLine, .arrow_firend_all, .arrow_menu {
     position: relative;
     background: #fff;
 }
@@ -69,6 +70,18 @@
 
 }
 
+.arrow_menu:after, .arrow_menu:before {
+    bottom: 100%;
+    left: 30%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+
+}
+
 .arrow_firend_all:after, .arrow_firend_all:before {
     bottom: 100%;
     left: 7%;
@@ -92,5 +105,16 @@
     border-width: 11px;
     margin-left: -11px;
 }
-
+ .arrow_menu:after {
+    border-color: rgba(136, 183, 213, 0);
+    border-bottom-color: #fff;
+    border-width: 7px;
+    margin-left: -7px;
+}
+.arrow_menu:before {
+    border-color: rgba(194, 225, 245, 0);
+    border-bottom-color: #ccc;
+    border-width: 8px;
+    margin-left: -8px;
+}
 

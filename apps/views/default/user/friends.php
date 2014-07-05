@@ -34,16 +34,11 @@
                         <a href="#" class="button icon add"><span class="label">Find Friends</span></a>
                     </div>
                     <div class="large-5 ">
-                        <div class="menuClick">
-                            <a id="linkglobal" class="button icon edit"></a>
-                            <div style="display: none;" id="divglobal" class="divmenu">
-                                <nav class="ink-navigation">
-                                    <ul class="menu vertical ">
-                                        <li><a href="#">Mange Sections</a></li>
-                                        <li><a href="#">Edit privacy</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
+                        <a data-dropdown="#dropdown-setting-friend" class="button icon edit"></a>
+                        <div id="dropdown-setting-friend" class="dropdown dropdown-tip dropdown-anchor-right">
+                            <ul class="dropdown-menu"> 
+                                <li><a href="#">Mange Sections</a></li>
+                                <li><a href="#">Edit privacy</a></li></ul>
                         </div>
                     </div>
                 </div>
@@ -86,7 +81,7 @@
             var userID = $("#userID").val();
             $.ajax({
                 type: "POST",
-                data: {key: key,userID:userID},
+                data: {key: key, userID: userID},
                 url: "/searchFriend",
                 success: function(data) {
                     $('#scrollFriends').html(data);
