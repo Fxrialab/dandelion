@@ -90,6 +90,58 @@
             });
         });
     };
+    $.fn.scrollPhoto = function(options) {
+        if (options) {
+            $.extend(settings, options);
+        }
+        return this.each(function() {
+            $this = $(this);
+            $settings = settings;
+            var offset = $settings.offset;
+            var busy = false; // Checks if the scroll action is happening 
+            var userID = $("#userID").val();
+            var albumID = $("#albumID").val();
+            // Custom messages based on settings
+            if ($settings.scroll == true)
+                $initmessage = '<div></div>';
+            else
+                $initmessage = 'Click for more';
+            $this.append('<div class="column-group"></div><div class="loading-bar">' + $initmessage + '</div>');
+            function getData() {
+                $.post('/content/photo/success', {
+                    action: 'scrollpagination',
+                    number: $settings.nop,
+                    offset: offset,
+                    userID: userID,
+                    albumID: albumID
+                }, function(data) {
+                    if (data == "") {
+                        $this.find('.loading-bar').html('');
+                    }
+                    else {
+                        offset = offset + $settings.nop;
+                        $this.find('.column-group').append(data);
+                        busy = false;
+                    }
+                    updateTime();
+                });
+            }
+
+            getData(); // Run function initially
+
+            if ($settings.scroll == true) {
+                $(window).scroll(function() {
+                    if ($(window).scrollTop() + $(window).height() > $this.height() && !busy) {
+                        busy = true;
+                        $this.find('.loading-bar').html('<div></div>');
+                        setTimeout(function() {
+                            getData();
+                        }, $settings.delay);
+                    }
+                });
+            }
+        });
+    };
     $.fn.scrollPagination = function(options) {
 // Extend the options so they work with the plugin
         if (options) {
@@ -198,7 +250,7 @@
                 $initmessage = '<div></div>';
             else
                 $initmessage = 'Click for more';
-            $this.append('<div class="viewGroups"></div><div class="loading-bar">' + $initmessage + '</div>');
+            $this.append('<div class="viewMoreGroups"></div><div class="loading-bar">' + $initmessage + '</div>');
             function getData() {
                 $.post('/content/group/successGroup', {
                     action: 'scrollpagination',
@@ -210,7 +262,7 @@
                         $this.find('.loading-bar').html($settings.error);
                     } else {
                         offset = offset + $settings.nop;
-                        $this.find('.viewGroups').append(data);
+                        $this.find('.viewMoreGroups').append(data);
                         busy = false;
                     }
                     updateTime();
@@ -218,7 +270,7 @@
             }
 
 //            if (count < 10) {
-                getData(); // Run function initially
+            getData(); // Run function initially
 //            }
             if ($settings.scroll == true) {
                 $(window).scroll(function() {
@@ -240,6 +292,7 @@
             });
         });
     };
+   
     $.fn.scrollPaginationPost = function(options) {
         var settings = {};
         // Extend the options so they work with the plugin
@@ -255,15 +308,12 @@
             $settings = settings;
             var offset = $settings.offset;
             var busy = false; // Checks if the scroll action is happening
-            // so we don't run it multiple times
-
-            // Custom messages based on settings
             if ($settings.scroll == true)
-                $initmessage = 'Loading...';
+                $initmessage = '<div></div>';
             else
                 $initmessage = 'Click for more';
             // Append custom messages and extra UI
-            $this.append('<div class="content"></div><div class="loading-bar" style="border:1px solid #ccc; text-align:center; padding:10px 0">' + $initmessage + '</div>');
+            $this.append('<div class="content"></div><div class="loading-bar">' + $initmessage + '</div>');
             function getData() {
 
                 // Post data to ajax.php
@@ -305,7 +355,7 @@
 // Now we are working, so busy is true
                         busy = true;
                         // Tell the user we're loading posts
-                        $this.find('.loading-bar').html('Loading...');
+                        $this.find('.loading-bar').html('<div></div>');
                         // Run the function to fetch the data inside a delay
                         // This is useful if you have content in a footer you
                         // want the user to see.

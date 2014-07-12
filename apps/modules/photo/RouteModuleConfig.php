@@ -8,6 +8,7 @@ class RouteModuleConfig
 
     public $route = array(
         'loadingPhoto_POST' => "PhotoController",
+        'success_POST' => "PhotoController",
         'upload_POST' => "PhotoController",
         'removePhoto_POST' => "PhotoController",
         'deletePhoto_POST' => "PhotoController",
@@ -20,7 +21,8 @@ class RouteModuleConfig
         'morePhotoComment_POST' => "PhotoController",
         'postComment_POST' => "PhotoController",
         'sharePhoto_POST' => "PhotoController",
-        'comment_POST' => "PhotoController"
+        'comment_POST' => "PhotoController",
+        'detail_GET' => "PhotoController"
     );
 
 }

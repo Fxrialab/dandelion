@@ -1,12 +1,26 @@
 <div class="large-33">
     <div class="photoItems">
-        <a class="viewThisPhoto" id="<?php echo $photoID; ?>">
-            <img src="<?php echo UPLOAD_URL . $photoURL; ?>">
+        <a class="detailPhoto" url="/content/photo/detail?id=<?php echo $postPhotoID ?>&p=<?php echo $k ?>">
+            <div style="width: 235px; height: 200px; background-image: url(<?php echo UPLOAD_URL . $photoURL; ?>)"></div>
         </a>
 
-        <div class="num"><div class="like_<?php echo $postPhotoID ?>"> 12 </div>  <div class="comment_<?php echo $postPhotoID ?>"> <?php echo $count ?> </div></div>
+        <div class="num"><div class="numLike-<?php echo $postPhotoID ?>"> <?php echo $numberLike ?> </div> 
+            <div class="comment_<?php echo $postPhotoID ?>"> <?php echo $count ?> </div></div>
         <div class="action" id="<?php echo $photoID; ?>">
-            <a href="javascript:void(0)" class="likePhoto">Like</a>
+            <span class="like_<?php echo $postPhotoID ?>">
+                <?php
+                if ($like == 0)
+                {
+                    ?>
+                    <a class="likeAction" id="<?php echo $postPhotoID; ?>" rel="photo">Like</a>
+                    <?php
+                }
+                else
+                {
+                    ?>
+                    <a class="unlikeAction" id="<?php echo $postPhotoID; ?>" rel="photo">UnLike</a>
+                <?php } ?>
+            </span>
             <a data-dropdown="#dropdown-c<?php echo $postPhotoID ?>" rel="<?php echo $postPhotoID ?>" class="open commentPhoto" >Comment</a>
             <?php
             if (($k + 1) % 3 == 0)
@@ -22,7 +36,7 @@
                         {
                             foreach ($comment as $k => $value)
                             {
-                                $user = PhotoController::getUser($value->data->actor);
+                                $user = PhotoController::getUser($value->data->userID);
                                 ?>
                                 <li class="itemC_<?php echo str_replace(':', '_', $value->recordID) ?>">
                                     <div class="avatar">
@@ -46,7 +60,7 @@
                                 <div  style="width:30px; height: 30px; float: left;  margin-right: 5px">
                                     <img src="<?php echo IMAGES ?>/avatarMenDefault.png">
                                 </div>
-                                <input name="photoID" type="hidden" value="<?php echo $recordID; ?>" />
+                                <input name="photoID" type="hidden" value="<?php echo $postPhotoID; ?>" />
                                 <textarea style="width:250px; height: 30px" name="comment" class="submitCommentPhoto" id="photoComment-<?php echo $postPhotoID; ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
                             </form>
                         </div>

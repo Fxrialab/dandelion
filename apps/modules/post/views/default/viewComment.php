@@ -1,73 +1,63 @@
 <?php
+
+//var_dump(F3::get('SESSION.userID'));
 if (!empty($statusID))
     $records = PostController::getFindComment($statusID);
 else
     $records = $this->f3->get('comments');
-//var_dump($records);
+
 if (!empty($records))
 {
     if (is_array($records))
     {
         $pos = (count($records) < 3 ? count($records) : 3);
-        for ($j = count($records)- $pos; $j < count($records); $j++)
+        for ($j = count($records) - $pos; $j < count($records); $j++)
         {
-            $content    = $records[$j]->data->content;
-            $published  = $records[$j]->data->published;
-            $profile    = PostController::getUser(str_replace(":", "_", $records[$j]->data->actor));
+            $id = str_replace(":", "_", $records[$j]->recordID);
+            $recordID = $records[$j]->recordID;
+            $content = $records[$j]->data->content;
+            $published = $records[$j]->data->published;
+            $numberLike = $records[$j]->data->numberLike;
+            $profile = PostController::getUser(str_replace(":", "_", $records[$j]->data->userID));
+            $like = PostController::like($records[$j]->recordID);
             if ($profile->data->profilePic != 'none')
             {
                 $photo = ElementController::findPhoto($profile->data->profilePic);
                 $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
-            }else {
+            }
+            else
+            {
                 $gender = ElementController::findGender($profile->recordID);
                 if ($gender == 'male')
                     $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                 else
                     $profilePic = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
             }
-            $actorComment = ucfirst($profile->data->firstName)." ".ucfirst($profile->data->lastName);
-            ?>
-            <div class="eachCommentItem verGapBox column-group">
-                <div class="large-10 uiActorCommentPicCol">
-                    <a href="/content/post?user=<?php echo $profile->data->username; ?>"><img src="<?php echo $profilePic; ?>"></a>
-                </div>
-                <div class="large-85 uiCommentContent">
-                    <p>
-                        <a class="timeLineCommentLink" href="/content/post?user=<?php echo $profile->data->username; ?>"><?php echo $actorComment; ?></a>
-                        <span class="textComment"><?php echo $content; ?></span>
-                    </p>
-                    <span><a class="linkColor-999999 swTimeComment" name="<?php echo $published; ?>"></a></span>
-                </div>
-            </div>
-        <?php
+            $actorComment = ucfirst($profile->data->firstName) . " " . ucfirst($profile->data->lastName);
+            $f3 = require('commentItem.php');
         }
-    }elseif (is_object($records)) {
-        $profile    = PostController::getUser(str_replace(":", "_", $records->data->actor));
-        $actorComment = ucfirst($profile->data->firstName)." ".ucfirst($profile->data->lastName);
+    }
+    elseif (is_object($records))
+    {
+        $profile = PostController::getUser(str_replace(":", "_", $records->data->userID));
+        $like = PostController::like($records->recordID);
+        $actorComment = ucfirst($profile->data->firstName) . " " . ucfirst($profile->data->lastName);
         if ($profile->data->profilePic != 'none')
         {
             $photo = ElementController::findPhoto($profile->data->profilePic);
             $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
-        }else {
+        }
+        else
+        {
             //check men or women later
             $profilePic = UPLOAD_URL . "avatar/170px/avatarMenDefault.png";
         }
-        $content    = $records->data->content;
-        $published  = $records->data->published;
-        ?>
-        <div class="eachCommentItem verGapBox column-group">
-            <div class="large-10 uiActorCommentPicCol">
-                <a href="/content/post?user=<?php echo $profile->data->username; ?>"><img src="<?php echo $profilePic; ?>"></a>
-            </div>
-            <div class="large-85 uiCommentContent">
-                <p>
-                    <a class="timeLineCommentLink" href="/content/post?user=<?php echo $profile->data->username; ?>"><?php echo $actorComment; ?></a>
-                    <span class="textComment"><?php echo $content; ?></span>
-                </p>
-                <span><a class="linkColor-999999 swTimeComment" name="<?php echo $published; ?>"></a></span>
-            </div>
-        </div>
-        <?php
+        $id = str_replace(":", "_", $records->recordID);
+        $recordID = $records->recordID;
+        $content = $records->data->content;
+        $published = $records->data->published;
+        $numberLike = $records->data->numberLike;
+        $f3 = require('commentItem.php');
     }
 }
 ?>

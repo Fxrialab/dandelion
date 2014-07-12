@@ -70,7 +70,6 @@ class HomeController extends AppController
 
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
-            //var_dump($activitiesRC);
             if (!empty($activitiesRC))
             {
                 $homes = array();
@@ -151,13 +150,16 @@ class HomeController extends AppController
                 foreach ($result as $people)
                 {
                     $infoOfSearchFound[$people] = Model::get('user')->callGremlin("current.map", array('@rid' => '#' . $people));
-
+                    if ($infoOfSearchFound[$people][0]->profilePic != 'none')
+                        $avatar = $infoOfSearchFound[$people][0]->profilePic;
+                    else
+                        $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                     $data['results'][] = array(
                         'recordID' => str_replace(':', '_', $people),
                         'firstName' => ucfirst($infoOfSearchFound[$people][0]->firstName),
                         'lastName' => ucfirst($infoOfSearchFound[$people][0]->lastName),
                         'username' => $infoOfSearchFound[$people][0]->username,
-                        'profilePic' => $infoOfSearchFound[$people][0]->profilePic,
+                        'profilePic' => $avatar,
                     );
                 }
                 $data['success'] = true;
@@ -188,7 +190,7 @@ class HomeController extends AppController
                 }
                 $this->f3->set('resultSearch', $resultSearch);
                 $this->f3->set('infoOfSearchFound', $infoOfSearchFound);
-                $this->render('user/searchResult.php', 'default');
+                $this->render('home/searchResult.php', 'default');
             }
         }
     }

@@ -1,28 +1,29 @@
 <?php
+
 $records = $this->f3->get('comments');
 if (!empty($records))
 {
-    for ($j = 0; $j < count($records)- 3; $j++)
+    foreach ($records as $value)
     {
-        $content    = $records[$j]->data->content;
-        $published  = $records[$j]->data->published;
-        $profile    = PostController::getUser(str_replace(":", "_", $records[$j]->data->actor));
-        $actorComment = ucfirst($profile->data->firstName)." ".ucfirst($profile->data->lastName);
-        ?>
-        <div class="eachCommentItem verGapBox column-group">
-            <div class="large-10 uiActorCommentPicCol">
-                <a href="/content/post?user=<?php echo $profile->data->username; ?>"><img src="<?php echo $profile->data->profilePic; ?>"></a>
-            </div>
-            <div class="large-85 uiCommentContent">
-                <p>
-                    <a class="timeLineCommentLink" href="/content/post?user=<?php echo $profile->data->username; ?>"><?php echo $actorComment; ?></a>
-
-                        <span class="textComment"><?php echo $content; ?></span>
-                </p>
-                <span><a class="linkColor-999999 swTimeComment" name="<?php echo $published; ?>"></a></span>
-            </div>
-        </div>
-        <?php
+        $id = str_replace(":", "_", $value->recordID);
+        $recordID = $value->recordID;
+        $content = $value->data->content;
+        $published = $value->data->published;
+        $numberLike = $value->data->numberLike;
+        $profile = PostController::getUser(str_replace(":", "_", $value->data->userID));
+        $like = PostController::like($value->recordID);
+        $actorComment = ucfirst($profile->data->firstName) . " " . ucfirst($profile->data->lastName);
+        if ($profile->data->profilePic != 'none')
+        {
+            $photo = ElementController::findPhoto($profile->data->profilePic);
+            $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
+        }
+        else
+        {
+            //check men or women later
+            $profilePic = UPLOAD_URL . "avatar/170px/avatarMenDefault.png";
+        }
+        $f3 = require('commentItem.php');
     }
 }
 ?>

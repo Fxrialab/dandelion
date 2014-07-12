@@ -30,7 +30,10 @@
             ?>
         </h5>
     </div>
-    <div id="viewGroup" class="viewMoreGroups">
+    <div id="viewGroup">
+        <div class="viewMoreGroups">
+
+        </div>
     </div>
 </div>
 <script>

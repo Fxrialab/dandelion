@@ -16,7 +16,7 @@
             </div>
             <div class="large-10"></div>
             <div class="large-20">
-                <div id="uploadAlbum">Upload photo</div>
+                <div id="uploadAlbum"> <a class="ink-button green">Upload photo</a></div>
                 <div class="msg"></div>
             </div>
         </div>
@@ -68,11 +68,9 @@
             type: "POST",
             url: "/content/photo/createAlbum",
             data: $("#formAlbum").serialize(), // serializes the form's elements.
-            success: function(html)
+            success: function(data)
             {
-                $("#contentContainer").prepend(html);
-                $(".dialog").dialog("close");
-                updateTime();
+                location.replace(data);
             }
         });
         return false; // avoid to execute the actual submit of the form.
@@ -80,12 +78,12 @@
 
 </script>
 <script id="imgTemplate4" type="text/x-jQuery-tmpl">
-    <div class="large-30" id="${imgID}" style="position: relative">
+    <div class="large-25" id="${imgID}" style="position: relative">
     <div style="margin-right:20px;">
     <input type="hidden" name="imgID[]" value="${imgID},${name},${width},${height}">
     <img src="${url}" style="width:100%">
     <textarea name="description_${imgID}" style="min-height:3px; width:100%"  placeholder="Enter description"></textarea>            
-    <a href="javascript:void(0)" style="position: absolute; top:5px; right:35px" rel="${name}" relID="${imgID}" class="deleteImage"><span class="icon icon56">X</span></a>
+    <a href="javascript:void(0)" style="position: absolute; top:5px; right:35px" rel="${name}" relID="${imgID}" class="deletePhoto"><span class="icon icon56">X</span></a>
     </div>
     </div>
 </script>

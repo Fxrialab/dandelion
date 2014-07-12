@@ -11,8 +11,18 @@ class PhotoController extends AppController
     static function getFindComment($photoID)
     {
         $facade = new DataFacade();
-        $comment = $facade->findAllAttributes('comment', array('post' => $photoID));
+        $comment = $facade->findAllAttributes('comment', array('typeID' => $photoID));
         return $comment;
+    }
+
+    public static function like($typeID)
+    {
+        $facade = new DataFacade();
+        $model = $facade->findByAttributes('like', array('actor' => F3::get('SESSION.userID'), 'objID' => $typeID));
+        if (!empty($model))
+            return TRUE;
+        else
+            return FALSE;
     }
 
     static function getPhoto($id)
@@ -30,7 +40,7 @@ class PhotoController extends AppController
     public static function countComment($id)
     {
         $facade = new DataFacade();
-        return $facade->count('comment', array('post' => $id));
+        return $facade->count('comment', array('typeID' => $id));
     }
 
     //Upload image Post and Comment
@@ -60,6 +70,21 @@ class PhotoController extends AppController
         }
     }
 
+    public function deletePhoto()
+    {
+        if ($this->isLogin())
+        {
+
+            $filename = $_POST['name'];
+            $link = UPLOAD_URL . $filename;
+            if (!empty($link))
+            {
+                unlink($link);
+                echo $_POST['id'];
+            }
+        }
+    }
+
     // @todo: ask client for album page
     public function photo($viewPath)
     {
@@ -70,28 +95,78 @@ class PhotoController extends AppController
             $albumID = $this->f3->get('GET.album');
             if (!empty($username))
             {
+                $photos = array();
                 $userID = $this->facade->findByAttributes('user', array('username' => $username));
                 if (!empty($albumID))
                 {
-                    $album = $this->facade->findByAttributes('album', array('owner' => $userID->recordID, '@rid' => str_replace('_', ':', $albumID)));
+                    $this->f3->set('albumID', $albumID);
+//                    $album = $this->facade->findByAttributes('album', array('owner' => $userID->recordID, '@rid' => str_replace('_', ':', $albumID)));
+//                    $array = explode(",", $album->data->photo);
+//                    foreach ($array as $value)
+//                    {
+//                        $model = $this->facade->findByPk('photo', $value);
+//                        $photos[] = array('recordID' => $model->recordID, 'userID' => $model->data->actor, 'fileName' => $model->data->fileName, 'numberLike' => $model->data->numberLike);
+//                    }
+                }
+                else
+                {
+                    $this->f3->set('albumID', '0');
+//                    $array = $this->facade->findAllAttributes('photo', array('actor' => $userID->recordID));
+//                    if (!empty($array))
+//                        foreach ($array as $value)
+//                            $photos[] = array('recordID' => $value->recordID, 'userID' => $value->data->actor, 'fileName' => $value->data->fileName, 'numberLike' => $value->data->numberLike);
+                }
+                $this->f3->set('userID', $userID->recordID);
+            }
+            $this->render($viewPath . "myPhoto.php", 'modules');
+        }
+    }
+
+    public function success()
+    {
+        if ($this->isLogin())
+        {
+            $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
+            $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
+            $obj = new ObjectHandler();
+            $obj->actor = $_POST['userID'];
+            $obj->select = 'and published > 1399543903 LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
+            if ($_POST['albumID'] == 0)
+            {
+                $model = $this->facade->findAll('photo', $obj);
+                if (!empty($model))
+                {
+                    foreach ($model as $value)
+                    {
+                        $photos[] = array('recordID' => $value->recordID, 'userID' => $value->data->actor, 'fileName' => $value->data->fileName, 'numberLike' => $value->data->numberLike);
+                    }
+                    $set = $photos;
+                }
+                else
+                {
+                    $set = 'null';
+                }
+            }
+            else
+            {
+                $album = $this->facade->findByAttributes('album', array('owner' => $userID->recordID, '@rid' => $_POST['albumID']));
+                if (!empty($album))
+                {
                     $array = explode(",", $album->data->photo);
                     foreach ($array as $value)
                     {
                         $model = $this->facade->findByPk('photo', $value);
-                        $photos[] = array('recordID' => $model->recordID, 'userID' => $model->data->actor, 'fileName' => $model->data->fileName);
+                        $photos[] = array('recordID' => $model->recordID, 'userID' => $model->data->actor, 'fileName' => $model->data->fileName, 'numberLike' => $model->data->numberLike);
                     }
+                    $set = $photos;
                 }
                 else
                 {
-                    $array = $this->facade->findAllAttributes('photo', array('actor' => $userID->recordID));
-                    foreach ($array as $value)
-                    {
-                        $photos[] = array('recordID' => $value->recordID, 'userID' => $value->data->actor, 'fileName' => $value->data->fileName);
-                    }
+                    $set = 'null';
                 }
-                $this->f3->set('photos', $photos);
             }
-            $this->render($viewPath . "myPhoto.php", 'modules');
+            $this->f3->set('photos', $set);
+            $this->renderModule('dataPhoto', 'photo');
         }
     }
 
@@ -100,18 +175,18 @@ class PhotoController extends AppController
         if (!empty($_POST['comment']))
         {
             $data = array(
-                "actor" => $this->f3->get('SESSION.userID'),
+                "userID" => $this->f3->get('SESSION.userID'),
                 "content" => $_POST['comment'],
-                "post" => $_POST['photoID'],
+                "typeID" => str_replace('_', ':', $_POST['photoID']),
                 "published" => time(),
             );
             $commentID = $this->facade->save('comment', $data);
             if (!empty($commentID))
             {
                 $commentRC = $this->facade->findByPk('comment', $commentID);
-                $count = $this->facade->count('comment', array('post' => $_POST['photoID']));
+                $count = $this->facade->count('comment', array('typeID' => str_replace('_', ':', $_POST['photoID'])));
                 $height = $count * 40 + 50;
-                $user = $this->facade->findByPk('user', $commentRC->data->actor);
+                $user = $this->facade->findByPk('user', $commentRC->data->userID);
                 echo json_encode(array(
                     'id' => str_replace(':', '_', $commentID),
                     'photoID' => str_replace(':', '_', $_POST['photoID']),
@@ -317,27 +392,6 @@ class PhotoController extends AppController
         }
     }
 
-    public function removePhoto()
-    {
-        if ($this->isLogin())
-        {
-            $photoID = $this->f3->get('POST.photoID');
-
-            if ($photoID && !is_array($photoID))
-            {
-                $this->Photo->deleteByCondition("@rid = ?", array('#' . str_replace('_', ':', $photoID)));
-                //@todo: remove file in out put dir
-            }
-            else
-            {
-                foreach ($photoID as $id)
-                {
-                    $this->Photo->deleteByCondition("@rid = ?", array('#' . str_replace('_', ':', $id)));
-                }
-            }
-        }
-    }
-
     public function createAlbum()
     {
         if ($this->isLogin())
@@ -377,7 +431,7 @@ class PhotoController extends AppController
                     'published' => $published
                 );
                 $album = $this->facade->save('album', $data);
-                header("Location: /content/photo?user=" . $this->f3->get('SESSION.username') . "&album=" . $album);
+                echo BASE_URL . "content/photo?user=" . $this->f3->get('SESSION.username') . "&album=" . str_replace(':', '_', $album);
             }
             else
             {
@@ -386,156 +440,53 @@ class PhotoController extends AppController
         }
     }
 
-   
-
-    public function addDescription()
+    public function detail()
     {
         if ($this->isLogin())
         {
-            $description = F3::get('POST.description');
-            $getPhotoID = F3::get('POST.photoID');
-            $photoID = str_replace('_', ':', $getPhotoID);
-
-            $updateDescription = array('description' => $description);
-            $this->Photo->updateByCondition($updateDescription, "@rid = ?", array("#" . $photoID));
-        }
-    }
-
-    public function postComment()
-    {
-        if ($this->isLogin())
-        {
-            $currentUser = $this->getCurrentUser();
-            $photoID = str_replace("_", ":", $this->f3->get('POST.postPhotoID'));
-            $textComment = $this->f3->get('POST.comment');
-            $actorName = $this->getCurrentUserName();
-            $published = time();
-            $existCommentRC = $this->Comment->findByCondition("actor = ? AND post = ?", array($currentUser->recordID, $photoID));
-            if ($existCommentRC)
+            if (!empty($_GET['id']))
             {
-                $commentEntryCase1 = array(
-                    "actor" => $currentUser->recordID,
-                    "actor_name" => $actorName,
-                    "content" => $textComment,
-                    "post" => $photoID,
-                    "status_post" => "later",
-                    "published" => $published,
-                    "tagged" => "none"
-                );
-                $comment1 = $this->Comment->create($commentEntryCase1);
-                $commentID = $comment1;
-            }
-            else
-            {
-                $commentEntryCase2 = array(
-                    "actor" => $this->getCurrentUser()->recordID,
-                    "actor_name" => $actorName,
-                    "content" => $textComment,
-                    "post" => $photoID,
-                    "status_post" => "first",
-                    "published" => $published,
-                    "tagged" => "none"
-                );
-
-                $comment = $this->Comment->create($commentEntryCase2);
-                $commentID = $comment;
-            }
-            /* Update number comment */
-            $status_update = $this->Photo->findOne('@rid = ?', array('#' . $photoID));
-            $dataCountNumberComment = array('numberComment' => $status_update->data->numberComment + 1);
-            $this->Photo->updateByCondition($dataCountNumberComment, "@rid = ?", array("#" . $photoID));
-            // track activity
-            $userPostID = $this->Photo->findOne("@rid = ?", array($photoID));
-            $this->trackComment($currentUser, "photo" . $commentID, $commentID, $photoID, $userPostID->data->actor, $published);
-
-            $this->f3->set('actorName', $actorName);
-            $this->f3->set('published', $published);
-            $this->f3->set('content', $textComment);
-            $this->f3->set('currentUser', $currentUser);
-            $this->renderModule('comment', 'photo');
-        }
-    }
-
-    /* Load comment for Insert in Activity */
-
-    //@todo Check again with album and photo.
-    public function LoadComment($object, $actor, $activityID)
-    {
-        if ($this->isLogin())
-        {
-            $findStatus = $this->Comment->findByCondition("@rid = ?", array('#' . $object));
-            if ($findStatus)
-            {
-                $findContentStt = $this->Photo->findByCondition("@rid = ?", array('#' . $findStatus[0]->data->post));
-                $profileCommentActor[$actor] = $this->User->load($actor);
-                $entry = array(
-                    'activityID' => $activityID,
-                    'name' => $findStatus[0]->data->actor_name,
-                    'content' => '<img src=\'' . $findContentStt[0]->data->thumbnail_url . '\' width=\'45px\' height=\'35px\' >',
-                    'numberComment' => $findContentStt[0]->data->numberComment,
-                    'pfCommentActor' => $profileCommentActor,
-                    'published' => $findStatus[0]->data->published,
-                    'text' => 'has comment ',
-                    'actor' => $actor,
-                    'commentID' => $object,
-                    'owner' => $findContentStt[0]->data->owner,
-                    'link' => 'detailStatus?id=' . $findStatus[0]->data->post,
-                    'type' => 'photo'
-                );
-                return $entry;
-            }
-        }
-    }
-
-    public function deletePhoto()
-    {
-        if ($this->isLogin())
-        {
-            $id_photo = str_replace('_', ':', F3::get('POST.id_photo'));
-            if ($id_photo)
-            {
-                $this->Photo->deleteByCondition('@rid = ? ', array('#' . $id_photo));
-                $this->Activity->deleteByCondition('idObject = ? ', array($id_photo));
-            }
-        }
-    }
-
-    public function morePhotoComment()
-    {
-        if ($this->isLogin())
-        {
-            $published = $this->f3->get('POST.published');
-            $photoID = str_replace("_", ":", $this->f3->get('POST.photoID'));
-
-            $comments = $this->Comment->findByCondition("post = ? and published < ? LIMIT 50 ORDER BY published DESC", array($photoID, $published));
-            if ($comments)
-            {
-                $pos = (count($comments) < 50 ? count($comments) : 50);
-                for ($j = $pos - 1; $j >= 0; $j--)
+                $id = str_replace('_', ':', $_GET['id']);
+                $k = str_replace('_', ':', $_GET['p']);
+                $kc = $k + 1;
+                $kt = $k - 1;
+                if (!empty($_GET['typeID']))
                 {
-                    $commentActor[$comments[$j]->data->actor] = $this->User->load($comments[$j]->data->actor);
+                    $array = $this->facade->findAllAttributes('photo', array('actor' => F3::get('SESSION.userID'), 'typeID' => str_replace('_', ':', $_GET['typeID'])));
+                    if ($k >= 0 && $k < count($array) - 1)
+                        $idn = str_replace(':', '_', $array[$kc]->recordID);
+                    else
+                        $idn = str_replace(':', '_', $array[$k]->recordID);
+                    if ($k == 0)
+                        $idp = 0;
+                    else
+                        $idp = str_replace(':', '_', $array[$kt]->recordID);
+                    $next = '/content/photo/detail?typeID=' . str_replace(':', '_', $_GET['typeID']) . '&id=' . $idn . '&p=' . $kc;
+                    $prev = '/content/photo/detail?typeID=' . str_replace(':', '_', $_GET['typeID']) . '&id=' . $idp . '&p=' . $kt;
                 }
-            }
-            else
-            {
-                $commentActor = null;
-            }
-            $this->f3->set("commentActor", $commentActor);
-            $this->f3->set("comments", $comments);
-            $this->renderModule('morePhotoComment', 'photo');
-        }
-    }
+                else
+                {
+                    $array = $this->facade->findAllAttributes('photo', array('actor' => F3::get('SESSION.userID')));
+                    if ($k >= 0 && $k < count($array) - 1)
+                        $idn = str_replace(':', '_', $array[$kc]->recordID);
+                    else
+                        $idn = str_replace(':', '_', $array[$k]->recordID);
+                    if ($k == 0)
+                        $idp = 0;
+                    else
+                        $idp = str_replace(':', '_', $array[$kt]->recordID);
+                    $next = '/content/photo/detail?id=' . $idn . '&p=' . $kc;
+                    $prev = '/content/photo/detail?id=' . $idp . '&p=' . $kt;
+                }
 
-    public function sharePhoto()
-    {
-        if ($this->isLogin())
-        {
-            $photoID = F3::get('POST.photoID');
-            $content_stt = $this->Photo->findOne("@rid = ?", array($photoID));
-            $getAvatar = $this->User->findOne(" @rid = ? ", array($content_stt->data->actor));
-            F3::set('content_stt', $content_stt);
-            F3::set('getAvatar', $getAvatar);
-            $this->renderModule('sharePhoto', 'photo');
+                $photo = $this->facade->findByPk('photo', $id);
+                $this->f3->set('photo', $photo);
+                $this->f3->set('next', $next);
+                $this->f3->set('prev', $prev);
+                $this->f3->set('p', $k);
+                $this->f3->set('count', count($array) - 1);
+                $this->renderModule('detail', 'photo');
+            }
         }
     }
 

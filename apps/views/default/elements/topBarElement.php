@@ -8,7 +8,7 @@
             <div class="large-45" id="uiSearch">
                 <div class="control-group">
                     <div class="control large-100 append-button ink-form column-group">
-                        <div class="large-80"><input class="large-100" type="text" id="search" name="search" autocomplete="off"></div>
+                    <input class="large-100" type="text" id="search" name="search" autocomplete="off">
                         <!--<div class="large-10"><a href="" class=""><i class="topNavIcon2-search"></i></a></div>-->
                     </div>
                 </div>

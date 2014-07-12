@@ -39,45 +39,20 @@ $(".autoloadModuleElement").ready(function()
 
 $(document).ready(function() {
     $('.taPostStatus').autosize();
-    //target show popUp
-    new showPopUpOver('a.settingOption', '.uiSettingOptionPopUpOver');
-    new showPopUpOver('a.quickPostStatusNav', '.uiQuickPostStatusPopUpOver');
-    new showPopUpOver('a.showRequestFriends', '.uiFriendRequestsPopUpOver');
-    new showPopUpOver('a.showMessages', '.uiMessagesPopUpOver');
-    new showPopUpOver('a.showNotifications', '.uiNotificationsPopUpOver');
-    new hoverShowPopUpOver('a.requestFriend', '.uiFriendOptionPopUpOver');
-    new hoverShowPopUpOver('a.respondFriendRequest', '.uiFriendOptionPopUpOver');
-    new hoverShowPopUpOver('a.isFriend', '.uiFriendOptionPopUpOver');
-    $(document).click(function() {
-        $('.uiPostOptionPopUpOver').hide();
-        $('.uiSettingOptionPopUpOver').hide();
-        $('.uiFriendRequestsPopUpOver').hide();
-        $('.uiMessagesPopUpOver').hide();
-        $('.uiNotificationsPopUpOver').hide();
-        var existSearchPopUp = $('#resultsList li').length;
-        if (existSearchPopUp > 0)
-        {
-            $('#resultsList').css('display', 'none');
-        } else {
-            $('#resultsList').css('display', 'block');
-        }
-    });
-    $('.cancelPostStatusNavBtn').click(function() {
-        $('.uiQuickPostStatusPopUpOver').hide();
-        return false;
-    });
-
     $('#resultsHolder').click(function(e) {
         e.stopPropagation();
     });
     $('body').on('click', '.likeAction', function() {
         var objectID = $(this).attr('id');
-        $(this).like('status', objectID);
+        var type = $(this).attr('rel');
+        $(this).like(type, objectID);
     });
     $('body').on('click', '.unlikeAction', function() {
         var objectID = $(this).attr('id');
-        $(this).unlike('status', objectID);
+        var type = $(this).attr('rel');
+        $(this).unlike(type, objectID);
     });
+
     $('body').on('click', '.shareStatus', function() {
         var objectID = $(this).attr('id');
         $(this).share(objectID);
@@ -110,80 +85,74 @@ $(document).ready(function() {
     };
 });
 
-//layout photo like pinterest
-/*$(window).load(function() {
- $('.uiPhotoPinCol').BlocksIt({
- numOfCol: 3,
- offsetX: -5,
- offsetY: 5
- });
- });*/
-
-function showPopUpOver($click, $popUpOver) {
-    $('body').on('click', $click, function() {
-        $($popUpOver).show();
-        return false;
-    });
-}
-
-function hoverShowPopUpOver($click, $popUpOver) {
-    $('body').on('mouseover', $click, function() {
-        $($popUpOver).show();
-    });
-    $('body').on('mouseout', $click, function() {
-        $($popUpOver).hide();
-    });
-    $('body').on('mouseover', $popUpOver, function() {
-        $(this).show();
-    });
-    $('body').on('mouseout', $popUpOver, function() {
-        $(this).hide();
-    });
-}
-
 (function($) {
     $.fn.like = function(type, objectID)
     {
-        var getNumLike = parseInt($("#numLike-" + objectID).html());
+        if (type == 'photoDialog' || type == 'photo') {
+            var recordID = 'photo';
+        } else {
+            var recordID = 'status';
+        }
+
         $.ajax({
             type: "POST",
             url: "/like",
-            data: {type: type, objectID: objectID},
+            data: {type: recordID, objectID: objectID},
             cache: false,
             success: function(html) {
-                $('.like-' + objectID).html(html);
-                $('.postItem-' + objectID).fadeIn("slow");
-                var likeSentence = $('#likeSentence-' + objectID).length;
-                $('#numLike-' + objectID).html(getNumLike + 1);
-                if (likeSentence)
-                {
-                    $("<span>You and </span>").prependTo("#likeSentence-" + objectID);
+                if (type == 'status' && type == 'photoDialog') {
+                    var getNumLike = parseInt($("#numLike-" + objectID).html());
+                    $('.like-' + objectID).html(html);
+                    $('.postItem-' + objectID).fadeIn("slow");
+                    var likeSentence = $('#likeSentence-' + objectID).length;
+                    $('#numLike-' + objectID).html(getNumLike + 1);
+                    if (likeSentence)
+                    {
+                        $("<span>You and </span>").prependTo("#likeSentence-" + objectID);
+                    } else {
+                        $(".tempLike-" + objectID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + objectID + "'>" +
+                                "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
+                                "</div>");
+                    }
                 } else {
-                    $(".tempLike-" + objectID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + objectID + "'>" +
-                            "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
-                            "</div>");
+                    var getNumLike = parseInt($(".numLike-" + objectID).html());
+                    $('.like_' + objectID).html(html);
+                    $('.numLike-' + objectID).html(getNumLike + 1);
                 }
+
             }
         });
     };
     $.fn.unlike = function(type, objectID)
     {
-        var getNumLike = parseInt($("#numLike-" + objectID).html());
+        if ((type == 'photoDialog') || (type == 'photo')) {
+            var recordID = 'photo';
+        } else {
+            var recordID = 'status';
+        }
         $.ajax({
             type: "POST",
             url: "/unlike",
-            data: {type: type, objectID: objectID},
+            data: {type: recordID, objectID: objectID},
             cache: false,
             success: function(html) {
-                $('.like-' + objectID).html(html);
-                $('#numLike-' + objectID).html(getNumLike - 1);
-                $('.postItem-' + objectID).fadeIn("slow");
-                var otherLike = $('#likeSentence-' + objectID + ' a').length;
-                if (otherLike)
-                {
-                    $('#likeSentence-' + objectID + ' span').remove();
-                } else {
-                    $('#likeSentence-' + objectID).detach();
+                if (type == 'status' && type == 'photoDialog') {
+                    var getNumLike = parseInt($("#numLike-" + objectID).html());
+                    $('.like-' + objectID).html(html);
+                    $('#numLike-' + objectID).html(getNumLike - 1);
+                    $('.postItem-' + objectID).fadeIn("slow");
+                    var otherLike = $('#likeSentence-' + objectID + ' a').length;
+                    if (otherLike)
+                    {
+                        $('#likeSentence-' + objectID + ' span').remove();
+                    } else {
+                        $('#likeSentence-' + objectID).detach();
+                    }
+                }
+                else {
+                    var getNumLike = parseInt($(".numLike-" + objectID).html());
+                    $('.like_' + objectID).html(html);
+                    $('.numLike-' + objectID).html(getNumLike - 1);
                 }
             }
         });
@@ -192,7 +161,7 @@ function hoverShowPopUpOver($click, $popUpOver) {
     {
         $('#fade').show();
         $('.uiShare').show();
-        $('.uiShare').center();
+        $('.uiShare').enter();
         $('.notificationShare').center();
         $.ajax({
             async: true,
@@ -272,6 +241,7 @@ $(document).ready(function()
                 url: "/search",
                 data: {data: searchText},
                 beforeSend: function() {
+                    $('#resultsHolder').css('display', 'block');
                     //Lets add a loading image
                     $('#resultsHolder').addClass('loading');
                 },
@@ -299,7 +269,7 @@ $(document).ready(function()
                                 $('#resultsList').append("<li rel='" + this.recordID + "'>" +
                                         "<a href='/content/myPost?username=" + this.username + "'>" +
                                         "<span>" +
-                                        "<img class='imgFindPeople' src='" + this.profilePic + "' width='30' height='30'/>" +
+                                        "<img class='imgFindPeople' src='" + this.profilePic + "' width='40' height='40'/>" +
                                         "<span class='infoPeople'>" + this.firstName + " " + this.lastName + "</span>" +
                                         "</span>" +
                                         "</a>" +
@@ -330,9 +300,12 @@ $(document).ready(function()
             url: "/content/post/moreComment",
             data: {statusID: objectID},
             cache: false,
+            beforeSend: function() {
+                $(".loading_" + objectID).html("<div class='loading2'></div>");
+            },
             success: function(html) {
-                $('#viewComments-' + objectID).css('display', 'none');
-                $('.moreComment-' + objectID).before(html);
+                $('#viewComments-' + objectID).remove();
+                $('.moreComment-' + objectID).html(html);
                 updateTime();
             }
         })
@@ -345,10 +318,8 @@ $(document).on('keypress', '.submitComment', function(event) {
     if (code == '13' && !event.shiftKey)
     {
         var statusID = $(this).attr('id').replace('textComment-', '');
-        console.log('statusID: ', statusID);
         var comment = $("#textComment-" + statusID).val();
         var numComment = parseInt($("#numCommentValue-" + statusID).val());
-        console.log('cm: ', comment);
         if (comment == '')
         {
             return false;
@@ -813,21 +784,75 @@ $("body").on('click', '.dialogAlbum', function(e) {
         url: "/content/photo/createAlbum",
         success: function(data) {
             $(".dialog").dialog({
-                width: "1000",
-                height: "650",
-                position: ['top', 100],
+                width: "1240",
+                height: "620",
                 resizable: false,
                 modal: true,
                 open: function(event, ui) {
+                    $('body').css('overflow', 'hidden');
                     $(".ui-dialog-titlebar").hide();
                     $(".ui-dialog-titlebar-close").hide();
                     $(".dialog").append(data);
                 }
             });
         }
-
     });
+});
+$("body").on('click', '.detailPhoto', function(e) {
+    var url = $(this).attr('url');
+    $.ajax({
+        type: "GET",
+        url: url,
+        success: function(data) {
+            $(".dialog").dialog({
+                width: "1240",
+                height: "600",
+                position: ['top', 100],
+                resizable: false,
+                modal: true,
+                open: function(event, ui) {
+                    $(".ui-widget-content").css('background-color', '#000');
+                    $('body').css('overflow', 'hidden');
+                    $(".ui-dialog-titlebar").hide();
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".dialog").html(data);
+                }
+            });
+        }
+    });
+});
+$("body").on('click', '.page', function(e) {
+    var url = $(this).attr('url');
+    $.ajax({
+        type: "GET",
+        url: url,
+        success: function(data) {
+            $(".dialog").html(data);
+        }
+    });
+});
 
+$("body").on('click', '.frameDialog', function(e) {
+    $("#frameDialog").attr('src', $(this).attr("href"));
+    $("#dialog").dialog({
+        width: "1240",
+        height: "620",
+        position: ['top', 150],
+        modal: true,
+        open: function(event, ui) {
+            $('body').css('overflow', 'hidden');
+            $('.ui-dialog-titlebar').css(' background-color', '#000');
+            $(".ui-dialog-titlebar").css(' background-color', '#000');
+//                    $(".ui-dialog-titlebar-close").hide();
+        },
+        close: function() {
+            $("#frameDialog").attr('src', "about:blank");
+        }
+    });
+    return false;
+});
+$("body").on('click', '.closeFrameDialog', function(e) {
+    $('#dialog').dialog('close');
 });
 $(document).ready(function() {
     $("body").on('click', '.menuClick a', function(e) {
@@ -843,18 +868,104 @@ $(document).ready(function() {
 
     });
 
-    $("body").on('click', '.open', function(e) {
-        var a = $('.action').find('a');
+    $("body").on('click', '.deletePhoto', function(e) {
         e.preventDefault();
-        var $this = $(this),
-                speed = 500;
-        if ($this.hasClass('active') === true) {
-            $this.removeClass('active').next('.box').slideUp(speed);
-        } else if (a.hasClass('active') === false) {
-            $this.addClass('active').next('.box').slideDown(speed);
-        } else {
-            a.removeClass('active').next('.box').slideUp(speed);
-            $this.addClass('active').next('.box').delay(speed).slideDown(speed);
+        var rel = $(this).attr('rel');
+        var relID = $(this).attr('relID');
+        var r = confirm("Are you sure you want to delete this image?")
+        if (r == true)
+        {
+            $.ajax({
+                type: "POST",
+                url: "/content/photo/deletePhoto",
+                data: {id: relID, name: rel},
+                success: function(data) {
+                    $("#" + data).remove();
+                }
+            });
         }
     });
+});
+
+$(document).on('keypress', '.submitCommentPhoto', function(event) {
+    var code = (event.keyCode ? event.keyCode : event.which);
+    if (code == '13' && !event.shiftKey)
+    {
+        var photoID = $(this).attr('id').replace('photoComment-', '');
+        var comment = $("#photoComment-" + photoID).val();
+        if (comment == '')
+        {
+            return false;
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "/content/photo/comment",
+                data: $('#form_' + photoID).serialize(),
+                cache: false,
+                success: function(data) {
+                    var obj = jQuery.parseJSON(data);
+                    if (obj.height < 190) {
+                        $("#box_" + photoID).css('height', obj.height + "px");
+                        $("#box_" + photoID).css('bottom', "-" + obj.height + "px");
+                    }
+                    var rs = [
+                        {
+                            id: obj.id,
+                            content: obj.content,
+                            userID: obj.userID,
+                            name: obj.name,
+                            photoID: obj.photoID,
+                            time: obj.time
+                        }
+                    ];
+                    $("#photoComment-" + photoID).val('');
+                    $(".comment_" + photoID).html(obj.count);
+                    $("#commentPhotoTemplate").tmpl(rs).appendTo(".viewComment_" + obj.photoID + " div.mCustomScrollbar");
+                    $(".viewComment_" + obj.photoID).mCustomScrollbar("scrollTo", " div.mCustomScrollBox div.mCSB_container li.item_" + obj.id);
+                    updateTime();
+                }
+            });
+            //exit();
+        }
+    }
+    //return false;
+});
+$(document).on('keypress', '.submitCommentDialog', function(event) {
+    var code = (event.keyCode ? event.keyCode : event.which);
+    if (code == '13' && !event.shiftKey)
+    {
+        var photoID = $(this).attr('id').replace('textComment_', '');
+        var comment = $("#textComment_" + photoID).val();
+        if (comment == '')
+        {
+            return false;
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "/content/photo/comment",
+                data: $('#formcm_' + photoID).serialize(),
+                cache: false,
+                success: function(data) {
+                    var obj = jQuery.parseJSON(data);
+                    var rs = [
+                        {
+                            id: obj.id,
+                            content: obj.content,
+                            userID: obj.userID,
+                            name: obj.name,
+                            photoID: obj.photoID,
+                            time: obj.time
+                        }
+                    ];
+                    $("#textComment_" + photoID).val('');
+//                    $(".comment_" + photoID).html(obj.count);
+                    $("#commentPhotoTemplate1").tmpl(rs).appendTo(".moreComment-" + obj.photoID + " div.mCustomScrollbar");
+//                    $(".viewComment_" + obj.photoID).mCustomScrollbar("scrollTo", " div.mCustomScrollBox div.mCSB_container li.item_" + obj.id);
+                    updateTime();
+                }
+            });
+            //exit();
+        }
+    }
+    //return false;
 });

@@ -12,16 +12,33 @@ class PostController extends AppController
         parent::__construct();
     }
 
+    public static function like($typeID)
+    {
+        $facade = new DataFacade();
+        $model = $facade->findByAttributes('like', array('actor' => F3::get('SESSION.userID'), 'objID' => $typeID));
+        if (!empty($model))
+            return TRUE;
+        else
+            return FALSE;
+    }
+
     static function getFindComment($postID)
     {
         $facade = new DataFacade();
-        $comment = $facade->findAllAttributes('comment', array('post' => str_replace("_", ":", $postID)));
+        $comment = $facade->findAllAttributes('comment', array('typeID' => str_replace("_", ":", $postID)));
         return $comment;
     }
 
     static function getPhoto($id)
     {
         return Model::get('photo')->find(str_replace("_", ":", $id));
+    }
+
+    static function getFindPhoto($postID)
+    {
+        $facade = new DataFacade();
+        $photo = $facade->findAllAttributes('photo', array('typeID' => $postID));
+        return $photo;
     }
 
     static function getStatus($id)
@@ -123,8 +140,36 @@ class PostController extends AppController
             $type = $this->f3->get("POST.type");
             //determine embed type if existing
             $embedType = $this->f3->get('POST.embedType');
+
+            if (!empty($_POST['typeID']))
+                $typeID = $_POST['typeID'];
+            else
+                $typeID = FALSE;
+            // prepare data
+            $postEntry = array(
+                'owner' => $this->f3->get('SESSION.userID'),
+                'actor' => $currentUser->recordID,
+                'content' => $content,
+                'embedType' => $embedType,
+                'actorName' => $this->getCurrentUserName(),
+                'numberLike' => '0',
+                'numberComment' => '0',
+                'published' => $published,
+                'numberShared' => '0',
+                'contentShare' => 'none',
+                'numberFollow' => '0',
+                'mainStatus' => 'none',
+                'active' => '1',
+                'type' => $type,
+                'typeID' => $typeID
+            );
+
+            // save
+            $statusID = $this->facade->save('status', $postEntry);
             if (!$embedType || $embedType == 'none')
+            {
                 $embedSource = false;
+            }
             else
             {
                 if ($embedType == 'photo')
@@ -147,7 +192,8 @@ class PostController extends AppController
                             'numberComment' => '0',
                             'statusUpload' => 'uploaded',
                             'published' => time(),
-                            'type' => 'post'
+                            'type' => 'post',
+                            'typeID' => $statusID
                         );
                         $photoID = $this->facade->save('photo', $entry);
                         if (!empty($photoID))
@@ -167,32 +213,6 @@ class PostController extends AppController
                     $embedSource = $video;
                 }
             }
-            if (!empty($_POST['typeID']))
-                $typeID = $_POST['typeID'];
-            else
-                $typeID = FALSE;
-            // prepare data
-            $postEntry = array(
-                'owner' => $this->f3->get('SESSION.userID'),
-                'actor' => $currentUser->recordID,
-                'content' => $content,
-                'embedType' => $embedType,
-                'embedSource' => $embedSource,
-                'actorName' => $this->getCurrentUserName(),
-                'numberLike' => '0',
-                'numberComment' => '0',
-                'published' => $published,
-                'numberShared' => '0',
-                'contentShare' => 'none',
-                'numberFollow' => '0',
-                'mainStatus' => 'none',
-                'active' => '1',
-                'type' => $type,
-                'typeID' => $typeID
-            );
-
-            // save
-            $statusID = $this->facade->save('status', $postEntry);
             // track activity
             $this->trackActivity($currentUser, 'ListController', $statusID, $type, $typeID, $published);
             $status = $this->facade->findByPk('status', $statusID);
@@ -219,10 +239,11 @@ class PostController extends AppController
             $content = $this->f3->get('POST.comment');
             //target for count who comments to post on notification, will check later
             $commentEntryCase = array(
-                "actor" => $currentUser->recordID,
+                "userID" => $currentUser->recordID,
                 "content" => $content,
-                "post" => $postID,
+                "typeID" => $postID,
                 "published" => $published,
+                'numberLike' => 0
             );
             $commentID = $this->facade->save('comment', $commentEntryCase);
             $commentRC = $this->facade->findByPk('comment', $commentID);
@@ -250,7 +271,7 @@ class PostController extends AppController
             $statusID = str_replace("_", ":", $this->f3->get('POST.statusID'));
             if (!empty($statusID))
             {
-                $comments = $this->facade->findAllAttributes('comment', array('post' => $statusID));
+                $comments = $this->facade->findAllAttributes('comment', array('typeID' => $statusID));
                 $this->f3->set("comments", $comments);
                 $this->renderModule('moreComment', 'post');
             }
@@ -328,21 +349,6 @@ class PostController extends AppController
             F3::set('comment', $comment);
             F3::set('status_detail', $status);
             $this->render(Register::getPathModule('post') . 'detailStatus.php', 'modules');
-        }
-    }
-
-    public function deleteImage()
-    {
-        if ($this->isLogin())
-        {
-
-            $filename = $_POST['name'];
-            $link = UNLINK . $filename;
-            if (!empty($link))
-            {
-                unlink($link);
-                echo $_POST['id'];
-            }
         }
     }
 

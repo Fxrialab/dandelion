@@ -3,8 +3,8 @@
         <div class="uiProfilePic large-30"><a href="/content/post?user=<?php echo $this->f3->get('SESSION.username'); ?>">
                 <img src="<?php echo $this->f3->get('SESSION.avatar'); ?>" width="50" height="50"></a></div>
         <div class="uiProfileInfo large-70">
-            <p class="fixMarginBottom-5"><a href=""><?php echo $this->f3->get('SESSION.fullname'); ?></a></p>
-            <span><a href="">Edit Profile</a></span>
+            <p class="fixMarginBottom-5"><a href="/content/post?user=<?php echo $this->f3->get('SESSION.username'); ?>"><?php echo $this->f3->get('SESSION.fullname'); ?></a></p>
+            <span><a href="/content/post?user=<?php echo $this->f3->get('SESSION.username'); ?>">Edit Profile</a></span>
         </div>
     </div>
     <div class="uiSideNav column-group">
