@@ -117,8 +117,8 @@ class UserController extends AppController
                     /* Create notify for user */
                     $notify = array(
                         'userID' => $user->recordID,
-                        'notify' => 0,
-                        'requestFriend' => 0,
+                        'notifications' => 0,
+                        'friendRequests' => 0,
                         'message' => 0
                     );
                     $this->facade->save('notify', $notify);

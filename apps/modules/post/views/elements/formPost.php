@@ -75,10 +75,7 @@ $rand = rand(100, 100000);
                             <div class="uiBox-PopUp topLeftArrow control">
                                 <div id="typeActivity"></div>
                                 <div id="typeActivityID" style="display: none"></div>
-                                <textarea id="status" name="status" spellcheck="false" placeholder="What's on your mind?">
-
-                                </textarea>
-
+                                <textarea id="status" name="status" spellcheck="false" placeholder="What's on your mind?"></textarea>
                                 <div class="embedElements">
                                     <!-- tag Image, Video, Link here -->
                                     <input type="hidden" id="embedType" name="embedType" value="">
@@ -213,23 +210,7 @@ $rand = rand(100, 100000);
         });
         return false; // avoid to execute the actual submit of the form.
     });
-    $("body").on('click', '.deleteImage', function(e) {
-        e.preventDefault();
-        var rel = $(this).attr('rel');
-        var relID = $(this).attr('relID');
-        var r = confirm("Are you sure you want to delete this image?")
-        if (r == true)
-        {
-            $.ajax({
-                type: "POST",
-                url: "/content/post/deleteImage",
-                data: {id: relID, name: rel},
-                success: function(data) {
-                    $("#" + data).remove();
-                }
-            });
-        }
-    })
+ 
 
 </script>
 <script id="imgTemplate" type="text/x-jQuery-tmpl">

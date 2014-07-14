@@ -8,12 +8,6 @@ class FriendController extends AppController
         parent::__construct();
     }
 
-    public static function findUser($id)
-    {
-        $facade = new DataFacade();
-        return $this->facade->findByPk('user', $id);
-    }
-
     public function sentFriendRequest()
     {
         if ($this->isLogin())
@@ -22,6 +16,7 @@ class FriendController extends AppController
             $toUser = $this->f3->get("POST.toUser");
             $userB = str_replace('_', ':', $toUser);
             $existRequestRC = $this->facade->findByAttributes('friendship', array('userA' => $currentUser->recordID, 'relationship' => 'request', 'userB' => $userB));
+            $published = time();
             if (!$existRequestRC)
             {
                 //prepare data
@@ -30,10 +25,37 @@ class FriendController extends AppController
                     'relationship' => 'request',
                     'status' => 'new',
                     'userB' => $userB,
-                    'published' => time()
+                    'published' => $published
                 );
                 //save data
                 Model::get('friendship')->createEdge('#' . $currentUser->recordID, '#' . $userB, $relationship);
+                //also create a activity
+                $entry = array(
+                    'owner' => $userB,
+                    'actor' => $currentUser->recordID,
+                    'verb' => 'sent',
+                    'type'  => 'friendRequests',
+                    'timers' => $published,
+                );
+                $this->facade->save('activity', $entry);
+                //update to notify class
+                $curNotify = $this->facade->findByAttributes('notify', array('userID'=>$userB));
+                $updateNotify = array(
+                    'friendRequests' => $curNotify->data->friendRequests + 1,
+                );
+                $this->facade->updateByAttributes('notify', $updateNotify, array('userID'=>$userB));
+                //sent a notifications
+                $newNotify = $this->facade->findByAttributes('notify', array('userID'=>$userB));
+                $friendRequests = $newNotify->data->friendRequests;
+                $keys = 'friendRequests.sent.'.$userB;
+                $keys = str_replace(':','_', $keys);
+                $data = array(
+                    'type'  => 'friendRq',
+                    'target'=> str_replace(':', '_',$userB),
+                    'dispatch'  => str_replace(':', '_',$currentUser->recordID),
+                    'count' => $friendRequests,
+                );
+                $this->service->exchange('dandelion','topic')->routingKey($keys)->dispatch('friendRequests', $data);
             }
             //After friend request is sent. The friendRequests action will be create
             $existFriendRequestAction = $this->facade->findByAttributes('actions', array('actionElement' => 'friendRequests'));

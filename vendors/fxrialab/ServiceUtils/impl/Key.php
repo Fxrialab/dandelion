@@ -1,5 +1,5 @@
 <?php
-require_once SERVICE_UTILS . "impl/Notifications.php";
+require_once SERVICE_UTILS . "impl/AMQP.php";
 class Key
 {
     protected $exchangeName;
@@ -13,7 +13,7 @@ class Key
 
     public function routingKey($routingKey)
     {
-        $impl = new Notifications();
+        $impl = new AMQP();
         $impl->setTarget($this->exchangeName, $this->exchangeType, $routingKey);
         return $impl;
     }

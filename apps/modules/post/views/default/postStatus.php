@@ -6,7 +6,8 @@ $statusID   = $this->f3->get('statusID');
 $username   = $currentUser->data->username;
 $like       = false;
 $rand       = rand(100, 100000);
-if ($currentUser->data->profilePic == 'none'){
+if ($currentUser->data->profilePic == 'none')
+{
     $gender = ElementController::findGender($currentUser->recordID);
     if ($gender =='male')
         $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';

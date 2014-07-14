@@ -41,7 +41,7 @@ class HomeController extends AppController
                 array_push($loadJS, BASE_URL . $jsMod);
             }
             $this->f3->set('js', $loadJS);
-            $this->f3->set('currentProfileID', $this->getCurrentUser()->recordID);
+            $this->f3->set('loggedUserID', $this->f3->get('SESSION.userID'));
             $this->render('home/home.php', 'default');
         }
         else
@@ -67,10 +67,9 @@ class HomeController extends AppController
 //            {
 //                $obj->type = 'post';
 //            }
-
+            $obj->type = 'post';
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
-            //var_dump($activitiesRC);
             if (!empty($activitiesRC))
             {
                 $homes = array();
@@ -87,6 +86,92 @@ class HomeController extends AppController
                 }
             }
             $this->render('home/view.php', 'default');
+        }
+    }
+
+    public function listenPost()
+    {
+        if ($this->isLogin())
+        {
+            $objID = $this->f3->get('POST.data');
+            $activity = $this->facade->findByPk('activity', $objID);
+            if (!empty($activity))
+            {
+                $mod = $activity->data->type;
+                $currentUser = $this->facade->findByPk('user', $activity->data->owner);
+                if ($mod == 'post')
+                {
+                    $status = $this->facade->findByPk('status', $activity->data->object);
+                }elseif ($mod == 'photo') {
+                    //@TODO: check it later
+                    $status = $this->facade->findByPk('photo', $activity->data->object);
+                }
+                $this->f3->set('status', $status);
+                $this->f3->set('statusID', $status->recordID);
+                $this->f3->set('content', $status->data->content);
+                //$this->f3->set('tagged', 'none');
+                $this->f3->set('currentUser', $currentUser);
+                $this->f3->set('published', $status->data->published);
+                $this->renderModule('postStatus', 'post');
+            }
+        }
+    }
+
+    public function notifications()
+    {
+        if ($this->isLogin())
+        {
+            $data = $this->f3->get('POST.data');
+            if (!empty($data))
+            {
+                $this->f3->set('data', $data);
+                $this->render('home/items.php', 'default');
+            }
+            //var_dump($data['type']);
+        }
+    }
+
+    public function loadNotifications()
+    {
+        if ($this->isLogin())
+        {
+            $currentUserID = $this->f3->get('SESSION.userID');
+            //update has read all notifications
+            $isRead = array(
+                'notifications' => 0,
+            );
+            $this->facade->updateByAttributes('notify', $isRead, array('userID'=>$currentUserID));
+            //load all notifications
+            $obj = new ObjectHandler();
+            $obj->owner = $currentUserID;
+            $obj->type  = 'notifications';
+            $obj->select= "ORDER BY timers DESC";
+            $notification = $this->facade->findAll('activity', $obj);
+            $this->f3->set('notification', $notification);
+            $this->f3->set('currentUserID', $currentUserID);
+            $this->render('home/notifications.php', 'default');
+        }
+    }
+
+    public function loadFriendRequests()
+    {
+        if ($this->isLogin())
+        {
+            $currentUserID = $this->f3->get('SESSION.userID');
+            //update has read all notifications
+            $isRead = array(
+                'friendRequests' => 0,
+            );
+            $this->facade->updateByAttributes('notify', $isRead, array('userID'=>$currentUserID));
+            //load all friend requests
+            $obj = new ObjectHandler();
+            $obj->owner = $currentUserID;
+            $obj->type  = 'friendRequests';
+            $obj->select= "ORDER BY timers DESC";
+            $notification = $this->facade->findAll('activity', $obj);
+            $this->f3->set('notification', $notification);
+            $this->f3->set('currentUserID', $currentUserID);
+            $this->render('home/friendRequests.php', 'default');
         }
     }
 
@@ -151,13 +236,16 @@ class HomeController extends AppController
                 foreach ($result as $people)
                 {
                     $infoOfSearchFound[$people] = Model::get('user')->callGremlin("current.map", array('@rid' => '#' . $people));
-
+                    if ($infoOfSearchFound[$people][0]->profilePic != 'none')
+                        $avatar = $infoOfSearchFound[$people][0]->profilePic;
+                    else
+                        $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                     $data['results'][] = array(
                         'recordID' => str_replace(':', '_', $people),
                         'firstName' => ucfirst($infoOfSearchFound[$people][0]->firstName),
                         'lastName' => ucfirst($infoOfSearchFound[$people][0]->lastName),
                         'username' => $infoOfSearchFound[$people][0]->username,
-                        'profilePic' => $infoOfSearchFound[$people][0]->profilePic,
+                        'profilePic' => $avatar,
                     );
                 }
                 $data['success'] = true;
@@ -188,7 +276,7 @@ class HomeController extends AppController
                 }
                 $this->f3->set('resultSearch', $resultSearch);
                 $this->f3->set('infoOfSearchFound', $infoOfSearchFound);
-                $this->render('user/searchResult.php', 'default');
+                $this->render('home/searchResult.php', 'default');
             }
         }
     }

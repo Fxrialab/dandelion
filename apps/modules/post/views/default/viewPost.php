@@ -4,6 +4,7 @@ $rpStatusID = str_replace(":", "_", $statusID);
 $embedType = $status->data->embedType;
 $status_content = $status->data->content;
 $numberLikes = $status->data->numberLike;
+$numberComment = $status->data->numberComment;
 $status_contentShare = $status->data->contentShare;
 $status_published = $status->data->published;
 ?>
@@ -80,22 +81,22 @@ $status_published = $status->data->published;
                         </div>
                     <?php }
                     ?>
+
                     <?php
                     if (!empty($status->data->embedType) && $status->data->embedType == 'photo')
                     {
-                        $imagesID = explode(',', $status->data->embedSource);
-                        $countImg = count($imagesID);
-                        foreach ($imagesID as $value)
+                        $photo = PostController::getFindPhoto($status->recordID);
+                        if (!empty($photo))
                         {
-                            $findImg = PostController::getPhoto($value);
-                            if (!empty($findImg))
+                            $countPhoto = count($photo);
+                            foreach ($photo as $k => $value)
                             {
-                                if ($countImg == 1)
-                                    echo '<div class="large-100"><img src=' . UPLOAD_URL . $findImg->data->fileName . '></div>';
-                                elseif ($countImg == 3)
-                                    echo '<div class="large-30"><div class="imgPost"><img src=' . UPLOAD_URL . $findImg->data->fileName . '></div></div>';
+                                if ($countPhoto == 1)
+                                    echo '<div class="large-100"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div>';
+                                elseif ($countPhoto == 3)
+                                    echo '<div class="large-30"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div></div>';
                                 else
-                                    echo '<div class="large-50"><div class="imgPost"><img src=' . UPLOAD_URL . $findImg->data->fileName . '></div></div>';
+                                    echo '<div class="large-50"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div></div>';
                             }
                         }
                     }
@@ -110,13 +111,13 @@ $status_published = $status->data->published;
                                 if ($like == TRUE)
                                 {
                                     ?>
-                                    <a class="unlikeAction" id="<?php echo $rpStatusID; ?>" title="Unlike post">Unlike</a>
+                                    <a class="unlikeAction" id="<?php echo $rpStatusID; ?>" rel="status" title="Unlike">Unlike</a>
                                     <?php
                                 }
                                 else
                                 {
                                     ?>
-                                    <a class="likeAction" id="<?php echo $rpStatusID; ?>" title="Like post">Like</a>
+                                    <a class="likeAction" id="<?php echo $rpStatusID; ?>" rel="status" title="Like">Like</a>
                                 <?php } ?>
                             </li>
                             <li class="gapArticleActions">.</li>
@@ -161,7 +162,7 @@ $status_published = $status->data->published;
 //                    $records = $mod['comment'][$statusID];
                         if ($status->data->numberLike > 0)
                         {
-                            if ($status->data->numberLike == 'null')
+                            if ($like == false)
                             {
                                 ?>
                                 <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID; ?>">
@@ -189,11 +190,11 @@ $status_published = $status->data->published;
                                 }
                             }
                         }
-                        if ($activity->numberComment > 3)
+                        if ($status->data->numberComment > 3)
                         {
                             ?>
                             <div class="whoCommentThisPost verGapBox" id="viewComments-<?php echo $rpStatusID; ?>">
-                                <span><i class="statusCounterIcon-comment"></i><a class="viewAllComments" id="<?php echo $rpStatusID; ?>">View all <?php echo $activity->numberComment; ?> comments</a></span>
+                                <i class="statusCounterIcon-comment"></i><a class="viewAllComments" id="<?php echo $rpStatusID; ?>">View all <?php echo $activity->numberComment; ?> comments <span style="width: 10px" class="loading_<?php echo $rpStatusID; ?>"><div class='loading2'></div></span></a>
                             </div>
                             <?php
                         }

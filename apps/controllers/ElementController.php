@@ -51,11 +51,19 @@ class ElementController extends Controller
         return $model;
     }
 
-    static public function findUser()
+    static public function findUser($id)
     {
         $facade = new DataFacade;
-        $model = $facade->findByPk('user', F3::get('SESSION.userID'));
+        $model = $facade->findByPk('user', $id);
         return $model;
+    }
+
+    static public function getFullNameUser($id)
+    {
+        $facade = new DataFacade;
+        $model = $facade->findByPk('user', $id);
+        $fullName = ucfirst($model->data->firstName).' '.ucfirst($model->data->lastName);
+        return $fullName;
     }
 
 }

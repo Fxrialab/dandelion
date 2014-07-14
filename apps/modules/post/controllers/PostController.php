@@ -12,16 +12,33 @@ class PostController extends AppController
         parent::__construct();
     }
 
+    public static function like($typeID)
+    {
+        $facade = new DataFacade();
+        $model = $facade->findByAttributes('like', array('actor' => F3::get('SESSION.userID'), 'objID' => $typeID));
+        if (!empty($model))
+            return TRUE;
+        else
+            return FALSE;
+    }
+
     static function getFindComment($postID)
     {
         $facade = new DataFacade();
-        $comment = $facade->findAllAttributes('comment', array('post' => str_replace("_", ":", $postID)));
+        $comment = $facade->findAllAttributes('comment', array('typeID' => str_replace("_", ":", $postID)));
         return $comment;
     }
 
     static function getPhoto($id)
     {
         return Model::get('photo')->find(str_replace("_", ":", $id));
+    }
+
+    static function getFindPhoto($postID)
+    {
+        $facade = new DataFacade();
+        $photo = $facade->findAllAttributes('photo', array('typeID' => $postID));
+        return $photo;
     }
 
     static function getStatus($id)
@@ -123,8 +140,36 @@ class PostController extends AppController
             $type = $this->f3->get("POST.type");
             //determine embed type if existing
             $embedType = $this->f3->get('POST.embedType');
+
+            if (!empty($_POST['typeID']))
+                $typeID = $_POST['typeID'];
+            else
+                $typeID = FALSE;
+            // prepare data
+            $postEntry = array(
+                'owner' => $this->f3->get('SESSION.userID'),
+                'actor' => $currentUser->recordID,
+                'content' => $content,
+                'embedType' => $embedType,
+                'actorName' => $this->getCurrentUserName(),
+                'numberLike' => '0',
+                'numberComment' => '0',
+                'published' => $published,
+                'numberShared' => '0',
+                'contentShare' => 'none',
+                'numberFollow' => '0',
+                'mainStatus' => 'none',
+                'active' => '1',
+                'type' => $type,
+                'typeID' => $typeID
+            );
+
+            // save
+            $statusID = $this->facade->save('status', $postEntry);
             if (!$embedType || $embedType == 'none')
+            {
                 $embedSource = false;
+            }
             else
             {
                 if ($embedType == 'photo')
@@ -147,7 +192,8 @@ class PostController extends AppController
                             'numberComment' => '0',
                             'statusUpload' => 'uploaded',
                             'published' => time(),
-                            'type' => 'post'
+                            'type' => 'post',
+                            'typeID' => $statusID
                         );
                         $photoID = $this->facade->save('photo', $entry);
                         if (!empty($photoID))
@@ -167,34 +213,16 @@ class PostController extends AppController
                     $embedSource = $video;
                 }
             }
-            if (!empty($_POST['typeID']))
-                $typeID = $_POST['typeID'];
-            else
-                $typeID = FALSE;
-            // prepare data
-            $postEntry = array(
-                'owner' => $this->f3->get('SESSION.userID'),
-                'actor' => $currentUser->recordID,
-                'content' => $content,
-                'embedType' => $embedType,
-                'embedSource' => $embedSource,
-                'actorName' => $this->getCurrentUserName(),
-                'numberLike' => '0',
-                'numberComment' => '0',
-                'published' => $published,
-                'numberShared' => '0',
-                'contentShare' => 'none',
-                'numberFollow' => '0',
-                'mainStatus' => 'none',
-                'active' => '1',
-                'type' => $type,
-                'typeID' => $typeID
-            );
-
-            // save
-            $statusID = $this->facade->save('status', $postEntry);
             // track activity
             $this->trackActivity($currentUser, 'ListController', $statusID, $type, $typeID, $published);
+
+            /*try {
+                echo "track activity if check friend null <br />";
+                $this->service->exchange('abc', 'topic')->routingKey('userA.text')->dispatch('message', '22:1');
+            } catch(Exception $e) {
+                //echo "Exception: ".$e->getMessage();
+            }*/
+
             $status = $this->facade->findByPk('status', $statusID);
             $this->f3->set('status', $status);
             $this->f3->set('statusID', $statusID);
@@ -219,10 +247,11 @@ class PostController extends AppController
             $content = $this->f3->get('POST.comment');
             //target for count who comments to post on notification, will check later
             $commentEntryCase = array(
-                "actor" => $currentUser->recordID,
+                "userID" => $currentUser->recordID,
                 "content" => $content,
-                "post" => $postID,
+                "typeID" => $postID,
                 "published" => $published,
+                'numberLike' => 0
             );
             $commentID = $this->facade->save('comment', $commentEntryCase);
             $commentRC = $this->facade->findByPk('comment', $commentID);
@@ -232,6 +261,114 @@ class PostController extends AppController
                 'numberComment' => $status_update->data->numberComment + 1
             );
             $this->facade->updateByAttributes('status', $dataCountNumberComment, array('@rid' => "#" . $postID));
+            //sent a notifications to owner's status
+            $owner  =   $status_update->data->owner;
+            $duplicate = $this->facade->findByAttributes('activity', array('owner'=>$owner, 'verb'=>'comment', 'object'=>$postID));
+            if (empty($duplicate))
+            {
+                //create a activity for owner's status
+                $entry = array(
+                    'owner' => $owner,
+                    'actor' => $currentUser->recordID,
+                    'verb' => 'comment',
+                    'object'=> $postID,
+                    'type'  => 'notifications',
+                    'timers' => $published,
+                    'details'   => 'commented on your status',
+                );
+                $this->facade->save('activity', $entry);
+                //update to notify class
+                $curNotify = $this->facade->findByAttributes('notify', array('userID'=>$owner));
+                $updateNotify = array(
+                    'notifications' => $curNotify->data->notifications + 1,
+                );
+                $this->facade->updateByAttributes('notify', $updateNotify, array('userID'=>$owner));
+                //sent a notifications
+                $newNotify = $this->facade->findByAttributes('notify', array('userID'=>$owner));
+                $notifications = $newNotify->data->notifications;
+                $keys = 'notifications.comment.'.$owner;
+                $keys = str_replace(':','_', $keys);
+                $data = array(
+                    'type'  => 'comment',
+                    'target'=> str_replace(':', '_',$postID),
+                    'dispatch'  => str_replace(':', '_',$currentUser->recordID),
+                    'content'   => $content,
+                    'published'  => $published,
+                    'count' => $notifications,
+                );
+                $this->service->exchange('dandelion','topic')->routingKey($keys)->dispatch('comment', $data);
+            }else {//else update it
+                $actor = explode('_',$duplicate->data->actor);
+                $pos = array_search($currentUser->recordID, $actor);
+                if (!is_bool($pos))
+                {
+                    unset($actor[$pos]);
+                }
+                $str = '';
+                if(count($actor) >= 1)
+                {
+                    foreach ($actor as $actors)
+                    {
+                        $str = $str.$actors.'_';
+                    }
+                    $str = substr($currentUser->recordID.'_'.$str, 0, -1);
+                }elseif (count($actor) == 0){
+                    $str = $str.$currentUser->recordID;
+                }
+                //then create a activity for who's friend join to status
+                $curActor = explode('_',$duplicate->data->actor);
+                $ownerName = ElementController::getFullNameUser($owner);
+                foreach ($curActor as $a)
+                {
+                    if ($a != $currentUser->recordID)
+                    {
+                        $actorActivity = $this->facade->findByAttributes('activity', array('owner'=>$a, 'verb'=>'comment', 'object'=>$postID));
+                        if (empty($actorActivity))
+                        {
+                            $entry = array(
+                                'owner' => $a,
+                                'actor' => $str,
+                                'verb' => 'comment',
+                                'object'=> $postID,
+                                'type'  => 'notifications',
+                                'timers' => $published,
+                                'details'   => "also commented on ".$ownerName."'s status",
+                            );
+                            $this->facade->save('activity', $entry);
+                        }else {
+                            $actorActivity->data->actor = $str;
+                            $actorActivity->data->timers = $published;
+                            $this->facade->updateByPk('activity', $actorActivity->recordID, $actorActivity);
+                        }
+                        //update to notify class
+                        $curNotify = $this->facade->findByAttributes('notify', array('userID'=>$a));
+                        $updateNotify = array(
+                            'notifications' => $curNotify->data->notifications + 1,
+                        );
+                        $this->facade->updateByAttributes('notify', $updateNotify, array('userID'=>$a));
+                        //sent a notifications
+                        $newNotify = $this->facade->findByAttributes('notify', array('userID'=>$a));
+                        $notifications = $newNotify->data->notifications;
+                        $keys = 'notifications.comment.'.$a;
+                        $keys = str_replace(':','_', $keys);
+                        $data = array(
+                            'type'  => 'comment',
+                            'target'=> str_replace(':', '_',$postID),
+                            'dispatch'  => str_replace(':', '_',$currentUser->recordID),
+                            'content'   => $content,
+                            'published'  => $published,
+                            'count' => $notifications,
+                        );
+                        $this->service->exchange('dandelion','topic')->routingKey($keys)->dispatch('comment', $data);
+                    }
+                }
+
+                //update actors to owner's status
+                $duplicate->data->actor = $str;
+                $duplicate->data->timers = $published;
+                $this->facade->updateByPk('activity', $duplicate->recordID, $duplicate);
+            }
+
             $this->f3->set('comments', $commentRC);
 
             $this->renderModule('viewComment', 'post');
@@ -250,7 +387,7 @@ class PostController extends AppController
             $statusID = str_replace("_", ":", $this->f3->get('POST.statusID'));
             if (!empty($statusID))
             {
-                $comments = $this->facade->findAllAttributes('comment', array('post' => $statusID));
+                $comments = $this->facade->findAllAttributes('comment', array('typeID' => $statusID));
                 $this->f3->set("comments", $comments);
                 $this->renderModule('moreComment', 'post');
             }
@@ -328,21 +465,6 @@ class PostController extends AppController
             F3::set('comment', $comment);
             F3::set('status_detail', $status);
             $this->render(Register::getPathModule('post') . 'detailStatus.php', 'modules');
-        }
-    }
-
-    public function deleteImage()
-    {
-        if ($this->isLogin())
-        {
-
-            $filename = $_POST['name'];
-            $link = UNLINK . $filename;
-            if (!empty($link))
-            {
-                unlink($link);
-                echo $_POST['id'];
-            }
         }
     }
 

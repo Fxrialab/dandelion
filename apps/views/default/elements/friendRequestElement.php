@@ -18,7 +18,7 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '')
                 ?>
                 <div class="rowItemBox column-group" id="unit<?php echo $friendRequestID; ?>">
                     <div class="profilePicDiv large-30">
-                        <img src="<?php echo $requestUserProfilePic; ?>" width="50" height="50">
+                        <img src="" width="50" height="50">
                     </div>
                     <div class="profileInfoDiv large-70">
                         <p class="timeLineName fixMarginBottom-5"><a class="timeLineLink large-100" href="/content/myPost?username=<?php echo $requestProfile;?>"><?php echo $requestUserName; ?></a></p>

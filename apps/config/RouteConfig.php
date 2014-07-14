@@ -24,6 +24,10 @@ class RouteConfig
         'newPassword_POST' => "UserController",
         /* Route config for home page */
         'home_GET' => "HomeController,UserController",
+        'listenPost_POST'    => "HomeController",
+        'notifications_POST'    => "HomeController",
+        'loadNotifications_POST'    => "HomeController",
+        'loadFriendRequests_POST'    => "HomeController",
         'moreCommentHome_POST' => "HomeController",
         'loading_POST' => "HomeController",
         /* Route config for request friend */

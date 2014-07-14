@@ -298,3 +298,19 @@
 .icon12-settings:hover:before,
 .icon12-settings:focus:before,
 .icon12-settings:active:before { background-position: -12px -120px; }
+.nextPhoto {
+    background-image: url("../images/nextArrow.png");
+    background-repeat: no-repeat;
+    color: transparent;
+    width: 54px;
+    height: 54px;
+    display: inherit;
+}
+.prevPhoto {
+    background-image: url("../images/prevArrow.png");
+    background-repeat: no-repeat;
+    color: transparent;
+    width: 54px;
+    height: 54px;
+    display: inherit;
+}
