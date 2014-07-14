@@ -2267,6 +2267,7 @@ a{
 .dropdown-menu-topbar div.scroll li{
     overflow: hidden; border-bottom: 1px solid #ccc; padding: 5px 10px;
 }
+
 .infoProfile{
     padding: 0 10px;
 }
@@ -2294,4 +2295,27 @@ a{
 }
 .fade{
     margin-right:-14px; margin-top:-6px;margin-bottom:-6px;background-color: #fff; padding: 10px; max-height: 562px; min-height: 562px
+}
+
+#topBar .dropdown-menu-topbar div.scroll div.loading-bar {
+    margin-top: 0;
+    padding: 10px 0;
+}
+
+span.countNotifies, span.countFriendRequest {
+    position: absolute;
+    height: inherit;
+    display: none;
+}
+
+.notificationContainers li:hover {
+    cursor: pointer;
+}
+
+.notificationContent {
+    margin-bottom: 5px;
+}
+
+.notificationTimes a.swTimeStatus:hover {
+    text-decoration: none;
 }

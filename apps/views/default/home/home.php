@@ -1,6 +1,21 @@
-<script>
+<?php
+$loggedUserID = str_replace(':', '_', $loggedUserID);
+?>
+<script type="text/javascript">
     $(document).ready(function() {
-
+        MQ.queue("userID<?php echo $loggedUserID; ?>").bind("dandelion", "newsFeed.*.<?php echo $loggedUserID; ?>").callback(function(m) {
+            //console.log('amqp data: ', m);
+            $.ajax({
+                 type: "POST",
+                 url: "/listenPost",
+                 data: {data: m.data, exchange: m.exchange, routingKey: m.routingKey},
+                 cache: false,
+                 success: function(html) {
+                    $("#contentContainer").prepend(html);
+                    updateTime();
+                 }
+             });
+        });
         $('#contentContainer').scrollPagination({
             nop: 5, // The number of posts per scroll to be loaded
             offset: 0, // Initial offset, begins at 0 in this case
@@ -13,10 +28,10 @@
 
         });
         $('#typeActivity').html('<input type=hidden id=type name=type value=post >');
+
     });
-
-
 </script>
+
 <style>
     #uploaded_images {width: 800px;margin: 0 auto}
     #uploaded_images div{float:left;padding-left: 10px;}

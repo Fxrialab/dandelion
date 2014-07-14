@@ -267,7 +267,7 @@ $(document).ready(function()
                             $.each(data.results, function()
                             {
                                 $('#resultsList').append("<li rel='" + this.recordID + "'>" +
-                                        "<a href='/content/myPost?username=" + this.username + "'>" +
+                                        "<a href='/content/post?user=" + this.username + "'>" +
                                         "<span>" +
                                         "<img class='imgFindPeople' src='" + this.profilePic + "' width='40' height='40'/>" +
                                         "<span class='infoPeople'>" + this.firstName + " " + this.lastName + "</span>" +

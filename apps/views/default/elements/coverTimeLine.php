@@ -1,9 +1,9 @@
 <?php
-$otherUser = $currentUser = ElementController::findUser();
-
+$otherUser = $this->f3->get('otherUser');
+$currentUser = $this->f3->get('currentUser');
 $statusFriendShip = $this->f3->get('statusFriendShip');
 //prepare data
-$otherUserID = $this->f3->get('SESSION.userID');
+$otherUserID = $otherUser->recordID;
 $otherUserName = ucfirst($otherUser->data->firstName) . " " . ucfirst($otherUser->data->lastName);
 $currentUserName = ucfirst($currentUser->data->firstName) . " " . ucfirst($currentUser->data->lastName);
 
@@ -13,54 +13,57 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
 <div class="uiCoverTimeLineContainer" style=" position: relative">
     <form id="submitCover">
         <?php
+        if ($otherUser->data->coverPhoto != 'none')
+            $photo = ElementController::findPhoto($otherUser->data->coverPhoto);
+        if (!empty($photo))
+        {
+            $a = 'Change cover';
+        }
+        else
+        {
+            $a = 'Add a cover';
+        }
         ?>
         <div class="column-group uiCoverTimeLine">
             <div class="displayPhoto">
                 <?php
-                if ($otherUser->data->coverPhoto != 'none')
+                if (!empty($photo))
                 {
-                    $photo = ElementController::findPhoto($otherUser->data->coverPhoto);
-                    if (!empty($photo))
-                        $a = 'Change cover';
-                    else
-                        $a = 'Add a cover';
-                    if (!empty($photo))
-                    {
-                        ?>
-                        <div class="imgCover">
-                            <div style="width:<?php echo $photo->data->width; ?>px; height:<?php echo $photo->data->height; ?>px;  position: relative; <?php if (!empty($photo->data->dragX)) echo 'left: -' . $photo->data->dragX . 'px' ?>; <?php if (!empty($photo->data->dragY)) echo 'top: -' . $photo->data->dragY . 'px' ?>">
-                                <img src="<?php echo UPLOAD_URL . "cover/750px/" . $photo->data->fileName ?>" style="width:100%;">
-                            </div>
+                    ?>
+                    <div class="imgCover">
+                        <div style="width:<?php echo $photo->data->width; ?>px; height:<?php echo $photo->data->height; ?>px;  position: relative; <?php if (!empty($photo->data->dragX)) echo 'left: -' . $photo->data->dragX . 'px' ?>; <?php if (!empty($photo->data->dragY)) echo 'top: -' . $photo->data->dragY . 'px' ?>">
+                            <img src="<?php echo UPLOAD_URL . "cover/750px/" . $photo->data->fileName ?>" style="width:100%;">
                         </div>
-                        <?php
-                    }
-                } else
-                {
-                    $a = 'Add a cover';
-                }
-                ?>
+                    </div>
+                <?php } ?>
             </div>
             <div class="actionCover">
-                <a data-dropdown="#dropdown-setting-cover" class="button icon edit"><span class="lable"><?php echo $a ?></span></a>
-                <div id="dropdown-setting-cover" class="dropdown dropdown-tip">
-                    <ul class="dropdown-menu"> 
-                        <li><a href="javascript:void(0)" role="cover" class="photoBrowse" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a></li>
-                        <li><a href="javascript:void(0)"><div id="uploadPhotoCover">Upload photo</div></a></li>
-                        <?php
-                        if (!empty($photo))
-                        {
-                            ?>
-                            <li><a href="javascript:void(0)" class="rCoverUser" rel="<?php echo $photo->recordID ?>"><span class="icon icon61"></span><span class="label">Reposition...</span></a></li>
-                            <?php
-                        }
-                        if (!empty($otherUser->data->coverPhoto) && $otherUser->data->coverPhoto != 'none')
-                        {
-                            ?>
-                            <li> <a href="javascript:void(0)" class="removeImgUser " id="removeCover" role="cover" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a></li>
-                        <?php } ?> 
-                    </ul>
-                </div>
 
+                <div class="menuClick">
+                    <a id="linkcover" class="button icon add"><span><?php echo $a ?></span></a>
+                    <div id="divcover" class="divmenu">
+                        <nav class="ink-navigation">
+                            <ul class="menu vertical ">
+                                <li><a href="javascript:void(0)" role="cover" class="photoBrowse" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a></li>
+                                <li><a href="javascript:void(0)"><div id="uploadPhotoCover"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a></li>
+                                <?php
+                                if (!empty($photo))
+                                {
+                                    ?>
+                                    <li><a href="javascript:void(0)" class="rCoverUser" rel="<?php echo $photo->recordID ?>"><span class="icon icon61"></span><span class="label">Reposition...</span></a></li>
+                                    <?php
+                                }
+                                if (!empty($otherUser->data->coverPhoto) && $otherUser->data->coverPhoto != 'none')
+                                {
+                                    ?>
+                                    <li> <a href="javascript:void(0)" class="removeImgUser " id="removeCover" role="cover" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a></li>
+                                <?php } ?>
+                            </ul>
+                        </nav>
+
+
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -125,53 +128,42 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                     if ($statusFriendShip == 'request' || $statusFriendShip == 'later')
                     {
                         ?>
-                        <div class="friendButton">
-                            <div>
-                                <div class="button"><span class="label">Friend Request Sent</span></div>
-                                <div class="info">
-                                    <nav class="ink-navigation">
-                                        <ul class="menu vertical menu_arrow shadow">
-                                            <div class="arrow_menu" style="left: 50%"></div>
-                                            <li><a>Report/Block</a></li>
-                                            <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Cancel Request</a></li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
+                        <a class="requestFriend uiMediumButton orange linkHover-fffff">Friend Request Sent</a>
+                        <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
+                            <nav class="ink-navigation">
+                                <ul class="menu vertical">
+                                    <li><a>Report/Block</a></li>
+                                    <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Cancel Request</a></li>
+                                </ul>
+                            </nav>
                         </div>
                         <?php
                     }
                     else
                     {
                         ?>
-                        <a class="button" id="<?php echo $rpOtherUserID; ?>">Add Friend</a>
+                        <a class="addFriend uiMediumButton orange linkHover-fffff" id="<?php echo $rpOtherUserID; ?>">Add Friend</a>
                         <?php
                     }
                 }
                 elseif ($statusFriendShip == 'respondRequest')
                 {
                     ?>
-                    <div class="friendButton">
-                        <div>
-                            <div class="button"><span class="label">Respond to Friend Request</span></div>
-                            <div class="info">
-                                <nav class="ink-navigation">
-                                    <ul class="menu vertical menu_arrow shadow">
-                                        <div class="arrow_menu" style="left: 50%"></div>
-                                        <li><a class="confirmFriend" id="<?php echo $rpOtherUserID; ?>">Confirm Friend</a></li>
-                                        <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unaccept Request</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
+                    <a class="respondFriendRequest uiMediumButton orange linkHover-fffff">Respond to Friend Request</a>
+                    <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
+                        <nav class="ink-navigation">
+                            <ul class="menu vertical">
+                                <li><a class="confirmFriend" id="<?php echo $rpOtherUserID; ?>">Confirm Friend</a></li>
+                                <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unaccept Request</a></li>
+                            </ul>
+                        </nav>
                     </div>
-
                     <?php
                 }
                 elseif ($statusFriendShip == 'updateInfo')
                 {
                     ?>
-                    <a class="button" href="/about?user=<?php echo $currentUser->data->username; ?>">Update Info</a>
+                    <a class="uiMediumButton orange linkHover-fffff" href="/about?user=<?php echo $currentUser->data->username; ?>">Update Info</a>
                     <?php
                 }
                 else
@@ -182,8 +174,8 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                             <div class="button"><span class="label">Friends</span></div>
                             <div class="info">
                                 <nav class="ink-navigation">
-                                    <ul class="menu vertical menu_arrow shadow">
-                                        <div class="arrow_menu" style="left: 50%"></div>
+                                    <ul class="menu vertical menu_arrow">
+                                        <div class="arrow_timeLine" style="left: 55%"></div>
                                         <li><a>Report/Block</a></li>
                                         <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unfriend</a></li>
                                     </ul>
@@ -213,7 +205,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                 {
                     var obj = jQuery.parseJSON(data);
                     var user = [
-                        {username: obj.username},
+                        {username: obj.username}
                     ];
                     $("#navInfoUserTemplate").tmpl(user).appendTo(".timeLineMenuNav");
                     $('.profilePic a img').css('display', 'block');

@@ -75,10 +75,7 @@ $rand = rand(100, 100000);
                             <div class="uiBox-PopUp topLeftArrow control">
                                 <div id="typeActivity"></div>
                                 <div id="typeActivityID" style="display: none"></div>
-                                <textarea id="status" name="status" spellcheck="false" placeholder="What's on your mind?">
-
-                                </textarea>
-
+                                <textarea id="status" name="status" spellcheck="false" placeholder="What's on your mind?"></textarea>
                                 <div class="embedElements">
                                     <!-- tag Image, Video, Link here -->
                                     <input type="hidden" id="embedType" name="embedType" value="">

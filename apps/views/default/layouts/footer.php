@@ -16,6 +16,8 @@
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tiptip.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.dropdown.js"></script>
+<script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>mq.js"></script>
+<script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>swfobject.js"></script>
 <script>
     $('.tiptip a.button, .tiptip button').tipTip();
 </script>

@@ -168,147 +168,49 @@ class AppController extends Controller
     // **********************************
     public function trackActivity($actor, $verb, $object, $type, $typeID, $published)
     {
-        $checkActivity = $this->facade->findAllAttributes('activity', array('owner' => $actor->recordID, 'object' => $object));
-        $findUserBOfFollow = $this->facade->findByPk('follow', $actor->recordID);
-        $actorID = ($findUserBOfFollow) ? $findUserBOfFollow->data->userB : $actor->recordID;
-        if (!$checkActivity)
+        $existActivity = $this->facade->findAllAttributes('activity', array('owner' => $actor->recordID, 'object' => $object));
+
+        if (!$existActivity)
         {
             // prepare activity data
-            $activity = array(
+            $data = array(
                 'owner' => $actor->recordID,
-                'actor' => $actorID,
+                'actor' => $actor->recordID,
                 'verb' => $verb,
                 'object' => $object,
                 'type' => $type,
                 'typeID' => $typeID,
-                'idObject' => $object,
                 'published' => $published
             );
             // create activity for currentUser
-            $this->facade->save('activity', $activity);
-            $friends = $this->getFriendsStt($actor->recordID);
+            $activities = $this->facade->save('activity', $data);
+            // check all friends of current user
+            $friends = $this->facade->findAllAttributes('friendship', array('userA' => $actor->recordID, 'relationship' => 'friend', 'status' => 'ok'));
 
-            // dupicate activities for followers
-            if (!empty($friends) && !$checkActivity)
+            // duplicate activities for friends
+            if (!empty($friends))
             {
                 for ($i = 0; $i < count($friends); $i++)
                 {
                     $checkActivityFriend = $this->facade->findAllAttributes('activity', array('owner' => $friends[$i]->data->userB, 'object' => $object));
-                    //var_dump($checkActivityFriend);
-                    //@todo handling follow after: HN
-                    if ($findUserBOfFollow)
-                    {
-                        $checkFriends = $this->facade->findAllAttributes('friendship', array('userA' => $friends[$i]->data->userB, 'userB' => $findUserBOfFollow->data->userB, 'status' => 'ok'));
-                        if ($checkFriends == null)
-                        {
-                            $activity = array(
-                                'owner' => $actor->recordID,
-                                'actor' => $findUserBOfFollow->data->userB,
-                                'verb' => $verb,
-                                'object' => $object,
-                                'type' => 'post',
-                                'idObject' => $object,
-                                'published' => $published
-                            );
-                            $this->facade->save('activity', $activity);
-                        }
-                    }
                     // prepare activity for each followers
                     if (!$checkActivityFriend)
                     {
-                        $activity = array(
+                        $data = array(
                             'owner' => $friends[$i]->data->userB,
                             'actor' => $actor->recordID,
                             'verb' => $verb,
                             'object' => $object,
-                            'type' => 'post',
-                            'idObject' => $object,
+                            'type' => $type,
+                            'typeID' => $typeID,
                             'published' => $published
                         );
-                        $this->facade->save('activity', $activity);
+                        $this->facade->save('activity', $data);
                     }
+                    $yourFriends = str_replace(':', '_', $friends[$i]->data->userB);
+                    $this->service->exchange('dandelion', 'topic')->routingKey('newsFeed.post.'.$yourFriends)->dispatch('post', $activities);
                 }
-            }
-        }
-    }
 
-    public function trackComment($actor, $verb, $object, $statusID, $owner, $published)
-    {
-        $findUser = Model::get('comment')->findByCondition("post = '" . $statusID . "'");
-        $checkActivity = Model::get('activity')->findByCondition("owner = '" . $actor->recordID . "' AND object = '" . $object . "'");
-
-        $findUserBOfFollow = Model::get('follow')->findByPk($actor->recordID);
-        $actorID = ($findUserBOfFollow) ? $findUserBOfFollow->data->userB : $actor->recordID;
-        if (!$checkActivity)
-        {
-            /* Insert in to Activity for user posted this status. */
-            if ($owner != $actor->recordID)
-            {
-                $userStatus = array(
-                    'owner' => $owner,
-                    'actor' => $actor->recordID,
-                    'verb' => $verb,
-                    'object' => $object,
-                    'type' => 'comment',
-                    'idObject' => $statusID,
-                    'published' => $published
-                );
-
-                Model::get('activity')->create($userStatus);
-            }
-
-            $friends = $this->getFriendsStt($actor->recordID);
-            /* dupicate activities for followers */
-            if (!empty($friends) && !$checkActivity)
-            {
-                for ($i = 0; $i < count($friends); $i++)
-                {
-                    //@todo handling follow after: HN
-                    if ($findUserBOfFollow)
-                    {
-                        $checkFriends = Model::get('friendship')->findByCondition("userA = '" . $friends[$i]->data->userB . "' AND status = 'ok' userB = '" . $findUserBOfFollow->data->userB . "'");
-                        if ($checkFriends == null)
-                        {
-                            $activity = array(
-                                'owner' => $actor->recordID,
-                                'actor' => $findUserBOfFollow->data->userB,
-                                'verb' => $verb,
-                                'object' => $object,
-                                'type' => 'comment',
-                                'idObject' => $statusID,
-                                'published' => $published
-                            );
-                            Model::get('activity')->create($activity);
-                        }
-                    }
-                }
-            }
-            /* Insert Activity for user join comment in this status . */
-            if ($findUser)
-            {
-                foreach ($findUser as $userCmt)
-                {
-                    if ($userCmt)
-                    {
-                        $checkActivityComment = Model::get('activity')->findByCondition("owner = '" . $userCmt->data->actor . "' AND object = '" . $object . "'");
-                        if (!$checkActivityComment)
-                        {
-                            if ($userCmt->data->actor != $this->getCurrentUser()->recordID)
-                            {
-                                $userComment = array(
-                                    'owner' => $userCmt->data->actor,
-                                    'actor' => $this->getCurrentUser()->recordID,
-                                    'verb' => $verb,
-                                    'object' => $object,
-                                    'type' => 'comment',
-                                    'idObject' => $statusID,
-                                    'published' => $published
-                                );
-                                Model::get('activity')->create($userComment);
-                            }
-                        }
-                    }
-                }
             }
         }
     }

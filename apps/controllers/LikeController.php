@@ -32,13 +32,14 @@ class LikeController extends AppController
 
             if (!empty($objectID) && empty($existStatusLikeRC))
             {
-                $data = array(
-                    'actor' => $currentUser->recordID,
-                    'filterLike' => $type,
-                    'objID' => $objectID,
+
+                $entry = array(
+                    'actor'     => $currentUser->recordID,
+                    'filterLike'=> $type,
+                    'objID'     => $objectID,
                     'published' => $published
                 );
-                $this->facade->save('like', $data);
+                $this->facade->save('like', $entry);
                 //update number like to status
                 $record = $this->facade->findByPk($type, $objectID);
                 $numLike = $record->data->numberLike + 1;
@@ -49,6 +50,62 @@ class LikeController extends AppController
                 $this->f3->set('liked', true);
                 $this->f3->set('type', $type);
                 $this->f3->set('objectID', $objectID);
+                $obj = $this->facade->findByPk($type, $objectID);
+                $numLike = $obj->data->numberLike + 1;
+                $updateNumLike = array(
+                    'numberLike' => $numLike,
+                );
+                $this->facade->updateByAttributes($type, $updateNumLike, array('@rid'=>'#'.$objectID));
+                //prepare data for dispatch like notifications
+                $userIsLiked = $obj->data->owner;
+                if ($userIsLiked != $currentUser->recordID) //not like yourself
+                {
+                    //update to notify class
+                    $curNotify = $this->facade->findByAttributes('notify', array('userID'=>$userIsLiked));
+                    $updateNotify = array(
+                        'notifications' => $curNotify->data->notifications + 1,
+                    );
+                    $this->facade->updateByAttributes('notify', $updateNotify, array('userID'=>$userIsLiked));
+                    //save to activity class
+                    $duplicate = $this->facade->findByAttributes('activity', array('owner'=>$userIsLiked, 'verb'=>'like', 'object'=>$objectID));
+                    if (empty($duplicate))//if do not exist then create it
+                    {
+                        $entry = array(
+                            'owner' => $userIsLiked,
+                            'actor' => $currentUser->recordID,
+                            'verb' => 'like',
+                            'object'=> $objectID,
+                            'type'  => 'notifications',
+                            'timers' => $published,
+                            'details'   => 'like your '.$type.':"'.$obj->data->content.'"',
+                        );
+                        $this->facade->save('activity', $entry);
+                    }else {//else update it
+                        $update = array(
+                            'actor' => $currentUser->recordID.'_'.$duplicate->data->actor,
+                            'timers' => $published,
+                        );
+                        $this->facade->updateByAttributes('activity', $update, array('@rid'=>'#'.$duplicate->recordID));
+                    }
+                    //sent a notifications
+                    $newNotify = $this->facade->findByAttributes('notify', array('userID'=>$userIsLiked));
+                    $notifications = $newNotify->data->notifications;
+                    $keys = 'notifications.like.'.$userIsLiked;
+                    $keys = str_replace(':','_', $keys);
+                    $data = array(
+                        'type'  => 'like',
+                        'target'=> str_replace(':', '_',$objectID),
+                        'dispatch'  => str_replace(':', '_',$currentUser->recordID),
+                        'count' => $notifications,
+                    );
+                    $this->service->exchange('dandelion','topic')->routingKey($keys)->dispatch('like', $data);
+                }
+
+                $this->f3->set('liked', true);
+                $this->f3->set('type', $type);
+                $this->f3->set('objectID', $objectID);
+                $this->f3->set('owner', $obj->data->owner);
+                $this->f3->set('currentUser', $currentUser);
                 $this->render('home/like.php', 'default');
             }
         }
@@ -64,7 +121,37 @@ class LikeController extends AppController
             //find id of record then delete record
             if (!empty($type) && !empty($objectID))
             {
-                $this->facade->deleteByAttributes('like', array('actor' => $currentUser->recordID, 'filterLike' => $type, 'objID' => $objectID));
+                //delete like record
+                $this->facade->deleteByAttributes('like', array('actor'=>$currentUser->recordID, 'filterLike'=>$type, 'objID'=>$objectID));
+                //update activity notifications
+                $obj = $this->facade->findByPk($type, $objectID);
+                $userIsLiked = $obj->data->owner;
+                if ($userIsLiked != $currentUser->recordID) //not unlike yourself
+                {
+                    $activity = $this->facade->findByAttributes('activity', array('owner'=>$userIsLiked, 'verb'=>'like', 'object'=>$objectID, 'type'=>'notifications'));
+                    $actor = explode('_',$activity->data->actor);
+                    $pos = array_search($currentUser->recordID, $actor);
+                    unset($actor[$pos]);
+                    $str = '';
+                    if(count($actor) >= 2)
+                    {
+                        foreach ($actor as $actors)
+                        {
+                            $str = $str.$actors.'_';
+                        }
+                        $str=substr($str, 0, -1);
+                    }elseif (count($actor) == 1){
+                        $str = $str.$actor[0];
+                    }
+                    if (empty($str)){
+                        $this->facade->deleteByAttributes('activity', array('owner'=>$userIsLiked, 'verb'=>'like', 'object'=>$objectID, 'type'=>'notifications'));
+                    }else {
+                        $update = array(
+                            'actor' => $str,
+                        );
+                        $this->facade->updateByAttributes('activity', $update, array('owner'=>$userIsLiked, 'verb'=>'like', 'object'=>$objectID, 'type'=>'notifications'));
+                    }
+                }
                 //update number like to status
                 $statusRC = $this->facade->findByPk($type, $objectID);
                 $numLike = $statusRC->data->numberLike - 1;

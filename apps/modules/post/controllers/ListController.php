@@ -25,8 +25,8 @@ class ListController extends AppController
                     $userRC = $this->facade->findByPk("user", $statusRC->data->actor);
                 else
                     $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
-                $like = $this->facade->findAllAttributes('like', array('actor' => $statusRC->data->owner,'objID'=>$statusID));
 
+                $like = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID,'objID'=>$statusID));
                 $entry = array(
                     'type'      => 'post',
                     'key'       => $key,

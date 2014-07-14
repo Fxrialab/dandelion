@@ -162,7 +162,7 @@ $status_published = $status->data->published;
 //                    $records = $mod['comment'][$statusID];
                         if ($status->data->numberLike > 0)
                         {
-                            if ($status->data->numberLike == 'null')
+                            if ($like == false)
                             {
                                 ?>
                                 <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $rpStatusID; ?>">
