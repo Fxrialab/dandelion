@@ -10,30 +10,11 @@ class FactoryUtils
 
     var $params = array();
 
-
-    static function element($element, $params = array())
+    static function element($element)
     {
-        if (!empty($params))
+        if (file_exists(UI . LAYOUTS . ELEMENTS . $element . '.php'))
         {
-            foreach ($params as $key => $value)
-            {
-                include MODULES . $value . '/info.php';
-                if (file_exists(MODULES . $value . '/views/elements/' . $element . '.php'))
-                {
-                    if (file_exists(MODULES . $value . '/controllers/Element' . $value . 'Controller.php'))
-                    {
-                        require_once MODULES . $value . '/controllers/Element' . $value . 'Controller.php';
-                    }
-                    require_once MODULES . $value . '/views/elements/' . $element . '.php';
-                }
-            }
-        }
-        else
-        {
-            if (file_exists(UI . ELEMENTS . $element . '.php'))
-            {
-                require(UI . ELEMENTS . $element . '.php');
-            }
+            require(UI . LAYOUTS . ELEMENTS . $element . '.php');
         }
     }
 

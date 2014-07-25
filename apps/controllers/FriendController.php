@@ -34,28 +34,28 @@ class FriendController extends AppController
                     'owner' => $userB,
                     'actor' => $currentUser->recordID,
                     'verb' => 'sent',
-                    'type'  => 'friendRequests',
+                    'type' => 'friendRequests',
                     'timers' => $published,
                 );
                 $this->facade->save('activity', $entry);
                 //update to notify class
-                $curNotify = $this->facade->findByAttributes('notify', array('userID'=>$userB));
+                $curNotify = $this->facade->findByAttributes('notify', array('userID' => $userB));
                 $updateNotify = array(
                     'friendRequests' => $curNotify->data->friendRequests + 1,
                 );
-                $this->facade->updateByAttributes('notify', $updateNotify, array('userID'=>$userB));
+                $this->facade->updateByAttributes('notify', $updateNotify, array('userID' => $userB));
                 //sent a notifications
-                $newNotify = $this->facade->findByAttributes('notify', array('userID'=>$userB));
+                $newNotify = $this->facade->findByAttributes('notify', array('userID' => $userB));
                 $friendRequests = $newNotify->data->friendRequests;
-                $keys = 'friendRequests.sent.'.$userB;
-                $keys = str_replace(':','_', $keys);
+                $keys = 'friendRequests.sent.' . $userB;
+                $keys = str_replace(':', '_', $keys);
                 $data = array(
-                    'type'  => 'friendRq',
-                    'target'=> str_replace(':', '_',$userB),
-                    'dispatch'  => str_replace(':', '_',$currentUser->recordID),
+                    'type' => 'friendRq',
+                    'target' => str_replace(':', '_', $userB),
+                    'dispatch' => str_replace(':', '_', $currentUser->recordID),
                     'count' => $friendRequests,
                 );
-                $this->service->exchange('dandelion','topic')->routingKey($keys)->dispatch('friendRequests', $data);
+                $this->service->exchange('dandelion', 'topic')->routingKey($keys)->dispatch('friendRequests', $data);
             }
             //After friend request is sent. The friendRequests action will be create
             $existFriendRequestAction = $this->facade->findByAttributes('actions', array('actionElement' => 'friendRequests'));
@@ -69,11 +69,7 @@ class FriendController extends AppController
                 );
                 $this->facade->save('actions', $actionRC);
             }
-            $this->f3->set('requestFriend', true);
-            $this->f3->set('addFriend', false);
-            $this->f3->set('isFriend', false);
-            $this->f3->set('toUser', $toUser);
-            $this->render('home/friend.php', 'default');
+            $this->render('home/friend', array('requestFriend' => TRUE, 'addFriend' => FALSE, 'isFriend' => FALSE, 'toUser' => $toUser));
         }
     }
 
@@ -112,11 +108,7 @@ class FriendController extends AppController
                 );
                 $this->facade->save('actions', $actionRC);
             }
-            $this->f3->set('requestFriend', false);
-            $this->f3->set('addFriend', false);
-            $this->f3->set('isFriend', true);
-            $this->f3->set('toUser', $toUser);
-            $this->render('home/friend.php', 'default');
+            $this->render('home/friend', array('requestFriend' => TRUE, 'addFriend' => FALSE, 'isFriend' => TRUE, 'toUser' => $toUser));
         }
     }
 
@@ -148,7 +140,7 @@ class FriendController extends AppController
             $this->f3->set('addFriend', true);
             $this->f3->set('isFriend', false);
             $this->f3->set('toUser', $toUser);
-            $this->render('home/friend.php', 'default');
+            $this->render('home/friend', array('requestFriend' => FALSE, 'addFriend' => FALSE, 'isFriend' => FALSE, 'toUser' => $toUser));
         }
     }
 
@@ -159,9 +151,7 @@ class FriendController extends AppController
             $this->layout = 'timeline';
             $username = $this->f3->get('GET.user');
             $user = $this->facade->findByAttributes('user', array('username' => $username));
-            $this->f3->set('user', $user);
-            $this->f3->set('username', $username);
-            $this->render('user/friends.php', 'default');
+            $this->render('user/friends', array('user' => $user, 'username' => $username));
         }
     }
 
@@ -190,8 +180,7 @@ class FriendController extends AppController
                             'avatar' => $user->data->profilePic
                         );
                     }
-                    $this->f3->set("friends", $array);
-                    $this->render('user/viewFriend.php', 'default');
+                    $this->renderPartial('user/viewFriend', array('friends' => $array));
                 }
             }
         }
@@ -246,7 +235,7 @@ class FriendController extends AppController
                 }
             }
             $this->f3->set("friends", $data);
-            $this->render('user/viewFriend.php', 'default');
+            $this->renderPartial('user/viewFriend', array('friends' => $data));
         }
     }
 

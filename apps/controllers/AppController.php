@@ -63,13 +63,9 @@ class AppController extends Controller
 
     public function element($element)
     {
-        if (file_exists(UI . ELEMENTS . $element . '.php'))
+        if (file_exists(UI . 'layouts/' . ELEMENTS . $element . '.php'))
         {
-            if (method_exists($this->Elements, $element))
-            {
-                $this->Elements->$element();
-            }
-            require(UI . ELEMENTS . $element . '.php');
+            require(UI . 'layouts/elements/' . $element . '.php');
         }
     }
 
@@ -208,9 +204,8 @@ class AppController extends Controller
                         $this->facade->save('activity', $data);
                     }
                     $yourFriends = str_replace(':', '_', $friends[$i]->data->userB);
-                    $this->service->exchange('dandelion', 'topic')->routingKey('newsFeed.post.'.$yourFriends)->dispatch('post', $activities);
+                    $this->service->exchange('dandelion', 'topic')->routingKey('newsFeed.post.' . $yourFriends)->dispatch('post', $activities);
                 }
-
             }
         }
     }

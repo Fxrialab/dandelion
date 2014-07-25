@@ -25,7 +25,7 @@ class Controller
     {
         $f3 = Base::instance();
         $facade = new DataFacade();
-        $amq    = new AMQFacade();
+        $amq = new AMQFacade();
 
         $this->f3 = $f3;
         $this->facade = $facade;
@@ -71,16 +71,36 @@ class Controller
         return $this->f3->get("SESSION.loggedUser");
     }
 
-    public function render($page, $type)
+// render view: $this->render('path',array())
+    public function render($path, $set = array())
     {
-        if ($this->layout != '')
+        foreach ($set as $k => $value)
         {
-            require_once(UI . LAYOUTS . $this->layout . '.php');
+            $this->f3->set($k, $value);
         }
+        if (file_exists(LAYOUTS . $this->layout . '/' . $path . '.php'))
+            $page = LAYOUTS . $this->layout . '/' . $path . '.php';
         else
-        {
+            $page = LAYOUTS . $path . '.php';
+
+        if (!empty($this->layout))
+            require_once(UI . LAYOUTS . $this->layout . '.php');
+        else
             echo View::instance()->render($page);
+    }
+
+    // render view: $this->renderPartial('path',array())
+    public function renderPartial($path, $set = array())
+    {
+        foreach ($set as $k => $value)
+        {
+            $this->f3->set($k, $value);
         }
+        $page = LAYOUTS . $path . '.php';
+        if (!empty($this->layout))
+            require_once(UI . LAYOUTS . $this->layout . '.php');
+        else
+            echo View::instance()->render($page);
     }
 
     public function renderModule($action, $type)

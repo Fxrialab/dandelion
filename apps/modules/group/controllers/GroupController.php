@@ -24,7 +24,12 @@ class GroupController extends AppController
 
     static public function findGroup($id)
     {
-        return Model::get('group')->find(str_replace("_", ":", $id));
+        return Model::get('group')->find($id);
+    }
+
+    static public function findMemeberGroup($id)
+    {
+        return Model::get('groupMember')->find($id);
     }
 
     static public function findUser($id)
@@ -37,7 +42,7 @@ class GroupController extends AppController
         return Model::get('photo')->find($id);
     }
 
-    public function group($viewPath)
+    public function group()
     {
         if ($this->isLogin())
         {
@@ -46,21 +51,7 @@ class GroupController extends AppController
                 $role = 'admin';
             else
                 $role = 'all';
-//            $userID = $this->f3->get('SESSION.userID');
-//            $obj = new ObjectHandler();
-//            $obj->member = $userID;
-//
-//            if ($_GET['category'] == 'admin')
-//                $obj->role = 'admin';
-//
-//            $obj->select = 'LIMIT 5 ORDER BY published DESC';
-//            $model = $this->facade->findAll('groupMember', $obj);
-//            if (!empty($model))
-//                $this->f3->set('groupMember', $model);
-//            else
-//                $this->f3->set('groupMember', 'null');
-            $this->f3->set('role', $role);
-            $this->render($viewPath . 'index.php', 'modules');
+            $this->render('group/index', array('role' => $role));
         }
     }
 
@@ -78,10 +69,10 @@ class GroupController extends AppController
             $obj->select = 'and published > 1399543903 LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $model = $this->facade->findAll('groupMember', $obj);
             if (!empty($model))
-                $this->f3->set('groupMember', $model);
+                $groupMember = $model;
             else
-                $this->f3->set('groupMember', 'null');
-            $this->renderModule('loadData', 'group');
+                $groupMember = 'null';
+            $this->renderPartial('group/loadData', array('groupMember' => $groupMember));
         }
     }
 
@@ -100,7 +91,6 @@ class GroupController extends AppController
                 echo '1';
             else
                 echo '0';
-//            $this->renderModule('joinGroup', 'group');
         }
     }
 
@@ -160,11 +150,7 @@ class GroupController extends AppController
             $group = $this->facade->findByPk('group', str_replace("_", ":", $groupID));
             $countAdmin = $this->facade->count('groupMember', array('groupID' => $groupID, 'role' => 'admin'));
             $count = $this->facade->count('groupMember', array('groupID' => $groupID));
-            $this->f3->set('group', $group);
-            $this->f3->set('members', $members);
-            $this->f3->set('countMember', $count);
-            $this->f3->set('countAdmin', $countAdmin);
-            $this->render($viewPath . 'members.php', 'modules');
+            $this->render('group/members', array('group' => $group, 'members' => $members, 'countMember' => $countMember, 'countAdmin' => $countAdmin));
         }
     }
 
@@ -197,11 +183,11 @@ class GroupController extends AppController
         else
         {
             $this->f3->set('groupID', $_POST['groupID']);
-            $this->renderModule('leave', 'group');
+            $this->renderPartial('group/leave');
         }
     }
 
-    public function groupdetail($viewPath)
+    public function groupdetail()
     {
         if ($this->isLogin())
         {
@@ -211,11 +197,7 @@ class GroupController extends AppController
             $member = $this->facade->findAllAttributes('groupMember', array('groupID' => str_replace("_", ":", $groupID)));
             $photo = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
             $count = $this->facade->count('groupMember', array('groupID' => $groupID));
-            $this->f3->set('photo', $photo);
-            $this->f3->set('group', $group);
-            $this->f3->set('member', $member);
-            $this->f3->set('countMember', $count);
-            $this->render($viewPath . 'detail.php', 'modules');
+            $this->render('group/detail', array('photo' => $photo, 'group' => $group, 'member' => $member, 'countMember' => $count));
         }
     }
 
@@ -224,9 +206,7 @@ class GroupController extends AppController
         if ($this->isLogin())
         {
             $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
-            $this->f3->set('photos', $photos);
-            $this->f3->set('groupID', $_POST['id']);
-            $this->renderModule('photoGalleries', 'group');
+            $this->renderPartial('group/photoGalleries', array('photos' => $photos, 'groupID' => $_POST['id']));
         }
     }
 
@@ -237,9 +217,7 @@ class GroupController extends AppController
             $photoID = $_POST['photoID'];
             $photo = $this->facade->findByPk('photo', $photoID);
             $image = array('name' => $photo->data->fileName, 'width' => $photo->data->width, 'height' => $photo->data->height);
-            $this->f3->set('image', $image);
-            $this->f3->set('target', 'choosePhoto');
-            $this->renderModule('cover', 'group');
+            $this->renderPartial('group/cover', array('image' => $image, 'target' => 'choosePhoto'));
         }
     }
 
@@ -258,9 +236,7 @@ class GroupController extends AppController
                     $newName = time();
                     $this->changeImage($file, 150, $thumbnailDir, $newName, 80, false);
                     $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true);
-                    $this->f3->set('image', $image);
-                    $this->f3->set('target', 'uploadCover');
-                    $this->renderModule('cover', 'group');
+                    $this->renderPartial('group/cover', array('image' => $image, 'target' => 'uploadCover'));
                 }
             }
         }
@@ -372,7 +348,7 @@ class GroupController extends AppController
             $photoID = $_POST['id'];
             $photo = $this->facade->findByPk('photo', $photoID);
             $this->f3->set('photo', $photo);
-            $this->renderModule('reposition', 'group');
+            $this->renderPartial('group/reposition', array('photo' => $photo));
         }
     }
 
@@ -434,11 +410,11 @@ class GroupController extends AppController
                     $model = Model::get('group')->find($group);
                     $this->f3->set('group', $model);
                 }
-                $this->renderModule('viewGroup', 'group');
+                $this->renderPartial('group/viewGroup', array('group' => $model));
             }
             else
             {
-                $this->renderModule('form', 'group');
+                $this->renderPartial('group/form');
             }
         }
     }
