@@ -22,12 +22,13 @@ define('CONTROLLERS', DOCUMENT_ROOT . 'apps' . DS . 'controllers' . DS);
 define('HELPERS', DOCUMENT_ROOT . 'apps' . DS . 'helpers' . DS);
 define('MODELS', DOCUMENT_ROOT . 'apps' . DS . 'models' . DS);
 define('VIEWS', DOCUMENT_ROOT . 'apps' . DS . 'views' . DS);
+define('ELEMENTS', DOCUMENT_ROOT . 'apps' . DS . 'elements' . DS);
 define('THEMES', DOCUMENT_ROOT . 'apps' . DS . 'themes' . DS);
 define('TEMPLATE', 'default');
 define('UI', THEMES . TEMPLATE . DS);
 
 // inside view
-define('ELEMENTS', 'elements' . DS);
+//define('ELEMENTS', 'elements' . DS);
 define('LAYOUTS', 'layouts' . DS);
 define('EMAILS', 'emails' . DS);
 

@@ -1,6 +1,6 @@
 <?php
 
-$records = $this->f3->get('comments');
+$records = F3::get('comments');
 if (!empty($records))
 {
     foreach ($records as $value)

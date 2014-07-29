@@ -73,6 +73,8 @@ class PostController extends AppController
         }
     }
 
+    
+
     public function loading()
     {
         if ($this->isLogin())
@@ -370,7 +372,7 @@ class PostController extends AppController
             if (!empty($statusID))
             {
                 $comments = $this->facade->findAllAttributes('comment', array('typeID' => $statusID));
-               $this->renderPartial('post/moreComment', array('comments' => $comments));
+                $this->renderPartial('post/moreComment', array('comments' => $comments));
             }
         }
     }
@@ -383,7 +385,7 @@ class PostController extends AppController
             $statusID = str_replace('_', ':', $this->f3->get('POST.statusID'));
             $statusRC = $this->facade->findByPk('status', $statusID);
             $user = $this->facade->findByPk('user', $statusRC->data->owner);
-             $this->renderPartial('post/shareStatus', array('status' => $statusRC, 'user' => $user));
+            $this->renderPartial('post/shareStatus', array('status' => $statusRC, 'user' => $user));
         }
     }
 

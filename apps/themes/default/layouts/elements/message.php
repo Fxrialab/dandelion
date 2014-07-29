@@ -17,7 +17,7 @@
             <li>
                 <div class="control-group">
                     <div class="large-15">
-                        <img src="<?php echo $this->f3->get('SESSION.avatar'); ?>" width="50" height="50">
+                        <img src="<?php echo F3::get('SESSION.avatar'); ?>" width="50" height="50">
                     </div>
                     <div class="large-80">
                         <div><a href="#" style="font-weight: bold">Vinh Huynh</a></div>
@@ -32,7 +32,7 @@
             <li>
                 <div class="control-group">
                     <div class="large-15">
-                        <img src="<?php echo $this->f3->get('SESSION.avatar'); ?>" width="50" height="50">
+                        <img src="<?php echo F3::get('SESSION.avatar'); ?>" width="50" height="50">
                     </div>
                     <div class="large-80">
                         <div><a href="#" style="font-weight: bold">Loc Mr</a></div>

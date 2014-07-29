@@ -71,6 +71,13 @@ class Controller
         return $this->f3->get("SESSION.loggedUser");
     }
 
+// element: $this->element();
+    public function element($param)
+    {
+        $element = new FactoryUtils();
+        return $element->element($param);
+    }
+
 // render view: $this->render('path',array())
     public function render($path, $set = array())
     {
@@ -97,8 +104,8 @@ class Controller
             $this->f3->set($k, $value);
         }
         $page = LAYOUTS . $path . '.php';
-        if (!empty($this->layout))
-            require_once(UI . LAYOUTS . $this->layout . '.php');
+        if (file_exists(UI . LAYOUTS . $path . '.php'))
+            require_once(UI . LAYOUTS . $path . '.php');
         else
             echo View::instance()->render($page);
     }

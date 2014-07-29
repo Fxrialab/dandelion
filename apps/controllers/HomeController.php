@@ -55,22 +55,24 @@ class HomeController extends AppController
 
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
+            $homes = array();
             if (!empty($activitiesRC))
             {
-                $homes = array();
                 foreach ($activitiesRC as $key => $activity)
                 {
                     $verbMod = $activity->data->verb;
-                    $obj = new $verbMod;
-                    if (method_exists($obj, 'viewPost'))
+                    if ($verbMod = "ListController")
                     {
-                        $home = $obj->viewPost($activity, $key);
-                        array_push($homes, $home);
-                        $this->f3->set('activities', $homes);
+                        $obj = new $verbMod;
+                        if (method_exists($obj, 'viewPost'))
+                        {
+                            $home = $obj->viewPost($activity, $key);
+                            array_push($homes, $home);
+                        }
                     }
                 }
             }
-            $this->renderPartial('home/view', array('type' => $_POST['type']));
+            $this->renderPartial('post/view', array('type' => $_POST['type'], 'activities' => $homes));
         }
     }
 
@@ -112,7 +114,7 @@ class HomeController extends AppController
             if (!empty($data))
             {
                 $this->f3->set('data', $data);
-                $this->renderPartial('home/items',array('data'=>$data));
+                $this->renderPartial('home/items', array('data' => $data));
             }
             //var_dump($data['type']);
         }

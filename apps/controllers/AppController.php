@@ -61,13 +61,13 @@ class AppController extends Controller
         return ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName);
     }
 
-    public function element($element)
-    {
-        if (file_exists(UI . 'layouts/' . ELEMENTS . $element . '.php'))
-        {
-            require(UI . 'layouts/elements/' . $element . '.php');
-        }
-    }
+//    public function element($element)
+//    {
+//        if (file_exists(UI . 'layouts/' . ELEMENTS . $element . '.php'))
+//        {
+//            require(UI . 'layouts/elements/' . $element . '.php');
+//        }
+//    }
 
     public function getMacAddress()
     {

@@ -3,7 +3,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-$members = $this->f3->get('members');
+$members = F3::get('members');
 ?>
 <nav class="ink-navigation">
     <ul class="member">

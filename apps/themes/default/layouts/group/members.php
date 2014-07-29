@@ -1,10 +1,10 @@
 <?php
-$group = $this->f3->get('group');
+$group = F3::get('group');
 $groupName = $group->data->name;
-$members = $this->f3->get('members');
-$admin = $this->f3->get('admin');
-$countMember = $this->f3->get('countMember');
-$countAdmin = $this->f3->get('countAdmin');
+$members = F3::get('members');
+$admin = F3::get('admin');
+$countMember = F3::get('countMember');
+$countAdmin = F3::get('countAdmin');
 ?>
 <?php $f3 = require('coverPhotoGroup.php'); ?>
 <?php $f3 = require('groupBar.php'); ?>
@@ -82,14 +82,16 @@ $countAdmin = $this->f3->get('countAdmin');
                         $action = $value->action;
                     }
                     $user = GroupController::findUser($userID);
-                    $fullName = ucfirst($user->data->firstName)." ".ucfirst($user->data->lastName);
+                    $fullName = ucfirst($user->data->firstName) . " " . ucfirst($user->data->lastName);
                     if ($user->data->profilePic != 'none')
                     {
                         $photo = ElementController::findPhoto($user->data->profilePic);
                         $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
-                    }else {
+                    }
+                    else
+                    {
                         $gender = ElementController::findGender($user->recordID);
-                        if ($gender =='male')
+                        if ($gender == 'male')
                             $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                         else
                             $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
@@ -114,7 +116,7 @@ $countAdmin = $this->f3->get('countAdmin');
                                                 ?>
                                                 <a rel="<?php echo $user->recordID ?>" title="Remove as admin" class="removeGroup ddm" href="/content/group/ajax/removeAdmin"><span class="label"> Remove as admin</span></a>
                                                 <a id="leaveGroup" class="ddm" rel="<?php echo str_replace(":", "_", $group->recordID) ?>" href="/content/group/leave" title="<?php echo $groupName ?>"><span class="label"> Leave Group</span></a>
-                                            <?php
+                                                <?php
                                             }
                                             else
                                             {
@@ -122,7 +124,7 @@ $countAdmin = $this->f3->get('countAdmin');
                                                 {
                                                     ?>
                                                     <a class="roleGroup ddm" rel="<?php echo $user->recordID ?>" title="Remove as admin" href="/content/group/ajax/rolegroup"><span class="label"> Remove as admin</span></a>
-                                                <?php
+                                                    <?php
                                                 }
                                                 else
                                                 {
@@ -130,7 +132,7 @@ $countAdmin = $this->f3->get('countAdmin');
                                                     <a class="roleGroup ddm" rel="<?php echo $user->recordID ?>" title="Add Group Admin" href="/content/group/ajax/rolegroup"><span class="label"> Make Admin</span></a>
                                                 <?php } ?>
                                                 <a rel="<?php echo $user->recordID ?>" title="Remove" role="remove" class="removeGroup ddm" href="/content/group/ajax/removeGroup"><span class="label">  Remove as group</span></a>
-                                            <?php } ?>
+        <?php } ?>
 
                                         </div> <!-- /.dropdown-slider -->
                                     </div> <!-- /.dropdown -->
@@ -139,14 +141,14 @@ $countAdmin = $this->f3->get('countAdmin');
                         </div>
 
                     </div>
-                <?php
+                    <?php
                 }
             }
             ?>
             <input type="hidden" id="group_id" value="<?php echo $group->recordID ?>">
         </div>
         <div class="large-30 uiRightCol">
-            <?php $f3 = require('rightColGroup.php'); ?>
+<?php $f3 = require('rightColGroup.php'); ?>
         </div>
     </div>
 </div>
@@ -154,27 +156,27 @@ $countAdmin = $this->f3->get('countAdmin');
 
 <script>
 
-//                            $('#callbacks').selectric();
+    //                            $('#callbacks').selectric();
     $(document).ready(function() {
-        $("input[type='hidden']").keypress(function(e) {
-            if (e.which == 13) {
-                alert("User pressed 'Enter' in a text input.");
-                // do your custom processing here
-            }
-        })
+    $("input[type='hidden']").keypress(function(e) {
+    if (e.which == 13) {
+    alert("User pressed 'Enter' in a text input.");
+    // do your custom processing here
+    }
+    })
     });
     $(function() {
-        $("#groupDescriptionLink").bind("click", function() {
-            $.ajax({
-                type: "POST",
-                data: {id: $(this).attr("rel")},
-                url: "/content/group/editDescription",
-                success: function(html) {
-                    $('#groupDescription').html(html);
-                    // Whatever you want to do after the PHP Script returns.
-                }
-            });
-        });
+    $("#groupDescriptionLink").bind("click", function() {
+    $.ajax({
+    type: "POST",
+    data: {id: $(this).attr("rel")},
+    url: "/content/group/editDescription",
+    success: function(html) {
+    $('#groupDescription').html(html);
+    // Whatever you want to do after the PHP Script returns.
+    }
+    });
+    });
     });
 
 </script>

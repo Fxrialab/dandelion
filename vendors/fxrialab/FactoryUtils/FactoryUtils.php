@@ -8,13 +8,30 @@
 class FactoryUtils
 {
 
-    var $params = array();
-
-    static function element($element)
+    public function element($param)
     {
-        if (file_exists(UI . LAYOUTS . ELEMENTS . $element . '.php'))
+        if (file_exists(ELEMENTS . $param . '.php'))
         {
-            require(UI . LAYOUTS . ELEMENTS . $element . '.php');
+            require_once(ELEMENTS . $param . '.php');
+            $get = 'get' . $param;
+            $element = new $param;
+            $element->$get();
+        }
+    }
+
+}
+
+class ViewHtml
+{
+    static function render($param, $array = array())
+    {
+        if (file_exists(UI . LAYOUTS . $param . '.php'))
+        {
+            foreach ($array as $k => $value)
+            {
+                $this->f3->set($k, $value);
+            }
+            require(UI . LAYOUTS . $param . '.php');
         }
     }
 
