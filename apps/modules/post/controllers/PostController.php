@@ -73,8 +73,6 @@ class PostController extends AppController
         }
     }
 
-    
-
     public function loading()
     {
         if ($this->isLogin())
@@ -205,7 +203,7 @@ class PostController extends AppController
                 }
             }
             // track activity
-            $this->trackActivity($currentUser, 'ListController', $statusID, $type, $typeID, $published);
+            $this->trackActivity($currentUser, 'Post', $statusID, $type, $typeID, $published);
 
             /* try {
               echo "track activity if check friend null <br />";
@@ -248,7 +246,7 @@ class PostController extends AppController
             $this->facade->updateByAttributes('status', $dataCountNumberComment, array('@rid' => "#" . $postID));
             //sent a notifications to owner's status
             $owner = $status_update->data->owner;
-            $duplicate = $this->facade->findByAttributes('activity', array('owner' => $owner, 'verb' => 'comment', 'object' => $postID));
+            $duplicate = $this->facade->findByAttributes('activity', array('owner' => $owner, 'verb' => 'Comment', 'object' => $postID));
             if (empty($duplicate))
             {
                 //create a activity for owner's status
@@ -311,7 +309,7 @@ class PostController extends AppController
                 {
                     if ($a != $currentUser->recordID)
                     {
-                        $actorActivity = $this->facade->findByAttributes('activity', array('owner' => $a, 'verb' => 'comment', 'object' => $postID));
+                        $actorActivity = $this->facade->findByAttributes('activity', array('owner' => $a, 'verb' => 'Comment', 'object' => $postID));
                         if (empty($actorActivity))
                         {
                             $entry = array(
@@ -421,7 +419,36 @@ class PostController extends AppController
             // save
             $status = $this->facade->save('status', $postEntry);
             // track activity
-            $this->trackActivity($this->getCurrentUser(), 'ListController', $status, $parentStatus->data->type, $parentStatus->data->typeID, $published);
+            $this->trackActivity($this->getCurrentUser(), 'Post', $status, $parentStatus->data->type, $parentStatus->data->typeID, $published);
+        }
+    }
+
+    public function dataPost($entry, $key)
+    {
+        if (!empty($entry))
+        {
+            $status = $this->facade->findByPk('status', $entry->data->object);
+            $activityID = $entry->recordID;
+            $userID = $this->f3->get('SESSION.userID');
+            if (!empty($status))
+            {
+                $statusID = $status->recordID;
+                $user = $this->facade->findByPk("user", $status->data->owner);
+                $like = $this->facade->findByAttributes('like', array('actor' => $userID, 'objID' => $statusID));
+                $entry = array(
+                    'type' => 'post',
+                    'key' => $key,
+                    'like' => $like,
+                    'user' => $user,
+                    'actions' => $status,
+                    'statusID' => $statusID
+                );
+                return $entry;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 

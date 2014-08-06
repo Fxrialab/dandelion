@@ -1,4 +1,5 @@
 <?php
+
 if (!empty($statusID))
     $records = PostController::getFindComment($statusID);
 else
@@ -25,11 +26,7 @@ if (!empty($records))
             }
             else
             {
-                $gender = ElementController::findGender($profile->recordID);
-                if ($gender == 'male')
-                    $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-                else
-                    $profilePic = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+                $profilePic = UPLOAD_URL . 'avatar/170px/avatar.png';
             }
             $actorComment = ucfirst($profile->data->firstName) . " " . ucfirst($profile->data->lastName);
             $f3 = require('commentItem.php');

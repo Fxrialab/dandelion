@@ -46,13 +46,8 @@ class HomeController extends AppController
             $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
             $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
             $obj = new ObjectHandler();
-            $obj->owner = $this->getCurrentUser()->recordID;
-            if ($_POST['type'] == 'group')
-            {
-                $obj->type = $_POST['type'];
-                $obj->typeID = $_POST['typeID'];
-            }
-
+            $obj->active = '1';
+            $obj->type = 'post';
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
             $homes = array();
@@ -60,16 +55,10 @@ class HomeController extends AppController
             {
                 foreach ($activitiesRC as $key => $activity)
                 {
-                    $verbMod = $activity->data->verb;
-                    if ($verbMod = "ListController")
-                    {
-                        $obj = new $verbMod;
-                        if (method_exists($obj, 'viewPost'))
-                        {
-                            $home = $obj->viewPost($activity, $key);
-                            array_push($homes, $home);
-                        }
-                    }
+                    $verbMod = $activity->data->verb . 'Controller';
+                    $obj = new $verbMod;
+                    $home = $obj->dataPost($activity, $key);
+                    array_push($homes, $home);
                 }
             }
             $this->renderPartial('post/view', array('type' => $_POST['type'], 'activities' => $homes));

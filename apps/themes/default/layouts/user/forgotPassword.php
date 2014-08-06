@@ -24,12 +24,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="footerBox column-group">
+                                    <input type="submit" class="ink-button" value="Search">
+                                    <a class="ink-button push-right" href="/">Cancel</a>
+                                </div>
                             </fieldset>
                         </form>
-                        <div class="footerBox column-group">
-                            <a id="searchEmail" class="ink-button push-right" href="">Search</a>
-                            <a class="ink-button push-right" href="/">Cancel</a>
-                        </div>
+
                     </div>
                 </div>
             </div>

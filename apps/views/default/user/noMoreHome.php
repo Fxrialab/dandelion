@@ -1,1 +1,0 @@
-<div class="noMoreActivity">No more activities to show</div>

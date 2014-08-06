@@ -126,7 +126,7 @@ class UserController extends AppController
                 {
                     $MsgSignIn = 'The confirmation code or email are incorrect. Please, try check mail again !';
                 }
-                $this->render('user/index', array('MsgSignUp' => $MsgSignUp));
+                $this->render('user/index', array('MsgSignUp' => $MsgSignIn));
             }
         }
     }
@@ -169,11 +169,7 @@ class UserController extends AppController
                         }
                         else
                         {
-                            $gender = ElementController::findGender($existUser->recordID);
-                            if ($gender == 'male')
-                                $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-                            else
-                                $profilePic = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+                            $profilePic = UPLOAD_URL . 'avatar/170px/avatar.png';
                         }
                         $fullName = ucfirst($existUser->data->firstName) . " " . ucfirst($existUser->data->lastName);
                         $this->f3->set('SESSION.loggedUser', $existUser);

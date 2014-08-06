@@ -5,16 +5,16 @@ if (!empty($activities))
     $rand = rand(100, 100000);
     foreach ($activities as $mod)
     {
-        foreach (glob(UI.'layouts/post/viewPost.php') as $views)
+        foreach (glob(UI . 'layouts/post/viewPost.php') as $views)
         {
             $status = $mod["actions"];
-            $username = $mod['username'];
-            $avatar = $mod['avatar'];
             $like = $mod['like'];
             $statusID = $mod['statusID'];
             $activity = $mod['actions']->data;
-            $userID = $mod['userID']->recordID;
-            if ($mod['avatar'] == 'none')
+            $userID = $mod['user']->recordID;
+            $username = $mod['user']->data->username;
+            $avatar = $mod['user']->data->profilePic;
+            if ($avatar == 'none')
             {
                 $gender = ElementController::findGender($userID);
                 if ($gender == 'male')
