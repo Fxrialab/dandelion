@@ -31,17 +31,17 @@ Remember set environment variables to vagrant and git for easy run.
 <pre>
     127.0.0.1 demo.dandelion.net
 </pre>
-2. Download attached [Vagrantfile](https://raw.githubusercontent.com/minhloc2011/test-docker/master/Dockerfiles/Vagrantfile) (Click Save as ... then make sure you remove .txt extension) or from source and put into folder where you want VM
+2. Download attached [Vagrantfile](https://raw.githubusercontent.com/Fxrialab/dandelion/master/Dockerfiles/Vagrantfile) (Click Save as ... then make sure you remove .txt extension) or from source and put into folder where you want VM
 3. Start a terminal (cmd.exe) then type *sh -login* or open git bash at Vagrantfile folder
 4. Type `vagrant up`. This command creates and configures guest machines according to Vagrantfile.
 5. Type `vagrant ssh`. This will SSH into a running Vagrant machine and give you access to a shell.
 6. Cut & paste command bellow. This will take a while
 <pre>
-$bash -c "$(curl -fsSL https://raw.githubusercontent.com/minhloc2011/test-docker/master/Dockerfiles/install.sh)"
+$bash -c "$(curl -fsSL https://raw.githubusercontent.com/Fxrialab/dandelion/master/Dockerfiles/install.sh)"
 </pre>
 7. After done, do like reported on step 6
 <pre>
-$cp test-docker/bin/ddlion dandelion
+$cp cp dandelion/Dockerfiles/bin/ddlion dandelion
 </pre>
 <pre>
 $chmod +x dandelion
@@ -64,7 +64,7 @@ Thats all, now you can access via [http://demo.dandelion.net:8080/](http://demo.
 
 #### Other dandelion commands
 ###### update
-This will pull the latest copy of Dockerfiles folder from git.
+This will pull the latest copy of dandelion repo from git.
 <pre>
 $./dandelion update
 </pre>
