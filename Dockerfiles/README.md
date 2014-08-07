@@ -1,25 +1,3 @@
-# Dandelion 1.0
-
-
-##Overview
-
-Realtime social network platform with nodejs, php, orientdb
-
-[Read more about dandelion](http://demo.dandelionet.org/)
-
-##Features
-
-- Realtime notification/updates (socket.io + Redis)
-- MVC based
-- PHP for easy templating
-- Plugin architecture (default: post/photos/group/event)
-- Simple template engine
-- Fast graph database (OrientDB)
-
-##Site administration
-- Separate admin site using angularjs
-- Plugin management
-
 ## Development backend using docker
 #### Prerequisites
 - Download and installs [Vagrant](http://www.vagrantup.com) and [VirtualBox](https://www.virtualbox.org)
