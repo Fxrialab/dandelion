@@ -1,0 +1,36 @@
+# -*- mode: ruby -*-
+# # vi: set ft=ruby :
+
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "coreos"
+  config.vm.box_url = "http://storage.core-os.net/coreos/amd64-generic/dev-channel/coreos_production_vagrant.box"
+config.vm.provider :virtualbox do |vb|
+  vb.customize ["modifyvm", :id, "--memory", "1024"]
+end
+
+  # Uncomment below to enable NFS for sharing the host machine into the coreos-vagrant VM.
+  # config.vm.network "private_network", ip: "172.12.8.150"
+  # config.vm.synced_folder "Dockerfiles/", "/Dockerfiles", id: "core", :nfs => true,  :mount_options   => ['nolock,vers=3,udp']
+
+  config.vm.network :forwarded_port, guest: 6379, host: 6379
+  config.vm.network :forwarded_port, guest: 2200, host: 2200
+   config.vm.network :forwarded_port, guest: 80, host: 8080
+   config.vm.network :forwarded_port, guest: 2480, host: 2480
+
+
+  # Fix docker not being able to resolve private registry in VirtualBox
+  config.vm.provider :virtualbox do |vb, override|
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  end
+
+  config.vm.provider :vmware_fusion do |vb, override|
+    override.vm.box_url = "http://storage.core-os.net/coreos/amd64-generic/dev-channel/coreos_production_vagrant_vmware_fusion.box"
+  end
+
+  # plugin conflict
+  if Vagrant.has_plugin?("vagrant-vbguest") then
+    config.vbguest.auto_update = false
+  end
+end

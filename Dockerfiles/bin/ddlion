@@ -1,0 +1,117 @@
+#!/bin/bash
+# dandelion run script
+
+BASEDIR=`dirname $0`
+BASEDIR=`(cd "$BASEDIR"; pwd)`
+
+echo "Base dir = $BASEDIR";
+
+# Docker check
+if [[ $(service docker status) == *"stop"*  || ! -e /var/run/docker.sock ]]
+  then
+  echo "Docker is NOT running! pls start docker first"
+  exit 0
+else
+  echo "Docker is running! continuing... "
+fi
+
+echo "Docker status = $(docker version)"
+#| tee /dev/fd/3
+
+
+case $1 in
+
+update)
+echo "UPDATE"
+cd dandelion
+git pull
+chmod +x dandelion/Dockerfiles/bin/dandelion
+;;
+
+build)
+echo "BUILD"
+
+# stop & remove containers incase they exist already
+echo "Building base"
+#| tee /dev/fd/3
+cd "$BASEDIR"/dandelion/Dockerfiles/CentosBase &&  docker build --rm -t fxrialab/base .
+sleep 2
+echo "Building data"
+#| tee /dev/fd/3
+cd "$BASEDIR"/dandelion/Dockerfiles/Data &&  docker build --rm -t fxrialab/data .
+sleep 2
+docker stop data
+docker rm data
+docker run -d -p 2200:22 --name data -v /home/dandelion:/home/dandelion fxrialab/data
+sleep 2
+
+echo "Building orientDB"
+#| tee /dev/fd/3
+cd "$BASEDIR"/dandelion/Dockerfiles/OrientDB &&  docker build --rm -t fxrialab/orient .
+sleep 2
+
+echo "Building appserver"
+#| tee /dev/fd/3
+cd "$BASEDIR"/dandelion/Dockerfiles/AppServer &&  docker build --rm -t fxrialab/appserver .
+
+echo "Build Complete!"
+;;
+
+start)
+echo "START"
+
+# configure port
+if [[ ! -z "$2" && "$2" == 'remote' ]] ;
+then
+    H=$(curl http://ipecho.net/plain; echo)
+elif [ ! -z "$2" ] ;
+then
+  H="$2"
+else
+  H="demo.dandelion.net"
+fi
+
+echo "stopping"
+#| tee /dev/fd/3
+docker stop appserver orient data
+echo "removing"
+#| tee /dev/fd/3
+docker rm appserver orient data
+
+# start data
+echo "starting data"
+#| tee /dev/fd/3
+docker run -d -p 2200:22 --name data -v /home/dandelion:/home/dandelion fxrialab/data
+sleep 2
+
+# start orientDB
+echo "starting orientDB"
+#| tee /dev/fd/3
+docker run -d -p 2480:2480 --name orient -v /home/dandelion/orientdb/databases:/opt/orientdb-community-1.7-rc1/databases -v /home/dandelion/logs/orientdb:/opt/orientdb-community-1.7-rc1/log fxrialab/orient
+sleep 2
+
+# start appserver
+echo "starting appserver"
+#| tee /dev/fd/3
+docker run -d -p 80:80 -p 443:443 --name appserver --link orient:db -v /home/dandelion/www:/var/www/html -v /home/dandelion/logs/httpd:/var/log/httpd fxrialab/appserver
+;;
+
+
+stop)
+echo "STOP"
+
+#| tee /dev/fd/
+# stop & remove containers incase they exist already
+if [[ $(docker version) == *"Client version"* ]]
+	then
+	echo "stopping"
+  #| tee /dev/fd/3
+	docker stop appserver orient data
+	echo "removing"
+  #| tee /dev/fd/3
+	docker rm appserver orient data
+fi
+;;
+
+esac
+exit 0

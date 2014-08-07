@@ -3,9 +3,9 @@
 
 ##Overview
 
-realtime social network platform with nodejs, php, orientdb
+Realtime social network platform with nodejs, php, orientdb
 
-[Read more about dandelion](http://dandelion.fxrialab.net)
+[Read more about dandelion](http://demo.dandelionet.org/)
 
 ##Features
 
@@ -14,67 +14,85 @@ realtime social network platform with nodejs, php, orientdb
 - PHP for easy templating
 - Plugin architecture (default: post/photos/group/event)
 - Simple template engine
-- Fast graph database( OrientDB)
+- Fast graph database (OrientDB)
 
 ##Site administration
 - Separate admin site using angularjs
 - Plugin management
 
-##Development backend using docker
-h1. Running dandelion server
+## Development backend using docker
+#### Prerequisites
+- Download and installs [Vagrant](http://www.vagrantup.com) and [VirtualBox](https://www.virtualbox.org)
+- Download and install [git](http://git-scm.com/).
 
-*First start*
-Intalls vagrant, follow instructions here 
-http://www.vagrantup.com
-
-Start a terminal (cmd.exe) at your work folder (such as e:/projects/)
+Remember set environment variables to vagrant and git for easy run.
+#### Quick Start
+1. Prepare local domain (something like demo.dandelion.net) by open your host file & add record for the domain.
 <pre>
-$ git clone https://github.com/gtdminh/coreos-vagrant.git
-$ cd coreos-vagrant
-$ vagrant up
+    127.0.0.1 demo.dandelion.net
+</pre>
+2. Download attached [Vagrantfile](https://raw.githubusercontent.com/minhloc2011/test-docker/master/Dockerfiles/Vagrantfile) (Click Save as ... then make sure you remove .txt extension) or from source and put into folder where you want VM
+3. Start a terminal (cmd.exe) then type *sh -login* or open git bash at Vagrantfile folder
+4. Type `vagrant up`. This command creates and configures guest machines according to Vagrantfile.
+5. Type `vagrant ssh`. This will SSH into a running Vagrant machine and give you access to a shell.
+6. Cut & paste command bellow. This will take a while
+<pre>
+$bash -c "$(curl -fsSL https://raw.githubusercontent.com/minhloc2011/test-docker/master/Dockerfiles/install.sh)"
+</pre>
+7. After done, do like reported on step 6
+<pre>
+$cp test-docker/bin/ddlion dandelion
+</pre>
+<pre>
+$chmod +x dandelion
+</pre>
+<pre>
+$./dandelion build
+</pre>
+8. After you see "Build complete!". You can use cyberduck/filezilla to connect to sftp **host: localhost, port: 2200** with **user: dandelion, pwd: w38T52007**.
+Then start upload the dandelion files into `/home/dandelion/www` folder.
+9. Now let start dandelion
+<pre>
+$./dandelion start
+</pre>
+Thats all, now you can access via [http://demo.dandelion.net:8080/](http://demo.dandelion.net:8080/).
+
+> Remember you make sure the config on `/www/apps/config` are correct
+
+- On Structure.php file change **BASE_URL** to **http://demo.dandelion.net:8080/**
+- On Database.php file change **HOST** to **172.17.0.3**
+
+#### Other dandelion commands
+###### update
+This will pull the latest copy of Dockerfiles folder from git.
+<pre>
+$./dandelion update
+</pre>
+###### build
+This will build all the docker containers from Dockerfiles folder.
+First time you run this it will take a while, after first run it will be quick
+<pre>
+$./dandelion build
+</pre>
+###### start
+This will start all the docker containers from Dockerfiles folder.
+<pre>
+$./dandelion start
+</pre>
+###### stop
+This will stop all the docker containers from Dockerfiles folder.
+<pre>
+$./dandelion stop
 </pre>
 
-if failed you need to do vagrant up again (from now it is inside the VM coreos)
-<pre>
-vagrant ssh
-sudo git clone https:/github.com/Fxrialab/dandelion-docker.git
-mv dandelion-docker Dockerfiles
-cd Dockerfiles
-sudo git checkout coreos
-cd ..
-cp Dockerfiles/dandelion dandelion
-chmod +x dandelion
-sudo su
-./dandelion build
-</pre>
+#### OrientDB
+Also download dandelion database files via `/Dockerfiles/database` then upload them into `/home/dandelion/orientdb/databases`.
 
-this will take a while, 
+After this, you can access to orientDB via [http://demo.dandelion.net:2480/](http://demo.dandelion.net:2480/).
 
-once you see it has started building mongo you are good to upload files
-connect to via (you can use cyberduck/filezilla to connect to host:localhost,port:2222 user:vagrant, pwd:vagrant)
+With user/password for authentication by browser: **root/dandelion**. After select dandelion database, login with **user: admin** and **pass: admin**.
 
-upload the app files into home/dandelion/www
-back in terminal, you see "Build complete!" 
-
-*Normal Run*
-
-up your machine, 
-<pre>
-cd ~
-sudo ./dandelion start
-</pre>
-
-*Other comands*
-
-update dockerfiles (this also creates copty of dandelion file in home directory)
-<pre>
-sudo ./dandelion update
-</pre>
-
-*Test its working*
-* upload systemate www folder to /home/systm8/www followed above instructions and define demo.v-systm8.com(in windows' hosts file) and open browser at http://demo.v-systm8.com:8080 to start systemate
-
-## license
+## License
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
