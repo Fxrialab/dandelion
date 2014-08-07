@@ -19,7 +19,7 @@ $bash -c "$(curl -fsSL https://raw.githubusercontent.com/Fxrialab/dandelion/mast
 </pre>
 7. After done, do like reported on step 6
 <pre>
-$cp cp dandelion/Dockerfiles/bin/ddlion dandelion
+$cp dandelion/Dockerfiles/bin/ddlion dandelion
 </pre>
 <pre>
 $chmod +x dandelion
