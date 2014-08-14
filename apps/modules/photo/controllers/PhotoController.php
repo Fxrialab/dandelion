@@ -92,17 +92,22 @@ class PhotoController extends AppController
         {
             $this->layout = "timeline";
             $username = $this->f3->get('GET.user');
-            $albumID = $this->f3->get('GET.album');
-            if (!empty($username))
+            $photos = array();
+            $user = $this->facade->findByAttributes('user', array('username' => $username));
+            $obj = new ObjectHandler();
+            $obj->actor = $user->recordID;
+            $obj->select = 'ORDER BY published DESC';
+            $set = array();
+            $model = $this->facade->findAll('photo', $obj);
+            if (!empty($model))
             {
-                $photos = array();
-                $userID = $this->facade->findByAttributes('user', array('username' => $username));
-                if (!empty($albumID))
-                    $id = $albumID;
-                else
-                    $id = 0;
+                foreach ($model as $value)
+                {
+                    $photos[] = array('recordID' => $value->recordID, 'userID' => $value->data->actor, 'fileName' => $value->data->fileName, 'numberLike' => $value->data->numberLike);
+                }
+                $set = $photos;
             }
-            $this->render("photo/myPhoto", array('userID' => $userID->recordID, 'albumID' => $id));
+            $this->render("photo/photo", array('user' => $user, 'photos' => $set));
         }
     }
 
@@ -184,17 +189,17 @@ class PhotoController extends AppController
         {
             $this->layout = "timeline";
             $username = $this->f3->get('GET.username');
+            $photos = array();
             if (!empty($username))
             {
-                $userID = $this->facade->findByAttributes('user', array('username' => $username));
-                $photos = $this->facade->findAll('photo', array('actor' => $userID->recordID));
-                $this->f3->set('photos', $photos);
+                $user = $this->facade->findByAttributes('user', array('username' => $username));
+                $photos = $this->facade->findAll('photo', array('actor' => $user->recordID));
             }
-            $this->render($viewPath . "myPhoto.php", 'modules');
+            $this->render("photo/photo", array('photos' => $photos, 'user' => $user));
         }
     }
 
-    public function myAlbum()
+    public function album()
     {
         if ($this->isLogin())
         {
@@ -202,10 +207,10 @@ class PhotoController extends AppController
             $username = $this->f3->get('GET.user');
             if (!empty($username))
             {
-                $userID = $this->facade->findByAttributes('user', array('username' => $username));
-                $album = $this->facade->findAllAttributes('album', array('owner' => $userID->recordID));
+                $user = $this->facade->findByAttributes('user', array('username' => $username));
+                $album = $this->facade->findAllAttributes('album', array('owner' => $user->recordID));
             }
-            $this->render("photo/myAlbum", array('album' => $album));
+            $this->render("photo/myAlbum", array('album' => $album, 'user' => $user));
         }
     }
 
@@ -428,15 +433,16 @@ class PhotoController extends AppController
                 $kt = $k - 1;
                 if (!empty($_GET['typeID']))
                 {
-                    $array = $this->facade->findAllAttributes('photo', array('actor' => F3::get('SESSION.userID'), 'typeID' => str_replace('_', ':', $_GET['typeID'])));
+                    $status = $this->facade->findByPk('status', str_replace('_', ':', $_GET['typeID']));
+                    $array = explode(',', $status->data->embedSource);
                     if ($k >= 0 && $k < count($array) - 1)
-                        $idn = str_replace(':', '_', $array[$kc]->recordID);
+                        $idn = str_replace(':', '_', $array[$kc]);
                     else
-                        $idn = str_replace(':', '_', $array[$k]->recordID);
+                        $idn = str_replace(':', '_', $array[$k]);
                     if ($k == 0)
                         $idp = 0;
                     else
-                        $idp = str_replace(':', '_', $array[$kt]->recordID);
+                        $idp = str_replace(':', '_', $array[$kt]);
                     $next = '/content/photo/detail?typeID=' . str_replace(':', '_', $_GET['typeID']) . '&id=' . $idn . '&p=' . $kc;
                     $prev = '/content/photo/detail?typeID=' . str_replace(':', '_', $_GET['typeID']) . '&id=' . $idp . '&p=' . $kt;
                 }

@@ -31,7 +31,24 @@ class HomeController extends AppController
         if ($this->isLogin())
         {
             $this->layout = 'home';
-            $this->render('home/home', array('currentProfileID' => $this->getCurrentUser()->recordID));
+            $obj = new ObjectHandler();
+            $obj->active = '1';
+            $obj->verb = 'post';
+            $obj->select = 'ORDER BY published DESC';
+            $activity = $this->facade->findAll('activity', $obj);
+            if (!empty($activity))
+            {
+                $limit = 20;
+                if (!empty($_GET['page']))
+                    $data = $this->pagePost($_GET['page'], $activity, $limit);
+                else
+                    $data = $this->pagePost(1, $activity, $limit);
+            } else
+            {
+                $data = array();
+            }
+
+            $this->render('home/home', array('data' => $data));
         }
         else
         {
@@ -39,31 +56,6 @@ class HomeController extends AppController
         }
     }
 
-    public function loading()
-    {
-        if ($this->isLogin())
-        {
-            $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
-            $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
-            $obj = new ObjectHandler();
-            $obj->active = '1';
-            $obj->type = 'post';
-            $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
-            $activitiesRC = $this->facade->findAll('activity', $obj);
-            $homes = array();
-            if (!empty($activitiesRC))
-            {
-                foreach ($activitiesRC as $key => $activity)
-                {
-                    $verbMod = $activity->data->verb . 'Controller';
-                    $obj = new $verbMod;
-                    $home = $obj->dataPost($activity, $key);
-                    array_push($homes, $home);
-                }
-            }
-            $this->renderPartial('post/view', array('type' => $_POST['type'], 'activities' => $homes));
-        }
-    }
 
     public function listenPost()
     {

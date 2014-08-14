@@ -3,59 +3,59 @@ $rand = rand(100, 100000);
 ?>
 <script>
     function isValidURL(url) {
-    var RegExp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+        var RegExp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
-    if (RegExp.test(url))
-    {
-    return true;
-    } else {
-    return false;
-    }
+        if (RegExp.test(url))
+        {
+            return true;
+        } else {
+            return false;
+        }
     }
     $(document).ready(function() {
 
-    $('#status').mouseleave(function() {
-    var embedPhotos = $('.embedElements #embedPhotos > div').length;
-    if (embedPhotos > 0)
-    {
-    $('#embedVideo').css('display', 'none');
-    }
-    var url, urlString, urlSpace, urlHttp, urlFirst, fullURL;
-    var text = $('#status').val();
-    text = $('<span>' + text + '</span>').text(); //strip html
-    urlHttp = text.indexOf('http');
+        $('#status').mouseleave(function() {
+            var embedPhotos = $('.embedElements #embedPhotos > div').length;
+            if (embedPhotos > 0)
+            {
+                $('#embedVideo').css('display', 'none');
+            }
+            var url, urlString, urlSpace, urlHttp, urlFirst, fullURL;
+            var text = $('#status').val();
+            text = $('<span>' + text + '</span>').text(); //strip html
+            urlHttp = text.indexOf('http');
 
-    if (urlHttp >= 0)
-    {
-    urlString = text.substr(urlHttp);
-    urlSpace = urlString.indexOf(" ");
-    if (urlSpace >= 0) {
-    urlFirst = text.substr(urlHttp, urlSpace);
-    if (isValidURL(urlFirst)) {
-    fullURL = url = urlFirst;
-    url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
-    url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
-    }
-    } else {
-    if (isValidURL(urlString)) {
-    fullURL = url = urlString;
-    url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
-    url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
-    }
-    }
-    }
-    //$('#tagElements').css('display', 'block');
-    $('#embedVideo').empty().html(url);
-    $(".oembed<?php echo $rand; ?>").oembed(null,
-    {
-    embedMethod: "append",
-    maxWidth: 1024,
-    maxHeight: 400,
-    vimeo: {autoplay: false, maxWidth: 200, maxHeight: 200}
-    });
-    $('#embedVideo').append("<input type='hidden' name='videoURL' value='" + fullURL + "'>");
+            if (urlHttp >= 0)
+            {
+                urlString = text.substr(urlHttp);
+                urlSpace = urlString.indexOf(" ");
+                if (urlSpace >= 0) {
+                    urlFirst = text.substr(urlHttp, urlSpace);
+                    if (isValidURL(urlFirst)) {
+                        fullURL = url = urlFirst;
+                        url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
+                        url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
+                    }
+                } else {
+                    if (isValidURL(urlString)) {
+                        fullURL = url = urlString;
+                        url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
+                        url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
+                    }
+                }
+            }
+            //$('#tagElements').css('display', 'block');
+            $('#embedVideo').empty().html(url);
+            $(".oembed<?php echo $rand; ?>").oembed(null,
+                    {
+                        embedMethod: "append",
+                        maxWidth: 1024,
+                        maxHeight: 400,
+                        vimeo: {autoplay: false, maxWidth: 200, maxHeight: 200}
+                    });
+            $('#embedVideo').append("<input type='hidden' name='videoURL' value='" + fullURL + "'>");
 
-    });
+        });
 
     });
 
@@ -74,8 +74,8 @@ $rand = rand(100, 100000);
                 <form class="ink-form" id="submitFormStatus">
                     <div class="control-group">
                         <div class="uiBox-PopUp topLeftArrow control">
-                            <div id="typeActivity"></div>
-                            <div id="typeActivityID" style="display: none"></div>
+                            <input type="hidden" name="type" value=" <?php echo F3::get('type') ?>">
+                            <input type="hidden" name="typeID" value="<?php echo F3::get('typeID') ?>">
                             <textarea id="status" name="status" spellcheck="false" placeholder="What's on your mind?">
 
                             </textarea>
@@ -128,7 +128,7 @@ $rand = rand(100, 100000);
                     </textarea>
                     <!-- tag Image, Video, Link here -->
                     <input type="hidden" name="embedType" value="photo">
-                    <input type="hidden" name="type" value="post">
+                    <input type="hidden" name="type" value="<?php echo F3::get('type') ?>">
                     <div class="control-group viewUpload">
                         <div class="large-20">
                             <div style="border: 1px solid #ccc; text-align: center; width: 95px; padding: 25px 0; margin-right: 5px;">
@@ -152,67 +152,67 @@ $rand = rand(100, 100000);
 <!--Other part-->
 <script>
     $(document).ready(function() {
-    $('textarea').autosize();
-    $('#statusPhoto').autosize();
-    $(".viewUpload").hide();
-    $(".postPhoto").hide();
-    $("#statusPhoto").hide();
+        $('textarea').autosize();
+        $('#statusPhoto').autosize();
+        $(".viewUpload").hide();
+        $(".postPhoto").hide();
+        $("#statusPhoto").hide();
     });
     $("#submitFormStatus").submit(function() {
-    var embedPhotos = $('.embedElements #embedPhotos > div').length;
-    var embedVideo = $('.embedElements #embedVideo > div').length;
-    var status = $("#status").val();
-    $(".msg").html("<div class='loadingUpload'></div>");
-    if (status || embedPhotos)
-    {
-    if (embedPhotos > 0)
-    {
-    $('#embedType').attr('value', 'photo');
-    } else {
-    if (embedVideo > 0)
-    $('#embedType').attr('value', 'video');
-    else
-    $('#embedType').attr('value', 'none');
-    }
-    $.ajax({
-    type: "POST",
-    url: "/content/post/postStatus",
-    data: $("#submitFormStatus").serialize(), // serializes the form's elements.
-    success: function(html)
-    {
-    $('#tagElements').css('display', 'none');
-    $("#contentContainer").prepend(html);
-    $('.photoWrap').remove();
-    $('#imgID').val();
-    $('#embedPhotos').html('');
-    $('#status').val('');
-    $(".msg").html("");
-    updateTime();
-    }
-    });
-    }
-    return false; // avoid to execute the actual submit of the form.
+        var embedPhotos = $('.embedElements #embedPhotos > div').length;
+        var embedVideo = $('.embedElements #embedVideo > div').length;
+        var status = $("#status").val();
+        $(".msg").html("<div class='loadingUpload'></div>");
+        if (status || embedPhotos)
+        {
+            if (embedPhotos > 0)
+            {
+                $('#embedType').attr('value', 'photo');
+            } else {
+                if (embedVideo > 0)
+                    $('#embedType').attr('value', 'video');
+                else
+                    $('#embedType').attr('value', 'none');
+            }
+            $.ajax({
+                type: "POST",
+                url: "/content/post/postStatus",
+                data: $("#submitFormStatus").serialize(), // serializes the form's elements.
+                success: function(html)
+                {
+                    $('#tagElements').css('display', 'none');
+                    $("#container").prepend(html);
+                    $('.photoWrap').remove();
+                    $('#imgID').val();
+                    $('#embedPhotos').html('');
+                    $('#status').val('');
+                    $(".msg").html("");
+                    updateTime();
+                }
+            });
+        }
+        return false; // avoid to execute the actual submit of the form.
     });
     $("#submitFormPhoto").submit(function() {
-    var status = $("#statusPhoto").val();
-    $(".msg").html("<div class='loadingUpload'></div>");
-    $.ajax({
-    type: "POST",
-    url: "/content/post/postStatus",
-    data: $("#submitFormPhoto").serialize(), // serializes the form's elements.
-    success: function(html)
-    {
-    $("#contentContainer").prepend(html);
-    $(".photoBoxArrow").show();
-    $(".viewUpload").hide();
-    $(".itemImg").remove();
-    $(".postPhoto").hide();
-    $('#statusPhoto').hide();
-    $(".msg").html("");
-    updateTime();
-    }
-    });
-    return false; // avoid to execute the actual submit of the form.
+        var status = $("#statusPhoto").val();
+        $(".msg").html("<div class='loadingUpload'></div>");
+        $.ajax({
+            type: "POST",
+            url: "/content/post/postStatus",
+            data: $("#submitFormPhoto").serialize(), // serializes the form's elements.
+            success: function(html)
+            {
+                $("#contentContainer").prepend(html);
+                $(".photoBoxArrow").show();
+                $(".viewUpload").hide();
+                $(".itemImg").remove();
+                $(".postPhoto").hide();
+                $('#statusPhoto').hide();
+                $(".msg").html("");
+                updateTime();
+            }
+        });
+        return false; // avoid to execute the actual submit of the form.
     });
 
 

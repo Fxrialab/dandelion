@@ -13,7 +13,7 @@ class RouteModuleConfig
         'removePhoto_POST' => "PhotoController",
         'deletePhoto_POST' => "PhotoController",
         'createAlbum_POST' => "PhotoController",
-        'myAlbum_GET' => "PhotoController",
+        'album_GET' => "PhotoController",
         'myPhoto_GET' => "PhotoController",
         'viewAlbum_GET' => "PhotoController",
         'viewPhoto_POST' => "PhotoController",

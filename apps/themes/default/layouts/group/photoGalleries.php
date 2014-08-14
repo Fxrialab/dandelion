@@ -8,7 +8,7 @@
             ?>
             <div class=" large-20">
                 <a href="#" class="choosePhoto" rel="<?php echo $value->recordID ?>" id="<?php echo $this->f3->get('groupID') ?>" >
-                    <img src="<?php echo UPLOAD_URL .'thumbnails/150px/'. $value->data->fileName; ?>" style="padding: 5px">
+                    <img src="<?php echo UPLOAD_URL . 'thumbnails/150px/' . $value->data->fileName; ?>" style="padding: 5px">
                 </a>
             </div>
             <?php
@@ -17,13 +17,13 @@
     ?>
 </div>
 <div class="footerDialog">
-    <button type="button" class="closeDialog ink-button">Cancel</button>
+    <button type="button" class="ink-button" onclick="$.pgwModal('close');">Cancel</button>
 </div>
 <script type="text/javascript">
-    $(document).ready(function() {
-        //        $('#scrollbar1').tinyscrollbar();
-        $('html, body').animate({
-            scrollTop: $("#scrollbar1").offset().top
-        }, 2000);
-    });
+        $(document).ready(function() {
+            //        $('#scrollbar1').tinyscrollbar();
+            $('html, body').animate({
+                scrollTop: $("#scrollbar1").offset().top
+            }, 2000);
+        });
 </script>

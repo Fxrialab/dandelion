@@ -10,12 +10,11 @@
                 <div class="large-80 borderLineRight">
                     <?php require_once 'leftCol.php'; ?>
                     <div class="uiMainColTimeLine large-80 borderLineLeft">
-                        <?php require_once 'coverTimeLine.php'; ?>
-                        <div class="mainColWrapper">
+                      
                             <?php
                                 echo View::instance()->render($page);
                             ?>
-                        </div>
+                        <!--</div>-->
                         <div class="uiRightCol large-30">
                             <?php require_once 'rightCol.php'; ?>
                         </div>

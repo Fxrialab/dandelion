@@ -24,6 +24,9 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: false,
+        onBeforeSend: function() {
+            $('.ajax-file-upload-statusbar').hide();
+        },
         onSuccess: function(files, data, xhr)
         {
             $('.displayPhoto').html(data);
@@ -38,7 +41,7 @@ $(document).ready(function()
         fileName: "myfile",
         multiple: false,
         beforeSend: function() {
-            //Lets add a loading image
+            $('.ajax-file-upload-statusbar').hide();
             $('.infoUser').addClass('loading');
         },
         onSuccess: function(files, data, xhr)
@@ -137,5 +140,5 @@ $(document).ready(function()
     $("#multiFiles").uploadFile(settingMultiFiles);
     $("#multiFiles2").uploadFile(settingMultiFiles2);
     $("#multiFiles3").uploadFile(settingMultiFiles2);
-   
+
 });

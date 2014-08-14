@@ -16,9 +16,16 @@ if ($user->data->profilePic != 'none')
 else
     $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
 ?>
-
+<style>
+    .pm-title{
+        display: none
+    }
+    .pm-content{
+        background: none !important;
+    }
+</style>
 <div class="control-group">
-    <div class="large-70" style="background-color: #000;">
+    <div class="large-60" style="min-height: 500px">
         <div class="control-group">
             <div class="large-100 <?php echo $recordID ?>">
                 <div class="stage">
@@ -39,7 +46,7 @@ else
             </div>
         </div>
     </div>
-    <div class="large-30">
+    <div class="large-40">
         <div class="fade mCustomScrollbar">
             <div class="control-group">
                 <div class="large-15">
@@ -50,7 +57,7 @@ else
                         <a href="/content/post?user=<?php echo $user->data->username ?>" class="timeLineLink"><?php echo $user->data->fullName; ?></a>
                         <div><a class="swTimeComment time" name="<?php echo $photo->data->published; ?>"></a></div>
                     </div>
-                    <a class="closeDialog float-right">Close</a>
+                    <a class=" float-right" onclick="$.pgwModal('close');" >Close</a>
                 </div>
             </div>
             <div class="control-group">
@@ -100,7 +107,6 @@ else
                             </nav>
                             <div class="postItem-<?php echo $recordID; ?> uiBox-PopUp boxLikeTopLeftArrow tempLike-<?php echo $recordID; ?> postItem">
                                 <?php
-//                    $records = $mod['comment'][$statusID];
                                 if ($photo->data->numberLike > 0)
                                 {
                                     if ($photo->data->numberLike == 'null')
@@ -198,10 +204,11 @@ else
         </div>
 
     </div>
-    <script>
-        $(document).ready(function() {
-            $('textarea').autosize();
+</div>
+<script>
+                        $(document).ready(function() {
+                            $('textarea').autosize();
 
-        });
+                        });
 
-    </script>
+</script>

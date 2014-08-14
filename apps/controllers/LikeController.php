@@ -57,7 +57,7 @@ class LikeController extends AppController
                 );
                 $this->facade->updateByAttributes($type, $updateNumLike, array('@rid' => '#' . $objectID));
                 //prepare data for dispatch like notifications
-                $userIsLiked = $obj->data->owner;
+                $userIsLiked = $obj->data->actor;
                 if ($userIsLiked != $currentUser->recordID) //not like yourself
                 {
                     //update to notify class

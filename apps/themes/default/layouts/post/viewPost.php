@@ -1,44 +1,42 @@
 <?php
-$rpOwnerID = str_replace(':', '_', $status->data->owner);
-$rpStatusID = str_replace(":", "_", $statusID);
-$embedType = $status->data->embedType;
-$status_content = $status->data->content;
-$numberLikes = $status->data->numberLike;
-$numberComment = $status->data->numberComment;
-$status_contentShare = $status->data->contentShare;
-$status_published = $status->data->published;
+$status = F3::get('status');
+$image = F3::get('image');
+$like = F3::get('like');
+$user = F3::get('user');
+$comment = F3::get('comment');
+$rpStatusID = str_replace(':', '_', $status->recordID);
 ?>
-<div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
+<div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?> post">
     <div class="uiBoxPostContainer column-group">
         <div class="large-10 uiActorPicCol">
-            <a href="/content/post?user=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+            <a href="/content/post?user=<?php echo $user->data->username ?>"><img src="<?php echo UPLOAD_URL . $user->data->profilePic ?>"></a>
         </div>
         <div class="large-85">
             <div class="postContent">
-                <a href="/content/post?user=<?php echo $username ?>" class="timeLineLink"><?php echo $status->data->actorName; ?></a>
+                <a href="/content/post?user=<?php echo $user->data->username ?>" class="timeLineLink"><?php echo $user->data->fullName ?></a>
                 <div class="column-group">
                     <?php
-                    if ($status_contentShare == 'none')
+                    if ($status->data->contentShare == 'none')
                     {
-                        $existLink = strpos($status_content, "http");
+                        $existLink = strpos($status->data->content, "http");
                         if (!empty($status->data->embedType) && $status->data->embedType == 'none' || $status->data->embedType == 'photo')
                         {
                             if (is_bool($existLink))
                             {
                                 ?>
                                 <div class="textPostContainer">
-                                    <span class="textPost"><?php echo $status_content; ?></span>
+                                    <span class="textPost"><?php echo $status->data->content; ?></span>
                                 </div>
                                 <?php
                             }
                             else
                             {
-                                $existSpace = strpos(substr($status_content, $existLink), ' ');
-                                $link = !empty($existSpace) ? substr($status_content, $existLink, $existSpace) : substr($status_content, $existLink);
+                                $existSpace = strpos(substr($status->data->content, $existLink), ' ');
+                                $link = !empty($existSpace) ? substr($status->data->content, $existLink, $existSpace) : substr($status->data->content, $existLink);
                                 $htmlLink = "<a href='" . $link . "'>" . $link . "</a>";
                                 ?>
                                 <div class="textPostContainer ">
-                                    <span class="textPost"><?php echo str_replace($link, $htmlLink, $status_content); ?></span>
+                                    <span class="textPost"><?php echo str_replace($link, $htmlLink, $status->data->content); ?></span>
                                 </div>
                                 <?php
                             }
@@ -51,17 +49,17 @@ $status_published = $status->data->published;
                                     <?php
                                     if (!is_bool($existLink))
                                     {
-                                        $existSpace = strpos(substr($status_content, $existLink), ' ');
-                                        $link = !empty($existSpace) ? substr($status_content, $existLink, $existSpace) : substr($status_content, $existLink);
+                                        $existSpace = strpos(substr($status->data->content, $existLink), ' ');
+                                        $link = !empty($existSpace) ? substr($status->data->content, $existLink, $existSpace) : substr($status->data->content, $existLink);
                                         $htmlLink = "<a href='" . $link . "'>" . $link . "</a>";
-                                        $rpLink = str_replace($link, $htmlLink, $status_content);
+                                        $rpLink = str_replace($link, $htmlLink, $status->data->content);
                                         $linkEmbed = "<a href='" . $status->data->embedSource . "'>" . $status->data->embedSource . "</a>";
                                         echo str_replace('_linkWith_', $linkEmbed, $rpLink);
                                     }
                                     else
                                     {
                                         $link = '<a href="' . $status->data->embedSource . '">' . $status->data->embedSource . '</a>';
-                                        echo str_replace('_linkWith_', $link, $status_content);
+                                        echo str_replace('_linkWith_', $link, $status->data->content);
                                     }
                                     ?>
                                     <a href="<?php echo $status->data->embedSource; ?>" class="oembed<?php echo $rand; ?>"></a>
@@ -74,32 +72,48 @@ $status_published = $status->data->published;
                     {
                         ?>
                         <div class="textPostContainer">
-                            <span class="textPost"><?php echo $status_contentShare; ?></span>
+                            <span class="textPost"><?php echo $status->data->contentShare; ?></span>
                             <div class="attachmentStatus">
-                                <span class="textPost"><?php echo $status_content; ?></span>
+                                <span class="textPost"><?php echo $status->data->content; ?></span>
                             </div>
                         </div>
-                    <?php }
-                    ?>
-
-                    <?php
-                    if (!empty($status->data->embedType) && $status->data->embedType == 'photo')
+                        <?php
+                    }
+                    if (!empty($image))
                     {
-                        $photo = PostController::getFindPhoto($status->recordID);
-                        if (!empty($photo))
+                        $countPhoto = count($image);
+                        foreach ($image as $k => $value)
                         {
-                            $countPhoto = count($photo);
-                            foreach ($photo as $k => $value)
-                            {
-                                if ($countPhoto == 1)
-                                    echo '<div class="large-100"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div>';
-                                elseif ($countPhoto == 3)
-                                    echo '<div class="large-30"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div></div>';
-                                else
-                                    echo '<div class="large-50"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div></div>';
-                            }
+                            if ($countPhoto == 1)
+                                echo '<div class="large-100"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value['id']) . '&p=' . $k . '" rel="' . $value['width'] . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value['fileName'] . '></a></div>';
+                            elseif ($countPhoto == 3)
+                                echo '<div class="large-30"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value['id']) . '&p=' . $k . '" rel="' . $value['width'] . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value['fileName'] . '></a></div></div>';
+                            else
+                                echo '<div class="large-50"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value['id']) . '&p=' . $k . '" rel="' . $value['width'] . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value['fileName'] . '></a></div></div>';
                         }
                     }
+//                    if (!empty($status->data->embedType) && $status->data->embedType == 'photo')
+//                    {
+//                        $embedSource = explode(',', $status->data->embedSource);
+//                        foreach ($array as $value)
+//                        {
+//                            
+//                        }
+//                        $photo = PostController::getFindPhoto($status->recordID);
+//                        if (!empty($photo))
+//                        {
+//                            $countPhoto = count($photo);
+//                            foreach ($photo as $k => $value)
+//                            {
+//                                if ($countPhoto == 1)
+//                                    echo '<div class="large-100"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div>';
+//                                elseif ($countPhoto == 3)
+//                                    echo '<div class="large-30"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div></div>';
+//                                else
+//                                    echo '<div class="large-50"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div></div>';
+//                            }
+//                        }
+//                    }
                     ?>
                 </div>
                 <div class="articleSelectOption">
@@ -131,7 +145,7 @@ $status_published = $status->data->published;
                             {
                                 ?>
                                 <!--Share Segments-->
-                                <li ><a class="shareStatus" id="<?php echo str_replace(":", "_", $statusID); ?>" title="Share">Share</a></li>
+                                <li ><a class="shareStatus" id="<?php echo str_replace(":", "_", $rpStatusID); ?>" title="Share">Share</a></li>
                                 <li class="gapArticleActions">.</li>
                                 <?php
                             }
@@ -159,7 +173,6 @@ $status_published = $status->data->published;
                     </nav>
                     <div class="postItem-<?php echo $rpStatusID; ?> uiBox-PopUp boxLikeTopLeftArrow tempLike-<?php echo $rpStatusID; ?> postItem">
                         <?php
-//                    $records = $mod['comment'][$statusID];
                         if ($status->data->numberLike > 0)
                         {
                             if ($like == false)
@@ -194,19 +207,26 @@ $status_published = $status->data->published;
                         {
                             ?>
                             <div class="whoCommentThisPost verGapBox" id="viewComments-<?php echo $rpStatusID; ?>">
-                                <i class="statusCounterIcon-comment"></i><a class="viewAllComments" id="<?php echo $rpStatusID; ?>">View all <?php echo $activity->numberComment; ?> comments <span style="width: 10px" class="loading_<?php echo $rpStatusID; ?>"><div class='loading2'></div></span></a>
+                                <i class="statusCounterIcon-comment"></i><a class="viewAllComments" id="<?php echo $rpStatusID; ?>">View all <?php echo $status->data->numberComment; ?> comments <span style="width: 10px" class="loading_<?php echo $rpStatusID; ?>"><div class='loading2'></div></span></a>
                             </div>
                             <?php
                         }
                         ?>
                         <div class="commentContentWrapper moreComment-<?php echo $rpStatusID ?>">
                             <?php
-                            $f3 = require('viewComment.php');
+                            if (!empty($comment))
+                            {
+                                $pos = (count($comment) < 3 ? count($comment) : 3);
+                                for ($j = count($comment) - $pos; $j < count($comment); $j++)
+                                {
+                                    ViewHtml::render('post/commentItem', array('comment' => $comment[$j]));
+                                }
+                            }
                             ?>
                         </div>
                         <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID ?>">
                             <div class="large-10 uiActorCommentPicCol">
-                                <a href="/content/post?user=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+                                <a href="/content/post?user=<?php echo $user->data->username ?>"><img src="<?php echo UPLOAD_URL . $user->data->profilePic ?>"></a>
                             </div>
                             <div class="large-90 uiTextCommentArea">
                                 <form class="ink-form" id="fmComment-<?php echo $rpStatusID ?>">

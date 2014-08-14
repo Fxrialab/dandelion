@@ -1,20 +1,14 @@
 <?php
-$otherUser = F3::get('otherUser');
-$currentUser = F3::get('currentUser');
+$user = F3::get('user');
 $statusFriendShip = F3::get('statusFriendShip');
-//prepare data
-$otherUserID = $otherUser->recordID;
-$otherUserName = ucfirst($otherUser->data->firstName) . " " . ucfirst($otherUser->data->lastName);
-$currentUserName = ucfirst($currentUser->data->firstName) . " " . ucfirst($currentUser->data->lastName);
-
-$rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
+$userID = str_replace("_", ":", $user->recordID);
 ?>
 
 <div class="uiCoverTimeLineContainer" style=" position: relative">
     <form id="submitCover">
         <?php
-        if ($otherUser->data->coverPhoto != 'none')
-            $photo = ElementController::findPhoto($otherUser->data->coverPhoto);
+        if ($user->data->coverPhoto != 'none')
+            $photo = Controller::getID('photo', $user->data->coverPhoto);
         if (!empty($photo))
         {
             $a = 'Change cover';
@@ -53,7 +47,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                                     <li><a href="javascript:void(0)" class="rCoverUser" rel="<?php echo $photo->recordID ?>"><span class="icon icon61"></span><span class="label">Reposition...</span></a></li>
                                     <?php
                                 }
-                                if (!empty($otherUser->data->coverPhoto) && $otherUser->data->coverPhoto != 'none')
+                                if (!empty($user->data->coverPhoto) && $user->data->coverPhoto != 'none')
                                 {
                                     ?>
                                     <li> <a href="javascript:void(0)" class="removeImgUser " id="removeCover" role="cover" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a></li>
@@ -67,52 +61,51 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
             </div>
 
         </div>
-        <div style=" position: relative;">
+        <div style=" position: relative; border: 1px solid #ccc">
             <div id="imgAvatar">
-                <div class="profilePic">
-                    <a class="infoUser" href="/content/post?user=<?php echo $this->f3->get('SESSION.username') ?>">
+                <div class="profilePic" >
+                    <a class="infoUser" href="/content/user?user=<?php echo $user->data->username ?>">
                         <?php
-                        if ($otherUser->data->profilePic != 'none')
+                        if ($user->data->profilePic != 'none')
                         {
-                            $photo = ElementController::findPhoto($otherUser->data->profilePic);
-                            $src = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
+                            $photo = Controller::getID('photo', $user->data->coverPhoto);
+                            $src = UPLOAD_URL . $photo->data->fileName;
                             $labelStt = 'Change avatar';
                         }
                         else
                         {
-                            $gender = ElementController::findGender($otherUser->recordID);
-                            if ($gender == 'male')
-                                $src = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-                            else
-                                $src = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+                            $src = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                             $labelStt = 'Add avatar';
                         }
                         ?>
                         <img src="<?php echo $src; ?>">
                     </a>
                 </div>
+
                 <div class="profileInfo">
-                    <div class="dropdown">
-                        <a href="#" class="button"><span class="icon icon148"></span><span class="label"><?php echo $labelStt ?></span></a>
-                        <div class="dropdown-slider left w175">
-                            <a href="#" class="photoBrowse ddm" role="avatar" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a>
-                            <a href="#" class="ddm"><div id="uploadAvatar"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a>
+                    <a class="ink-button link-button" data-dropdown="#dropdown-editAvatar"><?php echo $labelStt ?></a>
+                    <div id="dropdown-editAvatar" class="dropdown dropdown-tip">
+                        <ul class="dropdown-menu ">
+                            <li><a class="photoBrowser" role="avatar" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a></li>
+                            <li><a href="#" class="ddm"><div id="uploadAvatar"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a></li>
                             <?php
-                            if ($otherUser->data->profilePic != 'none')
+                            if ($user->data->profilePic != 'none')
                             {
                                 ?>
-                                <a href="#" class="ddm removeImgUser" id="removeAvatar" role="avatar" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a>
+                                <li><a href="#" class="ddm removeImgUser" id="removeAvatar" role="avatar" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a></li>
                             <?php } ?>
-                        </div> <!-- /.dropdown-slider -->
-                    </div> <!-- /.dropdown -->
+
+                            </li>
+                        </ul>
+                    </div>
+                    
                 </div>
             </div>
-            <a class="name" href="#"><?php echo $otherUserName; ?></a>
-            <div class="timeLineMenuNav ">
+            <a class="name" href="#"><?php echo $user->data->fullName; ?></a>
+            <div class="timeLineMenuNav">
                 <div>
                     <?php
-                    $username = $otherUser->data->username;
-                    $f3 = require('navTimeLine.php');
+                    ViewHtml::render('navTimeLine', array('user' => $user));
                     ?>
                 </div>
             </div>
@@ -163,7 +156,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                 elseif ($statusFriendShip == 'updateInfo')
                 {
                     ?>
-                    <a class="uiMediumButton orange linkHover-fffff" href="/about?user=<?php echo $currentUser->data->username; ?>">Update Info</a>
+                    <a class="ink-button" href="/about?user=<?php echo $user->data->username; ?>">Update Info</a>
                     <?php
                 }
                 else
@@ -177,7 +170,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                                     <ul class="menu vertical menu_arrow">
                                         <div class="arrow_timeLine" style="left: 55%"></div>
                                         <li><a>Report/Block</a></li>
-                                        <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unfriend</a></li>
+                                        <li><a class="cancelRequestFriend" id="<?php echo $userID; ?>">Unfriend</a></li>
                                     </ul>
                                 </nav>
                             </div>

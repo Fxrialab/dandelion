@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>group.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>token-input-facebook.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>jquery.dropdown.css" type="text/css" />
+    <link href="<?php echo $this->f3->get('CSS'); ?>pgwmodal.css" rel="stylesheet">
     <!--[if IE 7 ]>
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink-ie.css" type="text/css" media="screen"
           title="no title">
@@ -18,5 +19,6 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.tmpl.min.js"></script>
+
 
 </head>

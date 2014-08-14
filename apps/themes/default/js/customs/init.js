@@ -342,85 +342,66 @@ $(document).on('keypress', '.submitComment', function(event) {
     //return false;
 });
 
+
+
 $("body").on('click', '#createGroup', function(e) {
-    e.preventDefault();
     var title = $(this).attr('rel');
     var href = $(this).attr('href');
-    $.ajax({
-        type: "POST",
-        url: href,
-        success: function(data) {
-            $(".dialog").html(data);
-            $(".dialog").dialog({
-                width: "450",
-                height: "400",
-                position: ['top', 120],
-                title: title,
-                resizable: false,
-                modal: true,
-                open: function(event, ui) {
-                    $(".ui-dialog-titlebar-close").hide();
-                    $('body').css('overflow', 'hidden');
-                }
-            });
-        }
-    });
-});
-$("body").on('click', '#leaveGroup', function(e) {
     e.preventDefault();
-    var title = $(this).attr('title');
-    var href = $(this).attr('href');
-    var groupID = $(this).attr('rel');
-    $(".dialog").dialog({
-        width: "500",
-        height: "150",
-        position: ['top', 120],
-        title: "Leave " + title,
-        resizable: false,
-        modal: true,
-        open: function(event, ui) {
-            $(".ui-dialog-titlebar-close").hide();
-            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
-        }
-    });
-    $.ajax({
-        type: "POST",
+    $.pgwModal({
         url: href,
-        data: {groupID: groupID},
-        success: function(data) {
-            $(".dialog").html(data);
-
-        }
+        title: title,
+        close: false
     });
 });
-
+$("body").on('click', '.leaveGroup', function(e) {
+    var href = $(this).attr('href');
+    var title = $(this).attr('title');
+    e.preventDefault();
+    $.pgwModal({
+        url: href,
+        title: 'Leave ' + title,
+        close: true
+    });
+});
 $("body").on('click', '#addMember', function(e) {
-    e.preventDefault();
-    var title = $(this).attr('title');
     var href = $(this).attr('href');
-    var groupID = $(this).attr('rel');
-    $.ajax({
-        type: "POST",
+    var title = $(this).attr('title');
+    e.preventDefault();
+    $.pgwModal({
         url: href,
-        data: {groupID: groupID},
-        success: function(data) {
-            $(".dialog").dialog({
-                width: "500",
-                height: "160",
-                position: ['top', 120],
-                title: title,
-                resizable: false,
-                modal: true,
-                open: function(event, ui) {
-                    $(".ui-dialog-titlebar-close").hide();
-                    $(".dialog").html(data);
-                }
-            });
-
-
-        }
+        title: 'Add People to Group',
+        close: true,
     });
 });
+
+//$("body").on('click', '#addMember', function(e) {
+//    e.preventDefault();
+//    var title = $(this).attr('title');
+//    var href = $(this).attr('href');
+//    var groupID = $(this).attr('rel');
+//    $.ajax({
+//        type: "POST",
+//        url: href,
+//        data: {groupID: groupID},
+//        success: function(data) {
+//            $(".dialog").dialog({
+//                width: "500",
+//                height: "160",
+//                position: ['top', 120],
+//                title: title,
+//                resizable: false,
+//                modal: true,
+//                open: function(event, ui) {
+//                    $(".ui-dialog-titlebar-close").hide();
+//                    $(".dialog").html(data);
+//                }
+//            });
+//
+//
+//        }
+//    });
+//});
 
 $("body").on('click', '.removeGroup', function(e) {
     e.preventDefault();
@@ -479,32 +460,45 @@ $("body").on('click', '.roleGroup', function(e) {
         }
     });
 });
+
 $("body").on('click', '.myPhotoGroup', function(e) {
     var title = $(this).attr('title');
     var id = $(this).attr('rel');
-    $.ajax({
-        type: "POST",
-        url: "/content/group/photoBrowsers",
-        data: {id: id},
-        success: function(data) {
-            $(".ui-widget-overlay").append('<p>Loading...</p>');
-            $(".dialog").dialog({
-                width: "700",
-                height: "400",
-                position: ['top', 100],
-                title: title,
-                resizable: false,
-                modal: true,
-                open: function(event, ui) {
-                    $(".ui-dialog-titlebar-close").hide();
-//                    $('body').css('overflow', 'hidden'); //this line does the actual hiding
-                    $(".dialog").html(data);
-                }
-            });
-
-        }
+    e.preventDefault();
+    $.pgwModal({
+        url: "/content/group/photoBrowsers?id=" + id,
+        title: title,
+        maxWidth: 800,
+        close: true
     });
 });
+
+//$("body").on('click', '.myPhotoGroup', function(e) {
+//    var title = $(this).attr('title');
+//    var id = $(this).attr('rel');
+//    $.ajax({
+//        type: "POST",
+//        url: "/content/group/photoBrowsers",
+//        data: {id: id},
+//        success: function(data) {
+//            $(".ui-widget-overlay").append('<p>Loading...</p>');
+//            $(".dialog").dialog({
+//                width: "700",
+//                height: "400",
+//                position: ['top', 100],
+//                title: title,
+//                resizable: false,
+//                modal: true,
+//                open: function(event, ui) {
+//                    $(".ui-dialog-titlebar-close").hide();
+////                    $('body').css('overflow', 'hidden'); //this line does the actual hiding
+//                    $(".dialog").html(data);
+//                }
+//            });
+//
+//        }
+//    });
+//});
 
 $("body").on('click', '.removeImgUser', function(e) {
     var title = $(this).attr('title');
@@ -526,32 +520,18 @@ $("body").on('click', '.removeImgUser', function(e) {
         }
     });
 });
-
-
-$("body").on('click', '.photoBrowse', function(e) {
+$("body").on('click', '.photoBrowser', function(e) {
     var title = $(this).attr('title');
-    var role = $(this).attr('role');
-    $.ajax({
-        type: "POST",
-        data: {role: role},
-        url: "/photoBrowser",
-        success: function(data) {
-            $(".dialog").dialog({
-                width: "700",
-                height: "400",
-                position: ['top', 100],
-                title: title,
-                resizable: false,
-                modal: true,
-                open: function(event, ui) {
-                    $(".ui-dialog-titlebar-close").hide();
-                    $(".dialog").html(data);
-                }
-            });
-
-        }
+    var id = $(this).attr('rel');
+    e.preventDefault();
+    $.pgwModal({
+        url: "/photoBrowser?role=avatar",
+        title: title,
+        maxWidth: 800,
+        close: true
     });
 });
+
 $("body").on('click', '.closeDialog', function(e) {
     e.preventDefault();
     $(".dialog form").remove();
@@ -798,36 +778,36 @@ $("body").on('click', '.dialogAlbum', function(e) {
         }
     });
 });
-$("body").on('click', '.detailPhoto', function(e) {
-    var url = $(this).attr('url');
-    $.ajax({
-        type: "GET",
-        url: url,
-        success: function(data) {
-            $(".dialog").dialog({
-                width: "1240",
-                height: "600",
-                position: ['top', 100],
-                resizable: false,
-                modal: true,
-                open: function(event, ui) {
-                    $(".ui-widget-content").css('background-color', '#000');
-                    $('body').css('overflow', 'hidden');
-                    $(".ui-dialog-titlebar").hide();
-                    $(".ui-dialog-titlebar-close").hide();
-                    $(".dialog").html(data);
-                }
-            });
-        }
-    });
-});
+//$("body").on('click', '.detailPhoto', function(e) {
+//    var url = $(this).attr('url');
+//    $.ajax({
+//        type: "GET",
+//        url: url,
+//        success: function(data) {
+//            $(".dialog").dialog({
+//                width: "1240",
+//                height: "600",
+//                position: ['top', 100],
+//                resizable: false,
+//                modal: true,
+//                open: function(event, ui) {
+//                    $(".ui-widget-content").css('background-color', '#000');
+//                    $('body').css('overflow', 'hidden');
+//                    $(".ui-dialog-titlebar").hide();
+//                    $(".ui-dialog-titlebar-close").hide();
+//                    $(".dialog").html(data);
+//                }
+//            });
+//        }
+//    });
+//});
 $("body").on('click', '.page', function(e) {
     var url = $(this).attr('url');
     $.ajax({
         type: "GET",
         url: url,
         success: function(data) {
-            $(".dialog").html(data);
+            $(".pm-body").html(data);
         }
     });
 });

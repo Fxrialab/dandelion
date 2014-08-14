@@ -53,7 +53,7 @@ $countAdmin = F3::get('countAdmin');
                                             </form>
                                         </li>
                                         <li class="large-40 tiptip">
-                                            <a rel="<?php echo str_replace(":", "_", $group->recordID) ?>" class="button" title="Add People to Group" id="addMember" href="/content/group/ajax/addFriend"><span class="icon icon3"></span><span class="label">Add people</span></a>
+                                            <a rel="<?php echo str_replace(":", "_", $group->recordID) ?>" class="button" title="Add People to Group" id="addMember" href="/content/group/ajax/addFriend?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><span class="icon icon3"></span><span class="label">Add people</span></a>
                                         </li>
                                     </ul>
                                 </nav>
@@ -81,20 +81,15 @@ $countAdmin = F3::get('countAdmin');
                         $role = $value->role;
                         $action = $value->action;
                     }
-                    $user = GroupController::findUser($userID);
+                    $user = Controller::getID('user', $userID);
                     $fullName = ucfirst($user->data->firstName) . " " . ucfirst($user->data->lastName);
                     if ($user->data->profilePic != 'none')
                     {
-                        $photo = ElementController::findPhoto($user->data->profilePic);
-                        $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
-                    }
-                    else
-                    {
-                        $gender = ElementController::findGender($user->recordID);
-                        if ($gender == 'male')
-                            $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+                        $photo = Controller::getID('photo', $user->data->profilePic);
+                        if (!empty($photo))
+                            $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
                         else
-                            $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+                            $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                     }
                     ?>
                     <div class="large-30" id="user_<?php echo str_replace(":", "_", $user->recordID) ?>">
@@ -132,7 +127,7 @@ $countAdmin = F3::get('countAdmin');
                                                     <a class="roleGroup ddm" rel="<?php echo $user->recordID ?>" title="Add Group Admin" href="/content/group/ajax/rolegroup"><span class="label"> Make Admin</span></a>
                                                 <?php } ?>
                                                 <a rel="<?php echo $user->recordID ?>" title="Remove" role="remove" class="removeGroup ddm" href="/content/group/ajax/removeGroup"><span class="label">  Remove as group</span></a>
-        <?php } ?>
+                                            <?php } ?>
 
                                         </div> <!-- /.dropdown-slider -->
                                     </div> <!-- /.dropdown -->
@@ -148,7 +143,7 @@ $countAdmin = F3::get('countAdmin');
             <input type="hidden" id="group_id" value="<?php echo $group->recordID ?>">
         </div>
         <div class="large-30 uiRightCol">
-<?php $f3 = require('rightColGroup.php'); ?>
+            <?php $f3 = require('rightColGroup.php'); ?>
         </div>
     </div>
 </div>
@@ -158,25 +153,25 @@ $countAdmin = F3::get('countAdmin');
 
     //                            $('#callbacks').selectric();
     $(document).ready(function() {
-    $("input[type='hidden']").keypress(function(e) {
-    if (e.which == 13) {
-    alert("User pressed 'Enter' in a text input.");
-    // do your custom processing here
-    }
-    })
+        $("input[type='hidden']").keypress(function(e) {
+            if (e.which == 13) {
+                alert("User pressed 'Enter' in a text input.");
+                // do your custom processing here
+            }
+        })
     });
     $(function() {
-    $("#groupDescriptionLink").bind("click", function() {
-    $.ajax({
-    type: "POST",
-    data: {id: $(this).attr("rel")},
-    url: "/content/group/editDescription",
-    success: function(html) {
-    $('#groupDescription').html(html);
-    // Whatever you want to do after the PHP Script returns.
-    }
-    });
-    });
+        $("#groupDescriptionLink").bind("click", function() {
+            $.ajax({
+                type: "POST",
+                data: {id: $(this).attr("rel")},
+                url: "/content/group/editDescription",
+                success: function(html) {
+                    $('#groupDescription').html(html);
+                    // Whatever you want to do after the PHP Script returns.
+                }
+            });
+        });
     });
 
 </script>

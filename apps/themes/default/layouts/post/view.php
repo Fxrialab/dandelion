@@ -7,10 +7,10 @@ if (!empty($activities))
     {
         foreach (glob(UI . 'layouts/post/viewPost.php') as $views)
         {
-            $status = $mod["actions"];
+            $status = $mod["status"];
             $like = $mod['like'];
-            $statusID = $mod['statusID'];
-            $activity = $mod['actions']->data;
+            $statusID = $mod['status']->recordID;
+            $activity = $mod['status']->data;
             $userID = $mod['user']->recordID;
             $username = $mod['user']->data->username;
             $avatar = $mod['user']->data->profilePic;
@@ -23,8 +23,8 @@ if (!empty($activities))
                     $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
             }else
             {
-                $photo = ElementController::findPhoto($mod['avatar']);
-                $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
+//                $photo = ElementController::findPhoto($mod['avatar']);
+                $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
             }
             require $views;
         }

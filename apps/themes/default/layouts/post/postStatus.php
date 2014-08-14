@@ -1,24 +1,10 @@
 <?php
 $status = F3::get('status');
-$activity = $status->data;
-$currentUser = F3::get('currentUser');
-$statusID = F3::get('statusID');
-$username = $currentUser->data->username;
+$user = F3::get('user');
+$image = F3::get('image');
 $like = false;
 $rand = rand(100, 100000);
-if ($currentUser->data->profilePic == 'none')
-{
-    $gender = ElementController::findGender($currentUser->recordID);
-    if ($gender == 'male')
-        $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-    else
-        $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
-}else
-{
-    $photo = ElementController::findPhoto($currentUser->data->profilePic);
-    $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
-}
-$f3 = require('viewPost.php');
+ViewHtml::render('post/viewPost', array('status' => $status, 'user' => $user, 'image' => $image, 'like' => $like));
 ?>
 <script type="text/javascript">
     $(document).ready(function() {

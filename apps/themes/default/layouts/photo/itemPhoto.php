@@ -1,3 +1,18 @@
+<?php
+$item = F3::get('item');
+$recordID = $item['recordID'];
+$photoURL = $item['fileName'];
+$numberLike = $item['numberLike'];
+$photoID = substr($recordID, strpos($recordID, ':') + 1);
+$postPhotoID = str_replace(':', '_', $recordID);
+$comment = Controller::getID('comment', $recordID);
+$count = count($comment);
+$like = Controller::getArray('like', array('actor' => F3::get('SESSION.userID'), 'objID' => $recordID));
+if (!empty($like))
+    $liked = TRUE;
+else
+    $liked = FALSE;
+?>
 <div class="large-33">
     <div class="photoItems">
         <a class="detailPhoto" url="/content/photo/detail?id=<?php echo $postPhotoID ?>&p=<?php echo $k ?>">
@@ -9,7 +24,7 @@
         <div class="action" id="<?php echo $photoID; ?>">
             <span class="like_<?php echo $postPhotoID ?>">
                 <?php
-                if ($like == 0)
+                if ($liked = TRUE)
                 {
                     ?>
                     <a class="likeAction" id="<?php echo $postPhotoID; ?>" rel="photo">Like</a>

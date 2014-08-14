@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 ?>
-<form class="ink-form" id="submitLeave">
+<form class="ink-form" id="submitLeave" style="position: relative; height: 100px">
     <div class="control-group column-group ">
         <div class="statusDialog">Would you like to leave this group or just turn off notifications for new posts?</div>
-        <input type="hidden" name="groupID" value="<?php echo $this->f3->get('groupID'); ?>">
+        <input type="hidden" name="groupID" value="<?php echo F3::get('groupID'); ?>">
         <input type="hidden" name="action" value="ok">
     </div>
     <div class="error"></div>

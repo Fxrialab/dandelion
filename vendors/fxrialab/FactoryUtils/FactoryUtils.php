@@ -29,7 +29,7 @@ class ViewHtml
         {
             foreach ($array as $k => $value)
             {
-                $this->f3->set($k, $value);
+                F3::set($k, $value);
             }
             require(UI . LAYOUTS . $param . '.php');
         }

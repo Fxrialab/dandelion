@@ -162,15 +162,15 @@ class UserController extends AppController
                             setcookie('password', $password, time() - 3600);
                         }
                         //$this->f3->clear('SESSION');
-                        if ($existUser->data->profilePic != 'none')
-                        {
-                            $photo = $this->facade->findByPk('photo', $existUser->data->profilePic);
-                            $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
-                        }
-                        else
-                        {
-                            $profilePic = UPLOAD_URL . 'avatar/170px/avatar.png';
-                        }
+//                        if ($existUser->data->profilePic != 'none')
+//                        {
+//                            $photo = $this->facade->findByPk('photo', $existUser->data->profilePic);
+//                            $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
+//                        }
+//                        else
+//                        {
+                        $profilePic = UPLOAD_URL . 'avatar/170px/avatar.png';
+//                        }
                         $fullName = ucfirst($existUser->data->firstName) . " " . ucfirst($existUser->data->lastName);
                         $this->f3->set('SESSION.loggedUser', $existUser);
                         $this->f3->set('SESSION.username', $existUser->data->username);
@@ -629,6 +629,34 @@ class UserController extends AppController
             header("Content-Type: application/json; charset=UTF-8");
             echo json_encode((object) $data);
             //$this->render('user/editEduWork.php', 'default');
+        }
+    }
+
+    public function user()
+    {
+        if ($this->isLogin())
+        {
+            $this->layout = 'timeline';
+            $user = $this->facade->findByAttributes('user', array('username' => $_GET['user']));
+            $obj = new ObjectHandler();
+            $obj->active = '1';
+            $obj->verb = 'post';
+            $obj->owner = $user->recordID;
+            $obj->select = 'ORDER BY published DESC';
+            $activity = $this->facade->findAll('activity', $obj);
+            if (!empty($activity))
+            {
+                $limit = 20;
+                if (!empty($_GET['page']))
+                    $data = $this->pagePost($_GET['page'], $activity, $limit);
+                else
+                    $data = $this->pagePost(1, $activity, $limit);
+            } else
+            {
+                $data = array();
+            }
+            $statusFriendShip = $this->getStatusFriendShip(F3::get('SESSION.userID'), $user->recordID);
+            $this->render('user/user', array('user' => $user, 'data' => $data, 'statusFriendShip' => $statusFriendShip));
         }
     }
 

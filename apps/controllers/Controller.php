@@ -118,6 +118,18 @@ class Controller
         require_once(MODULES . $themePath . $action . ".php");
     }
 
+    public static function getID($model, $id)
+    {
+        $facade = new DataFacade();
+        return $facade->findByPk($model, $id);
+    }
+
+    public static function getArray($model, $array = array())
+    {
+        $facade = new DataFacade();
+        return $facade->findByAttributes($model, $array);
+    }
+
 }
 
 ?>

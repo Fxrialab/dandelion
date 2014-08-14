@@ -1,46 +1,52 @@
-<script>
-    $(document).ready(function() {
-
-    $('#contentContainer').scrollPaginationPost({
-    nop: 5, // The number of posts per scroll to be loaded
-    offset: 0, // Initial offset, begins at 0 in this case
-    error: '', // When the user reaches the end this is the message that is
-    // displayed. You can change this if you want.
-    delay: 500, // When you scroll down the posts will load after a delayed amount of time.
-    // This is mainly for usability concerns. You can alter this as you see fit
-    scroll: true // The main bit, if set to false posts will not load as the user scrolls.
-    // but will still load if the user clicks.
-
-    });
-    });
-
-
-</script>
-<style>
-    #uploaded_images {width: 800px;margin: 0 auto}
-    #uploaded_images div{float:left;padding-left: 10px;}
-    .hide{display:none}
-</style>
-
 <div class="uiMainContainer">
     <?php
-    ViewHtml::render('post/formPost');
+    ViewHtml::render('post/formPost', array('type' => 'post'));
     ?>
-    <input type="hidden" id="type" name="type" value="post">
     <div class="wrapperContainer">
-        <div id="contentContainer">
-
+        <div id="container" class="column-group">
+            <?php
+            $data = F3::get('data');
+            foreach ($data as $key => $value)
+            {
+                ViewHtml::render('post/viewPost', array(
+                    'key' => $key,
+                    'status' => $value['status'],
+                    'image' => $value['image'],
+                    'like' => $value['like'],
+                    'user' => $value['user'],
+                    'comment' => $value['comment']
+                ));
+            }
+            ?>
         </div>
-        <!--Other part-->
-        <div id="fade" class="black_overlay"></div>
-        <div class="uiShare uiPopUp"></div>
-        <div class="notificationShare uiPopUp">
-            <div class="titlePopUp large-100">
-                <span>Success</span>
-            </div>
-            <div class="mainPopUp large-100">
-                <span class="successNotification">That status was shared on your timeline</span>
-            </div>
-        </div>
+        <nav id="page-nav">
+            <a href="home?page=2"></a>
+        </nav>
     </div>
 </div>
+
+<script>
+    $(function() {
+
+        var $container = $('#container');
+
+        $container.infinitescroll({
+            navSelector: '#page-nav', // selector for the paged navigation
+            nextSelector: '#page-nav a', // selector for the NEXT link (to page 2)
+            itemSelector: '.post', // selector for all items you'll retrieve
+            loading: {
+                url: 'home',
+                finishedMsg: 'No more pages to load.',
+                img: 'http://i.imgur.com/6RMhx.gif'
+            }
+        },
+        // trigger Masonry as a callback
+        function(newElements) {
+            // hide new items while they are loading
+            var $newElems = $(newElements).css({opacity: 1});
+            // ensure that images load before adding to masonry layout
+
+        }
+        );
+    });
+</script>

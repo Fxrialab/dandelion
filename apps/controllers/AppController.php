@@ -19,7 +19,6 @@ class AppController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->Elements = new ElementController();
     }
 
     public function beforeRoute()
@@ -176,6 +175,7 @@ class AppController extends Controller
                 'object' => $object,
                 'type' => $type,
                 'typeID' => $typeID,
+                'active' => 1,
                 'published' => $published
             );
             // create activity for currentUser
@@ -199,6 +199,7 @@ class AppController extends Controller
                             'object' => $object,
                             'type' => $type,
                             'typeID' => $typeID,
+                            'active' => 1,
                             'published' => $published
                         );
                         $this->facade->save('activity', $data);
@@ -496,6 +497,56 @@ class AppController extends Controller
         list($width, $height) = getimagesize($tmpname);
         if (move_uploaded_file($tempname, $dir . $newName . '.' . $ext))
             return array('name' => $newName . '.' . $ext, 'width' => $width, 'height' => $height);
+    }
+
+    public function pagePost($page, $activity, $limit)
+    {
+        $i = 0;
+        $data = array();
+        if ($page > 1)
+        {
+            $countIndex = $page * $limit;
+            $pev = $limit * $page - $limit;
+        }
+        else
+        {
+            $countIndex = $limit;
+            $pev = 0;
+        }
+        for ($i = $pev; $i < $countIndex; $i++)
+        {
+            if (!empty($activity[$i]->data->object))
+            {
+                $status = $this->facade->findByPk('status', $activity[$i]->data->object);
+                $statusID = $status->recordID;
+                $user = $this->facade->findByPk('user', $status->data->owner);
+                $comment = $this->facade->findAllAttributes('comment', array('typeID' => $status->recordID));
+                if (!empty($comment))
+                    $arrayComment = $comment;
+                else
+                    $arrayComment = array();
+                $image = array();
+                if (!empty($status->data->embedSource))
+                {
+                    $embedSource = explode(',', $status->data->embedSource);
+                    foreach ($embedSource as $value)
+                    {
+                        $photo = $this->facade->findByPk('photo', $value);
+                        $image[] = array('id' => $value, 'fileName' => $photo->data->fileName, 'width' => $photo->data->width);
+                    }
+                }
+                $like = $this->facade->findByAttributes('like', array('actor' => F3::get('SESSION.userID'), 'objID' => $statusID));
+                $data[] = array(
+                    'key' => $i,
+                    'user' => $user,
+                    'status' => $status,
+                    'image' => $image,
+                    'like' => $like,
+                    'comment' => $arrayComment
+                );
+            }
+        }
+        return $data;
     }
 
 }

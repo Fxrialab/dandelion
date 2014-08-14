@@ -1,3 +1,6 @@
+<?php
+$user = F3::get('user');
+?>
 <div class="uiBoxTitle">
     <div class="column-group">
         <div style="padding: 13px">
@@ -16,8 +19,8 @@
     <div class="column-group">
         <nav class="ink-navigation">
             <ul class="menu horizontal">
-                <li><a href="/content/photo?user=<?php echo F3::get('SESSION.username') ?>">Photos of you</a></li>
-                <li><a href="/content/photo/myAlbum?user=<?php echo F3::get('SESSION.username') ?>">Albums</a></li>
+                <li><a href="/content/photo?user=<?php echo $user->data->username ?>">Photos of you</a></li>
+                <li><a href="/content/photo/album?user=<?php echo $user->data->username ?>">Albums</a></li>
                 <li><a href="">Not Tagged</a></li>
             </ul>
         </nav>

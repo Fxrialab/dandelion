@@ -1,10 +1,14 @@
 
 <?php
 $album = F3::get('album');
+$user = F3::get('user');
+ViewHtml::render('coverTimeLine', array('user' => $user));
 ?>
 <div class="uiMainColAbout">
     <div class="uiPhotoWrapper">
-        <?php require_once 'boxTitle.php'; ?>
+        <?php
+        ViewHtml::render('photo/boxTitle', array('user' => $user));
+        ?>
         <div class="arrow_album"></div>
         <div class="column-group">
             <div class="photoAll">
@@ -18,8 +22,8 @@ $album = F3::get('album');
                             <div class="photoItems">
                                 <?php
                                 $photo = explode(',', $value->data->photo);
-                                $p = PhotoController::getPhoto($photo[0]);
-                                $u = PhotoController::getUser($value->data->owner);
+                                $p = Controller::getID('photo', $photo[0]);
+                                $u = Controller::getID('user', $value->data->owner);
                                 ?>
                                 <a href="/content/photo?user=<?php echo $u->data->username ?>&album=<?php echo str_replace(':', '_', $value->recordID) ?>" class="viewThisPhoto">
                                     <img src="<?php echo UPLOAD_URL . $p->data->fileName ?>">

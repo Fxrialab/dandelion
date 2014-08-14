@@ -39,45 +39,45 @@
     <div class="footerDialog" >
         <div class="float-right">
             <button type="submit" id="groupSubmit" class="ink-button green-button">Add</button>
-            <button type="button" id="dialogCreateGroup" class="closeDialog ink-button">Cancel</button>
+            <button type="button" id="dialogCreateGroup" class="ink-button"  onclick="$.pgwModal('close');">Cancel</button>
         </div>
     </div>
 </form>
 <script>
-    $(function() {
-        $("#submitForm").submit(function() {
-            var groupName = $('#groupName').val();
-            var groupMember = $('#groupMember').val();
-            if (groupName == '') {
-                $(".error").html('<div class="ink-alert"><button class="ink-dismiss">×</button><p>Error Group Name</p></div>');
-            }
-            else if (groupMember == '') {
-                $(".error").html('<div class="ink-alert"><button class="ink-dismiss">×</button><p>Error Group Member</p></div>');
-            }
-            else
-            {
-                $.ajax({
-                    type: "POST",
-                    url: "/content/group/create",
-                    data: $("#submitForm").serialize(), // serializes the form's elements.
-                    success: function(data)
-                    {
-                        $(".dialog").dialog("close");
-                        $("#viewGroup").prepend(data);
-                    }
-                });
-            }
+                $(function() {
+                    $("#submitForm").submit(function() {
+                        var groupName = $('#groupName').val();
+                        var groupMember = $('#groupMember').val();
+                        if (groupName == '') {
+                            $(".error").html('<div class="ink-alert"><button class="ink-dismiss">×</button><p>Error Group Name</p></div>');
+                        }
+                        else if (groupMember == '') {
+                            $(".error").html('<div class="ink-alert"><button class="ink-dismiss">×</button><p>Error Group Member</p></div>');
+                        }
+                        else
+                        {
+                            $.ajax({
+                                type: "POST",
+                                url: "/content/group/create",
+                                data: $("#submitForm").serialize(), // serializes the form's elements.
+                                success: function(data)
+                                {
+                                    $.pgwModal('close');
+                                    $("#viewGroup").prepend(data);
+                                }
+                            });
+                        }
 
-            return false; // avoid to execute the actual submit of the form.
-        });
-        $('#groupMember').tokenInput("/content/group/ajax/searchFriends", {
-            theme: "facebook",
-            method: 'POST',
-            queryParam: 'q',
-            placeholder: "Add Members",
-            hintText: "",
-            noResultsText: "Nothin' found.",
-            preventDuplicates: true
-        });
-    });
+                        return false; // avoid to execute the actual submit of the form.
+                    });
+                    $('#groupMember').tokenInput("/content/group/ajax/searchFriends", {
+                        theme: "facebook",
+                        method: 'POST',
+                        queryParam: 'q',
+                        placeholder: "Add Members",
+                        hintText: "",
+                        noResultsText: "Nothin' found.",
+                        preventDuplicates: true
+                    });
+                });
 </script>

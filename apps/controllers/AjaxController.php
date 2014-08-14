@@ -59,10 +59,7 @@ class AjaxController extends AppController
                     $this->changeImage($file, 150, $thumbnailDir, $newName, 80, false);
                     $this->changeImage($file, 170, $avatarDir, $newName, 100, false);
                     $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true);
-
-                    $this->f3->set('image', $image);
-                    $this->f3->set('target', 'uploadCover');
-                    $this->render('ajax/confirmPhoto.php', 'default');
+                    $this->render('ajax/confirmPhoto', array('image' => $image, 'target' => 'uploadCover'));
                 }
             }
         }
@@ -86,10 +83,7 @@ class AjaxController extends AppController
                     $this->changeImage($file, 150, $thumbnailDir, $newName, 80, false);
                     $this->changeImage($file, 750, $coverDir, $newName, 100, false);
                     $image = $this->changeImage($file, 170, $avatarDir, $newName, 100, true);
-
-                    $this->f3->set('image', $image);
-                    $this->f3->set('target', 'uploadAvatar');
-                    $this->render('ajax/confirmAvatar.php', 'default');
+                    $this->render('ajax/confirmAvatar', array('image' => $image));
                 }
             }
         }
@@ -102,8 +96,7 @@ class AjaxController extends AppController
         {
             $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
             $this->f3->set('photos', $photos);
-            $this->f3->set('role', $_POST['role']);
-            $this->render('ajax/photoGalleries.php', 'ajax');
+            $this->render('ajax/photoBrowser', array('photos' => $photos, 'role' => $_GET['role']));
         }
     }
 
@@ -254,16 +247,10 @@ class AjaxController extends AppController
             $photoID = $_POST['id'];
             $photo = $this->facade->findByPk('photo', $photoID);
             $image = array('name' => $photo->data->fileName, 'width' => $photo->data->width, 'height' => $photo->data->height);
-            $this->f3->set('image', $image);
-            $this->f3->set('target', 'choosePhoto');
             if ($_POST['role'] == 'avatar')
-            {
-                $this->render('ajax/confirmAvatar.php', 'ajax');
-            }
+                $this->render('ajax/confirmAvatar', array('image' => $image, 'target' => 'choosePhoto'));
             else
-            {//when role such as cover
-                $this->render('ajax/confirmPhoto.php', 'ajax');
-            }
+                $this->render('ajax/confirmPhoto', array('image' => $image, 'target' => 'choosePhoto'));
         }
     }
 
@@ -273,8 +260,7 @@ class AjaxController extends AppController
         if ($this->isLogin())
         {
             $photo = $this->facade->findByPk('photo', $_POST['id']);
-            $this->f3->set('photo', $photo);
-            $this->render('ajax/reposition.php', 'ajax');
+            $this->render('ajax/reposition', array('photo' => $photo));
         }
     }
 
