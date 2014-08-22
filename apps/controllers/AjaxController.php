@@ -14,6 +14,16 @@ class AjaxController extends AppController
         return Model::get('photo')->find($id);
     }
 
+    public function modalUpload()
+    {
+
+        if ($this->isLogin())
+        {
+            $groupMember = $this->facade->findAllAttributes('groupMember', array('member' => F3::get('SESSION.userID')));
+            $this->renderPartial('post/formPost', array('groupMember' => $groupMember));
+        }
+    }
+
     //Upload image Post and Comment
     public function upload()
     {
@@ -25,6 +35,7 @@ class AjaxController extends AppController
                 'success' => false,
                 'error' => ''
             );
+
             if (!empty($_FILES["myfile"]))
             {
                 $fileName = $_FILES["myfile"]["name"][0];
@@ -36,7 +47,8 @@ class AjaxController extends AppController
                 if (move_uploaded_file($_FILES["myfile"]["tmp_name"][0], $outPutDir . $newName . '.' . $ext))
                     $data['results'][] = array('imgID' => $newName, 'url' => UPLOAD_URL . $newName . '.' . $ext, 'name' => $newName . '.' . $ext, 'width' => $width, 'height' => $height);
             }
-            header("Content-Type: application/json; charset=UTF-8");
+
+//            header("Content-Type: application/json; charset=UTF-8");
             echo json_encode((object) $data);
         }
     }

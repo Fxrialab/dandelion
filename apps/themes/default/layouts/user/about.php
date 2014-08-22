@@ -1,7 +1,9 @@
+<?php
+$user = F3::get('user');
+ViewHtml::render('coverTimeLine', array('user' => $user));
+?>
 <script type="text/javascript" src="<?php echo $JS; ?>customs/about.js"></script>
-<div class="arrow_timeLineMenuNav">
-    <div class="arrow_timeLine" style="left: 10%"></div>
-</div>
+
 <div class="uiMainColAbout">
     <div class="uiAboutBox">
         <div class="uiBoxTitle large-100">
@@ -25,7 +27,7 @@
                     <div class="boxItemBody">
                         <div class="rowBoxItem column-group">
                             <div class="large-40 leftColBox">Birth Date</div>
-                            <div class="large-50 rightColBox fixColor-111111 txtBirthDate">November 20</div>
+                            <div class="large-50 rightColBox fixColor-111111 txtBirthDate"><?php echo date('Y-m-d', $user->data->created) ?></div>
                             <div class="large-10"><a href=""><i class="icon-globe icon-large" id="birthDateIcon"></i></a></div>
                         </div>
                         <div class="rowBoxItem column-group">

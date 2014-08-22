@@ -12,13 +12,13 @@ class GroupController extends AppController
         parent::__construct();
     }
 
-    public function addGroup($viewPath)
+    public function addGroup()
     {
         if ($this->isLogin())
         {
             $this->layout = 'group';
             $obj = new ObjectHandler();
-            $this->render($viewPath . 'addGroup.php', 'modules');
+            $this->render('addGroup');
         }
     }
 
@@ -214,7 +214,7 @@ class GroupController extends AppController
             {
                 $data = array();
             }
-          
+
             $this->render('group/detail', array('photo' => $photo, 'group' => $group, 'member' => $member, 'countMember' => $count, 'data' => $data));
         }
     }
@@ -392,6 +392,7 @@ class GroupController extends AppController
                 $actor = explode(',', $_POST['groupMember']);
                 $array = array(
                     'name' => $_POST['groupName'],
+                    'description' => $_POST['groupDescription'],
                     'owner' => $this->f3->get('SESSION.userID'),
                     'numMember' => count($actor),
                     'privacy' => $_POST['groupPrivacy'],

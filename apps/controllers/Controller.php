@@ -126,8 +126,10 @@ class Controller
 
     public static function getArray($model, $array = array())
     {
+    
         $facade = new DataFacade();
-        return $facade->findByAttributes($model, $array);
+        $model = $facade->findByAttributes($model, $array);
+        return $model;
     }
 
 }

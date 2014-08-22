@@ -487,14 +487,12 @@ class UserController extends AppController
         if ($this->isLogin())
         {
             $this->layout = "timeline";
-
-            $username = $this->f3->get('GET.user');
-            $currentUser = $this->getCurrentUser();
-            $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $username));
-            $currentProfileID = $currentProfileRC->recordID;
-            //get status friendship
-            $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
-            $this->render('user/about', array('currentUser' => $currentUser, 'otherUser' => $otherUser, 'statusFriendShip' => $statusFriendShip));
+            if (!empty($_GET['user']))
+                $user = $this->facade->findByAttributes('user', array('username' => $_GET['user']));
+            else
+                $user = $this->facade->findByPk('user', F3::get('SESSION.userID'));
+            $statusFriendShip = $this->getStatusFriendShip(F3::get('SESSION.userID'), $user->recordID);
+            $this->render('user/about', array('user' => $user, 'statusFriendShip' => $statusFriendShip));
         }
     }
 

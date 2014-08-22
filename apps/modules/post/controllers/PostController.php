@@ -228,7 +228,7 @@ class PostController extends AppController
                     $image[] = array('id' => $photo->recordID, 'fileName' => $photo->data->fileName);
                 }
             }
-            $this->renderPartial('post/postStatus', array('status' => $status, 'user' => $user, 'image' => $image));
+            $this->renderPartial('post/postStatus', array('status' => $status, 'user' => $user, 'image' => $image, 'like' => FALSE));
         }
     }
 

@@ -6,7 +6,6 @@
  * Project: UserWired Network - Version: beta
  */
 require_once (CONTROLLERS . "AppController.php");
-require_once (CONTROLLERS . "ElementController.php");
 $url            = $_SERVER["REQUEST_URI"];
 $params_full    = explode('/',$url);
 //var_dump($params_full);
