@@ -1,0 +1,1258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="14987b25-b8af-445a-a6ad-fd8040f61cfa" name="Default" comment="">
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\.gitignore" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\.idea\dandelion.iml" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\.idea\encodings.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\.idea\misc.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\.idea\modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\.idea\vcs.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\elements\FormPostElement.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\models\app_model.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\arrow.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\button.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\buttons.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\group.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\icons.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\ink-ie7.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\ink.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\jquery.dropdown.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\jquery.mCustomScrollbar.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\main.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\tiptip.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\css\token-input-facebook.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\FontAwesome.otf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\fontawesome-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\fontawesome-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\fontawesome-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\fontawesome-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-b-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-b-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-b-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-b-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-bi-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-bi-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-bi-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-bi-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-c-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-c-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-c-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-c-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-l-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-l-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-l-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-l-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-li-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-li-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-li-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-li-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-m-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-m-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-m-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-m-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-mi-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-mi-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-mi-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-mi-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-r-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-r-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-r-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-r-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-ri-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-ri-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-ri-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntu-ri-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-b-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-b-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-b-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-b-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-bi-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-bi-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-bi-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-bi-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-r-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-r-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-r-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-r-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-ri-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-ri-webfont.svg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-ri-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\font\ubuntumono-ri-webfont.woff" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\avar.jpg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\avatarMenDefault.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\avatarWomenDefault.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\cd.jpg" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\chatIcons.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\closelabel.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\edit.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\editAvatar.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\editImage.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\gh-icons.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\google+-ui-sprite-colour.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\google+-ui-sprite-gray.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon.psd" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon16.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon16.psd" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon20.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon20.psd" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon24.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon30.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon32.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon35-active.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon35-active.psd" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon35.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\icon\icon35.psd" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\iconloading.gif" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\loading.gif" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\loadingIcon.gif" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\logo.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\menuNavIcons.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\nextArrow.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\options.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\photo.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\photoNavIcons.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\postOptionIcon.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\prevArrow.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\status.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\statusCounterIcons.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\toggle.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\topNavIcons-1.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\topNavIcons-2.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\uploadPhotoIcon.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\images\uploadVideoIcon.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\about.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\addFriend.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\contact.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\editProfile.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\forgotPassword.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\init.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\inputToggle.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\pretty.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\search.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\template.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\upload.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\customs\validate.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\fanc\jquery-ui-1.8.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\fanc\jquery-ui-1.8.min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\fanc\jquery.bgiframe.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\fanc\jquery.bgiframeTest.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\fanc\jquery.ui.theme.css" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\infinitescroll.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.autoSize-min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.dropdown.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.loadedContent.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.mCustomScrollbar.concat.min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.oembed.min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.selectric.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.tinyscrollbar.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.tiptip.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.tmpl.min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.tokeninput.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\jquery.uploadfile.min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\libs\autoload.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\libs\blocksit.min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\libs\ink-ui.min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\libs\ink.min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\libs\jquery-1.2.6.pack.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\libs\jquery-1.9.1.min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\libs\jquery.autosize.min.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\libs\jquery.oembed.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\libs\jquery.timers-1.2.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\mq.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\js\swfobject.js" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\ajax\confirmAvatar.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\ajax\confirmPhoto.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\ajax\photoGalleries.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\ajax\reposition.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\coverTimeLine.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\elements\friendRequest.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\elements\friendRequestElement.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\elements\friendRequestPopUpOver.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\elements\loadedSuggestElement.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\elements\message.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\elements\notification.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\elements\peopleYouMayKnowElement.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\footer.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\addFriend.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\cover.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\coverPhotoGroup.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\detail.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\editCover.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\form.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\formAddAdmin.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\formDescription.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\formMember.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\groupBar.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\groupmember.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\index.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\leave.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\loadData.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\members.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\photoGalleries.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\removeAdmin.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\removeGroup.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\reposition.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\rightColGroup.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\rolegroup.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\view.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\viewGroup.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\group\viewMember.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\head.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\home.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\home\friend.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\home\friendRequests.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\home\home.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\home\items.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\home\like.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\home\notifications.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\home\photobrowser.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\home\searchResult.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\home\view.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\index.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\leftCol.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\navTimeLine.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\album.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\boxTitle.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\comment.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\createAlbum.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\dataPhoto.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\detail.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\itemPhoto.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\menu.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\morePhotoComment.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\myAlbum.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\myPhoto.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\photo\sharePhoto.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\commentItem.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\formPost.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\moreComment.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\morePostComment.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\morePostStatus.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\myPost.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\post.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\postComment.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\postStatus.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\postWrap.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\shareStatus.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\view.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\viewComment.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\post\viewPost.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\rightCol.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\timeline.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\topBar.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\about.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\authentication.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\commentAMQ.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\confirmCode.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\confirmPassword.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\editBasicInfo.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\editEduWork.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\forgotPassword.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\friends.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\home.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\homeAMQ.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\index.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\install.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\moreHome.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\newPassword.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\noMoreHome.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\notice.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\resetPassword.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\layouts\user\viewFriend.php" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\swfs\amqp.swf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\swfs\expressInstall.swf" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\uploads\avatar\170px\avatarMenDefault.png" afterPath="" />
+      <change type="DELETED" beforePath="E:\WebDesign\Projects\dandelion\apps\themes\default\uploads\avatar\170px\avatarWomenDefault.png" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/modules/group/controllers/AjaxController.php" afterPath="$PROJECT_DIR$/apps/modules/group/controllers/AjaxController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/controllers/AppController.php" afterPath="$PROJECT_DIR$/apps/controllers/AppController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/controllers/Controller.php" afterPath="$PROJECT_DIR$/apps/controllers/Controller.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendors/fxrialab/FactoryUtils/FactoryUtils.php" afterPath="$PROJECT_DIR$/vendors/fxrialab/FactoryUtils/FactoryUtils.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/controllers/FriendController.php" afterPath="$PROJECT_DIR$/apps/controllers/FriendController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/elements/FriendRequestElement.php" afterPath="$PROJECT_DIR$/apps/elements/FriendRequestElement.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/modules/group/controllers/GroupController.php" afterPath="$PROJECT_DIR$/apps/modules/group/controllers/GroupController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/controllers/HomeController.php" afterPath="$PROJECT_DIR$/apps/controllers/HomeController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/controllers/LikeController.php" afterPath="$PROJECT_DIR$/apps/controllers/LikeController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/elements/MessageElement.php" afterPath="$PROJECT_DIR$/apps/elements/MessageElement.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/elements/NotificationElement.php" afterPath="$PROJECT_DIR$/apps/elements/NotificationElement.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/modules/photo/controllers/PhotoController.php" afterPath="$PROJECT_DIR$/apps/modules/photo/controllers/PhotoController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/modules/post/controllers/PostController.php" afterPath="$PROJECT_DIR$/apps/modules/post/controllers/PostController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/config/Structure.php" afterPath="$PROJECT_DIR$/apps/config/Structure.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/controllers/UserController.php" afterPath="$PROJECT_DIR$/apps/controllers/UserController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/modules/post/info.php" afterPath="$PROJECT_DIR$/apps/modules/post/info.php" />
+    </list>
+    <ignored path="dandelion.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="dandelion" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="friendRequestPopUpOver.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/views/facebook/elements/friendRequestPopUpOver.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="93" selection-start="93" selection-end="93" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="527">
+              <folding>
+                <element signature="n#style#0;n#i#0;n#a#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="notifications.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/views/facebook/home/notifications.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="37.26923" vertical-offset="969" max-vertical-offset="1564">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PostController.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/apps/modules/post/controllers/PostController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="119" column="61" selection-start="3991" selection-end="3991" vertical-scroll-proportion="2.325095" vertical-offset="800" max-vertical-offset="8806">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="home.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/views/facebook/home/home.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="29" column="40" selection-start="1434" selection-end="1434" vertical-scroll-proportion="-1.3076923" vertical-offset="459" max-vertical-offset="1156">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="home.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/views/facebook/layouts/home.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="6" column="42" selection-start="152" selection-end="152" vertical-scroll-proportion="-3.2692308" vertical-offset="17" max-vertical-offset="646">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="topBar.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/views/facebook/includes/topBar.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="49.03846" vertical-offset="1275" max-vertical-offset="2975">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Controller.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/controllers/Controller.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="71" column="5" selection-start="1832" selection-end="1832" vertical-scroll-proportion="-7.076923" vertical-offset="1023" max-vertical-offset="1972">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="footer.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/views/facebook/includes/footer.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="476">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="messagePopUpOver.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/views/facebook/elements/messagePopUpOver.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4" column="39" selection-start="304" selection-end="304" vertical-scroll-proportion="-2.6153846" vertical-offset="0" max-vertical-offset="1020">
+              <folding>
+                <element signature="n#style#0;n#i#0;n#a#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="notificationPopUpOver.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/views/facebook/elements/notificationPopUpOver.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1" column="97" selection-start="195" selection-end="195" vertical-scroll-proportion="-0.0" vertical-offset="17" max-vertical-offset="544">
+              <folding>
+                <element signature="n#style#0;n#i#0;n#a#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/apps/config/RouteConfig.php" />
+        <option value="$PROJECT_DIR$/apps/config/Core.php" />
+        <option value="$PROJECT_DIR$/apps/views/themes/default/layouts/index.php" />
+        <option value="$PROJECT_DIR$/vendors/fxrialab/ModelUtils/ObjectHandler.php" />
+        <option value="$PROJECT_DIR$/apps/modules/post/controllers/PostController.php" />
+        <option value="$PROJECT_DIR$/apps/controllers/Controller.php" />
+        <option value="$PROJECT_DIR$/apps/modules/post/views/elements/formPost.php" />
+        <option value="$PROJECT_DIR$/apps/modules/post/info.php" />
+        <option value="$PROJECT_DIR$/apps/views/facebook/home/home.php" />
+        <option value="$PROJECT_DIR$/apps/config/Structure.php" />
+        <option value="$PROJECT_DIR$/vendors/fxrialab/FactoryUtils/FactoryUtils.php" />
+        <option value="$PROJECT_DIR$/apps/controllers/AppController.php" />
+        <option value="$PROJECT_DIR$/apps/views/facebook/layouts/index.php" />
+        <option value="$PROJECT_DIR$/apps/elements/FriendRequestElement.php" />
+        <option value="$PROJECT_DIR$/apps/views/facebook/includes/topBarElement.php" />
+        <option value="$PROJECT_DIR$/apps/elements/NotificationElement.php" />
+        <option value="$PROJECT_DIR$/apps/views/facebook/elements/friendRequestPopUpOver.php" />
+        <option value="$PROJECT_DIR$/apps/views/facebook/elements/message.php" />
+        <option value="$PROJECT_DIR$/apps/views/facebook/elements/notificationPopUpOver.php" />
+        <option value="$PROJECT_DIR$/apps/elements/MessageElement.php" />
+        <option value="$PROJECT_DIR$/apps/views/facebook/layouts/home.php" />
+        <option value="$PROJECT_DIR$/apps/controllers/HomeController.php" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="facebook" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="facebook" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="facebook" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="home" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="post" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="post" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="facebook" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mains" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="post" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="facebook" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="post" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="photo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="photo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="group" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="group" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="group" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dandelion" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="FullScreen" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\WebDesign\Projects\dandelion" />
+      <recent name="E:\WebDesign\Projects\dandelion\apps\views\facebook\includes" />
+      <recent name="E:\WebDesign\Projects\dandelion\apps\views\facebook" />
+      <recent name="E:\WebDesign\Projects\dandelion\apps" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\WebDesign\Projects\dandelion\apps\views\facebook\includes" />
+      <recent name="E:\WebDesign\Projects\dandelion\apps\modules\post\views\facebook\mains" />
+      <recent name="E:\WebDesign\Projects\dandelion\apps\modules\post\views\facebook" />
+      <recent name="E:\WebDesign\Projects\dandelion\apps\views\themes\default" />
+      <recent name="E:\WebDesign\Projects\dandelion\apps\views" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
+    <list size="0" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="14987b25-b8af-445a-a6ad-fd8040f61cfa" name="Default" comment="" />
+      <created>1408979620861</created>
+      <updated>1408979620861</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32843137" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2620846" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32843137" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="2" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/apps/config/Routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="2175" max-vertical-offset="2737" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/ModuleController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="867" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/HomeController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="37" selection-start="982" selection-end="982" vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="4284" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/AppController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="501" column="20" selection-start="19061" selection-end="19061" vertical-scroll-proportion="0.0" vertical-offset="8427" max-vertical-offset="9486" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/UserController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="10729" max-vertical-offset="11322" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendors/fxrialab/FactoryUtils/FactoryUtils.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="6" selection-start="415" selection-end="415" vertical-scroll-proportion="0.0" vertical-offset="391" max-vertical-offset="782" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/ModuleController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="867" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/models/DB.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="567" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/models/Model.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="567" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/Register.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="11.769231" vertical-offset="306" max-vertical-offset="1003" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/config/Core.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="15" selection-start="77" selection-end="99" vertical-scroll-proportion="-1.9615384" vertical-offset="0" max-vertical-offset="527" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/base.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2036" column="14" selection-start="52474" selection-end="52480" vertical-scroll-proportion="-0.06420233" vertical-offset="34458" max-vertical-offset="44251" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendors/fxrialab/Facade/DataFacade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="140" column="20" selection-start="3582" selection-end="3582" vertical-scroll-proportion="0.15955473" vertical-offset="2294" max-vertical-offset="5423" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendors/fxrialab/ModelUtils/ObjectHandler.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="19" selection-start="47" selection-end="47" vertical-scroll-proportion="0.09461967" vertical-offset="0" max-vertical-offset="539" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/modules/post/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="765" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/config/Routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="44" selection-start="1758" selection-end="1758" vertical-scroll-proportion="0.0" vertical-offset="1326" max-vertical-offset="2754" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/layouts/timeline.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="15" selection-start="120" selection-end="120" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="952" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/modules/post/views/facebook/elements/formPost.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="73" column="45" selection-start="3192" selection-end="3192" vertical-scroll-proportion="0.0" vertical-offset="1020" max-vertical-offset="4165" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/ElementController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.3877551" vertical-offset="209" max-vertical-offset="1258" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/config/RouteConfig.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="11" selection-start="3121" selection-end="3121" vertical-scroll-proportion="-11.576923" vertical-offset="957" max-vertical-offset="1496" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/modules/post/views/facebook/mains/postStatus.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.19851577" vertical-offset="107" max-vertical-offset="646" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/modules/post/views/facebook/mains/viewComment.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.86085343" vertical-offset="464" max-vertical-offset="1156" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/modules/post/views/facebook/mains/myPost.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="867" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/home/view.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="850" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/includes/rightCol.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="565" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/elements/friendRequestElement.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="17" selection-start="280" selection-end="280" vertical-scroll-proportion="0.2908745" vertical-offset="0" max-vertical-offset="833" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendors/fxrialab/FactoryUtils/FactoryUtils.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="8" selection-start="412" selection-end="412" vertical-scroll-proportion="-11.769231" vertical-offset="0" max-vertical-offset="493" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/layouts/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="26" selection-start="51" selection-end="60" vertical-scroll-proportion="-1.9615384" vertical-offset="0" max-vertical-offset="425" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/includes/head.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="565" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/elements/FriendRequestElement.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="48" selection-start="41" selection-end="54" vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="357">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/elements/NotificationElement.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="70" selection-start="194" selection-end="256" vertical-scroll-proportion="-7.1923075" vertical-offset="0" max-vertical-offset="357">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/config/Structure.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="0" selection-start="988" selection-end="1079" vertical-scroll-proportion="0.0961183" vertical-offset="407" max-vertical-offset="969">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/webroot/js/fanc/jquery-ui-1.8.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="9690">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/elements/friendRequestPopUpOver.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="93" selection-start="93" selection-end="93" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="527">
+          <folding>
+            <element signature="n#style#0;n#i#0;n#a#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/elements/messagePopUpOver.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="39" selection-start="304" selection-end="304" vertical-scroll-proportion="-2.6153846" vertical-offset="0" max-vertical-offset="1020">
+          <folding>
+            <element signature="n#style#0;n#i#0;n#a#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/elements/notificationPopUpOver.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="97" selection-start="195" selection-end="195" vertical-scroll-proportion="-0.0" vertical-offset="17" max-vertical-offset="544">
+          <folding>
+            <element signature="n#style#0;n#i#0;n#a#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/elements/MessageElement.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="48" selection-start="224" selection-end="224" vertical-scroll-proportion="0.3469388" vertical-offset="0" max-vertical-offset="539">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/includes/topBar.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="49.03846" vertical-offset="1275" max-vertical-offset="2975">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/includes/footer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="565">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/layouts/home.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="42" selection-start="152" selection-end="152" vertical-scroll-proportion="-3.2692308" vertical-offset="17" max-vertical-offset="646">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/AppController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="107" column="20" selection-start="2907" selection-end="2907" vertical-scroll-proportion="0.34980989" vertical-offset="1635" max-vertical-offset="8534">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1938">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/Controller.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="5" selection-start="1832" selection-end="1832" vertical-scroll-proportion="-7.076923" vertical-offset="1023" max-vertical-offset="1972">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/home/home.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="40" selection-start="1434" selection-end="1434" vertical-scroll-proportion="-1.3076923" vertical-offset="459" max-vertical-offset="1156">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/HomeController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="163" column="38" selection-start="5674" selection-end="5674" vertical-scroll-proportion="0.3231939" vertical-offset="2601" max-vertical-offset="4607">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/controllers/UserController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="11254">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/modules/post/info.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="33" selection-start="137" selection-end="137" vertical-scroll-proportion="0.12615955" vertical-offset="0" max-vertical-offset="539">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/views/facebook/home/notifications.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="37.26923" vertical-offset="969" max-vertical-offset="1564">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/modules/post/controllers/PostController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="119" column="61" selection-start="3991" selection-end="3991" vertical-scroll-proportion="2.325095" vertical-offset="800" max-vertical-offset="8806">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+

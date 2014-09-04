@@ -1,10 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 class FactoryUtils
 {
 
@@ -15,26 +9,15 @@ class FactoryUtils
             require_once(ELEMENTS . $param . '.php');
             $get = 'get' . $param;
             $element = new $param;
-            $element->$get();
-        }
+            return $element->$get();
+        }else
+            return false;
     }
 
-}
-
-class ViewHtml
-{
-    static function render($param, $array = array())
+    public function elementModule($elementPath, $module)
     {
-        if (file_exists(UI . LAYOUTS . $param . '.php'))
-        {
-            foreach ($array as $k => $value)
-            {
-                $this->f3->set($k, $value);
-            }
-            require(UI . LAYOUTS . $param . '.php');
-        }
-    }
 
+    }
 }
 
 ?>
