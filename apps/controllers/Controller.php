@@ -25,7 +25,7 @@ class Controller
     {
         $f3 = Base::instance();
         $facade = new DataFacade();
-        $amq = new AMQFacade();
+        $amq    = new AMQFacade();
 
         $this->f3 = $f3;
         $this->facade = $facade;
@@ -71,49 +71,33 @@ class Controller
         return $this->f3->get("SESSION.loggedUser");
     }
 
-// element: $this->element();
-    public function element($param)
-    {
-        $element = new FactoryUtils();
-        return $element->element($param);
-    }
-
-// render view: $this->render('path',array())
-    public function render($path, $set = array())
+    /**
+     * How to use this render for get variables on view:
+     * - If existed layout when render, need $this->f3->get('...') on view for get variables
+     * - If not exist layout, only direct echo $variables on view for get variables. It always using when load ajax or return a part data
+     *
+     * @param $page
+     * @param $type
+     * @param array $set
+     */
+    public function render($page, $type, $set=array())
     {
         foreach ($set as $k => $value)
         {
             $this->f3->set($k, $value);
         }
-        if (file_exists(LAYOUTS . $this->layout . '/' . $path . '.php'))
-            $page = LAYOUTS . $this->layout . '/' . $path . '.php';
-        else
-            $page = LAYOUTS . $path . '.php';
 
-        if (!empty($this->layout))
+        if ($this->layout != '')
+        {
             require_once(UI . LAYOUTS . $this->layout . '.php');
-        else
+        }else {
             echo View::instance()->render($page);
-    }
-
-    // render view: $this->renderPartial('path',array())
-    public function renderPartial($path, $set = array())
-    {
-        foreach ($set as $k => $value)
-        {
-            $this->f3->set($k, $value);
         }
-        $page = LAYOUTS . $path . '.php';
-        if (file_exists(UI . LAYOUTS . $path . '.php'))
-            require_once(UI . LAYOUTS . $path . '.php');
-        else
-            echo View::instance()->render($page);
     }
 
     public function renderModule($action, $type)
     {
         $postInfo = Register::getModule($type);
-        //var_dump($pathInfo);
         $themePath = $postInfo[0]['viewPath'];
         require_once(MODULES . $themePath . $action . ".php");
     }

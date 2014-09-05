@@ -14,9 +14,17 @@ class FactoryUtils
             return false;
     }
 
-    public function elementModule($elementPath, $module)
+    static public function elementModule($element, $module)
     {
-
+        $pathMod = Register::getModule($module);
+        if (file_exists(MODULES  .$pathMod[0]['viewPath'].'elements/'. $element . '.php'))
+        {
+            $get = 'get' . $element;
+            $elementController = 'Element'.ucfirst($module).'Controller';
+            $element = new $elementController;
+            return $element->$get();
+        }else
+            return false;
     }
 }
 

@@ -1,8 +1,5 @@
 <?php
-
-require_once CONTROLLERS . "Controller.php";
-
-class NotificationElement extends Controller
+class NotificationElement extends AppController
 {
 
     public function __construct()
@@ -12,7 +9,7 @@ class NotificationElement extends Controller
 
     public function getNotificationElement()
     {
-        $this->renderPartial('elements/notification');
+        $this->render('elements/notificationPopUpOver.php','default');
     }
 
 }

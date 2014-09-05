@@ -1,8 +1,5 @@
 <?php
-
-require_once CONTROLLERS . "Controller.php";
-
-class FriendRequestElement extends Controller
+class FriendRequestElement extends AppController
 {
 
     public function __construct()
@@ -12,7 +9,7 @@ class FriendRequestElement extends Controller
 
     public function getFriendRequestElement()
     {
-        $this->renderPartial('elements/friendRequest');
+        $this->render('elements/friendRequestPopUpOver.php', 'default');
     }
 
 }

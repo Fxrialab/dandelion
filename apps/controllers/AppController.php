@@ -61,14 +61,6 @@ class AppController extends Controller
         return ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName);
     }
 
-//    public function element($element)
-//    {
-//        if (file_exists(UI . 'layouts/' . ELEMENTS . $element . '.php'))
-//        {
-//            require(UI . 'layouts/elements/' . $element . '.php');
-//        }
-//    }
-
     public function getMacAddress()
     {
         ob_start(); // Turn on output buffering
@@ -93,31 +85,24 @@ class AppController extends Controller
         return $ip;
     }
 
+    public function including($file)
+    {
+        if (file_exists(UI . 'includes/' . $file . '.php'))
+            require_once (UI . 'includes/' . $file . '.php');
+        else
+            throw New Exception('File is not existed !');
+    }
+
     public function loadModules($modules)
     {
         if ($modules != '')
             require_once(MODULES . $modules);
     }
 
-    static function elementModules($element, $modules)
+    public function element($param)
     {
-        include MODULES . $modules . '/info.php';
-        if (file_exists(MODULES . $path . $element . '.php'))
-        {
-            foreach (glob(MODULES . $modules . '/controllers/' . $modules . 'controller.php') as $elementController)
-            {
-                if (file_exists($elementController))
-                {
-                    $elementControllers = $modules . 'Controller';
-                    $newElement = new $elementControllers;
-                    if (method_exists($newElement, $element))
-                    {
-                        $newElement->$element();
-                    }
-                }
-            }
-            require_once(MODULES . $path . $element . '.php');
-        }
+        $element = new FactoryUtils();
+        return $element->element($param);
     }
 
     public function getFriendsStt($actor)
@@ -204,8 +189,9 @@ class AppController extends Controller
                         $this->facade->save('activity', $data);
                     }
                     $yourFriends = str_replace(':', '_', $friends[$i]->data->userB);
-                    $this->service->exchange('dandelion', 'topic')->routingKey('newsFeed.post.' . $yourFriends)->dispatch('post', $activities);
+                    $this->service->exchange('dandelion', 'topic')->routingKey('newsFeed.post.'.$yourFriends)->dispatch('post', $activities);
                 }
+
             }
         }
     }

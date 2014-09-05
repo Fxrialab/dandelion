@@ -86,7 +86,7 @@ class PhotoController extends AppController
     }
 
     // @todo: ask client for album page
-    public function photo()
+    public function photo($viewPath)
     {
         if ($this->isLogin())
         {
@@ -98,11 +98,27 @@ class PhotoController extends AppController
                 $photos = array();
                 $userID = $this->facade->findByAttributes('user', array('username' => $username));
                 if (!empty($albumID))
-                    $id = $albumID;
+                {
+                    $this->f3->set('albumID', $albumID);
+//                    $album = $this->facade->findByAttributes('album', array('owner' => $userID->recordID, '@rid' => str_replace('_', ':', $albumID)));
+//                    $array = explode(",", $album->data->photo);
+//                    foreach ($array as $value)
+//                    {
+//                        $model = $this->facade->findByPk('photo', $value);
+//                        $photos[] = array('recordID' => $model->recordID, 'userID' => $model->data->actor, 'fileName' => $model->data->fileName, 'numberLike' => $model->data->numberLike);
+//                    }
+                }
                 else
-                    $id = 0;
+                {
+                    $this->f3->set('albumID', '0');
+//                    $array = $this->facade->findAllAttributes('photo', array('actor' => $userID->recordID));
+//                    if (!empty($array))
+//                        foreach ($array as $value)
+//                            $photos[] = array('recordID' => $value->recordID, 'userID' => $value->data->actor, 'fileName' => $value->data->fileName, 'numberLike' => $value->data->numberLike);
+                }
+                $this->f3->set('userID', $userID->recordID);
             }
-            $this->render("photo/myPhoto", array('userID' => $userID->recordID, 'albumID' => $id));
+            $this->render($viewPath . "myPhoto.php", 'modules');
         }
     }
 
@@ -114,8 +130,7 @@ class PhotoController extends AppController
             $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
             $obj = new ObjectHandler();
             $obj->actor = $_POST['userID'];
-            $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
-            $set = array();
+            $obj->select = 'and published > 1399543903 LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             if ($_POST['albumID'] == 0)
             {
                 $model = $this->facade->findAll('photo', $obj);
@@ -127,10 +142,14 @@ class PhotoController extends AppController
                     }
                     $set = $photos;
                 }
+                else
+                {
+                    $set = 'null';
+                }
             }
             else
             {
-                $album = $this->facade->findByAttributes('album', array('owner' => $_POST['userID'], '@rid' => $_POST['albumID']));
+                $album = $this->facade->findByAttributes('album', array('owner' => $userID->recordID, '@rid' => $_POST['albumID']));
                 if (!empty($album))
                 {
                     $array = explode(",", $album->data->photo);
@@ -140,6 +159,10 @@ class PhotoController extends AppController
                         $photos[] = array('recordID' => $model->recordID, 'userID' => $model->data->actor, 'fileName' => $model->data->fileName, 'numberLike' => $model->data->numberLike);
                     }
                     $set = $photos;
+                }
+                else
+                {
+                    $set = 'null';
                 }
             }
             $this->f3->set('photos', $set);
@@ -204,8 +227,9 @@ class PhotoController extends AppController
             {
                 $userID = $this->facade->findByAttributes('user', array('username' => $username));
                 $album = $this->facade->findAllAttributes('album', array('owner' => $userID->recordID));
+                $this->f3->set('album', $album);
             }
-            $this->render("photo/myAlbum", array('album' => $album));
+            $this->render(Register::getPathModule('photo') . "myAlbum.php", 'modules');
         }
     }
 
@@ -411,7 +435,7 @@ class PhotoController extends AppController
             }
             else
             {
-                $this->renderPartial('photo/createAlbum');
+                $this->renderModule('createAlbum', 'photo');
             }
         }
     }
@@ -456,8 +480,12 @@ class PhotoController extends AppController
                 }
 
                 $photo = $this->facade->findByPk('photo', $id);
-                $count = count($array) - 1;
-                $this->renderPartial('photo/detail', array('photo' => $photo, 'next' => $next, 'prev' => $prev, 'p' => $k, 'count' => $count));
+                $this->f3->set('photo', $photo);
+                $this->f3->set('next', $next);
+                $this->f3->set('prev', $prev);
+                $this->f3->set('p', $k);
+                $this->f3->set('count', count($array) - 1);
+                $this->renderModule('detail', 'photo');
             }
         }
     }

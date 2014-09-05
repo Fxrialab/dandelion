@@ -13,8 +13,7 @@ class AjaxController extends AppController
         if (!empty($_POST['groupID']))
         {
             $this->f3->set('groupID', $_POST['groupID']);
-            
-            $this->render('group/addFriend.php');
+            $this->renderModule('addFriend', 'group');
         }
     }
 
@@ -101,7 +100,7 @@ class AjaxController extends AppController
             $json = json_encode($data);
             $obj = json_decode($json);
             $this->f3->set('members', $obj);
-            $this->render('group/viewMember.php');
+            $this->renderModule('viewMember', 'group');
         }
     }
 
@@ -113,7 +112,7 @@ class AjaxController extends AppController
             $group = $this->facade->findByPk('group', $_POST['groupID']);
             $this->f3->set('user', $user);
             $this->f3->set('group', $group);
-            $this->render('group/removeGroup.php');
+            $this->renderModule('removeGroup', 'group');
         }
     }
 
@@ -157,7 +156,7 @@ class AjaxController extends AppController
             }
 
             $this->f3->set('button', $button);
-            $this->render('group/role.php');
+            $this->renderModule('rolegroup', 'group');
         }
     }
 
@@ -190,7 +189,7 @@ class AjaxController extends AppController
                 $name = $user->data->fullName;
             $this->f3->set('message', 'You are about to remove ' . $name . ' as a group admin.');
             $this->f3->set('button', 'Remove Admin');
-              $this->render('group/makeAdmin.php');
+            $this->renderModule('makeAdmin', 'group');
         }
     }
 

@@ -40,7 +40,7 @@ $loggedUserID = str_replace(':', '_', $loggedUserID);
 
 <div class="uiMainContainer">
     <?php
-    AppController::elementModules('formPost','post');
+    FactoryUtils::elementModule('formPost','post');
     ?>
 	<input type="hidden" id="type" name="type" value="post">
     <div class="wrapperContainer">
