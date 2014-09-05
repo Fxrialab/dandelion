@@ -1,11 +1,7 @@
 <?php
-/**
- * User: Hoc Nguyen
- * Date: 12/21/12
- */
 // Info Path
 $pathElement = 'post/views/elements/';
-$path='post/views/default/';
+$path='post/views/'.TEMPLATE.'/';
 // Info viewPath
 $viewPath[]= array('type'=>'post','viewPath'=>$path);
 // Info Home page

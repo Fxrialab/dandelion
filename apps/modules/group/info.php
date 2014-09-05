@@ -1,12 +1,7 @@
 <?php
-
-/**
- * User: Hoc Nguyen
- * Date: 12/21/12
- */
 // Info Path
 $pathElement = 'group/views/elements';
-$path = 'group/views/default/';
+$path = 'group/views/'.TEMPLATE.'/';
 // Info viewPath
 $viewPath[] = array('type' => 'group', 'viewPath' => $path);
 // Info Home page

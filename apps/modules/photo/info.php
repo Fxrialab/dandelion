@@ -1,13 +1,5 @@
 <?php
-
-/**
- * Created by JetBrains PhpStorm.
- * User: King
- * Date: 10/09/2013
- * Time: 03:11
- * To change this template use File | Settings | File Templates.
- */
-$path = 'photo/views/default/';
+$path = 'photo/views/'.TEMPLATE.'/';
 $pathElement = 'photo/views/elements';
 // Info viewPath
 $viewPath[] = array('type' => 'photo', 'viewPath' => $path);
