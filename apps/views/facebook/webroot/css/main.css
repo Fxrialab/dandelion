@@ -137,8 +137,14 @@ a{
     padding: 0 10px;
 }
 
-.infoSearch {
+.imgSearch {
+    float: left;
+    margin-right: 5px;
     margin-top: 10px;
+}
+
+.infoSearch {
+    margin-top: 20px;
 }
 
 .infoSearch span {
@@ -2294,4 +2300,20 @@ a{
 }
 .fade{
     margin-right:-14px; margin-top:-6px;margin-bottom:-6px;background-color: #fff; padding: 10px; max-height: 562px; min-height: 562px
+}
+
+.fixMarginLeft-10 {
+    margin-left: 10px;
+}
+
+.fixMarginBottom-15 {
+    margin-bottom: 15px;
+}
+
+.fixMarginBottom-5 {
+    margin-bottom: 5px;
+}
+
+.fixPaddingLeft-10 {
+    padding-left: 10px;
 }

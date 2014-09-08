@@ -1,10 +1,10 @@
-<div class="column-group" style='min-height: 550px'>
+<div class="column-group">
     <div class="large-60">
         <div style='padding: 80px'>
-            <img src='<?php echo IMAGES ?>/cd.jpg'>
+            <img src='<?php echo IMAGES ?>cd.jpg'>
         </div>
     </div>
-    <div class="large-40">
+    <div class="large-40 medium-80 small-100" id="rightLanding">
         <h1>Sign Up Now</h1>
         <form class="ink-form" method="post" action="/signUp" id="fmSignUp">
             <fieldset>
@@ -31,7 +31,6 @@
                 <div class="control-group">
                     <div class="column-group uiBirthday">
                         <div class="control large-40">
-
                             <select id="birthdayMonthSignUp" class="fixColor-a9b1c6 required" name="birthdayMonth">
                                 <option value>
                                     Month:
@@ -47,7 +46,7 @@
                                 <?php } ?>
                             </select>
                         </div>
-                        <div class="control large-25 fixMarginLeft-8">
+                        <div class="control large-25 fixMarginLeft-10">
                             <select id="birthdayDaySignUp" class="fixColor-a9b1c6 required" name="birthdayDay">
                                 <option value="">
                                     Day:

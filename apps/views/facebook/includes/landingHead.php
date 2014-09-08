@@ -14,53 +14,34 @@
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/ink-ui.min.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>libs/autoload.js"></script>
     <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/validate.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $("a.uiTabNav").click(function () {
-                //inactive all tab
-                $(".activeLink").removeClass("activeLink");
-                // active tab is clicking
-                $(this).addClass("activeLink");
-                // slideUp for tab's clicking
-                $(".uiContent").slideUp();
-                // if first tab is set to slideDown
-                var contentShow = $(this).attr("name");
-                $("#"+contentShow).slideDown();
-            });
-        });
-    </script>
     <?php
     //@TODO: refactor below js later
-    $msgSignUp = $this->f3->get('MsgSignUp');
+    $msgSignUp = $this->f3->get('msgSignUp');
     if ( $msgSignUp != '') {
         ?>
         <script>
             $(document).ready(function(){
-                $("#uiLogInLink").removeClass("activeLink");
-                $("#uiLogInBox").css('display', 'none');
-                $("#uiSignUpLink").addClass("activeLink");
-                $("#uiSignUpBox").css('display', 'block');
                 msgSignUp = "<?php echo $msgSignUp; ?>";
-                $('#uiSignUpBox').append("<div class='ink-alert basic success' id='msgSignUp'>" +
+                $('#rightLanding').append("<div class='ink-alert basic success' id='msgSignUp'>" +
                     "<button class='ink-dismiss'>&times;</button>" +
                     "<p>"+msgSignUp+"</p></div> ");
             });
         </script>
     <?php
     }
-    $msgSignIn  = $this->f3->get('MsgSignIn');
+    $msgSignIn  = $this->f3->get('msgSignIn');
     if ($msgSignIn != '') {?>
         <script>
             $(document).ready(function(){
                 msgSignIn = "<?php echo $msgSignIn; ?>";
-                $('#uiLogInBox').append("<div class='ink-alert basic success' id='msgLogIn'>" +
+                $('#rightLanding').prepend("<div class='ink-alert basic success' id='msgLogIn'>" +
                     "<button class='ink-dismiss'>&times;</button>" +
                     "<p>"+msgSignIn+"</p></div> ");
             });
         </script>
     <?php
     }
-    $msgOther = $this->f3->get('MsgValidate');
+    $msgOther = $this->f3->get('msgValidate');
     if ($msgOther != '') {
         ?>
         <script>
@@ -73,8 +54,5 @@
         </script>
     <?php
     }
-    ?>
-    <?php $asd = $this->f3->get('user');
-    //var_dump($asd);
     ?>
 </head>

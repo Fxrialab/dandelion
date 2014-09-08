@@ -1,37 +1,4 @@
 <div class="column-group">
-    <div class="large-80 medium-100 small-100 push-center lineStroke overflowStyle">
-        <div class="column-group">
-            <div class="large-65 push-center fixMarginBottom-5">
-                <a id="uiLogInLink" class="uiTabNav linkColor-9aa9c8 fontSize-18" name="uiLogInBox">Log In</a>
-                <div class="quickLogInBox" id="uiLogInBox">
-                    <form class="ink-form fixMarginTop-10" method="post" action="/login" id="fmLogIn">
-                        <div class="column-group fixMarginBottom-5">
-                            <div class="large-40">
-                                <input type="text" class="fixWidth220" placeholder="Your Email" name="emailLogIn" id="emailLogIn">
-                            </div>
-                            <div class="large-40">
-                                <input type="password" class="fixWidth220" placeholder="Your Password" name="pwLogIn" id="pwLogIn">
-                            </div>
-                            <div class="large-20">
-                                <input type="submit" class="uiMediumButton orange" id="smLogIn" name="smLogIn" value="Log In">
-                            </div>
-                        </div>
-                        <div class="column-group">
-                            <div class="large-40">
-                                <input id="cbRememberMe" class="cbRememberMe" type="checkbox" name="persistent" value="1">
-                                <label for="cbRememberMe" class="linkColor-9aa9c8">Remember Me</label>
-                            </div>
-                            <div class="large-40">
-                                <a class="linkColor-9aa9c8" href="/forgotPassword">Forgot Password</a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="column-group">
     <div class="large-60 medium-100 small-100 push-center">
         <div class="column-group">
             <div class="uiForgotPWBox">
@@ -61,17 +28,30 @@
                                 </div>
                                 <div class="large-30 rightColBox">
                                     <div class="imgSearch">
-                                        <img src="<?php echo $user->data->profilePic;?>">
+                                        <?php
+                                        if ($user->data->profilePic == 'none')
+                                        {
+                                            $gender = ElementController::findGender($user->recordID);
+                                            if ($gender == 'male')
+                                                $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+                                            else
+                                                $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+                                        }else {
+                                            $photo = ElementController::findPhoto($user->data->profilePic);
+                                            $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
+                                        }
+                                        ?>
+                                        <img src="<?php echo $avatar;?>">
                                     </div>
                                     <div class="infoSearch">
-                                        <p class="timeLineLink fixColor-0069d6"><?php echo $profileName;?></p>
+                                        <p class="timeLineLink fixColor-0069d6"><?php echo ucfirst($user->data->firstName) . ' ' . ucfirst($user->data->lastName);?></p>
                                         <span><a href="/forgotPassword">Not Me?</a></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="footerBox column-group">
-                                <input type="submit" class="uiMediumButton white large-20 push-right" value="Continue">
-                                <a class="uiMediumButton white large-20 push-right" href="/">Cancel</a>
+                                <input type="submit" class="ink-button push-right" value="Continue">
+                                <a class="ink-button blue push-right" href="/">Cancel</a>
                             </div>
                         </form>
                     </div>

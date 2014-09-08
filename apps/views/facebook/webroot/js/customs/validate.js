@@ -8,7 +8,7 @@ $(document).ready(function(){
         var msgSignIn = CheckSignIn();
         if(msgSignIn != "")
         {
-            $('#uiLogInBox').append("<div class='ink-alert basic success' id='msgLogIn'>" +
+            $('#rightLanding').prepend("<div class='ink-alert basic success' id='msgLogIn'>" +
                 "<button class='ink-dismiss'>&times;</button>" +
                 "<p>"+msgSignIn+"</p></div> ");
         }else {
@@ -24,7 +24,7 @@ $(document).ready(function(){
         var msgSignUp = CheckSignUp();
         if(msgSignUp != "")
         {
-            $('#uiSignUpBox').append("<div class='ink-alert basic success' id='msgSignUp'>" +
+            $('#rightLanding').append("<div class='ink-alert basic success' id='msgSignUp'>" +
                 "<button class='ink-dismiss'>&times;</button>" +
                 "<p>"+msgSignUp+"</p></div> ");
         }else {

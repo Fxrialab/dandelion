@@ -1,4 +1,3 @@
-
 <div class="column-group">
     <div class="large-60 medium-100 small-100 push-center">
         <div class="column-group">
