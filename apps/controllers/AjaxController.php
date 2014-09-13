@@ -1,13 +1,7 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 class AjaxController extends AppController
 {
-
+    protected $helpers = array("String");
 //    Find Photo
     static public function findPhoto($id)
     {
@@ -15,26 +9,40 @@ class AjaxController extends AppController
     }
 
     //Upload image Post and Comment
-    public function upload()
+    public function uploading()
     {
         if ($this->isLogin())
         {
-            $outPutDir = UPLOAD;
+            $tempDir = UPLOAD . "tmp/";
+            $thumbnailDir = UPLOAD . "thumbnails/150px"; //The folder will display like gallery images on "Choose from my photos"
             $data = array(
-                'results' => array(),
-                'success' => false,
-                'error' => ''
+                'results'   => array(),
+                'success'   => false,
+                'error'     => ''
             );
-            if (!empty($_FILES["myfile"]))
+
+            if (isset($_FILES["myfile"]))
             {
-                $fileName = $_FILES["myfile"]["name"][0];
-                $tmpname = $_FILES["myfile"]['tmp_name'][0];
-                $size = $_FILES["myfile"]['size'][0];
-                list($name, $ext) = explode(".", $fileName);
-                $newName = uniqid();
-                list($width, $height) = getimagesize($tmpname);
-                if (move_uploaded_file($_FILES["myfile"]["tmp_name"][0], $outPutDir . $newName . '.' . $ext))
-                    $data['results'][] = array('imgID' => $newName, 'url' => UPLOAD_URL . $newName . '.' . $ext, 'name' => $newName . '.' . $ext, 'width' => $width, 'height' => $height);
+                //var_dump($_FILES["myfile"]['name']);
+                if (!is_array($_FILES["myfile"]['name'])) //single file
+                {
+                    echo 'single file';
+                    var_dump($_FILES["myfile"]['name']);
+                }else {//multiple files
+                    $file = $_FILES["myfile"];
+                    $code = $this->StringHelper->generateRandomString(5);
+                    $newName = $code.time();
+                    $photo = $this->changeImage($file, 150, $thumbnailDir, $newName, 80, true, $tempDir);//upload to thumbnail folder
+                    //var_dump($photo);
+                    $data['results'][] = array(
+                        'photoName' => $photo['name'],
+                        'nameNotExt'=> substr($photo['name'], 0, strpos($photo['name'], '.')),
+                        'url'       => UPLOAD_URL. 'thumbnails/150px/'.$photo['name']
+                    );
+                    $data['success'] = true;
+                }
+            }else {
+                $data['error'] = "Upload is failed, pls try again !";
             }
             header("Content-Type: application/json; charset=UTF-8");
             echo json_encode((object) $data);

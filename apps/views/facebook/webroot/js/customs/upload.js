@@ -77,7 +77,7 @@ $(document).ready(function()
         }
     };
     var settingMultiFiles = {
-        url: "/upload",
+        url: "/uploading",
         method: "POST",
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
@@ -88,12 +88,20 @@ $(document).ready(function()
         },
         onSuccess: function(files, data, xhr)
         {
+            if ($('#iStatus').hasClass('hide-all'))
+            {
+                $('#iStatus').removeClass('hide-all');
+                $('#iStatus').addClass('active');
+                $('#iPhoto').removeClass('active');
+                $('#iPhoto').addClass('hide-all');
+                $('li#statusTab').addClass('active');
+                $('li#photoTab').removeClass('active');
+            }
             $('.ajax-file-upload-statusbar').fadeOut('slow');
             $(".msg").html('');
             $.each(data.results, function() {
                 $("#imgTemplate").tmpl(data.results).appendTo("#embedPhotos");
             });
-            new Hover();
         },
         onError: function(files, status, errMsg)
         {
@@ -128,14 +136,12 @@ $(document).ready(function()
         }
     };
 
-
-
     $("#uploadAvatar").uploadFile(uploadAvatar);
     $("#uploadPhotoCover").uploadFile(uploadPhotoSingleFile);
     $("#uploadPhotoGroup").uploadFile(uploadPhotoGroup);
     $("#singleFile").uploadFile(settingSingleFile);
     $("#multiFiles").uploadFile(settingMultiFiles);
-    $("#multiFiles2").uploadFile(settingMultiFiles2);
+    $("#multiFiles2").uploadFile(settingMultiFiles);
     $("#multiFiles3").uploadFile(settingMultiFiles2);
    
 });

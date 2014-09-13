@@ -66,4 +66,11 @@ class ElementController extends Controller
         return $fullName;
     }
 
+    static function getFindPhotoByPhotoName($name)
+    {
+        $facade = new DataFacade();
+        $photo = $facade->findByAttributes('photo', array('fileName' => $name));
+        return $photo;
+    }
+
 }

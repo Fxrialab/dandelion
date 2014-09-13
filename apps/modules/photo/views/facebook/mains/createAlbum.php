@@ -4,15 +4,15 @@
  * and open the template in the editor.
  */
 ?>
-<div style="padding: 10px;">
+<div class="dialogContainers">
     <form class="ink-form" id="formAlbum">
-        <div class="column-group">
+        <div class="column-group titleDialog">
             <div class="large-30">
-                <input type="text" name="title" placeholder="Enter title" class="large-100">
+                <input type="text" name="albumTitle" autocomplete="off" placeholder="Untitled Album" class="large-100">
             </div>
             <div class="large-10"></div>
             <div class="large-30">
-                <input type="text" name="description" placeholder="Enter description" class="large-100">
+                <textarea name="albumDescription" cols="3" rows="2" placeholder="Write something about this album" class="large-100"></textarea>
             </div>
             <div class="large-10"></div>
             <div class="large-20">
@@ -20,7 +20,7 @@
                 <div class="msg"></div>
             </div>
         </div>
-        <div class="column-group album">
+        <div class="column-group contentDialog">
         </div>
         <div class="footerDialog" >
             <div class="float-right">
@@ -32,10 +32,10 @@
 </div>
 <script>
     $(document).ready(function() {
-        $('textarea').autosize();
+        //$('textarea').autosize();
 
         var uploadAlbum = {
-            url: "/content/photo/upload",
+            url: "/uploading",
             method: "POST",
             allowedTypes: "jpg,png,gif",
             fileName: "myfile",
@@ -50,10 +50,8 @@
                 $(".ui-dialog-titlebar").hide();
                 $(".ui-dialog-titlebar-close").hide();
                 $.each(data.results, function() {
-                    $("#imgTemplate4").tmpl(data.results).appendTo(".album");
+                    $("#imgTemplate4").tmpl(data.results).appendTo(".contentDialog");
                 });
-
-                new Hover();
             },
             onError: function(files, status, errMsg)
             {
@@ -78,12 +76,12 @@
 
 </script>
 <script id="imgTemplate4" type="text/x-jQuery-tmpl">
-    <div class="large-25" id="${imgID}" style="position: relative">
-    <div style="margin-right:20px;">
-    <input type="hidden" name="imgID[]" value="${imgID},${name},${width},${height}">
-    <img src="${url}" style="width:100%">
-    <textarea name="description_${imgID}" style="min-height:3px; width:100%"  placeholder="Enter description"></textarea>            
-    <a href="javascript:void(0)" style="position: absolute; top:5px; right:35px" rel="${name}" relID="${imgID}" class="deletePhoto"><span class="icon icon56">X</span></a>
-    </div>
+    <div class="large-25" style="position: relative">
+        <div style="margin-right:20px;">
+            <input type="hidden" name="imgName[]" value="${photoName},${nameNotExt}">
+            <img src="${url}" style="width:100%">
+            <textarea name="description_${nameNotExt}" style="min-height:3px; width:100%"  placeholder="Write something about this photo"></textarea>
+            <a href="javascript:void(0)" style="position: absolute; top:5px; right:35px" rel="${photoName}" class="deletePhoto"><span class="icon icon56">X</span></a>
+        </div>
     </div>
 </script>

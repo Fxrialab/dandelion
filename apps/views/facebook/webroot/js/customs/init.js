@@ -784,8 +784,8 @@ $("body").on('click', '.dialogAlbum', function(e) {
         url: "/content/photo/createAlbum",
         success: function(data) {
             $(".dialog").dialog({
-                width: "1240",
-                height: "620",
+                width: "900",
+                height: "500",
                 resizable: false,
                 modal: true,
                 open: function(event, ui) {

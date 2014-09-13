@@ -396,46 +396,67 @@ class PhotoController extends AppController
     {
         if ($this->isLogin())
         {
-            $title = $this->f3->get("POST.title");
-            $des = $this->f3->get("POST.description");
-            $published = time();
-            if (!empty($_POST['imgID']))
+            $currentUser = $this->getCurrentUser();
+            //if existed photo for create album
+            if (!empty($_POST['imgName']))
             {
-                foreach ($_POST['imgID'] as $value)
+                $albumTitle = $this->f3->get("POST.albumTitle");
+                $albumDes = $this->f3->get("POST.albumDescription");
+                $published = time();
+                //get album id
+                if (!empty($albumTitle))
                 {
-                    list($id, $name, $width, $height) = explode(",", $value);
-                    $description = $_POST["description_" . $id];
-                    $entry = array(
+                    $albumEntry = array(
+                        'owner'     => $this->getCurrentUser()->recordID,
+                        'name'      => $albumTitle,
+                        'description' => $albumDes,
+                        'published' => $published
+                    );
+                    $albumID = $this->facade->save('album', $albumEntry);
+                }else {
+                    $albumID = 'none';//of untitled album
+                }
+                $imagesName = $_POST['imgName'];
+                $imagesDir = UPLOAD . "images/";
+                foreach ($imagesName as $image)
+                {
+                    list($imageName, $name) = explode(",", $image);
+                    $description = $_POST["description_" . $name];
+                    //images are waiting in tmp folder
+                    $file = UPLOAD.'tmp/'.$imageName;
+                    list($width, $height) = getimagesize($file);
+                    //check IF size of images are larger than 960px then resize us ELSE move us from tmp folder to images folder
+                    if ($width > 960 || $height > 960)
+                        $this->resizeImageFile($file, 960, $imagesDir.$imageName, 100);
+                    else
+                        rename($file, $imagesDir.$imageName);
+                    //save to DB
+                    list($nWidth, $nHeight) = getimagesize(UPLOAD.'images/'.$imageName);
+                    $photoEntry = array(
                         'actor' => $this->f3->get('SESSION.userID'),
-                        'fileName' => $name,
-                        'width' => $width,
-                        'height' => $height,
-                        'dragX' => 0,
-                        'dragY' => 0,
+                        'albumID' => $albumID,
+                        'fileName' => $imageName,
+                        'width' => $nWidth,
+                        'height' => $nHeight,
+                        'dragX' => '0',
+                        'dragY' => '0',
                         'thumbnail_url' => '',
                         'description' => $description,
                         'numberLike' => '0',
                         'numberComment' => '0',
                         'statusUpload' => 'uploaded',
                         'published' => time(),
-                        'type' => 'album'
+                        'type' => 'none'
                     );
-                    $photoID[] = $this->facade->save('photo', $entry);
+                    $this->facade->save('photo', $photoEntry);
                 }
-                $photo = implode(',', $photoID);
-                $data = array(
-                    'owner' => $this->getCurrentUser()->recordID,
-                    'name' => $title,
-                    'description' => $des,
-                    'photo' => $photo,
-                    'published' => $published
-                );
-                $album = $this->facade->save('album', $data);
-                echo BASE_URL . "content/photo?user=" . $this->f3->get('SESSION.username') . "&album=" . str_replace(':', '_', $album);
+                // track activity to home page
+                $this->trackActivity($currentUser, 'Photo', false, 'photo', $albumID, $published);
+                echo BASE_URL . "content/photo?user=" . $this->f3->get('SESSION.username') . "&album=" . str_replace(':', '_', $albumID);
             }
             else
             {
-                $this->renderModule('createAlbum', 'photo');
+                $this->renderModule('mains/createAlbum', 'photo');
             }
         }
     }

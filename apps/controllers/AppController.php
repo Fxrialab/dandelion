@@ -375,85 +375,149 @@ class AppController extends Controller
      * @param $newImgName
      * @param $quality
      * @param bool $returnInfo
+     * @param bool $moveDefaultFileTo
      * @return array|bool
      */
-    public function changeImage($file, $thumbSize = 0, $desImgFile, $newImgName, $quality, $returnInfo = false)
+    public function changeImage($file, $thumbSize = 0, $desImgFile, $newImgName, $quality, $returnInfo = false, $moveDefaultFileTo = false)
     {
-        $fileName = $file["name"];
-        $tmpName = $file['tmp_name'];
-        $formats = $file['type'];
-
-        list($width, $height) = getimagesize($tmpName);
-        /* The width and the height of the image also the getimagesize retrieve other information as well   */
-        $imgRatio = $width / $height;
-
-        if ($imgRatio > 1)
+        if (!is_array($file["name"]))//single file
         {
-            $newWidth = $thumbSize;
-            $newHeight = (int) ($thumbSize / $imgRatio);
-        }
-        else
-        {
-            $newHeight = $thumbSize;
-            $newWidth = (int) ($thumbSize * $imgRatio);
-        }
-        list($name, $ext) = explode(".", $fileName);
+            $fileName = $file["name"];
+            $tmpName = $file['tmp_name'];
+            $formats = $file['type'];
 
-        if ($formats == 'image/jpeg')// Now it will create a new image from the source
-            $source = imagecreatefromjpeg($tmpName);
-        elseif ($formats == 'image/gif')
-            $source = imagecreatefromgif($tmpName);
-        elseif ($formats == 'image/png')
-            $source = imagecreatefrompng($tmpName);
+            list($width, $height) = getimagesize($tmpName);
+            /* The width and the height of the image also the getimagesize retrieve other information as well   */
+            $imgRatio = $width / $height;
 
-        $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
-        $newImage = $newImgName . '.' . $ext;
-        imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
-        imagejpeg($thumb, $desImgFile . '/' . $newImage, $quality);
-        /*
-          Out put of image
-          if the $savePath is null then it will display the image in the browser
-         */
-        imagedestroy($thumb);
-        /*
-          Destroy the image
-         */
-        if (!empty($returnInfo))
-            return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
-        else
-            return false;
+            if ($imgRatio > 1)
+            {
+                $newWidth = $thumbSize;
+                $newHeight = (int) ($thumbSize / $imgRatio);
+            }
+            else
+            {
+                $newHeight = $thumbSize;
+                $newWidth = (int) ($thumbSize * $imgRatio);
+            }
+            list($name, $ext) = explode(".", $fileName);
+
+            if ($formats == 'image/jpeg')// Now it will create a new image from the source
+                $source = imagecreatefromjpeg($tmpName);
+            elseif ($formats == 'image/gif')
+                $source = imagecreatefromgif($tmpName);
+            elseif ($formats == 'image/png')
+                $source = imagecreatefrompng($tmpName);
+
+            $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
+            $newImage = $newImgName . '.' . $ext;
+            imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
+            imagejpeg($thumb, $desImgFile . '/' . $newImage, $quality);
+            /*
+              Out put of image
+              if the $savePath is null then it will display the image in the browser
+             */
+            imagedestroy($thumb);
+            /*
+              Destroy the image
+             */
+            if (!empty($moveDefaultFileTo))
+            {
+                move_uploaded_file($tmpName, $moveDefaultFileTo.$newImage);
+            }
+            if (!empty($returnInfo))
+                return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
+            else
+                return false;
+        }else {//multiple files
+            $fileCount = count($file["name"]);
+            for ($i = 0; $i < $fileCount; $i++)
+            {
+                $fileName = $file["name"][$i];
+                $tmpName = $file['tmp_name'][$i];
+                $formats = $file['type'][$i];
+
+                list($width, $height) = getimagesize($tmpName);
+                /* The width and the height of the image also the getimagesize retrieve other information as well   */
+                $imgRatio = $width / $height;
+
+                if ($imgRatio > 1)
+                {
+                    $newWidth = $thumbSize;
+                    $newHeight = (int) ($thumbSize / $imgRatio);
+                }
+                else
+                {
+                    $newHeight = $thumbSize;
+                    $newWidth = (int) ($thumbSize * $imgRatio);
+                }
+                list($name, $ext) = explode(".", $fileName);
+
+                if ($formats == 'image/jpeg')// Now it will create a new image from the source
+                    $source = imagecreatefromjpeg($tmpName);
+                elseif ($formats == 'image/gif')
+                    $source = imagecreatefromgif($tmpName);
+                elseif ($formats == 'image/png')
+                    $source = imagecreatefrompng($tmpName);
+
+                $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
+                $newImage = $newImgName . '.' . $ext;
+                imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
+                imagejpeg($thumb, $desImgFile . '/' . $newImage, $quality);
+                /*
+                  Out put of image
+                  if the $savePath is null then it will display the image in the browser
+                 */
+                imagedestroy($thumb);
+                /*
+                  Destroy the image
+                 */
+                if (!empty($moveDefaultFileTo))
+                {
+                    move_uploaded_file($tmpName, $moveDefaultFileTo.$newImage);
+                }
+                if (!empty($returnInfo))
+                    return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
+                else
+                    return false;
+
+            }
+        }
     }
 
-    public function resizeImages($file, $size = 0, $dir, $newName)
+    public function resizeImageFile($imgFile="",$thumbSize=0,$savePath=NULL,$quality)
     {
-        $allowed_formats = array("jpg", "png", "gif", "bmp");
-        $fileName = $file["name"];
-        $tmpname = $file['tmp_name'];
+        list($width,$height)=getimagesize($imgFile);
+        /* The width and the height of the image also the getimagesize retrieve other information as well   */
 
-        list($name, $ext) = explode(".", $fileName);
-        if (!in_array($ext, $allowed_formats))
-        {
-            $err = "<strong>Oh snap!</strong>Invalid file formats only use jpg,png,gif";
-            return false;
-        }
-        if ($ext == "jpg" || $ext == "jpeg")
-            $src = imagecreatefromjpeg($tmpname);
-        else if ($ext == "png")
-            $src = imagecreatefrompng($tmpname);
-        else
-            $src = imagecreatefromgif($tmpname);
-
-        $thumbName = $newName . '.' . $ext;
-        list($width, $height) = getimagesize($tmpname);
-        $newwidth = $size;
-        $newheight = ($height / $width) * $newwidth;
-        $tmp = imagecreatetruecolor($newwidth, $newheight);
-        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-        $image = $dir . $fileName;
-        imagejpeg($tmp, $dir . $size . '/' . $thumbName, 100);
+        $imgRatio=$width/$height;
         /*
-          Destroy the image
-         */
+        To compress the image we will calculate the ration
+        For eg. if the image width=700 and the height = 921 then the ration is 0.77...
+        if means the image must be compression from its height and the width is based on its height
+        so the newheight = thumbsize and the newwidth is thumbsize*0.77...
+        */
+        if($imgRatio>1)
+        {
+            $newWidth   = $thumbSize;
+            $newHeight  = $thumbSize/$imgRatio;
+        } else {
+            $newHeight  = $thumbSize;
+            $newWidth   = $thumbSize*$imgRatio;
+        }
+
+        $thumb=imagecreatetruecolor($newWidth,$newHeight); // Making a new true color image
+        $source=imagecreatefromjpeg($imgFile); // Now it will create a new image from the source
+        imagecopyresampled($thumb,$source,0,0,0,0,$newWidth,$newHeight,$width,$height);  // Copy and resize the image
+        imagejpeg($thumb,$savePath,$quality);
+        /*
+        Out put of image
+        if the $savePath is null then it will display the image in the browser
+        */
+        imagedestroy($thumb);
+        /*
+            Destroy the image
+        */
     }
 
     public function move_uploaded_file($file, $i, $dir, $newName)

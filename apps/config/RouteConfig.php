@@ -70,7 +70,7 @@ class RouteConfig
         'choosePhoto_POST' => "AjaxController",
         'reposition_POST' => "AjaxController",
         'cancel_POST' => "AjaxController",
-        'upload_POST' => "AjaxController"
+        'uploading_POST' => "AjaxController"
     );
     public $modules = array(
         /* Route config for modules */
