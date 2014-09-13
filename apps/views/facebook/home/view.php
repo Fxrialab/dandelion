@@ -4,7 +4,7 @@ if (!empty($activities))
     $rand = rand(100, 100000);
     foreach ($activities as $mod)
     {
-        foreach (glob(MODULES . $mod['type'] . '/views/default/viewPost.php') as $views)
+        foreach (glob(MODULES . $mod['type'] . '/views/'.TEMPLATE.'/mains/viewPost.php') as $views)
         {
             $status = $mod["actions"];
             $username = $mod['username'];

@@ -62,17 +62,16 @@ $rand = rand(100, 100000);
 </script>
 <div class="ink-tabs top" style="position: relative"> <!-- Creates a tabbed view with top nav -->
     <ul class="tabs-nav">
-        <li><a href="#item1"><img src="<?php echo IMAGES; ?>status.png"> Status</a></li> <!-- Points to item 1 below -->
-        <li><a href="#item2"><img src="<?php echo IMAGES; ?>photo.png"> Photo</a></li> <!-- Points to item 2 below -->
+        <li id="statusTab"><a href="#iStatus"><i class="icon30-status"></i>Update Status</a></li> <!-- Points to item 1 below -->
+        <li id="photoTab"><a href="#iPhoto"><i class="icon30-photo"></i>Add Photo</a></li> <!-- Points to item 2 below -->
     </ul>
-
     <div class="msg" style="position: absolute; top: 0; right: 20px"></div>
-    <div id="item1" class="tabs-content"> <!-- Item 1 -->
+    <div id="iStatus" class="tabs-content"> <!-- Item 1 -->
         <div class="uiPostArea column-group">
             <div class="uiPostStatusArea">
                 <form class="ink-form" id="submitFormStatus">
-                    <div class="control-group">
-                        <div class="uiBox-PopUp topLeftArrow control">
+                    <div class="uiPostContent control-group">
+                        <div class="control">
                             <div id="typeActivity"></div>
                             <div id="typeActivityID" style="display: none"></div>
                             <textarea id="status" name="status" spellcheck="false" placeholder="What's on your mind?"></textarea>
@@ -90,12 +89,12 @@ $rand = rand(100, 100000);
                     <div class="uiPostOption control-group">
                         <nav class="ink-navigation">
                             <ul class="menu horizontal">
-                                <li>
-                                    <input name="album_id" id="albumID" value="none" type="hidden">
-                                    <div id="multiFiles">Upload Images</div>
+                                <li title="Upload a photo">
+                                    <!--<input name="album_id" id="albumID" value="none" type="hidden">-->
+                                    <div id="multiFiles"><i class="icon30-upload"></i></div>
                                 </li>
-                                <li class="lineGapPostOption">|</li>
-                                <li><a href="#" title="Paste a video link"><img src="<?php echo IMAGES; ?>uploadVideoIcon.png"></a></li>
+                                <li title="Add a location"><i class="icon30-location"></i></li>
+                                <li title="Attachment a file"><i class="icon30-attachment"></i></li>
                                 <li class="fixRightFloat"><button class="button active">Post</button></li>
                             </ul>
                         </nav>
@@ -104,45 +103,41 @@ $rand = rand(100, 100000);
             </div>
         </div>
     </div>
-    <div id="item2" class="tabs-content"> <!-- Item 2 -->
-        <form id="submitFormPhoto">
-                <div class="uiPostArea column-group">
-                    <div class="uiPostPhotoArea">
-                        <div class="content-center uiBox-PopUp photoBoxArrow">
-                            <div class="large-50 borderLineRight">
-                                <input name="album_id" id="albumID" value="none" type="hidden">
-                                <div style="padding: 30px 0;">
-                                    <div id="multiFiles2">Upload Photo</div>
-                                </div>
-                            </div>
-                            <div class="large-50 uiCreateAlbumBox createAlbum">
-                                <div class="dialogAlbum">Create Album</div>
-                            </div>
-                        </div>
-                        <textarea id="statusPhoto" name="status" spellcheck="false" placeholder="Say something about this photo?">
-
-                        </textarea>
-                        <!-- tag Image, Video, Link here -->
-                        <input type="hidden" name="embedType" value="photo">
-                        <input type="hidden" name="type" value="post">
-                        <div class="control-group viewUpload">
-                            <div class="large-20">
-                                <div style="border: 1px solid #ccc; text-align: center; width: 95px; padding: 25px 0; margin-right: 5px;">
-                                    <div id="multiFiles3">Upload</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group  postPhoto">
-                            <div class="large-90"></div>
-                            <div class="large-10">
-                                <button class="button">Post</button>
-                            </div>
-                        </div>
-
+    <div id="iPhoto" class="tabs-content"> <!-- Item 2 -->
+        <div class="uiPostArea column-group">
+            <div class="uiPostPhotoArea">
+                <div class="content-center">
+                    <div class="large-50 uiUploadPhotoBox borderLineRight">
+                        <input name="album_id" id="albumID" value="none" type="hidden">
+                        <div id="multiFiles2">Upload Photos</div>
                     </div>
-
+                    <div class="large-50 uiCreateAlbumBox createAlbum">
+                        <div class="dialogAlbum">Create Photo Album</div>
+                    </div>
                 </div>
-        </form>
+                <!--<textarea id="statusPhoto" name="status" spellcheck="false" placeholder="Say something about this photo?">
+
+                </textarea>
+
+                <input type="hidden" name="embedType" value="photo">
+                <input type="hidden" name="type" value="post">
+                <div class="control-group viewUpload">
+                    <div class="large-20">
+                        <div style="border: 1px solid #ccc; text-align: center; width: 95px; padding: 25px 0; margin-right: 5px;">
+                            <div id="multiFiles3">Upload</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group  postPhoto">
+                    <div class="large-90"></div>
+                    <div class="large-10">
+                        <button class="button">Post</button>
+                    </div>
+                </div>-->
+
+            </div>
+
+        </div>
     </div>
 </div>
 <!--Other part-->
@@ -189,7 +184,7 @@ $rand = rand(100, 100000);
         }
         return false; // avoid to execute the actual submit of the form.
     });
-    $("#submitFormPhoto").submit(function() {
+    /*$("#submitFormPhoto").submit(function() {
         var status = $("#statusPhoto").val();
         $(".msg").html("<div class='loadingUpload'></div>");
         $.ajax({
@@ -209,17 +204,15 @@ $rand = rand(100, 100000);
             }
         });
         return false; // avoid to execute the actual submit of the form.
-    });
+    });*/
  
 
 </script>
 <script id="imgTemplate" type="text/x-jQuery-tmpl">
-    <div class="large-50" id="${imgID}" style="position: relative">
-    <div style="margin-right:20px;">
-    <input type="hidden" name="imgID[]" value="${name},${width},${height}">
-    <img src="${url}" style="width:100%">
-    <a href="javascript:void(0)" style="position: absolute; top:5px; right:35px" rel="${name}" relID="${imgID}" class="deleteImage"><span class="icon icon56">X</span></a>
-    </div>
+    <div class="imgContainer">
+        <input type="hidden" name="imgName[]" value="${photoName}">
+        <img class="loadingImage" src="${url}">
+        <a href="javascript:void(0)" style="position: absolute; top:1px; right:5px" rel="${photoName}" relID="${imgName}" class="deleteImage"><span class="icon icon56">X</span></a>
     </div>
 </script>
 <script id="imgTemplate2" type="text/x-jQuery-tmpl">

@@ -490,7 +490,7 @@ a{
 }
 
 .uiMainContainer .ink-tabs .tabs-content {
-    padding-top: 1em;
+    padding-top: 5px;
     border-left: 1px solid #cccccc;
     border-right: 1px solid #cccccc;
     border-bottom: 1px solid #cccccc;
@@ -499,11 +499,26 @@ a{
 }
 
 .uiMainContainer .ink-tabs .tabs-nav li.active a {
-    background-color: white;
+    background-color: #0069d6;
+    color: white;
+}
+
+.uiMainContainer .ink-tabs .tabs-nav li a:hover {
+    background-color: #0069d6;
+    text-decoration: none;
+    color: white;
 }
 
 .uiPostArea {
-    padding: 0 10px 5px;
+
+}
+
+.uiPostArea .ink-form .control-group {
+    margin-bottom: 0px;
+}
+
+.uiPostContent {
+    padding: 0 7px;
 }
 
 .uiPostStatusArea .ink-form fieldset {
@@ -512,6 +527,20 @@ a{
 
 .uiPostStatusArea .uiPostOption {
     margin-bottom: 0;
+    padding: 5px;
+    background-color: #e6f1f7;
+}
+
+.uiPostOption .ink-navigation ul.menu.horizontal li:first-child {
+    margin-left: 0;
+}
+
+.uiPostOption .ink-navigation ul.menu.horizontal li {
+    margin-left: 10px;
+}
+
+.uiPostOption .ink-navigation ul.menu.horizontal li:hover {
+    cursor: pointer;
 }
 
 .uiPostStatusArea textarea, .uiPostPhotoArea textarea {
@@ -1390,10 +1419,20 @@ a{
 
 
 .uiUploadPhotoBox, .uiCreateAlbumBox {
-    padding: 30px ;
     margin-top: 5px;
     font-size: 13px;
     cursor: pointer;
+    font-weight: bold;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.uiUploadPhotoBox div, .uiCreateAlbumBox div {
+    padding: 20px ;
+}
+
+.uiUploadPhotoBox:hover, .uiCreateAlbumBox:hover {
+    background-color: #F2F2F2;
 }
 
 .uiPinLayoutPhotoWrapper {
@@ -1841,7 +1880,7 @@ a{
 .ajax-file-upload-percent{position:absolute;display:inline-block;top:3px;left:48%}
 .ajax-file-upload-red{-moz-box-shadow:inset 0 39px 0 -24px #e67a73;-webkit-box-shadow:inset 0 39px 0 -24px #e67a73;box-shadow:inset 0 39px 0 -24px #e67a73;background-color:#e4685d;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;display:inline-block;color:#fff;font-family:arial;font-size:13px;font-weight:normal;padding:4px 15px;text-decoration:none;text-shadow:0 1px 0 #b23e35;cursor:pointer;vertical-align:top}
 .ajax-file-upload-green{background-color:#77b55a;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;margin:0;padding:0;display:inline-block;color:#fff;font-family:arial;font-size:13px;font-weight:normal;padding:4px 15px;text-decoration:none;cursor:pointer;text-shadow:0 1px 0 #5b8a3c;vertical-align:top}
-.ajax-file-upload{cursor:pointer;line-height:20px;display:inline-block;color:#888;text-decoration:none;}
+.ajax-file-upload{cursor:pointer;display:inline-block;color:#888;text-decoration:none;}
 .ajax-upload-dragdrop{color:#000;vertical-align:middle;}
 .ajax-upload-dragdrop label{
     width: 100%;
@@ -2104,8 +2143,22 @@ a{
 .viewUpload{
     padding: 10px 0;
 }
-.album{
-    margin: 20px 0;
+.titleDialog {
+    margin-top: 10px;
+}
+.contentDialog{
+    overflow: auto;
+    height: 360px;
+}
+.contentDialog .large-25 {
+    float: none;
+    display: inline-block;
+}
+.dialogContainers .ink-form input {
+    font-size: 12px;
+}
+.dialogContainers .ink-form .contentDialog textarea {
+    font-size: 11px;
 }
 .box {
     display:none;
@@ -2316,4 +2369,19 @@ a{
 
 .fixPaddingLeft-10 {
     padding-left: 10px;
+}
+
+.imgContainer {
+    position: relative;
+    float: left;
+    margin-right: 10px;
+}
+
+.loadingImage {
+    width: 80px;
+    height: 80px;
+}
+
+.dialogContainers .column-group {
+    margin: 5px;
 }

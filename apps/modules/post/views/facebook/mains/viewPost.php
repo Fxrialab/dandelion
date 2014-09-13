@@ -85,19 +85,16 @@ $status_published = $status->data->published;
                     <?php
                     if (!empty($status->data->embedType) && $status->data->embedType == 'photo')
                     {
-                        $photo = PostController::getFindPhoto($status->recordID);
-                        if (!empty($photo))
+                        $photosName = explode(',',$status->data->embedSource);
+                        foreach ($photosName as $k=>$value)
                         {
-                            $countPhoto = count($photo);
-                            foreach ($photo as $k => $value)
-                            {
-                                if ($countPhoto == 1)
-                                    echo '<div class="large-100"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div>';
-                                elseif ($countPhoto == 3)
-                                    echo '<div class="large-30"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div></div>';
-                                else
-                                    echo '<div class="large-50"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $value->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . $value->data->fileName . '></a></div></div>';
-                            }
+                            $photo = ElementController::getFindPhotoByPhotoName($value);
+                            if (count($photosName) == 1)
+                                echo '<div class="large-100"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $photo->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL .'images/'. $photo->data->fileName . '></a></div>';
+                            elseif (count($photosName) == 3)
+                                echo '<div class="large-30"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $photo->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL .'images/'. $photo->data->fileName . '></a></div></div>';
+                            else
+                                echo '<div class="large-50"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $photo->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL .'images/'. $photo->data->fileName . '></a></div></div>';
                         }
                     }
                     ?>

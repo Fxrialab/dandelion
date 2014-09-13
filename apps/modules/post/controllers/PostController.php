@@ -59,9 +59,6 @@ class PostController extends AppController
             $currentUser= $this->getCurrentUser();
             $statusRC   = $this->facade->findByAttributes('status', array('@rid'=>'#'.$entry->data->object, 'active'=>1));
 
-            $activityID = $entry->recordID;
-            $userID = $this->f3->get('SESSION.userID');
-
             if (!empty($statusRC))
             {
                 $statusID = $statusRC->recordID;
@@ -179,17 +176,73 @@ class PostController extends AppController
             $type = $this->f3->get("POST.type");
             //determine embed type if existing
             $embedType = $this->f3->get('POST.embedType');
-
+            //typeID is available with group module
             if (!empty($_POST['typeID']))
                 $typeID = $_POST['typeID'];
             else
                 $typeID = FALSE;
             // prepare data
+            if (!$embedType || $embedType == 'none')
+            {
+                $embedSource = false;
+            }
+            else
+            {
+                if ($embedType == 'photo')
+                {
+                    $imagesDir = UPLOAD . "images/";
+                    $images = $_POST["imgName"];
+                    foreach ($images as $image)
+                    {
+                        //images are waiting in tmp folder
+                        $file = UPLOAD.'tmp/'.$image;
+                        list($width, $height) = getimagesize($file);
+                        //check IF size of images are larger than 960px then resize us ELSE move us from tmp folder to images folder
+                        if ($width > 960 || $height > 960)
+                            $this->resizeImageFile($file, 960, $imagesDir.$image, 100);
+                        else
+                            rename($file, $imagesDir.$image);
+                        //save to DB
+                        list($nWidth, $nHeight) = getimagesize(UPLOAD.'images/'.$image);
+                        $entry = array(
+                            'actor' => $currentUser->recordID,
+                            'albumID' => 'none',
+                            'fileName' => $image,
+                            'width' => $nWidth,
+                            'height' => $nHeight,
+                            'dragX' => '0',
+                            'dragY' => '0',
+                            'thumbnail_url' => '',
+                            'description' => '',
+                            'numberLike' => '0',
+                            'numberComment' => '0',
+                            'statusUpload' => 'uploaded',
+                            'published' => time(),
+                            'type' => 'none'
+                        );
+                        $this->facade->save('photo', $entry);
+                    }
+                    $embedSource = implode(',', $images);
+                }
+                else
+                {
+                    $video = $this->f3->get("POST.videoURL");
+
+                    $countChar = strlen($video);
+                    $countCharFirst = strpos($content, $video);
+                    $content1 = substr($content, 0, $countCharFirst);
+                    $content2 = substr($content, $countChar + $countCharFirst);
+                    $content = $content1 . "_linkWith_" . $content2;
+                    $embedSource = $video;
+                }
+            }
+
             $postEntry = array(
                 'owner' => $this->f3->get('SESSION.userID'),
                 'actor' => $currentUser->recordID,
                 'content' => $content,
                 'embedType' => $embedType,
+                'embedSource'   => $embedSource,
                 'actorName' => $this->getCurrentUserName(),
                 'numberLike' => '0',
                 'numberComment' => '0',
@@ -205,62 +258,9 @@ class PostController extends AppController
 
             // save
             $statusID = $this->facade->save('status', $postEntry);
-            if (!$embedType || $embedType == 'none')
-            {
-                $embedSource = false;
-            }
-            else
-            {
-                if ($embedType == 'photo')
-                {
-                    $images = $_POST["imgID"];
-                    foreach ($images as $value)
-                    {
-                        list($name, $width, $height) = explode(",", $value);
-                        $entry = array(
-                            'actor' => $currentUser->recordID,
-                            'album' => '',
-                            'fileName' => $name,
-                            'width' => $width,
-                            'height' => $height,
-                            'dragX' => 0,
-                            'dragY' => 0,
-                            'thumbnail_url' => '',
-                            'description' => '',
-                            'numberLike' => '0',
-                            'numberComment' => '0',
-                            'statusUpload' => 'uploaded',
-                            'published' => time(),
-                            'type' => 'post',
-                            'typeID' => $statusID
-                        );
-                        $photoID = $this->facade->save('photo', $entry);
-                        if (!empty($photoID))
-                            $id[] = $photoID;
-                    }
-                    $embedSource = implode(',', $id);
-                }
-                else
-                {
-                    $video = $this->f3->get("POST.videoURL");
 
-                    $countChar = strlen($video);
-                    $countCharFirst = strpos($content, $video);
-                    $content1 = substr($content, 0, $countCharFirst);
-                    $content2 = substr($content, $countChar + $countCharFirst);
-                    $content = $content1 . "_linkWith_" . $content2;
-                    $embedSource = $video;
-                }
-            }
             // track activity
             $this->trackActivity($currentUser, 'Post', $statusID, $type, $typeID, $published);
-
-            /*try {
-                echo "track activity if check friend null <br />";
-                $this->service->exchange('abc', 'topic')->routingKey('userA.text')->dispatch('message', '22:1');
-            } catch(Exception $e) {
-                //echo "Exception: ".$e->getMessage();
-            }*/
 
             $status = $this->facade->findByPk('status', $statusID);
             $this->f3->set('status', $status);
@@ -269,7 +269,7 @@ class PostController extends AppController
             //$this->f3->set('tagged', 'none');
             $this->f3->set('currentUser', $currentUser);
             $this->f3->set('published', $published);
-            $this->renderModule('postStatus', 'post');
+            $this->renderModule('mains/postStatus', 'post');
         }
     }
 

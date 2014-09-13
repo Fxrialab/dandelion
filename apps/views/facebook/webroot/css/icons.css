@@ -15,7 +15,7 @@
     display: inline-block;
     width: 20px;
     height:20px;
-    *margin-right: .3em;
+    margin-right: .3em;
     line-height: 20px;
     vertical-align: text-top;
     background-image: url("../images/icon/icon.png");
@@ -44,7 +44,7 @@
     display: inline-block;
     width: 17px;
     height:16px;
-    *margin-right: .3em;
+    margin-right: .3em;
     margin-top: 3px;
     line-height: 16px;
     vertical-align: text-top;
@@ -67,17 +67,31 @@
 
 [class^="icon30-"], [class*="icon30-"] {
     display: inline-block;
-    width: 31px;
-    height:30px;
-    *margin-right: .3em;
-    line-height: 30px;
-    vertical-align: text-top;
-    background-image: url("../images/icon/icon.png");
+    width:24px;
+    height:22px;
+    background-image: url("../images/icon/icon30.png");
     background-position: 0;
     background-repeat: no-repeat;
+    color: transparent;
+    vertical-align: text-top;
 }
-.icon30-upload{
-    background-position:-15px -80px;
+.icon30-home{
+    background-position: 0 0;
+}
+.icon30-status {
+    background-position: 0 -154px;
+}
+.icon30-photo {
+    background-position: -160px -154px;
+}
+.icon30-upload {
+    background-position: -160px -104px;
+}
+.icon30-attachment {
+    background-position: -264px -208px;
+}
+.icon30-location {
+    background-position: -212px -50px;
 }
 [class*="topNavIcon1-"] {
     display: block;
