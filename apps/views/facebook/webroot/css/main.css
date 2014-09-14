@@ -1539,7 +1539,9 @@ a{
 }
 
 .albumItems {
-
+    margin: 5px;
+    position: relative;
+    border: 1px solid #d3d6db;
 }
 
 .firstPhoto {
@@ -2384,4 +2386,29 @@ a{
 
 .dialogContainers .column-group {
     margin: 5px;
+}
+
+.noDataDisplay {
+    min-height: 200px;
+    padding: 50px 200px;
+    font-size: 28px;
+    color: #888;
+    text-align: center;
+}
+
+.actionBox {
+    text-align: right;
+}
+
+.albumInfo {
+    padding: 4px;
+}
+
+.albumTitle {
+    font-weight: bold;
+    color: #0069d6;
+}
+
+.photoInside img {
+    min-height: 200px;
 }

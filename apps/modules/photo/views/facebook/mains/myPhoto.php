@@ -4,16 +4,12 @@ $photos = $this->f3->get('photos');
 <div class="arrow_timeLineMenuNav">
     <div class="arrow_phototab"></div>
 </div>
-
 <div class="uiMainColAbout">
     <div class="uiPhotoWrapper">
-        <?php require_once 'boxTitle.php'; ?>
+        <?php $f3 = require('boxTitle.php'); ?>
         <input type="hidden" id="userID" value="<?php echo $this->f3->get('userID') ?>">
         <input type="hidden" id="albumID" value="<?php echo $this->f3->get('albumID') ?>">
         <div class="arrow_photo"></div>
-
-
-
         <div class="column-group">
             <div class="photoAll" id="scrollPhoto"></div>
         </div>
@@ -23,10 +19,6 @@ $photos = $this->f3->get('photos');
     <iframe id="frameDialog" style="width: 100%; height: 580px; margin: 0; padding: 0; border: none; background-color: #000; overflow-x:hidden"></iframe>
 </div>
 <script>
-    $(document).ready(function() {
-
-    });
-
     $(document).ready(function() {
         $('textarea').autosize();
 

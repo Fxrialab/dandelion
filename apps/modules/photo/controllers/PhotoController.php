@@ -8,23 +8,6 @@ class PhotoController extends AppController
         parent::__construct();
     }
 
-    static function getFindComment($photoID)
-    {
-        $facade = new DataFacade();
-        $comment = $facade->findAllAttributes('comment', array('typeID' => $photoID));
-        return $comment;
-    }
-
-    public static function like($typeID)
-    {
-        $facade = new DataFacade();
-        $model = $facade->findByAttributes('like', array('actor' => F3::get('SESSION.userID'), 'objID' => $typeID));
-        if (!empty($model))
-            return TRUE;
-        else
-            return FALSE;
-    }
-
     static function getPhoto($id)
     {
         $facade = new DataFacade();
@@ -35,12 +18,6 @@ class PhotoController extends AppController
     {
         $facade = new DataFacade();
         return $facade->findByPk('user', $id);
-    }
-
-    public static function countComment($id)
-    {
-        $facade = new DataFacade();
-        return $facade->count('comment', array('typeID' => $id));
     }
 
     //Upload image Post and Comment
@@ -92,81 +69,66 @@ class PhotoController extends AppController
         {
             $this->layout = "timeline";
             $username = $this->f3->get('GET.user');
-            $albumID = $this->f3->get('GET.album');
+            $album = $this->f3->get('GET.album');
+            //echo $username;
             if (!empty($username))
             {
-                $photos = array();
-                $userID = $this->facade->findByAttributes('user', array('username' => $username));
-                if (!empty($albumID))
+                $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $username));
+                $currentProfileID = $currentProfileRC->recordID;
+                $this->f3->set('SESSION.userProfileID', $currentProfileID);
+                $currentProfileRC = $this->facade->load('user', $currentProfileID);
+                $currentUser = $this->getCurrentUser();
+                if (!empty($album))
                 {
-                    $this->f3->set('albumID', $albumID);
-//                    $album = $this->facade->findByAttributes('album', array('owner' => $userID->recordID, '@rid' => str_replace('_', ':', $albumID)));
-//                    $array = explode(",", $album->data->photo);
-//                    foreach ($array as $value)
-//                    {
-//                        $model = $this->facade->findByPk('photo', $value);
-//                        $photos[] = array('recordID' => $model->recordID, 'userID' => $model->data->actor, 'fileName' => $model->data->fileName, 'numberLike' => $model->data->numberLike);
-//                    }
+                    $albumID = $album;
                 }
                 else
                 {
-                    $this->f3->set('albumID', '0');
-//                    $array = $this->facade->findAllAttributes('photo', array('actor' => $userID->recordID));
-//                    if (!empty($array))
-//                        foreach ($array as $value)
-//                            $photos[] = array('recordID' => $value->recordID, 'userID' => $value->data->actor, 'fileName' => $value->data->fileName, 'numberLike' => $value->data->numberLike);
+                    $albumID = 'allPhoto';//Untitled album
                 }
-                $this->f3->set('userID', $userID->recordID);
+                $this->f3->set('userID', $currentProfileID);
+                $this->render($viewPath . "mains/myPhoto.php", 'modules', array(
+                    'currentUser'   => $currentUser,
+                    'otherUser'     => $currentProfileRC,
+                    'userID'        => str_replace(':','_',$currentProfileID),
+                    'albumID'       => $albumID
+                ));
             }
-            $this->render($viewPath . "myPhoto.php", 'modules');
+
         }
     }
 
-    public function success()
+    public function loading()
     {
         if ($this->isLogin())
         {
             $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
             $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
-            $obj = new ObjectHandler();
-            $obj->actor = $_POST['userID'];
-            $obj->select = 'and published > 1399543903 LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
-            if ($_POST['albumID'] == 0)
+
+            if (!empty($_POST['userID']))
             {
-                $model = $this->facade->findAll('photo', $obj);
-                if (!empty($model))
+                $userID = str_replace('_',':',$_POST['userID']);
+                $obj = new ObjectHandler();
+                $obj->owner = $userID;
+                $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
+                //echo "album: ".$_POST['albumID'];
+                if ($_POST['albumID'] != '')
                 {
-                    foreach ($model as $value)
+                    $albumID = str_replace('_',':',$_POST['albumID']);
+                    if ($albumID == 'allPhoto')//load all photos of all album
                     {
-                        $photos[] = array('recordID' => $value->recordID, 'userID' => $value->data->actor, 'fileName' => $value->data->fileName, 'numberLike' => $value->data->numberLike);
+                        $model = $this->facade->findAll('photo', $obj);
+                    }else {//load all photos of determine an album
+                        $obj->albumID = $albumID;
+                        $model = $this->facade->findAll('photo', $obj);
                     }
-                    $set = $photos;
+                    $target = 'photos';
+                }else {//this mean is load all album on myAlbum
+                    $model = $this->facade->findAll('album', $obj);
+                    $target = 'album';
                 }
-                else
-                {
-                    $set = 'null';
-                }
+                $this->renderModule('mains/dataPhoto', 'photo', array('model'=>$model, 'target'=>$target));
             }
-            else
-            {
-                $album = $this->facade->findByAttributes('album', array('owner' => $userID->recordID, '@rid' => $_POST['albumID']));
-                if (!empty($album))
-                {
-                    $array = explode(",", $album->data->photo);
-                    foreach ($array as $value)
-                    {
-                        $model = $this->facade->findByPk('photo', $value);
-                        $photos[] = array('recordID' => $model->recordID, 'userID' => $model->data->actor, 'fileName' => $model->data->fileName, 'numberLike' => $model->data->numberLike);
-                    }
-                    $set = $photos;
-                }
-                else
-                {
-                    $set = 'null';
-                }
-            }
-            $this->f3->set('photos', $set);
-            $this->renderModule('dataPhoto', 'photo');
         }
     }
 
@@ -200,7 +162,7 @@ class PhotoController extends AppController
             }
         }
     }
-
+    //dont use
     public function myPhoto($viewPath)
     {
         if ($this->isLogin())
@@ -217,7 +179,7 @@ class PhotoController extends AppController
         }
     }
 
-    public function myAlbum()
+    public function album()
     {
         if ($this->isLogin())
         {
@@ -225,14 +187,20 @@ class PhotoController extends AppController
             $username = $this->f3->get('GET.user');
             if (!empty($username))
             {
-                $userID = $this->facade->findByAttributes('user', array('username' => $username));
-                $album = $this->facade->findAllAttributes('album', array('owner' => $userID->recordID));
-                $this->f3->set('album', $album);
+                $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $username));
+                $currentProfileID = $currentProfileRC->recordID;
+                $currentProfileRC = $this->facade->load('user', $currentProfileID);
+                $currentUser = $this->getCurrentUser();
+                $this->render(Register::getPathModule('photo')."mains/myAlbum.php", 'modules', array(
+                    'currentUser'   => $currentUser,
+                    'otherUser'     => $currentProfileRC,
+                    'userID'        => str_replace(':','_',$currentProfileID)
+                ));
             }
-            $this->render(Register::getPathModule('photo') . "myAlbum.php", 'modules');
+
         }
     }
-
+    //dont use
     public function loadingPhoto()
     {
         if ($this->isLogin())
@@ -332,7 +300,7 @@ class PhotoController extends AppController
             }
         }
     }
-
+    //dont use
     public function uploadPhoto()
     {
         if ($this->isLogin())
@@ -433,7 +401,7 @@ class PhotoController extends AppController
                     //save to DB
                     list($nWidth, $nHeight) = getimagesize(UPLOAD.'images/'.$imageName);
                     $photoEntry = array(
-                        'actor' => $this->f3->get('SESSION.userID'),
+                        'owner' => $this->f3->get('SESSION.userID'),
                         'albumID' => $albumID,
                         'fileName' => $imageName,
                         'width' => $nWidth,

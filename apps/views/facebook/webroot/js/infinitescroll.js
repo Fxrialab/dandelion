@@ -108,7 +108,7 @@
                 $initmessage = 'Click for more';
             $this.append('<div class="column-group"></div><div class="loading-bar">' + $initmessage + '</div>');
             function getData() {
-                $.post('/content/photo/success', {
+                $.post('/content/photo/loading', {
                     action: 'scrollpagination',
                     number: $settings.nop,
                     offset: offset,
@@ -121,7 +121,10 @@
                     else {
                         offset = offset + $settings.nop;
                         $this.find('.column-group').append(data);
-                        busy = false;
+                        if(data.indexOf('noDataDisplay'))
+                            busy = true;
+                        else
+                            busy = false;
                     }
                     updateTime();
                 });
@@ -137,6 +140,8 @@
                         setTimeout(function() {
                             getData();
                         }, $settings.delay);
+                    }else {
+                        $this.find('.loading-bar').fadeOut('normal');
                     }
                 });
             }
