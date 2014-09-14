@@ -176,7 +176,7 @@ class UserController extends AppController
                             $photo = $this->facade->findByPk('photo', $existUser->data->profilePic);
                             $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
                         }else {
-                            $gender = ElementController::findGender($existUser->recordID);
+                            $gender = HelperController::findGender($existUser->recordID);
                             if ($gender == 'male')
                                 $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                             else

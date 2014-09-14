@@ -105,16 +105,13 @@ class PostController extends AppController
                 $currentUser = $this->getCurrentUser();
                 //get status friendship
                 $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
-                //set
-                $this->f3->set('currentUser', $currentUser);
-                $this->f3->set('otherUser', $currentProfileRC);
-
-                $this->f3->set('statusFriendShip', $statusFriendShip);
-                //set ID for postWrap.php
-                $this->f3->set("currentProfileID", $currentProfileID);
+                $this->render($viewPath . 'mains/myPost.php', 'modules', array(
+                    'currentUser'   => $currentUser,
+                    'otherUser'     => $currentProfileRC,
+                    'statusFriendShip'  => $statusFriendShip,
+                    'currentProfileID'  => $currentProfileID,
+                ));
             }
-
-            $this->render($viewPath . 'myPost.php', 'modules');
         }
     }
 
@@ -141,9 +138,7 @@ class PostController extends AppController
                     {
                         $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $status->recordID));
                     }
-                    $this->f3->set("listStatus", $statusRC);
-                    $this->f3->set("likeStatus", $likeStatus);
-                    $this->renderModule('post', 'post');
+                    $this->renderModule('post', 'post', array('listStatus'=>$statusRC, 'likeStatus'=>$likeStatus));
                 }
             }
         }
@@ -205,7 +200,7 @@ class PostController extends AppController
                         //save to DB
                         list($nWidth, $nHeight) = getimagesize(UPLOAD.'images/'.$image);
                         $entry = array(
-                            'actor' => $currentUser->recordID,
+                            'owner' => $currentUser->recordID,
                             'albumID' => 'none',
                             'fileName' => $image,
                             'width' => $nWidth,
@@ -356,7 +351,7 @@ class PostController extends AppController
                 }
                 //then create a activity for who's friend join to status
                 $curActor = explode('_',$duplicate->data->actor);
-                $ownerName = ElementController::getFullNameUser($owner);
+                $ownerName = HelperController::getFullNameUser($owner);
                 foreach ($curActor as $a)
                 {
                     if ($a != $currentUser->recordID)

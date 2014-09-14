@@ -115,28 +115,7 @@ $rand = rand(100, 100000);
                         <div class="dialogAlbum">Create Photo Album</div>
                     </div>
                 </div>
-                <!--<textarea id="statusPhoto" name="status" spellcheck="false" placeholder="Say something about this photo?">
-
-                </textarea>
-
-                <input type="hidden" name="embedType" value="photo">
-                <input type="hidden" name="type" value="post">
-                <div class="control-group viewUpload">
-                    <div class="large-20">
-                        <div style="border: 1px solid #ccc; text-align: center; width: 95px; padding: 25px 0; margin-right: 5px;">
-                            <div id="multiFiles3">Upload</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="control-group  postPhoto">
-                    <div class="large-90"></div>
-                    <div class="large-10">
-                        <button class="button">Post</button>
-                    </div>
-                </div>-->
-
             </div>
-
         </div>
     </div>
 </div>
@@ -184,29 +163,6 @@ $rand = rand(100, 100000);
         }
         return false; // avoid to execute the actual submit of the form.
     });
-    /*$("#submitFormPhoto").submit(function() {
-        var status = $("#statusPhoto").val();
-        $(".msg").html("<div class='loadingUpload'></div>");
-        $.ajax({
-            type: "POST",
-            url: "/content/post/postStatus",
-            data: $("#submitFormPhoto").serialize(), // serializes the form's elements.
-            success: function(html)
-            {
-                $("#contentContainer").prepend(html);
-                $(".photoBoxArrow").show();
-                $(".viewUpload").hide();
-                $(".itemImg").remove();
-                $(".postPhoto").hide();
-                $('#statusPhoto').hide();
-                $(".msg").html("");
-                updateTime();
-            }
-        });
-        return false; // avoid to execute the actual submit of the form.
-    });*/
- 
-
 </script>
 <script id="imgTemplate" type="text/x-jQuery-tmpl">
     <div class="imgContainer">

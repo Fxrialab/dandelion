@@ -85,10 +85,10 @@ $countAdmin = $this->f3->get('countAdmin');
                     $fullName = ucfirst($user->data->firstName)." ".ucfirst($user->data->lastName);
                     if ($user->data->profilePic != 'none')
                     {
-                        $photo = ElementController::findPhoto($user->data->profilePic);
+                        $photo = HelperController::findPhoto($user->data->profilePic);
                         $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
                     }else {
-                        $gender = ElementController::findGender($user->recordID);
+                        $gender = HelperController::findGender($user->recordID);
                         if ($gender =='male')
                             $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                         else

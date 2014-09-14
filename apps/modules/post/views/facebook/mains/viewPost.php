@@ -88,7 +88,7 @@ $status_published = $status->data->published;
                         $photosName = explode(',',$status->data->embedSource);
                         foreach ($photosName as $k=>$value)
                         {
-                            $photo = ElementController::getFindPhotoByPhotoName($value);
+                            $photo = HelperController::getFindPhotoByPhotoName($value);
                             if (count($photosName) == 1)
                                 echo '<div class="large-100"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $photo->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL .'images/'. $photo->data->fileName . '></a></div>';
                             elseif (count($photosName) == 3)

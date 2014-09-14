@@ -5,16 +5,16 @@ if (!empty($notification))
     {
         $actor = $notifications->data->actor;
         //get later avatar user
-        $user = ElementController::findUser($actor);
-        $fullName = ElementController::getFullNameUser($actor);
+        $user = HelperController::findUser($actor);
+        $fullName = HelperController::getFullNameUser($actor);
         if ($user->data->profilePic == 'none'){
-            $gender = ElementController::findGender($user->recordID);
+            $gender = HelperController::findGender($user->recordID);
             if ($gender =='male')
                 $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
             else
                 $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
         }else {
-            $photo = ElementController::findPhoto($user->data->profilePic);
+            $photo = HelperController::findPhoto($user->data->profilePic);
             $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
         }
         ?>

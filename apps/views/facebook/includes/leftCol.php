@@ -33,12 +33,12 @@
                     <ul class="uiVerticalNav-menu">
                         <li class="active"><a href="/content/group?category=admin">Groups your Admin</a></li>
                         <?php
-                        $memberGroup = ElementController::groupMember();
+                        $memberGroup = HelperController::groupMember();
                         if (!empty($memberGroup))
                         {
                             foreach ($memberGroup as $value)
                             {
-                                $group = ElementController::findGroup($value->data->groupID);
+                                $group = HelperController::findGroup($value->data->groupID);
                                 if (!empty($group))
                                 {
                                     ?>

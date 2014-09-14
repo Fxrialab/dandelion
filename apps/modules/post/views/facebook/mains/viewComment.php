@@ -22,12 +22,12 @@ if (!empty($records))
             $like = PostController::like($records[$j]->recordID);
             if ($profile->data->profilePic != 'none')
             {
-                $photo = ElementController::findPhoto($profile->data->profilePic);
+                $photo = HelperController::findPhoto($profile->data->profilePic);
                 $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
             }
             else
             {
-                $gender = ElementController::findGender($profile->recordID);
+                $gender = HelperController::findGender($profile->recordID);
                 if ($gender == 'male')
                     $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                 else
@@ -44,7 +44,7 @@ if (!empty($records))
         $actorComment = ucfirst($profile->data->firstName) . " " . ucfirst($profile->data->lastName);
         if ($profile->data->profilePic != 'none')
         {
-            $photo = ElementController::findPhoto($profile->data->profilePic);
+            $photo = HelperController::findPhoto($profile->data->profilePic);
             $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
         }
         else

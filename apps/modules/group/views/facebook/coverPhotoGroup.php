@@ -2,7 +2,7 @@
     <input type="hidden" id="groupID" name="groupID" value="<?php echo $group->recordID ?>">
     <?php
     if ($group->data->coverGroup != 'none')
-        $photo = ElementController::findPhoto($group->data->coverGroup);
+        $photo = HelperController::findPhoto($group->data->coverGroup);
     if (!empty($photo))
     {
         $a = 'Change cover';

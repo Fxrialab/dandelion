@@ -16,11 +16,12 @@ class FactoryUtils
 
     static public function elementModule($element, $module)
     {
-        $pathMod = Register::getModule($module);
-        if (file_exists(MODULES  .$pathMod[0]['viewPath'].'elements/'. $element . '.php'))
+        $pathMod = Register::getPathModule($module);
+        if (file_exists(MODULES  .$pathMod.'elements/'. $element . '.php'))
         {
             $get = 'get' . $element;
             $elementController = 'Element'.ucfirst($module).'Controller';
+            require_once MODULES.$module.'/controllers/'.$elementController.'.php';
             $element = new $elementController;
             return $element->$get();
         }else

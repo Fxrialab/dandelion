@@ -95,10 +95,13 @@ class Controller
         }
     }
 
-    public function renderModule($action, $type)
+    public function renderModule($action, $type, $set=array())
     {
-        $postInfo = Register::getModule($type);
-        $themePath = $postInfo[0]['viewPath'];
+        foreach ($set as $k => $value)
+        {
+            $this->f3->set($k, $value);
+        }
+        $themePath = Register::getPathModule($type);
         require_once(MODULES . $themePath . $action . ".php");
     }
 

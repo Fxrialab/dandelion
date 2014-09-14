@@ -15,14 +15,14 @@ if (!empty($activities))
             $userID = $mod['userID']->recordID;
             if ($mod['avatar'] == 'none')
             {
-                $gender = ElementController::findGender($userID);
+                $gender = HelperController::findGender($userID);
                 if ($gender == 'male')
                     $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                 else
                     $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
             }else
             {
-                $photo = ElementController::findPhoto($mod['avatar']);
+                $photo = HelperController::findPhoto($mod['avatar']);
                 $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
             }
             require $views;

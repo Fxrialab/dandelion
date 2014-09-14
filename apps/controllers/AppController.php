@@ -19,7 +19,6 @@ class AppController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->Elements = new ElementController();
     }
 
     public function beforeRoute()
@@ -93,10 +92,10 @@ class AppController extends Controller
             throw New Exception('File is not existed !');
     }
 
-    public function loadModules($modules)
+    public function loadModules($path)
     {
-        if ($modules != '')
-            require_once(MODULES . $modules);
+        if ($path != '')
+            require_once(MODULES . $path);
     }
 
     public function element($param)

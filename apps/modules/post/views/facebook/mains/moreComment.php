@@ -15,7 +15,7 @@ if (!empty($records))
         $actorComment = ucfirst($profile->data->firstName) . " " . ucfirst($profile->data->lastName);
         if ($profile->data->profilePic != 'none')
         {
-            $photo = ElementController::findPhoto($profile->data->profilePic);
+            $photo = HelperController::findPhoto($profile->data->profilePic);
             $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
         }
         else

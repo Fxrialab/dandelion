@@ -14,31 +14,31 @@ if (!empty($notification))
         if (!empty($actor))
         {
             //get later avatar user
-            $user = ElementController::findUser(current($actor));
+            $user = HelperController::findUser(current($actor));
             if ($user->data->profilePic == 'none'){
-                $gender = ElementController::findGender($user->recordID);
+                $gender = HelperController::findGender($user->recordID);
                 if ($gender =='male')
                     $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                 else
                     $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
             }else {
-                $photo = ElementController::findPhoto($user->data->profilePic);
+                $photo = HelperController::findPhoto($user->data->profilePic);
                 $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
             }
             //get full name
             $str = '';
             if (count($actor) > 2)
             {
-                $actor1 = ElementController::getFullNameUser($actor[0]);
-                $actor2 = ElementController::getFullNameUser($actor[1]);
+                $actor1 = HelperController::getFullNameUser($actor[0]);
+                $actor2 = HelperController::getFullNameUser($actor[1]);
                 $others = count($actor) - 2;
                 $str = $str.'<b>'.$actor1.'</b>, <b>'.$actor2.'</b> and '.$others.' other people';
             }elseif (count($actor) == 2) {
-                $actor1 = ElementController::getFullNameUser($actor[0]);
-                $actor2 = ElementController::getFullNameUser($actor[1]);
+                $actor1 = HelperController::getFullNameUser($actor[0]);
+                $actor2 = HelperController::getFullNameUser($actor[1]);
                 $str = $str.'<b>'.$actor1.'</b> and <b>'.$actor2.'</b>';
             }else {
-                $actor1 = ElementController::getFullNameUser($actor[0]);
+                $actor1 = HelperController::getFullNameUser($actor[0]);
                 $str = $str.'<b>'.$actor1.'</b>';
             }
             $txtNotifications = $str;

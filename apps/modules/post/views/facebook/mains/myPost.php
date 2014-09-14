@@ -20,7 +20,7 @@
 <div class="uiMainColProfile large-70">
     <div class="uiMainContainer">
         <?php
-        FactoryUtils::element('formPost', array('module' => 'post'));
+        FactoryUtils::elementModule('formPost','post');
         ?>
         <!--<input type="hidden" id="type" name="type" value="post">-->
         <input name="profileID" id="profileID" type="hidden" value="<?php echo $this->f3->get('SESSION.userID'); ?>">

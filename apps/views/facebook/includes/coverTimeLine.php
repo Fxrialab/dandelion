@@ -14,7 +14,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
     <form id="submitCover">
         <?php
         if ($otherUser->data->coverPhoto != 'none')
-            $photo = ElementController::findPhoto($otherUser->data->coverPhoto);
+            $photo = HelperController::findPhoto($otherUser->data->coverPhoto);
         if (!empty($photo))
         {
             $a = 'Change cover';
@@ -74,13 +74,13 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                         <?php
                         if ($otherUser->data->profilePic != 'none')
                         {
-                            $photo = ElementController::findPhoto($otherUser->data->profilePic);
+                            $photo = HelperController::findPhoto($otherUser->data->profilePic);
                             $src = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
                             $labelStt = 'Change avatar';
                         }
                         else
                         {
-                            $gender = ElementController::findGender($otherUser->recordID);
+                            $gender = HelperController::findGender($otherUser->recordID);
                             if ($gender == 'male')
                                 $src = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                             else

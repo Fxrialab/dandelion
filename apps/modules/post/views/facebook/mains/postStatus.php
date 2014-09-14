@@ -8,13 +8,13 @@ $like       = false;
 $rand       = rand(100, 100000);
 if ($currentUser->data->profilePic == 'none')
 {
-    $gender = ElementController::findGender($currentUser->recordID);
+    $gender = HelperController::findGender($currentUser->recordID);
     if ($gender =='male')
         $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
     else
         $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
 }else {
-    $photo  = ElementController::findPhoto($currentUser->data->profilePic);
+    $photo  = HelperController::findPhoto($currentUser->data->profilePic);
     $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
 }
 $f3         = require('viewPost.php');

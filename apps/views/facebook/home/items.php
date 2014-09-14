@@ -1,8 +1,8 @@
 <?php
 if($data['type'] == 'like')
 {
-    $user = ElementController::findUser(str_replace('_',':', $data['dispatch']));
-    $likeBy = ElementController::getFullNameUser(str_replace('_',':', $data['dispatch']));
+    $user = HelperController::findUser(str_replace('_',':', $data['dispatch']));
+    $likeBy = HelperController::getFullNameUser(str_replace('_',':', $data['dispatch']));
     ?>
     <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $data['target']; ?>">
         <span><i class="statusCounterIcon-like"></i>
@@ -13,14 +13,14 @@ if($data['type'] == 'like')
     </div>
 <?php
 }elseif ($data['type'] == 'comment'){
-    $user = ElementController::findUser(str_replace('_',':', $data['dispatch']));
-    $commentBy = ElementController::getFullNameUser(str_replace('_',':', $data['dispatch']));
+    $user = HelperController::findUser(str_replace('_',':', $data['dispatch']));
+    $commentBy = HelperController::getFullNameUser(str_replace('_',':', $data['dispatch']));
     if ($user->data->profilePic != 'none')
     {
-        $photo = ElementController::findPhoto($user->data->profilePic);
+        $photo = HelperController::findPhoto($user->data->profilePic);
         $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
     }else {
-        $gender = ElementController::findGender($user->recordID);
+        $gender = HelperController::findGender($user->recordID);
         if ($gender == 'male')
             $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
         else
