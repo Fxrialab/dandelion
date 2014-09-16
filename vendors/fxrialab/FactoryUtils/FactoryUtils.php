@@ -17,7 +17,18 @@ class FactoryUtils
     static public function elementModule($element, $module)
     {
         $pathMod = Register::getPathModule($module);
-        if (file_exists(MODULES  .$pathMod.'elements/'. $element . '.php'))
+        if (is_array($pathMod))
+        {
+            foreach ($pathMod as $path){
+                if ($path['mod'] == $module)
+                {
+                    $viewPath = $path['viewPath'];
+                }
+            }
+        }else {
+            $viewPath = $pathMod;
+        }
+        if (file_exists(MODULES  .$viewPath.'elements/'. $element . '.php'))
         {
             $get = 'get' . $element;
             $elementController = 'Element'.ucfirst($module).'Controller';

@@ -101,7 +101,19 @@ class Controller
         {
             $this->f3->set($k, $value);
         }
-        $themePath = Register::getPathModule($type);
+
+        $pathMod = Register::getPathModule($type);
+        if (is_array($pathMod))
+        {
+            foreach ($pathMod as $path){
+                if ($path['mod'] == $type)
+                {
+                    $themePath = $path['viewPath'];
+                }
+            }
+        }else {
+            $themePath = $pathMod;
+        }
         require_once(MODULES . $themePath . $action . ".php");
     }
 

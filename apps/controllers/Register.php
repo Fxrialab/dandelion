@@ -18,7 +18,7 @@ class Register
             $infoModule= ModulesConfig();
 
             foreach($infoModule as $module){
-                Register::$modulesMap[] =array('func'=> $module['func'],'controller'=>$module['controller'],'viewPath'=>$module['viewPath']);
+                Register::$modulesMap[] =array('mod'=> $module['mod'], 'func'=> $module['func'], 'controller'=>$module['controller'],'viewPath'=>$module['viewPath']);
             }
         }
         return Register::$modulesMap;
@@ -39,7 +39,6 @@ class Register
     static function getPathModule($type)
     {
         $infoModule= getViewPath();
-
         foreach($infoModule as $viewPath){
             if($viewPath['type']==$type)
             {
