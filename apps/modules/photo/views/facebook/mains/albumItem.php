@@ -2,7 +2,7 @@
     <div class="albumItems">
         <div class="photoInside large-100">
             <a href="/content/photo?user=minhloc.vhit&album=<?php echo $albumID; ?>">
-                <img src="<?php echo UPLOAD_URL.'images/'.$lastPhoto; ?>">
+                <img src="<?php echo UPLOAD_URL.'images/'.$lastPhoto; ?>" height="200">
             </a>
         </div>
         <div class="albumInfo large-100">

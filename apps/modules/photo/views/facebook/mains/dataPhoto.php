@@ -35,8 +35,14 @@ if (!empty($model))
             $recordID = $album->recordID;
             $albumTitle = $album->data->name;
             $photos = HelperController::findPhotosByAlbum($recordID);
-            $numberPhoto = count($photos);
-            $lastPhoto  = $photos[$numberPhoto-1]->data->fileName;
+            if (!empty($photos))
+            {
+                $numberPhoto = count($photos);
+                $lastPhoto  = $photos[$numberPhoto-1]->data->fileName;
+            }else {
+                $numberPhoto = 0;
+                $lastPhoto  = 'noimages.jpg';
+            }
             $albumID = str_replace(':', '_', $recordID);
             $f3 = require('albumItem.php');
         }

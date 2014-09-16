@@ -536,6 +536,7 @@ $("body").on('click', '.photoBrowse', function(e) {
         data: {role: role},
         url: "/photoBrowser",
         success: function(data) {
+            $('body').css('overflow', 'hidden');
             $(".dialog").dialog({
                 width: "700",
                 height: "400",
@@ -613,30 +614,6 @@ $("body").on('click', '#chooseAvatar', function(e) {
         }
     });
 });
-// Toggle the dropdown menu's
-$("body").on('click', '.dropdown .button', function(e) {
-    e.preventDefault();
-    if (!$(this).find('span.toggle').hasClass('active')) {
-        $('.dropdown-slider').slideUp();
-        $('span.toggle').removeClass('active');
-    }
-
-    // open selected dropown
-//    $(this).parent().find('.dropdown-slider').toggle('fast');
-    $(this).parent().find('.dropdown-slider').toggle('fast');
-    $(this).find('span.toggle').toggleClass('active');
-
-    return false;
-});
-
-
-// Close open dropdown slider by clicking elsewhwere on page
-$("body").bind('click', function(e) {
-    if (e.target.id != $('.dropdown').attr('class')) {
-        $('.dropdown-slider').slideUp();
-        $('span.toggle').removeClass('active');
-    }
-});
 
 $("body").on('click', '.rCoverUser', function(e) {
     e.preventDefault();
@@ -702,6 +679,7 @@ $("body").on('click', '.cancel', function(e) {
                     $('.displayPhoto .imgCover').remove();
                 }
                 $('.timeLineMenuNav .cancelCover').remove();
+                $('.arrow_timeLineMenuNav').show();
                 $('.profilePic img').css('display', 'block');
                 $('.profilePic .profileInfo').css('display', 'block ');
                 $('.dropdown').css('display', '');
@@ -709,9 +687,7 @@ $("body").on('click', '.cancel', function(e) {
                 $('.actionCover').css('display', 'block');
                 $("#navInfoUserTemplate").tmpl(user).appendTo(".timeLineMenuNav");
             } else if (target == 'profilePic') {
-                $('.profilePic').html('<a class="infoUser" href="/content/post?user=' + obj.username + '">' +
-                        +'<img src="' + obj.src + '" style="display: block;">' +
-                        +'</a>')
+                $('.profilePic').html('<a class="infoUser" href="/content/post?user=' + obj.username + '"><img src="' + obj.src + '"></a>')
             }
             return false;
 
@@ -855,19 +831,6 @@ $("body").on('click', '.closeFrameDialog', function(e) {
     $('#dialog').dialog('close');
 });
 $(document).ready(function() {
-    $("body").on('click', '.menuClick a', function(e) {
-        var clickedId = "#" + this.id.replace(/^link/, "div");
-        $(".menuClick div").not(clickedId).hide();
-        $('.ajax-upload-dragdrop').css('display', 'block');
-        $(clickedId).toggle();
-        if ($(clickedId).css("display") == "none") {
-            $(this).removeClass("selected");
-        } else {
-            $(this).addClass("selected");
-        }
-
-    });
-
     $("body").on('click', '.deletePhoto', function(e) {
         e.preventDefault();
         var rel = $(this).attr('rel');

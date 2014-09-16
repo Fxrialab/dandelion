@@ -3,7 +3,7 @@
         <input type="hidden" name="dragX" value="0">
         <input type="hidden" name="dragY" value="0">
     </div>
-    <input type="hidden" name="coverFile" value="<?php echo $image['name']; ?>">
+    <input type="hidden" name="fileName" value="<?php echo $image['name']; ?>">
     <input type="hidden" name="width" value="<?php echo $image['width']; ?>">
     <input type="hidden" name="height" value="<?php echo $image['height']; ?>">
     <input type="hidden" name="target" value="<?php echo $target; ?>">

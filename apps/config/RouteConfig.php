@@ -62,15 +62,15 @@ class RouteConfig
         'loadFriend_POST' => "FriendController",
         'searchFriend_POST' => "FriendController",
         /* Route config for ajax page */
-        'photoBrowser_POST' => "AjaxController",
-        'uploadCover_POST' => "AjaxController",
-        'uploadAvatar_POST' => "AjaxController",
-        'savePhoto_POST' => "AjaxController",
-        'remove_POST' => "AjaxController",
-        'choosePhoto_POST' => "AjaxController",
-        'reposition_POST' => "AjaxController",
-        'cancel_POST' => "AjaxController",
-        'uploading_POST' => "AjaxController"
+        'photoBrowser_POST' => "UploadController",
+        'uploadCover_POST' => "UploadController",
+        'uploadAvatar_POST' => "UploadController",
+        'savePhoto_POST' => "UploadController",
+        'remove_POST' => "UploadController",
+        'choosePhoto_POST' => "UploadController",
+        'reposition_POST' => "UploadController",
+        'cancel_POST' => "UploadController",
+        'uploading_POST' => "UploadController"
     );
     public $modules = array(
         /* Route config for modules */

@@ -24,8 +24,14 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: false,
+        onBeforeSend: function() {
+            $('.ajax-file-upload-statusbar').hide();
+            $(".uploadCoverStatusBar").html("<div class='loadingUpload'></div>");
+        },
         onSuccess: function(files, data, xhr)
         {
+            $(".uploadCoverStatusBar").html("");
+            $('.arrow_timeLineMenuNav').hide();
             $('.displayPhoto').html(data);
             $('.timeLineMenuNav div').remove();
             $("#navCoverUserTemplate").tmpl(data).appendTo(".timeLineMenuNav");
@@ -37,9 +43,9 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: false,
-        beforeSend: function() {
+        onBeforeSend: function() {
             //Lets add a loading image
-            $('.infoUser').addClass('loading');
+            $(".uploadCoverStatusBar").html("<div class='loadingUpload'></div>");
         },
         onSuccess: function(files, data, xhr)
         {

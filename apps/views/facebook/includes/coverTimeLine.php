@@ -25,6 +25,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
         }
         ?>
         <div class="column-group uiCoverTimeLine">
+            <div class="uploadCoverStatusBar"></div>
             <div class="displayPhoto">
                 <?php
                 if (!empty($photo))
@@ -38,37 +39,31 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                 <?php } ?>
             </div>
             <div class="actionCover">
+                <a data-dropdown="#dropdown-uploadCover" class="button icon add"><span><?php echo $a ?></span></a>
+                <div id="dropdown-uploadCover" class="dropdown dropdown-tip">
+                    <ul class="dropdown-menu">
+                        <li><a class="photoBrowse" role="cover" title="My Photos">Choose from Photos...</a></li>
+                        <li><a id="uploadPhotoCover">Upload photo</a></li>
+                        <?php
+                        if (!empty($photo))
+                        {
+                            ?>
+                            <li><a href="javascript:void(0)" class="rCoverUser" rel="<?php echo $photo->recordID ?>">Reposition</a></li>
+                        <?php
+                        }
+                        if (!empty($otherUser->data->coverPhoto) && $otherUser->data->coverPhoto != 'none')
+                        {
+                            ?>
+                            <li><a href="javascript:void(0)" class="removeImgUser " id="removeCover" role="cover" title="Remove">Remove</a></li>
+                        <?php } ?>
+                    </ul>
 
-                <div class="menuClick">
-                    <a id="linkcover" class="button icon add"><span><?php echo $a ?></span></a>
-                    <div id="divcover" class="divmenu">
-                        <nav class="ink-navigation">
-                            <ul class="menu vertical ">
-                                <li><a href="javascript:void(0)" role="cover" class="photoBrowse" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a></li>
-                                <li><a href="javascript:void(0)"><div id="uploadPhotoCover"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a></li>
-                                <?php
-                                if (!empty($photo))
-                                {
-                                    ?>
-                                    <li><a href="javascript:void(0)" class="rCoverUser" rel="<?php echo $photo->recordID ?>"><span class="icon icon61"></span><span class="label">Reposition...</span></a></li>
-                                    <?php
-                                }
-                                if (!empty($otherUser->data->coverPhoto) && $otherUser->data->coverPhoto != 'none')
-                                {
-                                    ?>
-                                    <li> <a href="javascript:void(0)" class="removeImgUser " id="removeCover" role="cover" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a></li>
-                                <?php } ?>
-                            </ul>
-                        </nav>
-
-
-                    </div>
                 </div>
             </div>
-
         </div>
-        <div style=" position: relative;">
-            <div id="imgAvatar">
+        <div >
+            <div id="imgAvatar" style=" position: relative;">
+                <div class="uploadAvatarStatusBar"></div>
                 <div class="profilePic">
                     <a class="infoUser" href="/content/post?user=<?php echo $this->f3->get('SESSION.username') ?>">
                         <?php
@@ -92,19 +87,20 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                     </a>
                 </div>
                 <div class="profileInfo">
-                    <div class="dropdown">
-                        <a href="#" class="button"><span class="icon icon148"></span><span class="label"><?php echo $labelStt ?></span></a>
-                        <div class="dropdown-slider left w175">
-                            <a href="#" class="photoBrowse ddm" role="avatar" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a>
-                            <a href="#" class="ddm"><div id="uploadAvatar"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a>
+                    <a data-dropdown="#dropdown-uploadAvatar" class="button icon add"><span><?php echo $labelStt ?></span></a>
+                    <div id="dropdown-uploadAvatar" class="dropdown dropdown-tip">
+                        <ul class="dropdown-menu">
+                            <li><a class="photoBrowse" role="avatar" title="My Photos">Choose from Photos...</a></li>
+                            <li><a id="uploadAvatar">Upload photo</a></li>
                             <?php
                             if ($otherUser->data->profilePic != 'none')
                             {
                                 ?>
-                                <a href="#" class="ddm removeImgUser" id="removeAvatar" role="avatar" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a>
+                                <li><a href="#" class="removeImgUser" id="removeAvatar" role="avatar" title="Remove">Remove</a></li>
                             <?php } ?>
-                        </div> <!-- /.dropdown-slider -->
-                    </div> <!-- /.dropdown -->
+                        </ul>
+
+                    </div>
                 </div>
             </div>
             <a class="name" href="#"><?php echo $otherUserName; ?></a>
@@ -208,6 +204,7 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                         {username: obj.username}
                     ];
                     $("#navInfoUserTemplate").tmpl(user).appendTo(".timeLineMenuNav");
+                    $('.arrow_timeLineMenuNav').show();
                     $('.profilePic a img').css('display', 'block');
                     $('.profilePic .profileInfo').css('display', 'block ');
                     $('.dropdown').css('display', '');

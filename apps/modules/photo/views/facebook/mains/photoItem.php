@@ -1,7 +1,7 @@
 <div class="large-33">
     <div class="photoItems">
         <a class="detailPhoto" url="/content/photo/detail?id=<?php echo $photoID ?>&p=<?php echo $k ?>">
-            <div style="width: 235px; height: 200px; background-image: url(<?php echo UPLOAD_URL.'images/' . $photoName; ?>)"></div>
+            <img src="<?php echo UPLOAD_URL.'images/' . $photoName; ?>" height="200">
         </a>
 
         <div class="num"><div class="numLike-<?php echo $photoID ?>"> <?php echo $numberLike ?> </div>

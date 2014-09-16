@@ -1,16 +1,10 @@
-<?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
 <div class=" column-group">
     <?php
     if (!empty($photos))
     {
         foreach ($photos as $key => $value)
         {
-            $find = AjaxController::findPhoto($value->recordID);
+            $find = HelperController::findPhoto($value->recordID);
             if ($role == 'avatar')
                 $id = 'chooseAvatar';
             else
