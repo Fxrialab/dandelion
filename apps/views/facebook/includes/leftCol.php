@@ -12,26 +12,26 @@
             <ul class="uiVerticalNav-menu">
                 <li class="active">
                     <a href="#" class="uiVerticalNav-item">
-                        <i class="navMenuIcon-newFeed"></i>
+                        <i class="icon30-newFeed"></i>
                         News Feed
                         <span class="uiVerticalNav-counter">4</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="uiVerticalNav-item">
-                        <i class="navMenuIcon-messages"></i>
+                        <i class="icon30-message"></i>
                         Messages
                         <span class="uiVerticalNav-counter">8</span>
                     </a>
                 </li>
                 <li class="">
                     <a href="/content/group?category=membership" class="uiVerticalNav-item">
-                        <i class="navMenuIcon-group"></i>
+                        <i class="icon30-group"></i>
                         Group
                         <span class="uiVerticalNav-counter">15</span>
                     </a>
                     <ul class="uiVerticalNav-menu">
-                        <li class="active"><a href="/content/group?category=admin">Groups your Admin</a></li>
+                        <li class="active children"><a href="/content/group?category=admin"><i class="icon30-index"></i>Groups your Admin</a></li>
                         <?php
                         $memberGroup = HelperController::groupMember();
                         if (!empty($memberGroup))
@@ -54,7 +54,7 @@
                 </li>
                 <li>
                     <a href="#" class="uiVerticalNav-item">
-                        <i class="navMenuIcon-event"></i>
+                        <i class="icon30-event"></i>
                         Event
                         <span class="uiVerticalNav-counter">42</span>
                     </a>

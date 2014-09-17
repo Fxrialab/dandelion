@@ -93,6 +93,26 @@
 .icon30-location {
     background-position: -212px -50px;
 }
+.icon30-newFeed{
+    background-position: -475px -104px;
+}
+.icon30-message {
+    background-position: -52px 0;
+}
+.icon30-group {
+    background-position: 0 -105px;
+}
+.icon30-event {
+    background-position: -160px -313px;
+}
+.icon30-index {
+    background-position: -478px -210px;
+}
+.icon30-options {
+    background-position: 0 -50px;
+    width: 18px;
+    height: 14px;
+}
 [class*="topNavIcon1-"] {
     display: block;
     height: 32px;

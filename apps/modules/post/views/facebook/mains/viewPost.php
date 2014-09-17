@@ -223,7 +223,7 @@ $status_published = $status->data->published;
             </div>
         </div>
         <div class="large-5">
-            <a data-dropdown="#dropdown-<?php echo $rpStatusID; ?>"><i class="optionIcon-articlePost"></i></a>
+            <a data-dropdown="#dropdown-<?php echo $rpStatusID; ?>"><i class="icon30-options"></i></a>
             <div id="dropdown-<?php echo $rpStatusID; ?>" class="dropdown dropdown-tip dropdown-anchor-right dropdown-right-option">
                 <ul class="dropdown-menu">
                     <li><a class="test" href="#">Report this post</a></li>
