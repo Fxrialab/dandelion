@@ -1,3 +1,6 @@
+<?php
+$username = $otherUser->data->username;
+?>
 <script>
     $(document).ready(function() {
         $('#scrollFriends').scrollPaginationFriend({
@@ -14,7 +17,7 @@
 
 </script>
 
-<input type="hidden" id="userID" name="userID" value="<?php echo $user->recordID ?>">
+<input type="hidden" id="userID" name="userID" value="<?php echo $otherUser->recordID ?>">
 <div class="arrow_timeLineMenuNav">
     <div class="arrow_timeLine" style="left: 19%"></div>
 </div>
@@ -26,11 +29,10 @@
         <div class="uiBoxTitle">
             <div class="column-group">
                 <div style="padding: 13px">
-                    <div class="large-60 ">
+                    <div class="large-75">
                         <h2>Friends</h2>
                     </div>
-                    <div class="large-35">
-                        <a href="#" class="button dialogAlbum">Friends Requests</span></a>
+                    <div class="large-20">
                         <a href="#" class="button icon add"><span class="label">Find Friends</span></a>
                     </div>
                     <div class="large-5 ">
@@ -48,9 +50,8 @@
                     <div style="margin-top: 15px;">
                         <nav class="ink-navigation">
                             <ul class="menu horizontal">
-                                <li><a href="/content/friends?user=<?php echo $username ?>&f=friend_all">All friends (2)</a></li>
-                                <li><a href="/content/friends?user=<?php echo $username ?>&f=friend_recent">Recently Added</a></li>
-                                <li><a href="/content/friends?user=<?php echo $username ?>&f=following">Following</a></li>
+                                <li><a href="/content/friends?user=<?php echo $username ?>&f=friend_all">All friends (<?php if(!empty($friends)) echo count($friends);else echo '0'; ?>)</a></li>
+                                <li><a href="/content/friends?user=<?php echo $username ?>&f=friend_recent">Friend Requests</a></li>
                             </ul>
                         </nav>
                     </div>

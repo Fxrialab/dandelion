@@ -35,7 +35,13 @@ $(".autoloadModuleElement").ready(function()
         }
     })
 });
-
+//hide search result if click anywhere
+$(document).click(function(){
+    var existedSearch = $('#resultsHolder').length;
+    if (existedSearch){
+        $('#resultsHolder').hide();
+    }
+});
 
 $(document).ready(function() {
     $('.taPostStatus').autosize();
@@ -251,7 +257,6 @@ $(document).ready(function()
                     $('#resultsList').empty();
                     if (data.success)
                     {
-                        console.log(data);
                         //Display the results
                         if (data.results.length > 0)
                         {
@@ -267,7 +272,7 @@ $(document).ready(function()
                             $.each(data.results, function()
                             {
                                 $('#resultsList').append("<li rel='" + this.recordID + "'>" +
-                                        "<a href='/content/myPost?username=" + this.username + "'>" +
+                                        "<a href='/content/post?user=" + this.username + "'>" +
                                         "<span>" +
                                         "<img class='imgFindPeople' src='" + this.profilePic + "' width='40' height='40'/>" +
                                         "<span class='infoPeople'>" + this.firstName + " " + this.lastName + "</span>" +

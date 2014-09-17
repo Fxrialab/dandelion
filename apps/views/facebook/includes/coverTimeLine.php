@@ -30,10 +30,13 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                 <?php
                 if (!empty($photo))
                 {
+                    $photoID = str_replace(':','_',$photo->recordID);
                     ?>
                     <div class="imgCover">
                         <div style="width:<?php echo $photo->data->width; ?>px; height:<?php echo $photo->data->height; ?>px;  position: relative; <?php if (!empty($photo->data->dragX)) echo 'left: -' . $photo->data->dragX . 'px' ?>; <?php if (!empty($photo->data->dragY)) echo 'top: -' . $photo->data->dragY . 'px' ?>">
-                            <img src="<?php echo UPLOAD_URL . "cover/750px/" . $photo->data->fileName ?>" style="width:100%;">
+                            <a class="page" url="/content/photo/detail?id=<?php echo $photoID ?>">
+                                <img src="<?php echo UPLOAD_URL . "cover/750px/" . $photo->data->fileName ?>" style="width:100%;">
+                            </a>
                         </div>
                     </div>
                 <?php } ?>
@@ -65,24 +68,27 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
             <div id="imgAvatar" style=" position: relative;">
                 <div class="uploadAvatarStatusBar"></div>
                 <div class="profilePic">
-                    <a class="infoUser" href="/content/post?user=<?php echo $this->f3->get('SESSION.username') ?>">
-                        <?php
-                        if ($otherUser->data->profilePic != 'none')
-                        {
-                            $photo = HelperController::findPhoto($otherUser->data->profilePic);
-                            $src = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
-                            $labelStt = 'Change avatar';
-                        }
+                    <?php
+                    if ($otherUser->data->profilePic != 'none')
+                    {
+                        $photo = HelperController::findPhoto($otherUser->data->profilePic);
+                        $src = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
+                        $labelStt = 'Change avatar';
+                        $photoID = str_replace(':','_',$photo->recordID);
+                        $viewAvatar = '/content/photo/detail?id='.$photoID.'&p=';
+                    }
+                    else
+                    {
+                        $gender = HelperController::findGender($otherUser->recordID);
+                        if ($gender == 'male')
+                            $src = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                         else
-                        {
-                            $gender = HelperController::findGender($otherUser->recordID);
-                            if ($gender == 'male')
-                                $src = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-                            else
-                                $src = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
-                            $labelStt = 'Add avatar';
-                        }
-                        ?>
+                            $src = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+                        $labelStt = 'Add avatar';
+                        $viewAvatar = '';
+                    }
+                    ?>
+                    <a class="infoUser page" url="<?php echo $viewAvatar; ?>">
                         <img src="<?php echo $src; ?>">
                     </a>
                 </div>
@@ -124,42 +130,38 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                     if ($statusFriendShip == 'request' || $statusFriendShip == 'later')
                     {
                         ?>
-                        <a class="requestFriend uiMediumButton orange linkHover-fffff">Friend Request Sent</a>
-                        <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
-                            <nav class="ink-navigation">
-                                <ul class="menu vertical">
-                                    <li><a>Report/Block</a></li>
-                                    <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Cancel Request</a></li>
-                                </ul>
-                            </nav>
+                        <a data-dropdown="#dropdown-requestFriend" class="requestFriend button blue"><span>Friend Request Sent</span></a>
+                        <div id="dropdown-requestFriend" class="dropdown dropdown-tip">
+                            <ul class="dropdown-menu">
+                                <li><a>Report/Block</a></li>
+                                <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Cancel Request</a></li>
+                            </ul>
                         </div>
                         <?php
                     }
                     else
                     {
                         ?>
-                        <a class="addFriend uiMediumButton orange linkHover-fffff" id="<?php echo $rpOtherUserID; ?>">Add Friend</a>
+                        <a class="addFriend button blue linkHover-fffff" id="<?php echo $rpOtherUserID; ?>">Add Friend</a>
                         <?php
                     }
                 }
                 elseif ($statusFriendShip == 'respondRequest')
                 {
                     ?>
-                    <a class="respondFriendRequest uiMediumButton orange linkHover-fffff">Respond to Friend Request</a>
-                    <div class="uiFriendOptionPopUpOver uiBox-PopUp topCenterArrow infoOver-">
-                        <nav class="ink-navigation">
-                            <ul class="menu vertical">
-                                <li><a class="confirmFriend" id="<?php echo $rpOtherUserID; ?>">Confirm Friend</a></li>
-                                <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unaccept Request</a></li>
-                            </ul>
-                        </nav>
+                    <a data-dropdown="#dropdown-respondFriendRequest" class="respondFriendRequest button blue"><span>Respond to Friend Request</span></a>
+                    <div id="dropdown-respondFriendRequest" class="dropdown dropdown-tip">
+                        <ul class="dropdown-menu">
+                            <li><a class="confirmFriend" id="<?php echo $rpOtherUserID; ?>">Confirm Friend</a></li>
+                            <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unaccept Request</a></li>
+                        </ul>
                     </div>
                     <?php
                 }
                 elseif ($statusFriendShip == 'updateInfo')
                 {
                     ?>
-                    <a class="uiMediumButton orange linkHover-fffff" href="/about?user=<?php echo $currentUser->data->username; ?>">Update Info</a>
+                    <a class="button blue linkHover-fffff" href="/about?user=<?php echo $currentUser->data->username; ?>">Update Info</a>
                     <?php
                 }
                 else
@@ -167,15 +169,12 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                     ?>
                     <div class="friendButton">
                         <div>
-                            <div class="button"><span class="label">Friends</span></div>
-                            <div class="info">
-                                <nav class="ink-navigation">
-                                    <ul class="menu vertical menu_arrow">
-                                        <div class="arrow_timeLine" style="left: 55%"></div>
-                                        <li><a>Report/Block</a></li>
-                                        <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unfriend</a></li>
-                                    </ul>
-                                </nav>
+                            <a data-dropdown="#dropdown-isFriend" class="button blue"><span>Friend</span></a>
+                            <div id="dropdown-isFriend" class="dropdown dropdown-tip">
+                                <ul class="dropdown-menu">
+                                    <li><a>Report/Block</a></li>
+                                    <li><a class="cancelRequestFriend" id="<?php echo $rpOtherUserID; ?>">Unfriend</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>

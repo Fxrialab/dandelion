@@ -217,10 +217,16 @@ class HomeController extends AppController
                 foreach ($result as $people)
                 {
                     $infoOfSearchFound[$people] = Model::get('user')->callGremlin("current.map", array('@rid' => '#' . $people));
-                    if ($infoOfSearchFound[$people][0]->profilePic != 'none')
-                        $avatar = $infoOfSearchFound[$people][0]->profilePic;
-                    else
-                        $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+                    if ($infoOfSearchFound[$people][0]->profilePic != 'none'){
+                        $photo = HelperController::findPhoto($infoOfSearchFound[$people][0]->profilePic);
+                        $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
+                    }else {
+                        $gender = HelperController::findGender($people);
+                        if ($gender =='male')
+                            $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+                        else
+                            $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+                    }
                     $data['results'][] = array(
                         'recordID' => str_replace(':', '_', $people),
                         'firstName' => ucfirst($infoOfSearchFound[$people][0]->firstName),

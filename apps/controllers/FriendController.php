@@ -158,10 +158,22 @@ class FriendController extends AppController
         {
             $this->layout = 'timeline';
             $username = $this->f3->get('GET.user');
-            $user = $this->facade->findByAttributes('user', array('username' => $username));
-            $this->f3->set('user', $user);
-            $this->f3->set('username', $username);
-            $this->render('user/friends.php', 'default');
+            if (!empty($username))
+            {
+                $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $username));
+                $currentProfileID = $currentProfileRC->recordID;
+                $currentProfileRC = $this->facade->load('user', $currentProfileID);
+                $currentUser = $this->getCurrentUser();
+                $friends = $this->facade->findAllAttributes('friendship', array('userA'=>$currentProfileRC->recordID, 'relationship'=>'friend','status'=>'ok'));
+                //get status friendship
+                $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
+                $this->render('user/friends.php', 'default',array(
+                    'currentUser'   => $currentUser,
+                    'otherUser'     => $currentProfileRC,
+                    'statusFriendShip'  => $statusFriendShip,
+                    'friends'       => $friends
+                ));
+            }
         }
     }
 
@@ -175,23 +187,17 @@ class FriendController extends AppController
                 $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
                 $obj = new ObjectHandler();
                 $obj->userA = $_POST['userID'];
+                $obj->relationship = 'friend';
+                $obj->status = 'ok';
                 $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
                 $friends = $this->facade->findAll('friendship', $obj);
                 if (!empty($friends))
                 {
-                    $array = array();
                     foreach ($friends as $value)
                     {
                         $user = $this->facade->findByPk('user', $value->data->userB);
-                        $array[] = array(
-                            'recordID' => $user->recordID,
-                            'username' => $user->data->username,
-                            'fullName' => $user->data->fullName,
-                            'avatar' => $user->data->profilePic
-                        );
                     }
-                    $this->f3->set("friends", $array);
-                    $this->render('user/viewFriend.php', 'default');
+                    $this->render('user/viewFriend.php', 'default', array('friends'=>$user));
                 }
             }
         }
@@ -202,7 +208,6 @@ class FriendController extends AppController
         if ($this->isLogin())
         {
             $key = $_POST['key'];
-            $data = array();
             if (!empty($key))
             {
                 $command = $this->getSearchCommand(array('fullName'), $key);
@@ -215,12 +220,7 @@ class FriendController extends AppController
                         if (!empty($friend))
                         {
                             $user = $this->facade->findByPk('user', $people);
-                            $data[] = array(
-                                'recordID' => $user->recordID,
-                                'username' => $user->data->username,
-                                'fullName' => $user->data->fullName,
-                                'avatar' => $user->data->profilePic
-                            );
+
                         }
                     }
                 }
@@ -236,17 +236,11 @@ class FriendController extends AppController
                     foreach ($friends as $value)
                     {
                         $user = $this->facade->findByPk('user', $value->data->userB);
-                        $data[] = array(
-                            'recordID' => $user->recordID,
-                            'username' => $user->data->username,
-                            'fullName' => $user->data->fullName,
-                            'avatar' => $user->data->profilePic
-                        );
+
                     }
                 }
             }
-            $this->f3->set("friends", $data);
-            $this->render('user/viewFriend.php', 'default');
+            $this->render('user/viewFriend.php', 'default', array('friends'=>$user));
         }
     }
 
