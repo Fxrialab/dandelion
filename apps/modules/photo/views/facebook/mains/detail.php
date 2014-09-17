@@ -1,20 +1,17 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 $photo = $this->f3->get('photo');
 $recordID = str_replace(':', '_', $photo->recordID);
 $p = $this->f3->get('p');
 $count = $this->f3->get('count');
 $photoID = substr($photo->recordID, strpos($photo->recordID, ':') + 1);
-$user = PhotoController::getUser($photo->data->actor);
-$like = PhotoController::like($photo->recordID);
-$comment = PhotoController::getFindComment($photo->recordID);
-if ($user->data->profilePic != 'none')
-    $avatar = UPLOAD_URL . $user->data->profilePic;
-else
-    $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+$user = HelperController::findUser($photo->data->owner);
+$fullName = HelperController::getFullNameUser($photo->data->owner);
+$like = HelperController::like($photo->recordID);
+$comment = HelperController::getFindComment($photo->recordID);
+$avatar = HelperController::getAvatar($user);
+//info current user
+$currentUser = $this->f3->get('currentUser');
+$currentUserAvatar = HelperController::getAvatar($currentUser);
 ?>
 
 <div class="control-group">
@@ -28,7 +25,7 @@ else
                         ?>
                         <a  class='page prev' url="<?php echo $this->f3->get('prev') ?>"><i class="prevPhoto"></i></a>
                     <?php } ?>
-                    <img src="<?php echo UPLOAD_URL . $photo->data->fileName; ?>">
+                    <img src="<?php echo UPLOAD_URL.'images/' . $photo->data->fileName; ?>">
                     <?php
                     if ($p < $count)
                     {
@@ -43,11 +40,11 @@ else
         <div class="fade mCustomScrollbar">
             <div class="control-group">
                 <div class="large-15">
-                    <img src ="<?php echo $avatar ?>">
+                    <img src ="<?php echo $avatar ?>" style="width: 55px; height: 55px">
                 </div>
                 <div class="large-85">
                     <div class="infoProfile">
-                        <a href="/content/post?user=<?php echo $user->data->username ?>" class="timeLineLink"><?php echo $user->data->fullName; ?></a>
+                        <a href="/content/post?user=<?php echo $user->data->username ?>" class="timeLineLink"><?php echo $fullName; ?></a>
                         <div><a class="swTimeComment time" name="<?php echo $photo->data->published; ?>"></a></div>
                     </div>
                     <a class="closeDialog float-right">Close</a>
@@ -147,11 +144,17 @@ else
                                         {
                                             foreach ($comment as $k => $value)
                                             {
-                                                $profile = PhotoController::getUser($value->data->userID);
-                                                if ($profile->data->profilePic != 'none')
-                                                    $avatarComment = UPLOAD_URL . $user->data->profilePic;
-                                                else
-                                                    $avatarComment = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+                                                $profile = HelperController::findUser($value->data->userID);
+                                                if ($profile->data->profilePic != 'none'){
+                                                    $photo = HelperController::findPhoto($user->data->profilePic);
+                                                    $avatarComment = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
+                                                }else{
+                                                    $gender = HelperController::findGender($user->recordID);
+                                                    if ($gender =='male')
+                                                        $avatarComment = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
+                                                    else
+                                                        $avatarComment = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+                                                }
                                                 ?>
 
                                                 <div class="eachCommentItem verGapBox column-group">
@@ -175,7 +178,7 @@ else
                                 </div>
                                 <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $recordID ?>">
                                     <div class="large-10 uiActorCommentPicCol">
-                                        <a href="/content/post?user=<?php echo $user->data->fullName ?>"><img src="<?php echo $avatar ?>"></a>
+                                        <a href="/content/post?user=<?php echo $currentUser->data->username; ?>"><img src="<?php echo $currentUserAvatar ?>"></a>
                                     </div>
                                     <div class="large-90 uiTextCommentArea">
                                         <form class="ink-form" id="formcm_<?php echo $recordID ?>">

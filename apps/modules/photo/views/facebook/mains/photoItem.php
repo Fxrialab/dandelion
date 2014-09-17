@@ -1,6 +1,6 @@
 <div class="large-33">
     <div class="photoItems">
-        <a class="detailPhoto" url="/content/photo/detail?id=<?php echo $photoID ?>&p=<?php echo $k ?>">
+        <a class="detailPhoto page" url="/content/photo/detail?id=<?php echo $photoID ?>&p=<?php echo $k ?>">
             <img src="<?php echo UPLOAD_URL.'images/' . $photoName; ?>" height="200">
         </a>
 
@@ -36,7 +36,7 @@
                         {
                             foreach ($comment as $k => $value)
                             {
-                                $user = PhotoController::getUser($value->data->userID);
+                                $user = HelperController::findUser($value->data->userID);
                                 ?>
                                 <li class="itemC_<?php echo str_replace(':', '_', $value->recordID) ?>">
                                     <div class="avatar">
