@@ -162,6 +162,7 @@
             var offset = $settings.offset;
             var busy = false; // Checks if the scroll action is happening 
             var type = $("#type").val();
+            //console.log('typess', type);
             if (type == 'group')
                 var typeID = $("#typeID").val();
             else
@@ -178,7 +179,7 @@
             function getData() {
 
                 // Post data to ajax.php
-                $.post('/loading', {
+                $.post('/content/post/loading', {
                     action: 'scrollpagination',
                     number: $settings.nop,
                     offset: offset,

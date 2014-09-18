@@ -121,13 +121,20 @@ class PostController extends AppController
         {
             $currentUser = $this->getCurrentUser();
             $currentProfileID = $this->f3->get('SESSION.userProfileID');
+
             if (!empty($currentProfileID))
             {
                 $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
                 $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
+                //$type = $_POST['type'];
+                $typeID = $_POST['typeID'];
                 $obj = new ObjectHandler();
                 $obj->owner = $currentProfileID;
                 $obj->type = 'post';
+                if (!empty($typeID))
+                {
+                    $obj->typeID = $typeID;
+                }
                 $obj->active = 1;
                 $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
                 $statusRC = $this->facade->findAll('status', $obj);
@@ -138,7 +145,7 @@ class PostController extends AppController
                     {
                         $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $status->recordID));
                     }
-                    $this->renderModule('post', 'post', array('listStatus'=>$statusRC, 'likeStatus'=>$likeStatus));
+                    $this->renderModule('mains/post', 'post', array('listStatus'=>$statusRC, 'likeStatus'=>$likeStatus));
                 }
             }
         }

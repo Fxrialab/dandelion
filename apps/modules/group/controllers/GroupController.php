@@ -18,23 +18,8 @@ class GroupController extends AppController
         {
             $this->layout = 'group';
             $obj = new ObjectHandler();
-            $this->render($viewPath . 'addGroup.php', 'modules');
+            $this->render($viewPath . 'mains/addGroup.php', 'modules');
         }
-    }
-
-    static public function findGroup($id)
-    {
-        return Model::get('group')->find(str_replace("_", ":", $id));
-    }
-
-    static public function findUser($id)
-    {
-        return Model::get('user')->find($id);
-    }
-
-    static public function findPhoto($id)
-    {
-        return Model::get('photo')->find($id);
     }
 
     public function group($viewPath)
@@ -60,7 +45,7 @@ class GroupController extends AppController
 //            else
 //                $this->f3->set('groupMember', 'null');
             $this->f3->set('role', $role);
-            $this->render($viewPath . 'index.php', 'modules');
+            $this->render($viewPath . 'mains/index.php', 'modules');
         }
     }
 
@@ -81,7 +66,7 @@ class GroupController extends AppController
                 $this->f3->set('groupMember', $model);
             else
                 $this->f3->set('groupMember', 'null');
-            $this->renderModule('loadData', 'group');
+            $this->renderModule('mains/loadData', 'group');
         }
     }
 
@@ -164,7 +149,7 @@ class GroupController extends AppController
             $this->f3->set('members', $members);
             $this->f3->set('countMember', $count);
             $this->f3->set('countAdmin', $countAdmin);
-            $this->render($viewPath . 'members.php', 'modules');
+            $this->render($viewPath . 'mains/members.php', 'modules');
         }
     }
 
@@ -175,7 +160,7 @@ class GroupController extends AppController
             $this->f3->set('groupID', $_POST['id']);
             $group = $this->facade->findByPk('group', str_replace("_", ":", $_POST['id']));
             $this->f3->set('group', $group);
-            $this->renderModule('formDescription', 'group');
+            $this->renderModule('mains/formDescription', 'group');
         }
         elseif (!empty($_POST['groupDescription']))
         {
@@ -197,7 +182,7 @@ class GroupController extends AppController
         else
         {
             $this->f3->set('groupID', $_POST['groupID']);
-            $this->renderModule('leave', 'group');
+            $this->renderModule('mains/leave', 'group');
         }
     }
 
@@ -215,7 +200,7 @@ class GroupController extends AppController
             $this->f3->set('group', $group);
             $this->f3->set('member', $member);
             $this->f3->set('countMember', $count);
-            $this->render($viewPath . 'detail.php', 'modules');
+            $this->render($viewPath . 'mains/detail.php', 'modules');
         }
     }
 
@@ -434,11 +419,11 @@ class GroupController extends AppController
                     $model = Model::get('group')->find($group);
                     $this->f3->set('group', $model);
                 }
-                $this->renderModule('viewGroup', 'group');
+                $this->renderModule('mains/viewGroup', 'group');
             }
             else
             {
-                $this->renderModule('form', 'group');
+                $this->renderModule('mains/form', 'group');
             }
         }
     }

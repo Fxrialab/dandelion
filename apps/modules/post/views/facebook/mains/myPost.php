@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
         $('#contentContainer').scrollPaginationPost({
             nop: 5, // The number of posts per scroll to be loaded

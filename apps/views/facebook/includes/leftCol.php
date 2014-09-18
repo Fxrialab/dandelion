@@ -42,7 +42,7 @@
                                 if (!empty($group))
                                 {
                                     ?>
-                                    <li><a href="/content/group/groupdetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><?php echo $group->data->name ?></a></li>
+                                    <li class="children"><a href="/content/group/groupdetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><i class="icon30-index"></i><?php echo $group->data->name ?></a></li>
                                     <?php
                                 }
                             }

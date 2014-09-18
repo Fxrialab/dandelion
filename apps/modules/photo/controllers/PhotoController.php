@@ -7,21 +7,6 @@ class PhotoController extends AppController
     {
         parent::__construct();
     }
-
-    static function getPhoto($id)
-    {
-        $facade = new DataFacade();
-        return $facade->findByPk('photo', $id);
-    }
-
-    static function getUser($id)
-    {
-        $facade = new DataFacade();
-        return $facade->findByPk('user', $id);
-    }
-
-
-
     // @todo: ask client for album page
     public function photo($viewPath)
     {

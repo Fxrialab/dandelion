@@ -199,7 +199,7 @@ class UploadController extends AppController
                         //prepare data for save
                         $entry = array(
                             'owner' => $currentUser->recordID,
-                            'album' => 'none',
+                            'albumID' => 'none',
                             'fileName' => $file,
                             'width' => $width,
                             'height' => $height,
@@ -226,7 +226,7 @@ class UploadController extends AppController
                         //prepare data for save
                         $entry = array(
                             'owner' => $currentUser->recordID,
-                            'album' => 'none',
+                            'albumID' => 'none',
                             'fileName' => $file,
                             'width' => $width,
                             'height' => $height,

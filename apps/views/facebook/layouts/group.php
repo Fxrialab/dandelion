@@ -1,13 +1,14 @@
+<!DOCTYPE html>
 <html lang="en">
-    <?php require_once 'head.php'; ?>
+    <?php $this->including('head');?>
     <body>
         <div id="topBar">
-            <?php $this->element('topBarElement'); ?>
+            <?php $this->including('topBar'); ?>
         </div>
         <div id="uiContainerWrapper" class="ink-grid">
             <div class="column-group">
                 <div class="large-80 borderLineRight">
-                    <?php $this->element('leftCol'); ?>
+                    <?php $this->including('leftCol'); ?>
                     <div class="uiMainColTimeLine large-80 borderLineLeft">
                         <div class="mainColWrapper">
                             <?php
@@ -24,7 +25,6 @@
                 </div>
             </div>
         </div>
-
-        <?php require_once 'footer.php'; ?>
+        <?php $this->including('footer'); ?>
     </body>
 </html>
