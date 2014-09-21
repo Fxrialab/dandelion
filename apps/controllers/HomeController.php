@@ -50,6 +50,7 @@ class HomeController extends AppController
             $obj = new ObjectHandler();
             $obj->owner = $this->getCurrentUser()->recordID;
             $obj->type = 'post';
+            $obj->OR = "type = 'photo'";
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
             $homes = array();
@@ -177,8 +178,7 @@ class HomeController extends AppController
                     array_push($actionElement, $suggestAction[$actionIDArrays[$key]][0]->data->actionElement);
                 }
                 //check if suggest by friend request is null. Will not return to load element
-                $this->f3->set('actionElement', $actionElement);
-                $this->render('elements/loadedSuggestElement.php', 'default');
+                $this->render('elements/loadedSuggestElement.php', 'default', array('actionElement'=>$actionElement));
             }
         }
     }
@@ -261,9 +261,7 @@ class HomeController extends AppController
                 {
                     $infoOfSearchFound[$people] = Model::get('user')->callGremlin("current.map", array('@rid' => '#' . $people));
                 }
-                $this->f3->set('resultSearch', $resultSearch);
-                $this->f3->set('infoOfSearchFound', $infoOfSearchFound);
-                $this->render('home/searchResult.php', 'default');
+                $this->render('home/searchResult.php', 'default', array('resultSearch'=>$resultSearch,'infoOfSearchFound'=>$infoOfSearchFound));
             }
         }
     }
