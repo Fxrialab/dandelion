@@ -6,14 +6,14 @@ if (!empty($listStatus))
 {
     foreach ($listStatus as $key => $status)
     {
-        $statusID = $status->recordID;
-        $activity = $status->data;
-        $user = PostController::getUser($status->data->actor);
+        $objectID = $status->recordID;
+        $user = HelperController::findUser($status->data->actor);
         $username = $user->data->username;
         $curUserID = $user->recordID;
-        $like = $likeStatus[$statusID];
+        $actorName  = HelperController::getFullNameUser($curUserID);
+        $like = $likeStatus[$objectID];
         $avatar = HelperController::getAvatar($user);
-        $f3 = require('viewPost.php');
+        $f3 = require('viewMod.php');
     }
 }
 ?>

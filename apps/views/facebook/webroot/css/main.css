@@ -2108,6 +2108,8 @@ a{
     cursor: inherit;
     padding:10px 0;
     position: relative;
+    border: 1px solid #cccccc;
+    text-align: center;
 }
 .loading-bar div{
     background: url(../images/iconloading.gif);

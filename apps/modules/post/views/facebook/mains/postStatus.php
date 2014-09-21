@@ -2,10 +2,11 @@
 $status     = $this->f3->get('status');
 $activity   = $status->data;
 $currentUser= $this->f3->get('currentUser');
-$statusID   = $this->f3->get('statusID');
+$objectID   = $this->f3->get('statusID');
 $username   = $currentUser->data->username;
 $like       = false;
 $rand       = rand(100, 100000);
+$actorName  = HelperController::getFullNameUser($currentUser->recordID);
 if ($currentUser->data->profilePic == 'none')
 {
     $gender = HelperController::findGender($currentUser->recordID);
@@ -17,7 +18,7 @@ if ($currentUser->data->profilePic == 'none')
     $photo  = HelperController::findPhoto($currentUser->data->profilePic);
     $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
 }
-$f3         = require('viewPost.php');
+$f3         = require('viewMod.php');
 ?>
 <script type="text/javascript">
     $(document).ready(function() {

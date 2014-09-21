@@ -7,7 +7,45 @@ class PhotoController extends AppController
     {
         parent::__construct();
     }
-    // @todo: ask client for album page
+
+    /**
+     * Binding photo data from album
+     *
+     * @param $entry
+     * @param $key
+     * @return array|bool
+     */
+    public function bindingData($entry, $key)
+    {
+        if (!empty($entry))
+        {
+            $currentUser= $this->getCurrentUser();
+            $albumRC   = $this->facade->findByAttributes('album', array('@rid'=>'#'.$entry->data->object));
+
+            if (!empty($albumRC))
+            {
+                $albumID = $albumRC->recordID;
+                $userRC = $this->facade->findByPk("user", $albumRC->data->owner);
+
+                $photos = $this->facade->findAllAttributes('photo', array('owner' => $albumRC->data->owner,'albumID'=>$albumID));
+                $entry = array(
+                    'type'      => 'photo',
+                    'key'       => $key,
+                    'like'      => true,
+                    'user'      => $userRC,
+                    'actions'   => $photos,
+                    'objectID'  => $albumID,
+                    'path'      => Register::getPathModule('photo'),
+                );
+                return $entry;
+            }else{
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+
     public function photo($viewPath)
     {
         if ($this->isLogin())
@@ -46,6 +84,9 @@ class PhotoController extends AppController
         }
     }
 
+    /**
+     *  This is loading only photo or album on photo module
+     */
     public function loading()
     {
         if ($this->isLogin())
@@ -207,7 +248,7 @@ class PhotoController extends AppController
                     $this->facade->save('photo', $photoEntry);
                 }
                 // track activity to home page
-                $this->trackActivity($currentUser, 'Photo', false, 'photo', $albumID, $published);
+                $this->trackActivity($currentUser, 'Photo', $albumID, 'photo', false, $published);
                 echo BASE_URL . "content/photo?user=" . $this->f3->get('SESSION.username') . "&album=" . str_replace(':', '_', $albumID);
             }
             else

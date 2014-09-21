@@ -8,6 +8,7 @@ class RouteModuleConfig
 
     public $route = array(
         'create_POST'       => "GroupController",
+        'loading_POST'       => "GroupController",
         'successGroup_POST' => "GroupController",
         'editDescription_POST' => "GroupController",
         'joinGroup_POST'    => "GroupController",
@@ -16,7 +17,7 @@ class RouteModuleConfig
         'saveCover_POST'    => "GroupController",
         'cancelCover_POST'  => "GroupController",
         'choosePhoto_POST'  => "GroupController",
-        'uploadphoto_POST'  => "GroupController",
+        'uploadCover_POST'  => "GroupController",
         'search_POST'       => "GroupController",
         'leave_POST'        => "GroupController",
         'addFriend_POST'    => "AjaxController",

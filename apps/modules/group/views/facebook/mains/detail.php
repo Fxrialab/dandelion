@@ -5,7 +5,7 @@ $countMember = $this->f3->get('countMember');
 ?>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#contentContainer').scrollPaginationPost({
+        $('#contentContainer').scrollPaginationGroupMod({
             nop: 5, // The number of posts per scroll to be loaded
             offset: 0, // Initial offset, begins at 0 in this case
             error: 'No More Posts!', // When the user reaches the end this is the message that is

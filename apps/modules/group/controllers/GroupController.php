@@ -1,12 +1,7 @@
 <?php
-
-/**
- * Author: Hoc Nguyen
- * Date: 12/21/12
- */
 class GroupController extends AppController
 {
-
+    protected $helpers = array("String");
     public function __construct()
     {
         parent::__construct();
@@ -17,7 +12,7 @@ class GroupController extends AppController
         if ($this->isLogin())
         {
             $this->layout = 'group';
-            $obj = new ObjectHandler();
+
             $this->render($viewPath . 'mains/addGroup.php', 'modules');
         }
     }
@@ -46,6 +41,40 @@ class GroupController extends AppController
 //                $this->f3->set('groupMember', 'null');
             $this->f3->set('role', $role);
             $this->render($viewPath . 'mains/index.php', 'modules');
+        }
+    }
+
+    /**
+     *  This is loading all activity on group module
+     */
+    public function loading()
+    {
+        if ($this->isLogin())
+        {
+            $currentUser = $this->getCurrentUser();
+            $groupID = $this->f3->get('POST.groupID');
+
+            if (!empty($groupID))
+            {
+                $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
+                $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
+
+                $obj = new ObjectHandler();
+                $obj->typeID = $groupID;
+                $obj->type  = 'group';
+                $obj->active = 1;
+                $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
+                $statusRC = $this->facade->findAll('status', $obj);
+                //var_dump($statusRC);
+                if (!empty($statusRC))
+                {
+                    foreach ($statusRC as $status)
+                    {
+                        $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $status->recordID));
+                    }
+                    $this->renderModule('mains/post', 'post', array('listStatus'=>$statusRC, 'likeStatus'=>$likeStatus));
+                }
+            }
         }
     }
 
@@ -211,7 +240,7 @@ class GroupController extends AppController
             $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
             $this->f3->set('photos', $photos);
             $this->f3->set('groupID', $_POST['id']);
-            $this->renderModule('photoGalleries', 'group');
+            $this->renderModule('mains/photoGalleries', 'group');
         }
     }
 
@@ -224,28 +253,26 @@ class GroupController extends AppController
             $image = array('name' => $photo->data->fileName, 'width' => $photo->data->width, 'height' => $photo->data->height);
             $this->f3->set('image', $image);
             $this->f3->set('target', 'choosePhoto');
-            $this->renderModule('cover', 'group');
+            $this->renderModule('mains/cover', 'group');
         }
     }
 
-    public function uploadphoto()
+    public function uploadCover()
     {
         if ($this->isLogin())
         {
+            $tempDir = UPLOAD . "tmp/";
             $coverDir = UPLOAD . "cover/750px";
-            $thumbnailDir = UPLOAD . "thumbnails/150px"; //The folder will display like gallery images on "Choose from my photos"
 
             if (isset($_FILES["myfile"]))
             {
                 if (!is_array($_FILES["myfile"]['name'])) //single file
                 {
                     $file = $_FILES["myfile"];
-                    $newName = time();
-                    $this->changeImage($file, 150, $thumbnailDir, $newName, 80, false);
-                    $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true);
-                    $this->f3->set('image', $image);
-                    $this->f3->set('target', 'uploadCover');
-                    $this->renderModule('cover', 'group');
+                    $code = $this->StringHelper->generateRandomString(5);
+                    $newName = $code.time();
+                    $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true, $tempDir);
+                    $this->renderModule('mains/cover', 'group', array('image'=> $image, 'target'=>'uploadCover'));
                 }
             }
         }
@@ -255,6 +282,9 @@ class GroupController extends AppController
     {
         if ($this->isLogin())
         {
+            $thumbnailDir = UPLOAD . "thumbnails/150px/"; //The folder will display like gallery images on "Choose from my photos"
+            $imagesDir = UPLOAD . "images/";
+
             $currentUser = $this->getCurrentUser();
             $target = $_POST['target'];
             $file = $_POST['coverFile'];
@@ -263,12 +293,17 @@ class GroupController extends AppController
             $dragX = $_POST['dragX'];
             $dragY = $_POST['dragY'];
             $groupID = $_POST['groupID'];
+            $pathFile = UPLOAD.'tmp/'.$file;
             switch ($target)
             {
                 case 'uploadCover':
+                    //resize image to thumbnail, cover folder and move image from tmp folder to images folder
+                    $this->resizeImageFile($pathFile, 150, $thumbnailDir.$file, 80);
+                    rename($pathFile, $imagesDir.$file);
+                    //prepare data for save
                     $entry = array(
-                        'actor' => $currentUser->recordID,
-                        'album' => '',
+                        'owner' => $currentUser->recordID,
+                        'albumID' => '',
                         'fileName' => $file,
                         'width' => $width,
                         'height' => $height,
@@ -357,7 +392,7 @@ class GroupController extends AppController
             $photoID = $_POST['id'];
             $photo = $this->facade->findByPk('photo', $photoID);
             $this->f3->set('photo', $photo);
-            $this->renderModule('reposition', 'group');
+            $this->renderModule('mains/reposition', 'group');
         }
     }
 

@@ -12,46 +12,6 @@ class PostController extends AppController
         parent::__construct();
     }
 
-    public static function like($typeID)
-    {
-        $facade = new DataFacade();
-        $model = $facade->findByAttributes('like', array('actor' => F3::get('SESSION.userID'), 'objID' => $typeID));
-        if (!empty($model))
-            return TRUE;
-        else
-            return FALSE;
-    }
-
-    static function getFindComment($postID)
-    {
-        $facade = new DataFacade();
-        $comment = $facade->findAllAttributes('comment', array('typeID' => str_replace("_", ":", $postID)));
-        return $comment;
-    }
-
-    static function getPhoto($id)
-    {
-        return Model::get('photo')->find(str_replace("_", ":", $id));
-    }
-
-    static function getFindPhoto($postID)
-    {
-        $facade = new DataFacade();
-        $photo = $facade->findAllAttributes('photo', array('typeID' => $postID));
-        return $photo;
-    }
-
-    static function getStatus($id)
-    {
-        return Model::get('group')->find($id);
-    }
-
-    static function getUser($id)
-    {
-        $facade = new DataFacade();
-        return $facade->findByPk('user', str_replace("_", ":", $id));
-    }
-
     public function bindingData($entry, $key)
     {
         if (!empty($entry))
@@ -72,11 +32,9 @@ class PostController extends AppController
                     'type'      => 'post',
                     'key'       => $key,
                     'like'      => $like,
-                    'username'  => $userRC->data->username,
-                    'avatar'    => $userRC->data->profilePic,
-                    'userID'    => $userRC,
+                    'user'      => $userRC,
                     'actions'   => $statusRC,
-                    'statusID'  => $statusID,
+                    'objectID'  => $statusID,
                     'path'      => Register::getPathModule('post'),
                 );
                 return $entry;
@@ -115,6 +73,9 @@ class PostController extends AppController
         }
     }
 
+    /**
+     *  This is loading only post on post module
+     */
     public function loading()
     {
         if ($this->isLogin())
@@ -126,15 +87,10 @@ class PostController extends AppController
             {
                 $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
                 $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
-                //$type = $_POST['type'];
-                $typeID = $_POST['typeID'];
+
                 $obj = new ObjectHandler();
                 $obj->owner = $currentProfileID;
-                $obj->type = 'post';
-                if (!empty($typeID))
-                {
-                    $obj->typeID = $typeID;
-                }
+                $obj->type  = 'post';
                 $obj->active = 1;
                 $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
                 $statusRC = $this->facade->findAll('status', $obj);
@@ -412,7 +368,7 @@ class PostController extends AppController
 
             $this->f3->set('comments', $commentRC);
 
-            $this->renderModule('viewComment', 'post');
+            $this->renderModule('mains/viewComment', 'post');
         }
         else
         {
@@ -430,7 +386,7 @@ class PostController extends AppController
             {
                 $comments = $this->facade->findAllAttributes('comment', array('typeID' => $statusID));
                 $this->f3->set("comments", $comments);
-                $this->renderModule('moreComment', 'post');
+                $this->renderModule('mains/moreComment', 'post');
             }
         }
     }
@@ -445,7 +401,7 @@ class PostController extends AppController
             $user = $this->facade->findByPk('user', $statusRC->data->owner);
             $this->f3->set('status', $statusRC);
             $this->f3->set('user', $user);
-            $this->renderModule('shareStatus', 'post');
+            $this->renderModule('mains/shareStatus', 'post');
         }
     }
 
@@ -481,31 +437,7 @@ class PostController extends AppController
             // save
             $status = $this->facade->save('status', $postEntry);
             // track activity
-            $this->trackActivity($this->getCurrentUser(), 'ListController', $status, $parentStatus->data->type, $parentStatus->data->typeID, $published);
-        }
-    }
-
-    //just implement
-    public function detailStatus()
-    {
-        if ($this->isLogin())
-        {
-            $this->layout = 'default';
-            $statusID = F3::get('GET.id');
-            $status = $this->Status->load($statusID);
-            $comment = $this->Comment->findByCondition("post = ? LIMIT 4 ORDER BY published ASC", array($statusID));
-            $userFriend = $this->User->findOne("@rid = ?", array($status->data->owner));
-            $getStatusFollow = $this->Follow->findOne("userA = ? AND userB = ? AND filterFollow = 'post' AND ID = ?", array($status->data->owner, $status->data->actor, $statusID));
-            $statusFollow = ($getStatusFollow == null) ? 'null' : $getStatusFollow->data->follow;
-            $currentUser = $this->getCurrentUser();
-            F3::set('statusFollow', $statusFollow);
-            //F3::set('username', ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName));
-            F3::set('currentUser', $currentUser);
-            F3::set('otherUser', $currentUser);
-            F3::set('userFriend', $userFriend);
-            F3::set('comment', $comment);
-            F3::set('status_detail', $status);
-            $this->render(Register::getPathModule('post') . 'detailStatus.php', 'modules');
+            $this->trackActivity($this->getCurrentUser(), 'Post', $status, $parentStatus->data->type, $parentStatus->data->typeID, $published);
         }
     }
 
