@@ -1,7 +1,7 @@
 $(document).ready(function()
 {
     var uploadPhotoGroup = {
-        url: "/content/group/uploadphoto",
+        url: "/content/group/uploadCover",
         method: "POST",
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",

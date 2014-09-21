@@ -8,20 +8,21 @@
             <span class="textComment"><?php echo $content; ?></span>
         </p>
         <a class="swTimeComment" name="<?php echo $published; ?>"></a>
-        <span class="like_<?php echo $id ?>">
+        <!--Implement like comment feature later-->
+        <!--<span class="like_<?php /*echo $id */?>">
             <?php
-            if ($like == 0)
+/*            if ($like == 0)
             {
-                ?>
-                <a class="likeAction" id="<?php echo $id ?>" rel="comment">Like</a>
+                */?>
+                <a class="likeAction" id="<?php /*echo $id */?>" rel="comment">Like</a>
                 <?php
-            }
+/*            }
             else
             {
-                ?>
-                <a class="unlikeAction" id="<?php echo $id ?>" rel="comment">UnLike</a>
-            <?php } ?>
+                */?>
+                <a class="unlikeAction" id="<?php /*echo $id */?>" rel="comment">UnLike</a>
+            <?php /*} */?>
         </span>
-        <span class="numLike-<?php echo $id ?>"><?php echo $numberLike ?></span>
+        <span class="numLike-<?php /*echo $id */?>"><?php /*echo $numberLike */?></span>-->
     </div>
 </div>

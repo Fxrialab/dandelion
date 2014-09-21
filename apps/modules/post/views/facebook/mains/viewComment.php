@@ -1,8 +1,8 @@
 <?php
 
 //var_dump(F3::get('SESSION.userID'));
-if (!empty($statusID))
-    $records = PostController::getFindComment($statusID);
+if (!empty($objectID))
+    $records = HelperController::getFindComment($objectID);
 else
     $records = $this->f3->get('comments');
 
@@ -18,8 +18,8 @@ if (!empty($records))
             $content = $records[$j]->data->content;
             $published = $records[$j]->data->published;
             $numberLike = $records[$j]->data->numberLike;
-            $profile = PostController::getUser(str_replace(":", "_", $records[$j]->data->userID));
-            $like = PostController::like($records[$j]->recordID);
+            $profile = HelperController::findUser($records[$j]->data->userID);
+            $like = HelperController::like($records[$j]->recordID);
             if ($profile->data->profilePic != 'none')
             {
                 $photo = HelperController::findPhoto($profile->data->profilePic);
@@ -39,8 +39,8 @@ if (!empty($records))
     }
     elseif (is_object($records))
     {
-        $profile = PostController::getUser(str_replace(":", "_", $records->data->userID));
-        $like = PostController::like($records->recordID);
+        $profile = HelperController::findUser($records->data->userID);
+        $like = HelperController::like($records->recordID);
         $actorComment = ucfirst($profile->data->firstName) . " " . ucfirst($profile->data->lastName);
         if ($profile->data->profilePic != 'none')
         {

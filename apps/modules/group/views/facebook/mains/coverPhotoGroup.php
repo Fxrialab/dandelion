@@ -33,26 +33,22 @@
         {
             ?>
             <div class="actionCover">
-                <div class="menuClick">
-                    <a id="linkCoverGroup" class="button icon add"><span><?php echo $a ?></span></a>
-                    <div id="divCoverGroup" class="divmenu">
-                        <nav class="ink-navigation">
-                            <ul class="menu vertical ">
-                                <li><a class="myPhotoGroup"  rel="<?php echo $group->recordID; ?>" title="My Photos"><span class="icon icon147"></span><span class="label">Choose from Photos...</span></a></li>
-                                <li><a href="javascript:void(0)"><div id="uploadPhotoGroup"><span class="icon icon189"></span><span class="label">Upload photo</span></div></a></li>
-                                <?php
-                                if (!empty($photo))
-                                {
-                                    ?>
-                                    <li><a href="javascript:void(0)" class="ddm rCoverGroup" rel="<?php echo $photo->recordID; ?>"><span class="icon icon160"></span><span class="label">Reposition...</span></a></li>
-                                    <li>   <a href="javascript:void(0)" class="removeImgGroup ddm" rel="<?php echo $photo->recordID; ?>" title="Remove"><span class="icon icon58"></span><span class="label">Remove</span></a></li>
-                                <?php }
-                                ?>
-                            </ul>
-                        </nav>
+                <a data-dropdown="#dropdown-uploadCover" class="button icon add"><span><?php echo $a ?></span></a>
+                <div id="dropdown-uploadCover" class="dropdown dropdown-tip">
+                    <ul class="dropdown-menu">
+                        <li><a class="myPhotoGroup" rel="<?php echo $group->recordID; ?>" title="My Photos">Choose from Photos...</a></li>
+                        <li><a id="uploadPhotoGroup">Upload photo</a></li>
+                        <?php
+                        if (!empty($photo))
+                        {
+                            ?>
+                            <li><a href="javascript:void(0)" class="rCoverGroup" rel="<?php echo $photo->recordID ?>">Reposition</a></li>
+                            <li><a href="javascript:void(0)" class="removeImgGroup" id="removeCover" rel="<?php echo $photo->recordID; ?> title="Remove">Remove</a></li>
+                        <?php
+                        }
+                        ?>
+                    </ul>
 
-
-                    </div>
                 </div>
                 
             </div>

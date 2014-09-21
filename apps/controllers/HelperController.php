@@ -1,11 +1,4 @@
 <?php
-
-/**
- * Created by fxrialab team
- * Author: Uchiha
- * Date: 7/30/13 - 3:23 PM
- * Project: UserWired Network - Version: beta
- */
 class HelperController extends Controller
 {
 
@@ -42,13 +35,6 @@ class HelperController extends Controller
         $facade = new DataFacade;
         $model = $facade->findByAttributes('information', array('user' => $id));
         return $model->data->gender;
-    }
-
-    static public function findRs($id)
-    {
-        $facade = new DataFacade;
-        $model = $facade->findByPk('reposition', $id);
-        return $model;
     }
 
     static public function findUser($id)
@@ -116,5 +102,12 @@ class HelperController extends Controller
                 $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
         }
         return $avatar;
+    }
+
+    static public function findAlbum($id)
+    {
+        $facade = new DataFacade;
+        $model = $facade->findByPk('album', $id);
+        return $model;
     }
 }

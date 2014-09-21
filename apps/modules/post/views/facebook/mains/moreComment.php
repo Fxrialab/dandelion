@@ -10,8 +10,8 @@ if (!empty($records))
         $content = $value->data->content;
         $published = $value->data->published;
         $numberLike = $value->data->numberLike;
-        $profile = PostController::getUser(str_replace(":", "_", $value->data->userID));
-        $like = PostController::like($value->recordID);
+        $profile = HelperController::findUser(str_replace(":", "_", $value->data->userID));
+        $like = HelperController::like($value->recordID);
         $actorComment = ucfirst($profile->data->firstName) . " " . ucfirst($profile->data->lastName);
         if ($profile->data->profilePic != 'none')
         {
