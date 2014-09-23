@@ -7,33 +7,33 @@ $start = $time;
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php require_once 'head.php'; ?>
+<?php $this->including('head'); ?>
 <body>
-<div id="topBar">
-    <?php $this->element('topBarElement'); ?>
-</div>
-<div id="uiContainerWrapper" class="ink-grid">
-    <div class="column-group">
-        <div class="large-80 borderLineRight">
-            <?php $this->element('leftCol'); ?>
-            <div class="uiMainColTimeLine large-80 borderLineLeft">
-                <?php // $this->element('coverTimeLine'); ?>
-                <div class="mainColWrapper">
-                    <?php
-                    if($type =='modules')
-                        $this->loadModules($page);
-                    else
-                        echo View::instance()->render($page);
-                    ?>
+    <div id="topBar">
+        <?php $this->including('topBar'); ?>
+    </div>
+    <div id="uiContainerWrapper" class="ink-grid">
+        <div class="column-group">
+            <div class="large-80 borderLineRight">
+                <?php $this->including('leftCol'); ?>
+                <div class="uiMainColTimeLine large-80 borderLineLeft">
+                    <?php $this->including('coverTimeLine'); ?>
+                    <div class="mainColWrapper">
+                        <?php
+                        if($type =='modules')
+                            $this->loadModules($page);
+                        else
+                            echo View::instance()->render($page);
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
+        <div id="sideBar" style="display: none">
+            Chat UI
+        </div>
+        <?php $this->including('footer'); ?>
     </div>
-    <div id="sideBar" style="display: none">
-        Chat UI
-    </div>
-    <?php require_once 'footer.php'; ?>
-</div>
 </body>
 </html>
 <?php

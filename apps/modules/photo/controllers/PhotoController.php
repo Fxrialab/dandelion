@@ -33,6 +33,8 @@ class PhotoController extends AppController
                     'key'       => $key,
                     'like'      => true,
                     'user'      => $userRC,
+                    'username'  => $userRC->data->username,
+                    'profilePic'=> $userRC->data->profilePic,
                     'actions'   => $photos,
                     'objectID'  => $albumID,
                     'path'      => Register::getPathModule('photo'),
@@ -50,7 +52,7 @@ class PhotoController extends AppController
     {
         if ($this->isLogin())
         {
-            $this->layout = "timeline";
+            $this->layout = "other";
             $username = $this->f3->get('GET.user');
             $album = $this->f3->get('GET.album');
             //echo $username;
@@ -171,7 +173,7 @@ class PhotoController extends AppController
     {
         if ($this->isLogin())
         {
-            $this->layout = "timeline";
+            $this->layout = "other";
             $username = $this->f3->get('GET.user');
             if (!empty($username))
             {
@@ -179,9 +181,12 @@ class PhotoController extends AppController
                 $currentProfileID = $currentProfileRC->recordID;
                 $currentProfileRC = $this->facade->load('user', $currentProfileID);
                 $currentUser = $this->getCurrentUser();
+                //get status friendship
+                $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
                 $this->render(Register::getPathModule('photo')."mains/myAlbum.php", 'modules', array(
                     'currentUser'   => $currentUser,
                     'otherUser'     => $currentProfileRC,
+                    'statusFriendShip'  => $statusFriendShip,
                     'userID'        => str_replace(':','_',$currentProfileID)
                 ));
             }

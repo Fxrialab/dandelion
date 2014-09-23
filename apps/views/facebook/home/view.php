@@ -8,8 +8,8 @@ if (!empty($activities))
         {
             $status     = $mod["actions"];
             $userID     = $mod['user']->recordID;
-            $username   = $mod['user']->data->username;
-            $profilePic = $mod['user']->data->profilePic;
+            $username   = $mod['username'];
+            $profilePic = $mod['profilePic'];
             $like       = $mod['like'];
             $objectID   = $mod['objectID'];
             $actorName  = HelperController::getFullNameUser($userID);

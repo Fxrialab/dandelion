@@ -33,6 +33,8 @@ class PostController extends AppController
                     'key'       => $key,
                     'like'      => $like,
                     'user'      => $userRC,
+                    'username'  => $userRC->data->username,
+                    'profilePic'=> $userRC->data->profilePic,
                     'actions'   => $statusRC,
                     'objectID'  => $statusID,
                     'path'      => Register::getPathModule('post'),
