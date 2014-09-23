@@ -50,9 +50,9 @@ fi
 chmod +x "$BASEDIR"/dandelion/Dockerfiles/bin/ddlion
 
 echo "Done"
-echo "Now run 'cp dandelion/Dockerfiles/bin/ddlion dandelion'"
-echo "Run 'chmod +x dandelion'"
-echo "Then run './dandelion build'"
+echo "Now run 'cp dandelion/Dockerfiles/bin/ddlion ddlion'"
+echo "Run 'chmod +x ddlion'"
+echo "Then run './ddlion build'"
 exit 0
 
 

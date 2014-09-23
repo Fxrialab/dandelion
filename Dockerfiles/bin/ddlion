@@ -25,7 +25,7 @@ update)
 echo "UPDATE"
 cd dandelion
 git pull
-chmod +x dandelion/Dockerfiles/bin/dandelion
+chmod +x dandelion/Dockerfiles/bin/ddlion
 ;;
 
 build)
