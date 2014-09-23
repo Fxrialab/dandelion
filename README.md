@@ -41,19 +41,19 @@ $bash -c "$(curl -fsSL https://raw.githubusercontent.com/Fxrialab/dandelion/mast
 </pre>
 7. After done, do like reported on step 6
 <pre>
-$cp dandelion/Dockerfiles/bin/ddlion dandelion
+$cp dandelion/Dockerfiles/bin/ddlion ddlion
 </pre>
 <pre>
-$chmod +x dandelion
+$chmod +x ddlion
 </pre>
 <pre>
-$./dandelion build
+$./ddlion build
 </pre>
 8. After you see "Build complete!". You can use cyberduck/filezilla to connect to sftp **host: localhost, port: 2200** with **user: dandelion, pwd: w38T52007**.
 Then start upload the dandelion files into `/home/dandelion/www` folder.
 9. Now let start dandelion
 <pre>
-$./dandelion start
+$./ddlion start
 </pre>
 Thats all, now you can access via [http://demo.dandelion.net:8080/](http://demo.dandelion.net:8080/).
 
@@ -66,23 +66,23 @@ Thats all, now you can access via [http://demo.dandelion.net:8080/](http://demo.
 ###### update
 This will pull the latest copy of dandelion repo from git.
 <pre>
-$./dandelion update
+$./ddlion update
 </pre>
 ###### build
 This will build all the docker containers from Dockerfiles folder.
 First time you run this it will take a while, after first run it will be quick
 <pre>
-$./dandelion build
+$./ddlion build
 </pre>
 ###### start
 This will start all the docker containers from Dockerfiles folder.
 <pre>
-$./dandelion start
+$./ddlion start
 </pre>
 ###### stop
 This will stop all the docker containers from Dockerfiles folder.
 <pre>
-$./dandelion stop
+$./ddlion stop
 </pre>
 
 #### OrientDB
