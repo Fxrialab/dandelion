@@ -94,7 +94,7 @@ class HomeController extends AppController
                 //$this->f3->set('tagged', 'none');
                 $this->f3->set('currentUser', $currentUser);
                 $this->f3->set('published', $status->data->published);
-                $this->renderModule('postStatus', 'post');
+                $this->renderModule('mains/postStatus', 'post');
             }
         }
     }

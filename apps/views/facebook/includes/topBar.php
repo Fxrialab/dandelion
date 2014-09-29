@@ -1,5 +1,5 @@
 <?php
-$loggedUserID = str_replace(':', '_', F3::get('SESSION.userID'));
+$loggedUserID = str_replace(':', '_', $this->f3->get('SESSION.userID'));
 ?>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -137,7 +137,7 @@ $loggedUserID = str_replace(':', '_', F3::get('SESSION.userID'));
                 <a class="float-right" style="line-height: 30px; color: #fff; font-weight: bold" href="/home">Home</a>
             </div>
             <div class="large-5 friendRequests">
-                <!--<span class="ink-badge red countFriendRequest">0</span>-->
+                <span class="ink-badge red countFriendRequest">0</span>
                 <div class="float-right">
                     <?php $this->element('FriendRequestElement'); ?>
                 </div>
@@ -148,7 +148,7 @@ $loggedUserID = str_replace(':', '_', F3::get('SESSION.userID'));
                 </div>
             </div>
             <div class="large-5 notifications">
-                <!--<span class="ink-badge red countNotifies">0</span>-->
+                <span class="ink-badge red countNotifies">0</span>
                 <div class="float-right">
                     <?php $this->element('NotificationElement'); ?>
                 </div>

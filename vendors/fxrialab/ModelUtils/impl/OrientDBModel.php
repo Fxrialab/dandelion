@@ -231,10 +231,10 @@ class OrientDBModel implements IDataModel
 
     public function deleteEdge($sourceID, $desID, $data = null)
     {
-        $sql = "DELETE EDGE " . $this->_className . " FROM " . $sourceID . " TO " . $desID;
+        $sql = "DELETE EDGE FROM " . $sourceID . " TO " . $desID;
         if (is_array($data) && count($data) > 0)
         {
-            $sql = $sql . " WHERE ";
+            $sql = $sql . " WHERE @class = '".$this->_className."'";
             foreach ($data as $key => $value) {
                 $sql = $sql . ' ' . $key . " = " . "'" . $this->SecurityHelper->postIn($value) . "' AND";
             }

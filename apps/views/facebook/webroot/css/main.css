@@ -2464,3 +2464,9 @@ a{
     padding: 5px;
     font-size: 12px;
 }
+
+span.countNotifies, span.countFriendRequest {
+    position: absolute;
+    height: inherit;
+    display: none;
+}
