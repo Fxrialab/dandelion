@@ -8,147 +8,118 @@ class PhotoController extends AppController
         parent::__construct();
     }
 
-    static function getFindComment($photoID)
+    /**
+     * Binding photo data from album
+     *
+     * @param $entry
+     * @param $key
+     * @return array|bool
+     */
+    public function bindingData($entry, $key)
     {
-        $facade = new DataFacade();
-        $comment = $facade->findAllAttributes('comment', array('typeID' => $photoID));
-        return $comment;
-    }
-
-    public static function like($typeID)
-    {
-        $facade = new DataFacade();
-        $model = $facade->findByAttributes('like', array('actor' => F3::get('SESSION.userID'), 'objID' => $typeID));
-        if (!empty($model))
-            return TRUE;
-        else
-            return FALSE;
-    }
-
-    static function getPhoto($id)
-    {
-        $facade = new DataFacade();
-        return $facade->findByPk('photo', $id);
-    }
-
-    static function getUser($id)
-    {
-        $facade = new DataFacade();
-        return $facade->findByPk('user', $id);
-    }
-
-    public static function countComment($id)
-    {
-        $facade = new DataFacade();
-        return $facade->count('comment', array('typeID' => $id));
-    }
-
-    //Upload image Post and Comment
-    public function upload()
-    {
-        if ($this->isLogin())
+        if (!empty($entry))
         {
-            $outPutDir = UPLOAD;
-            $data = array(
-                'results' => array(),
-                'success' => false,
-                'error' => ''
-            );
-            if (!empty($_FILES["myfile"]))
+            $currentUser= $this->getCurrentUser();
+            $albumRC   = $this->facade->findByAttributes('album', array('@rid'=>'#'.$entry->data->object));
+
+            if (!empty($albumRC))
             {
-                $fileName = $_FILES["myfile"]["name"][0];
-                $tmpname = $_FILES["myfile"]['tmp_name'][0];
-                $size = $_FILES["myfile"]['size'][0];
-                list($name, $ext) = explode(".", $fileName);
-                $newName = uniqid();
-                list($width, $height) = getimagesize($tmpname);
-                if (move_uploaded_file($_FILES["myfile"]["tmp_name"][0], $outPutDir . $newName . '.' . $ext))
-                    $data['results'][] = array('imgID' => $newName, 'url' => UPLOAD_URL . $newName . '.' . $ext, 'name' => $newName . '.' . $ext, 'width' => $width, 'height' => $height);
+                $albumID = $albumRC->recordID;
+                $userRC = $this->facade->findByPk("user", $albumRC->data->owner);
+
+                $photos = $this->facade->findAllAttributes('photo', array('owner' => $albumRC->data->owner,'albumID'=>$albumID));
+                $entry = array(
+                    'type'      => 'photo',
+                    'key'       => $key,
+                    'like'      => true,
+                    'user'      => $userRC,
+                    'username'  => $userRC->data->username,
+                    'profilePic'=> $userRC->data->profilePic,
+                    'actions'   => $photos,
+                    'objectID'  => $albumID,
+                    'path'      => Register::getPathModule('photo'),
+                );
+                return $entry;
+            }else{
+                return false;
             }
-            header("Content-Type: application/json; charset=UTF-8");
-            echo json_encode((object) $data);
+        }else {
+            return false;
         }
     }
 
-    public function deletePhoto()
+    public function photo($viewPath)
     {
         if ($this->isLogin())
         {
-
-            $filename = $_POST['name'];
-            $link = UPLOAD_URL . $filename;
-            if (!empty($link))
-            {
-                unlink($link);
-                echo $_POST['id'];
-            }
-        }
-    }
-
-    // @todo: ask client for album page
-    public function photo()
-    {
-        if ($this->isLogin())
-        {
-            $this->layout = "timeline";
+            $this->layout = "other";
             $username = $this->f3->get('GET.user');
-            $photos = array();
-            $user = $this->facade->findByAttributes('user', array('username' => $username));
-            $obj = new ObjectHandler();
-            $obj->actor = $user->recordID;
-            $obj->select = 'ORDER BY published DESC';
-            $set = array();
-            $model = $this->facade->findAll('photo', $obj);
-            if (!empty($model))
+            $album = $this->f3->get('GET.album');
+            //echo $username;
+            if (!empty($username))
             {
-                foreach ($model as $value)
+                $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $username));
+                $currentProfileID = $currentProfileRC->recordID;
+                $this->f3->set('SESSION.userProfileID', $currentProfileID);
+                $currentProfileRC = $this->facade->load('user', $currentProfileID);
+                $currentUser = $this->getCurrentUser();
+                //get status friendship
+                $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
+                if (!empty($album))
                 {
-                    $photos[] = array('recordID' => $value->recordID, 'userID' => $value->data->actor, 'fileName' => $value->data->fileName, 'numberLike' => $value->data->numberLike);
+                    $albumID = $album;
                 }
-                $set = $photos;
+                else
+                {
+                    $albumID = 'allPhoto';//Untitled album
+                }
+                $this->f3->set('userID', $currentProfileID);
+                $this->render($viewPath . "mains/myPhoto.php", 'modules', array(
+                    'currentUser'   => $currentUser,
+                    'otherUser'     => $currentProfileRC,
+                    'statusFriendShip'  => $statusFriendShip,
+                    'userID'        => str_replace(':','_',$currentProfileID),
+                    'albumID'       => $albumID
+                ));
             }
-            $this->render("photo/photo", array('user' => $user, 'photos' => $set));
+
         }
     }
 
-    public function success()
+    /**
+     *  This is loading only photo or album on photo module
+     */
+    public function loading()
     {
         if ($this->isLogin())
         {
             $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
             $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
-            $obj = new ObjectHandler();
-            $obj->actor = $_POST['userID'];
-            $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
-            $set = array();
-            if ($_POST['albumID'] == 0)
+
+            if (!empty($_POST['userID']))
             {
-                $model = $this->facade->findAll('photo', $obj);
-                if (!empty($model))
+                $userID = str_replace('_',':',$_POST['userID']);
+                $obj = new ObjectHandler();
+                $obj->owner = $userID;
+                $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
+
+                if ($_POST['albumID'] != '')
                 {
-                    foreach ($model as $value)
+                    $albumID = str_replace('_',':',$_POST['albumID']);
+                    if ($albumID == 'allPhoto')//load all photos of all album
                     {
-                        $photos[] = array('recordID' => $value->recordID, 'userID' => $value->data->actor, 'fileName' => $value->data->fileName, 'numberLike' => $value->data->numberLike);
+                        $model = $this->facade->findAll('photo', $obj);
+                    }else {//load all photos of determine an album
+                        $obj->albumID = $albumID;
+                        $model = $this->facade->findAll('photo', $obj);
                     }
-                    $set = $photos;
+                    $target = 'photos';
+                }else {//this mean is load all album on myAlbum
+                    $model = $this->facade->findAll('album', $obj);
+                    $target = 'album';
                 }
+                $this->renderModule('mains/dataPhoto', 'photo', array('model'=>$model, 'target'=>$target));
             }
-            else
-            {
-                $album = $this->facade->findByAttributes('album', array('owner' => $_POST['userID'], '@rid' => $_POST['albumID']));
-                if (!empty($album))
-                {
-                    $array = explode(",", $album->data->photo);
-                    foreach ($array as $value)
-                    {
-                        $model = $this->facade->findByPk('photo', $value);
-                        $photos[] = array('recordID' => $model->recordID, 'userID' => $model->data->actor, 'fileName' => $model->data->fileName, 'numberLike' => $model->data->numberLike);
-                    }
-                    $set = $photos;
-                }
-            }
-            $this->f3->set('photos', $set);
-            $this->renderModule('dataPhoto', 'photo');
         }
     }
 
@@ -183,19 +154,18 @@ class PhotoController extends AppController
         }
     }
 
-    public function myPhoto($viewPath)
+    public function deletePhoto()
     {
         if ($this->isLogin())
         {
-            $this->layout = "timeline";
-            $username = $this->f3->get('GET.username');
-            $photos = array();
-            if (!empty($username))
+
+            $filename = $_POST['name'];
+            $link = UPLOAD_URL . $filename;
+            if (!empty($link))
             {
-                $user = $this->facade->findByAttributes('user', array('username' => $username));
-                $photos = $this->facade->findAll('photo', array('actor' => $user->recordID));
+                unlink($link);
+                echo $_POST['id'];
             }
-            $this->render("photo/photo", array('photos' => $photos, 'user' => $user));
         }
     }
 
@@ -203,173 +173,24 @@ class PhotoController extends AppController
     {
         if ($this->isLogin())
         {
-            $this->layout = "timeline";
+            $this->layout = "other";
             $username = $this->f3->get('GET.user');
             if (!empty($username))
             {
-                $user = $this->facade->findByAttributes('user', array('username' => $username));
-                $album = $this->facade->findAllAttributes('album', array('owner' => $user->recordID));
-            }
-            $this->render("photo/myAlbum", array('album' => $album, 'user' => $user));
-        }
-    }
-
-    public function loadingPhoto()
-    {
-        if ($this->isLogin())
-        {
-            $outPutDir = UPLOAD;
-            $data = array(
-                'results' => array(),
-                'success' => false,
-                'error' => ''
-            );
-
-            if (isset($_FILES["myfile"]))
-            {
+                $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $username));
+                $currentProfileID = $currentProfileRC->recordID;
+                $currentProfileRC = $this->facade->load('user', $currentProfileID);
                 $currentUser = $this->getCurrentUser();
-                $allowed_formats = array("jpg", "png", "gif", "bmp");
-                $data['success'] = true;
-                $data['error'] = $_FILES["myfile"]["error"];
-
-                if (!is_array($_FILES["myfile"]['name'])) //single file
-                {
-                    $allowed_formats = array("jpg", "png", "gif", "bmp");
-                    $fileName = $_FILES["myfile"]["name"];
-                    $tmpname = $_FILES['myfile']['tmp_name'];
-                    $size = $_FILES['myfile']['size'];
-                    list($name, $ext) = explode(".", $fileName);
-                    if (!in_array($ext, $allowed_formats))
-                    {
-                        $err = "<strong>Oh snap!</strong>Invalid file formats only use jpg,png,gif";
-                        return false;
-                    }
-                    if ($ext == "jpg" || $ext == "jpeg")
-                        $src = imagecreatefromjpeg($tmpname);
-                    else if ($ext == "png")
-                        $src = imagecreatefrompng($tmpname);
-                    else
-                        $src = imagecreatefromgif($tmpname);
-
-                    list($width, $height) = getimagesize($tmpname);
-                    if ($width > 750)
-                    {
-                        $newwidth = 750;
-                        $newheight = ($height / $width) * $newwidth;
-                        $tmp = imagecreatetruecolor($newwidth, $newheight);
-                        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-                        $image = $outPutDir . $fileName;
-                        imagejpeg($tmp, $outPutDir . $fileName, 100);
-                        move_uploaded_file($image, $outPutDir . $fileName);
-                    }
-                    else
-                    {
-                        move_uploaded_file($_FILES["myfile"]["tmp_name"], $outPutDir . $fileName);
-                    }
-
-
-                    $entry = array(
-                        'actor' => $currentUser->recordID,
-                        'album' => '',
-                        'fileName' => $fileName,
-                        'drapx' => 0,
-                        'drapy' => 0,
-                        'thumbnail_url' => '',
-                        'description' => '',
-                        'numberLike' => '0',
-                        'numberComment' => '0',
-                        'statusUpload' => 'uploaded',
-                        'published' => ''
-                    );
-
-                    $photoID = $this->facade->save('photo', $entry);
-
-                    $infoPhotoRC = $this->facade->findByPk('photo', $photoID);
-
-                    $data['results'][] = array(
-                        'photoID' => str_replace(':', '_', $infoPhotoRC->recordID),
-                        'fileName' => $infoPhotoRC->data->fileName,
-                        'url' => UPLOAD_URL . $infoPhotoRC->data->fileName
-                    );
-                }
-                else
-                {
-                    $fileCount = count($_FILES["myfile"]['name']);
-                    for ($i = 0; $i < $fileCount; $i++)
-                    {
-                        $fileName = $_FILES["myfile"]["name"][$i];
-                        $tmpname = $_FILES["myfile"]['tmp_name'][$i];
-                        $size = $_FILES["myfile"]['size'][$i];
-                        list($name, $ext) = explode(".", $fileName);
-                        $newName = time();
-                        list($width, $height) = getimagesize($tmpname);
-                        if (move_uploaded_file($_FILES["myfile"]["tmp_name"][$i], $outPutDir . $newName . '.' . $ext))
-                            $data['results'][] = array('url' => UPLOAD_URL . $newName . '.' . $ext, 'name' => $newName . '.' . $ext, 'width' => $width, 'height' => $height);
-                    }
-                }
-                header("Content-Type: application/json; charset=UTF-8");
-                $jsonData = json_encode((object) $data);
-                echo $jsonData;
+                //get status friendship
+                $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
+                $this->render(Register::getPathModule('photo')."mains/myAlbum.php", 'modules', array(
+                    'currentUser'   => $currentUser,
+                    'otherUser'     => $currentProfileRC,
+                    'statusFriendShip'  => $statusFriendShip,
+                    'userID'        => str_replace(':','_',$currentProfileID)
+                ));
             }
-        }
-    }
 
-    public function uploadPhoto()
-    {
-        if ($this->isLogin())
-        {
-            $outPutDir = UPLOAD . "test/";
-            $qualityCB = $this->f3->get('POST.stage');
-            $data = $this->f3->get('POST.data');
-            $albumID = $this->f3->get('POST.albumID');
-            $albumID = ($albumID == 'none') ? $albumID : str_replace('_', ':', $albumID);
-            $published = time();
-            if ($qualityCB == 'checked')
-            {
-                if ($data)
-                {
-                    foreach ($data as $photo)
-                    {
-                        $photoID = str_replace('_', ':', $photo['photoID']);
-                        $description = $photo['description'];
-                        $updateEntry = array(
-                            'album' => $albumID,
-                            'description' => $description,
-                            'published' => $published
-                        );
-                        $this->Photo->updateByCondition($updateEntry, "@rid = ?", array('#' . $photoID));
-                        $photoRC = $this->Photo->findOne("@rid = ?", array('#' . $photoID));
-                        $filePath = $outPutDir . $photoRC->data->fileName;
-                        //check size of image
-                        list($width, $height) = getimagesize($filePath);
-                        if ($width > 960 || $height > 960)
-                            $this->resizeImage($filePath, 960, $filePath);
-                    }
-                }
-            }else
-            {
-                if ($data)
-                {
-                    foreach ($data as $photo)
-                    {
-                        $photoID = str_replace('_', ':', $photo['photoID']);
-                        $description = $photo['description'];
-                        $updateEntry = array(
-                            'album' => $albumID,
-                            'description' => $description,
-                            'published' => $published
-                        );
-                        $this->Photo->updateByCondition($updateEntry, "@rid = ?", array('#' . $photoID));
-                        $photoRC = $this->Photo->findOne("@rid = ?", array('#' . $photoID));
-                        $filePath = $outPutDir . $photoRC->data->fileName;
-                        //check size of image
-                        list($width, $height) = getimagesize($filePath);
-                        if ($width > 960 || $height > 960)
-                            $this->resizeImage($filePath, 960, $filePath);
-                        $this->compressImage($filePath, $filePath, 80);
-                    }
-                }
-            }
         }
     }
 
@@ -377,46 +198,67 @@ class PhotoController extends AppController
     {
         if ($this->isLogin())
         {
-            $title = $this->f3->get("POST.title");
-            $des = $this->f3->get("POST.description");
-            $published = time();
-            if (!empty($_POST['imgID']))
+            $currentUser = $this->getCurrentUser();
+            //if existed photo for create album
+            if (!empty($_POST['imgName']))
             {
-                foreach ($_POST['imgID'] as $value)
+                $albumTitle = $this->f3->get("POST.albumTitle");
+                $albumDes = $this->f3->get("POST.albumDescription");
+                $published = time();
+                //get album id
+                if (!empty($albumTitle))
                 {
-                    list($id, $name, $width, $height) = explode(",", $value);
-                    $description = $_POST["description_" . $id];
-                    $entry = array(
-                        'actor' => $this->f3->get('SESSION.userID'),
-                        'fileName' => $name,
-                        'width' => $width,
-                        'height' => $height,
-                        'dragX' => 0,
-                        'dragY' => 0,
+                    $albumEntry = array(
+                        'owner'     => $this->getCurrentUser()->recordID,
+                        'name'      => $albumTitle,
+                        'description' => $albumDes,
+                        'published' => $published
+                    );
+                    $albumID = $this->facade->save('album', $albumEntry);
+                }else {
+                    $albumID = 'none';//of untitled album
+                }
+                $imagesName = $_POST['imgName'];
+                $imagesDir = UPLOAD . "images/";
+                foreach ($imagesName as $image)
+                {
+                    list($imageName, $name) = explode(",", $image);
+                    $description = $_POST["description_" . $name];
+                    //images are waiting in tmp folder
+                    $file = UPLOAD.'tmp/'.$imageName;
+                    list($width, $height) = getimagesize($file);
+                    //check IF size of images are larger than 960px then resize us ELSE move us from tmp folder to images folder
+                    if ($width > 960 || $height > 960)
+                        $this->resizeImageFile($file, 960, $imagesDir.$imageName, 100);
+                    else
+                        rename($file, $imagesDir.$imageName);
+                    //save to DB
+                    list($nWidth, $nHeight) = getimagesize(UPLOAD.'images/'.$imageName);
+                    $photoEntry = array(
+                        'owner' => $this->f3->get('SESSION.userID'),
+                        'albumID' => $albumID,
+                        'fileName' => $imageName,
+                        'width' => $nWidth,
+                        'height' => $nHeight,
+                        'dragX' => '0',
+                        'dragY' => '0',
                         'thumbnail_url' => '',
                         'description' => $description,
                         'numberLike' => '0',
                         'numberComment' => '0',
                         'statusUpload' => 'uploaded',
                         'published' => time(),
-                        'type' => 'album'
+                        'type' => 'none'
                     );
-                    $photoID[] = $this->facade->save('photo', $entry);
+                    $this->facade->save('photo', $photoEntry);
                 }
-                $photo = implode(',', $photoID);
-                $data = array(
-                    'owner' => $this->getCurrentUser()->recordID,
-                    'name' => $title,
-                    'description' => $des,
-                    'photo' => $photo,
-                    'published' => $published
-                );
-                $album = $this->facade->save('album', $data);
-                echo BASE_URL . "content/photo?user=" . $this->f3->get('SESSION.username') . "&album=" . str_replace(':', '_', $album);
+                // track activity to home page
+                $this->trackActivity($currentUser, 'Photo', $albumID, 'photo', false, $published);
+                echo BASE_URL . "content/photo?user=" . $this->f3->get('SESSION.username') . "&album=" . str_replace(':', '_', $albumID);
             }
             else
             {
-                $this->renderPartial('photo/createAlbum');
+                $this->renderModule('mains/createAlbum', 'photo');
             }
         }
     }
@@ -433,22 +275,21 @@ class PhotoController extends AppController
                 $kt = $k - 1;
                 if (!empty($_GET['typeID']))
                 {
-                    $status = $this->facade->findByPk('status', str_replace('_', ':', $_GET['typeID']));
-                    $array = explode(',', $status->data->embedSource);
+                    $array = $this->facade->findAllAttributes('photo', array('actor' => F3::get('SESSION.userID'), 'typeID' => str_replace('_', ':', $_GET['typeID'])));
                     if ($k >= 0 && $k < count($array) - 1)
-                        $idn = str_replace(':', '_', $array[$kc]);
+                        $idn = str_replace(':', '_', $array[$kc]->recordID);
                     else
-                        $idn = str_replace(':', '_', $array[$k]);
+                        $idn = str_replace(':', '_', $array[$k]->recordID);
                     if ($k == 0)
                         $idp = 0;
                     else
-                        $idp = str_replace(':', '_', $array[$kt]);
+                        $idp = str_replace(':', '_', $array[$kt]->recordID);
                     $next = '/content/photo/detail?typeID=' . str_replace(':', '_', $_GET['typeID']) . '&id=' . $idn . '&p=' . $kc;
                     $prev = '/content/photo/detail?typeID=' . str_replace(':', '_', $_GET['typeID']) . '&id=' . $idp . '&p=' . $kt;
                 }
                 else
                 {
-                    $array = $this->facade->findAllAttributes('photo', array('actor' => F3::get('SESSION.userID')));
+                    $array = $this->facade->findAllAttributes('photo', array('owner' => F3::get('SESSION.userID')));
                     if ($k >= 0 && $k < count($array) - 1)
                         $idn = str_replace(':', '_', $array[$kc]->recordID);
                     else
@@ -460,10 +301,16 @@ class PhotoController extends AppController
                     $next = '/content/photo/detail?id=' . $idn . '&p=' . $kc;
                     $prev = '/content/photo/detail?id=' . $idp . '&p=' . $kt;
                 }
-
+                $currentUser = $this->getCurrentUser();
                 $photo = $this->facade->findByPk('photo', $id);
-                $count = count($array) - 1;
-                $this->renderPartial('photo/detail', array('photo' => $photo, 'next' => $next, 'prev' => $prev, 'p' => $k, 'count' => $count));
+                $this->renderModule('mains/detail', 'photo', array(
+                    'photo' => $photo,
+                    'next'  => $next,
+                    'prev'  => $prev,
+                    'p'     => $k,
+                    'count'  => count($array) - 1,
+                    'currentUser'  => $currentUser,
+                ));
             }
         }
     }

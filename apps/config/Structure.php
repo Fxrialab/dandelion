@@ -23,9 +23,8 @@ define('HELPERS', DOCUMENT_ROOT . 'apps' . DS . 'helpers' . DS);
 define('MODELS', DOCUMENT_ROOT . 'apps' . DS . 'models' . DS);
 define('VIEWS', DOCUMENT_ROOT . 'apps' . DS . 'views' . DS);
 define('ELEMENTS', DOCUMENT_ROOT . 'apps' . DS . 'elements' . DS);
-define('THEMES', DOCUMENT_ROOT . 'apps' . DS . 'themes' . DS);
-define('TEMPLATE', 'default');
-define('UI', THEMES . TEMPLATE . DS);
+define('TEMPLATE', 'facebook');
+define('UI', VIEWS . TEMPLATE . DS);
 
 // inside view
 //define('ELEMENTS', 'elements' . DS);
@@ -33,12 +32,12 @@ define('LAYOUTS', 'layouts' . DS);
 define('EMAILS', 'emails' . DS);
 
 // static
-define('WEBROOT', BASE_URL . 'apps' . DS . 'themes' . DS . TEMPLATE . DS);
+define('WEBROOT', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS .'webroot' . DS);
 define('IMAGES', WEBROOT . 'images' . DS);
 define('JS', WEBROOT . 'js' . DS);
 define('CSS', WEBROOT . 'css' . DS);
-define('UPLOAD', DOCUMENT_ROOT . 'apps' . DS . 'themes' . DS . TEMPLATE . DS . 'uploads' . DS);
-define('UPLOAD_URL', BASE_URL . 'apps' . DS . 'themes' . DS . TEMPLATE . DS . 'uploads' . DS);
+define('UPLOAD', VIEWS . TEMPLATE . DS . 'upload' . DS);
+define('UPLOAD_URL', WEBROOT . 'upload' . DS);
 
 
 // vendors

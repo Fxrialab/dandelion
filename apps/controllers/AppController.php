@@ -60,14 +60,6 @@ class AppController extends Controller
         return ucfirst($this->getCurrentUser()->data->firstName) . " " . ucfirst($this->getCurrentUser()->data->lastName);
     }
 
-//    public function element($element)
-//    {
-//        if (file_exists(UI . 'layouts/' . ELEMENTS . $element . '.php'))
-//        {
-//            require(UI . 'layouts/elements/' . $element . '.php');
-//        }
-//    }
-
     public function getMacAddress()
     {
         ob_start(); // Turn on output buffering
@@ -92,31 +84,24 @@ class AppController extends Controller
         return $ip;
     }
 
-    public function loadModules($modules)
+    public function including($file)
     {
-        if ($modules != '')
-            require_once(MODULES . $modules);
+        if (file_exists(UI . 'includes/' . $file . '.php'))
+            require_once (UI . 'includes/' . $file . '.php');
+        else
+            throw New Exception('File is not existed !');
     }
 
-    static function elementModules($element, $modules)
+    public function loadModules($path)
     {
-        include MODULES . $modules . '/info.php';
-        if (file_exists(MODULES . $path . $element . '.php'))
-        {
-            foreach (glob(MODULES . $modules . '/controllers/' . $modules . 'controller.php') as $elementController)
-            {
-                if (file_exists($elementController))
-                {
-                    $elementControllers = $modules . 'Controller';
-                    $newElement = new $elementControllers;
-                    if (method_exists($newElement, $element))
-                    {
-                        $newElement->$element();
-                    }
-                }
-            }
-            require_once(MODULES . $path . $element . '.php');
-        }
+        if ($path != '')
+            require_once(MODULES . $path);
+    }
+
+    public function element($param)
+    {
+        $element = new FactoryUtils();
+        return $element->element($param);
     }
 
     public function getFriendsStt($actor)
@@ -175,7 +160,6 @@ class AppController extends Controller
                 'object' => $object,
                 'type' => $type,
                 'typeID' => $typeID,
-                'active' => 1,
                 'published' => $published
             );
             // create activity for currentUser
@@ -199,14 +183,14 @@ class AppController extends Controller
                             'object' => $object,
                             'type' => $type,
                             'typeID' => $typeID,
-                            'active' => 1,
                             'published' => $published
                         );
                         $this->facade->save('activity', $data);
                     }
                     $yourFriends = str_replace(':', '_', $friends[$i]->data->userB);
-                    $this->service->exchange('dandelion', 'topic')->routingKey('newsFeed.post.' . $yourFriends)->dispatch('post', $activities);
+                    $this->service->exchange('dandelion', 'topic')->routingKey('newsFeed.post.'.$yourFriends)->dispatch('post', $activities);
                 }
+
             }
         }
     }
@@ -390,85 +374,149 @@ class AppController extends Controller
      * @param $newImgName
      * @param $quality
      * @param bool $returnInfo
+     * @param bool $moveDefaultFileTo
      * @return array|bool
      */
-    public function changeImage($file, $thumbSize = 0, $desImgFile, $newImgName, $quality, $returnInfo = false)
+    public function changeImage($file, $thumbSize = 0, $desImgFile, $newImgName, $quality, $returnInfo = false, $moveDefaultFileTo = false)
     {
-        $fileName = $file["name"];
-        $tmpName = $file['tmp_name'];
-        $formats = $file['type'];
-
-        list($width, $height) = getimagesize($tmpName);
-        /* The width and the height of the image also the getimagesize retrieve other information as well   */
-        $imgRatio = $width / $height;
-
-        if ($imgRatio > 1)
+        if (!is_array($file["name"]))//single file
         {
-            $newWidth = $thumbSize;
-            $newHeight = (int) ($thumbSize / $imgRatio);
-        }
-        else
-        {
-            $newHeight = $thumbSize;
-            $newWidth = (int) ($thumbSize * $imgRatio);
-        }
-        list($name, $ext) = explode(".", $fileName);
+            $fileName = $file["name"];
+            $tmpName = $file['tmp_name'];
+            $formats = $file['type'];
 
-        if ($formats == 'image/jpeg')// Now it will create a new image from the source
-            $source = imagecreatefromjpeg($tmpName);
-        elseif ($formats == 'image/gif')
-            $source = imagecreatefromgif($tmpName);
-        elseif ($formats == 'image/png')
-            $source = imagecreatefrompng($tmpName);
+            list($width, $height) = getimagesize($tmpName);
+            /* The width and the height of the image also the getimagesize retrieve other information as well   */
+            $imgRatio = $width / $height;
 
-        $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
-        $newImage = $newImgName . '.' . $ext;
-        imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
-        imagejpeg($thumb, $desImgFile . '/' . $newImage, $quality);
-        /*
-          Out put of image
-          if the $savePath is null then it will display the image in the browser
-         */
-        imagedestroy($thumb);
-        /*
-          Destroy the image
-         */
-        if (!empty($returnInfo))
-            return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
-        else
-            return false;
+            if ($imgRatio > 1)
+            {
+                $newWidth = $thumbSize;
+                $newHeight = (int) ($thumbSize / $imgRatio);
+            }
+            else
+            {
+                $newHeight = $thumbSize;
+                $newWidth = (int) ($thumbSize * $imgRatio);
+            }
+            list($name, $ext) = explode(".", $fileName);
+
+            if ($formats == 'image/jpeg')// Now it will create a new image from the source
+                $source = imagecreatefromjpeg($tmpName);
+            elseif ($formats == 'image/gif')
+                $source = imagecreatefromgif($tmpName);
+            elseif ($formats == 'image/png')
+                $source = imagecreatefrompng($tmpName);
+
+            $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
+            $newImage = $newImgName . '.' . $ext;
+            imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
+            imagejpeg($thumb, $desImgFile . '/' . $newImage, $quality);
+            /*
+              Out put of image
+              if the $savePath is null then it will display the image in the browser
+             */
+            imagedestroy($thumb);
+            /*
+              Destroy the image
+             */
+            if (!empty($moveDefaultFileTo))
+            {
+                move_uploaded_file($tmpName, $moveDefaultFileTo.$newImage);
+            }
+            if (!empty($returnInfo))
+                return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
+            else
+                return false;
+        }else {//multiple files
+            $fileCount = count($file["name"]);
+            for ($i = 0; $i < $fileCount; $i++)
+            {
+                $fileName = $file["name"][$i];
+                $tmpName = $file['tmp_name'][$i];
+                $formats = $file['type'][$i];
+
+                list($width, $height) = getimagesize($tmpName);
+                /* The width and the height of the image also the getimagesize retrieve other information as well   */
+                $imgRatio = $width / $height;
+
+                if ($imgRatio > 1)
+                {
+                    $newWidth = $thumbSize;
+                    $newHeight = (int) ($thumbSize / $imgRatio);
+                }
+                else
+                {
+                    $newHeight = $thumbSize;
+                    $newWidth = (int) ($thumbSize * $imgRatio);
+                }
+                list($name, $ext) = explode(".", $fileName);
+
+                if ($formats == 'image/jpeg')// Now it will create a new image from the source
+                    $source = imagecreatefromjpeg($tmpName);
+                elseif ($formats == 'image/gif')
+                    $source = imagecreatefromgif($tmpName);
+                elseif ($formats == 'image/png')
+                    $source = imagecreatefrompng($tmpName);
+
+                $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
+                $newImage = $newImgName . '.' . $ext;
+                imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
+                imagejpeg($thumb, $desImgFile . '/' . $newImage, $quality);
+                /*
+                  Out put of image
+                  if the $savePath is null then it will display the image in the browser
+                 */
+                imagedestroy($thumb);
+                /*
+                  Destroy the image
+                 */
+                if (!empty($moveDefaultFileTo))
+                {
+                    move_uploaded_file($tmpName, $moveDefaultFileTo.$newImage);
+                }
+                if (!empty($returnInfo))
+                    return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
+                else
+                    return false;
+
+            }
+        }
     }
 
-    public function resizeImages($file, $size = 0, $dir, $newName)
+    public function resizeImageFile($imgFile="",$thumbSize=0,$savePath=NULL,$quality)
     {
-        $allowed_formats = array("jpg", "png", "gif", "bmp");
-        $fileName = $file["name"];
-        $tmpname = $file['tmp_name'];
+        list($width,$height)=getimagesize($imgFile);
+        /* The width and the height of the image also the getimagesize retrieve other information as well   */
 
-        list($name, $ext) = explode(".", $fileName);
-        if (!in_array($ext, $allowed_formats))
-        {
-            $err = "<strong>Oh snap!</strong>Invalid file formats only use jpg,png,gif";
-            return false;
-        }
-        if ($ext == "jpg" || $ext == "jpeg")
-            $src = imagecreatefromjpeg($tmpname);
-        else if ($ext == "png")
-            $src = imagecreatefrompng($tmpname);
-        else
-            $src = imagecreatefromgif($tmpname);
-
-        $thumbName = $newName . '.' . $ext;
-        list($width, $height) = getimagesize($tmpname);
-        $newwidth = $size;
-        $newheight = ($height / $width) * $newwidth;
-        $tmp = imagecreatetruecolor($newwidth, $newheight);
-        imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-        $image = $dir . $fileName;
-        imagejpeg($tmp, $dir . $size . '/' . $thumbName, 100);
+        $imgRatio=$width/$height;
         /*
-          Destroy the image
-         */
+        To compress the image we will calculate the ration
+        For eg. if the image width=700 and the height = 921 then the ration is 0.77...
+        if means the image must be compression from its height and the width is based on its height
+        so the newheight = thumbsize and the newwidth is thumbsize*0.77...
+        */
+        if($imgRatio>1)
+        {
+            $newWidth   = $thumbSize;
+            $newHeight  = $thumbSize/$imgRatio;
+        } else {
+            $newHeight  = $thumbSize;
+            $newWidth   = $thumbSize*$imgRatio;
+        }
+
+        $thumb=imagecreatetruecolor($newWidth,$newHeight); // Making a new true color image
+        $source=imagecreatefromjpeg($imgFile); // Now it will create a new image from the source
+        imagecopyresampled($thumb,$source,0,0,0,0,$newWidth,$newHeight,$width,$height);  // Copy and resize the image
+        imagejpeg($thumb,$savePath,$quality);
+        /*
+        Out put of image
+        if the $savePath is null then it will display the image in the browser
+        */
+        imagedestroy($thumb);
+        /*
+            Destroy the image
+        */
     }
 
     public function move_uploaded_file($file, $i, $dir, $newName)
@@ -497,56 +545,6 @@ class AppController extends Controller
         list($width, $height) = getimagesize($tmpname);
         if (move_uploaded_file($tempname, $dir . $newName . '.' . $ext))
             return array('name' => $newName . '.' . $ext, 'width' => $width, 'height' => $height);
-    }
-
-    public function pagePost($page, $activity, $limit)
-    {
-        $i = 0;
-        $data = array();
-        if ($page > 1)
-        {
-            $countIndex = $page * $limit;
-            $pev = $limit * $page - $limit;
-        }
-        else
-        {
-            $countIndex = $limit;
-            $pev = 0;
-        }
-        for ($i = $pev; $i < $countIndex; $i++)
-        {
-            if (!empty($activity[$i]->data->object))
-            {
-                $status = $this->facade->findByPk('status', $activity[$i]->data->object);
-                $statusID = $status->recordID;
-                $user = $this->facade->findByPk('user', $status->data->owner);
-                $comment = $this->facade->findAllAttributes('comment', array('typeID' => $status->recordID));
-                if (!empty($comment))
-                    $arrayComment = $comment;
-                else
-                    $arrayComment = array();
-                $image = array();
-                if (!empty($status->data->embedSource))
-                {
-                    $embedSource = explode(',', $status->data->embedSource);
-                    foreach ($embedSource as $value)
-                    {
-                        $photo = $this->facade->findByPk('photo', $value);
-                        $image[] = array('id' => $value, 'fileName' => $photo->data->fileName, 'width' => $photo->data->width);
-                    }
-                }
-                $like = $this->facade->findByAttributes('like', array('actor' => F3::get('SESSION.userID'), 'objID' => $statusID));
-                $data[] = array(
-                    'key' => $i,
-                    'user' => $user,
-                    'status' => $status,
-                    'image' => $image,
-                    'like' => $like,
-                    'comment' => $arrayComment
-                );
-            }
-        }
-        return $data;
     }
 
 }

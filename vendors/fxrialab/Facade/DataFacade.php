@@ -143,10 +143,17 @@ class DataFacade
         if (!empty($model) && is_object($object))
         {
             $array = get_object_vars($object);
+
             if (count($array) > 1)
             {
                 $select = $array['select'];
                 array_shift($array);
+                //add OR operator if condition have exist
+                if (array_key_exists('OR',$array)){
+                    $operatorOR = 'OR '.$array['OR'];
+                    unset($array['OR']);
+                }
+
                 $conditions = "";
                 $operator = " AND ";
                 foreach ($array as $key => $v)
@@ -155,7 +162,7 @@ class DataFacade
                     $value[] = $v;
                 }
                 $conditions = substr($conditions, strlen($operator));
-                $conditions = $conditions . (!isset($select) ? "" : " " . $select);
+                $conditions = $conditions . (!isset($operatorOR) ? "" : " " . $operatorOR).(!isset($select) ? "" : " " . $select);
 
                 return Model::get($model)->findByCondition($conditions, $value);
             }

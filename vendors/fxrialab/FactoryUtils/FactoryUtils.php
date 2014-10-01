@@ -1,10 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 class FactoryUtils
 {
 
@@ -15,26 +9,35 @@ class FactoryUtils
             require_once(ELEMENTS . $param . '.php');
             $get = 'get' . $param;
             $element = new $param;
-            $element->$get();
-        }
+            return $element->$get();
+        }else
+            return false;
     }
 
-}
-
-class ViewHtml
-{
-    static function render($param, $array = array())
+    static public function elementModule($element, $module)
     {
-        if (file_exists(UI . LAYOUTS . $param . '.php'))
+        $pathMod = Register::getPathModule($module);
+        if (is_array($pathMod))
         {
-            foreach ($array as $k => $value)
-            {
-                F3::set($k, $value);
+            foreach ($pathMod as $path){
+                if ($path['mod'] == $module)
+                {
+                    $viewPath = $path['viewPath'];
+                }
             }
-            require(UI . LAYOUTS . $param . '.php');
+        }else {
+            $viewPath = $pathMod;
         }
+        if (file_exists(MODULES  .$viewPath.'elements/'. $element . '.php'))
+        {
+            $get = 'get' . $element;
+            $elementController = 'Element'.ucfirst($module).'Controller';
+            require_once MODULES.$module.'/controllers/'.$elementController.'.php';
+            $element = new $elementController;
+            return $element->$get();
+        }else
+            return false;
     }
-
 }
 
 ?>

@@ -1,8 +1,5 @@
 <?php
-
-require_once CONTROLLERS . "Controller.php";
-
-class MessageElement extends Controller
+class MessageElement extends AppController
 {
 
     public function __construct()
@@ -12,7 +9,7 @@ class MessageElement extends Controller
 
     public function getMessageElement()
     {
-        $this->renderPartial('elements/message');
+        $this->render('elements/messagePopUpOver.php','default');
     }
 
 }

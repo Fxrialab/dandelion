@@ -231,10 +231,10 @@ class OrientDBModel implements IDataModel
 
     public function deleteEdge($sourceID, $desID, $data = null)
     {
-        $sql = "DELETE EDGE " . $this->_className . " FROM " . $sourceID . " TO " . $desID;
+        $sql = "DELETE EDGE FROM " . $sourceID . " TO " . $desID;
         if (is_array($data) && count($data) > 0)
         {
-            $sql = $sql . " WHERE ";
+            $sql = $sql . " WHERE @class = '".$this->_className."'";
             foreach ($data as $key => $value) {
                 $sql = $sql . ' ' . $key . " = " . "'" . $this->SecurityHelper->postIn($value) . "' AND";
             }
@@ -270,13 +270,14 @@ class OrientDBModel implements IDataModel
                 }
                 $sql = $sql . " WHERE " . $conditions;
             }
+
             $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
 
             if (!empty($queryResult))
             {
                 $stringResult = $this->getString($queryResult);
                 $result = $this->getContentResult($stringResult, $this->_className);
-                //var_dump($stringResult);
+
                 return $result;
             }else
                 return false;
@@ -302,31 +303,30 @@ class OrientDBModel implements IDataModel
     private function getContentResult($resultGremlin, $className)
     {
         $toFirstFind = 'com.tinkerpop.blueprints.impls.orient.OrientVertex|#';
-        $toSecondFind = '[#';
+        $toSecondFind = '#';
         $toThirdFind = '}';
         $arrayResult = array();
         for ($i = 0; $i < count($resultGremlin); $i++)
         {
             $pos1[$i] = strpos($resultGremlin[$i], $toFirstFind);
-            if (!empty($pos1[$i]))
+            if (isset($pos1[$i]) && is_numeric($pos1[$i]))
             {
                 $replace[$i] = str_replace(array($toFirstFind, ')', '[', ']'), '', $resultGremlin[$i]);
                 $arrayResult = explode(',', $replace[$i]);
             }else {
                 $pos2[$i] = strpos($resultGremlin[$i], $toSecondFind);
-                if (!empty($pos2[$i]))
+                if (isset($pos2[$i]) && is_numeric($pos2[$i]))
                 {
-                    $replace[$i] = str_replace(array('v(' . $className . ')[#', ']'), '', $resultGremlin[$i]);
+                    $replace[$i] = str_replace(array('v(' . $className . ')[#', ']', '#'), '', $resultGremlin[$i]);
                     array_push($arrayResult, $replace[$i]);
                 }else {
                     $pos3[$i] = strpos($resultGremlin[$i], $toThirdFind);
-                    if (!empty($pos3[$i]))
+                    if (isset($pos2[$i]) && is_numeric($pos3[$i]))
                     {
                         $startPos[$i] = strpos($resultGremlin[$i], '[');
                         $endPos[$i] = strpos($resultGremlin[$i], ']');
                         if (!$startPos[$i] && !$endPos[$i]) {
                             $jsonString[$i] = '[' . $resultGremlin[$i] . ']';
-                            ;
                         } else {
                             $jsonString[$i] = $resultGremlin[$i];
                         }

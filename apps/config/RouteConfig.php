@@ -16,7 +16,6 @@ class RouteConfig
         'login_POST' => "UserController",
         'logout_GET' => "UserController",
         'confirm_GET' => "UserController",
-        'user_GET' => "UserController",
         'authentication_GET|POST' => "UserController",
         'confirmCode_POST' => "UserController",
         'forgotPassword_GET|POST' => "UserController",
@@ -25,12 +24,12 @@ class RouteConfig
         'newPassword_POST' => "UserController",
         /* Route config for home page */
         'home_GET' => "HomeController,UserController",
-        'listenPost_POST' => "HomeController",
-        'notifications_POST' => "HomeController",
-        'loadNotifications_POST' => "HomeController",
-        'loadFriendRequests_POST' => "HomeController",
+        'listenPost_POST'    => "HomeController",
+        'notifications_POST'    => "HomeController",
+        'loadNotifications_POST'    => "HomeController",
+        'loadFriendRequests_POST'    => "HomeController",
         'moreCommentHome_POST' => "HomeController",
-        'loading_POST|GET' => "HomeController",
+        'loading_POST' => "HomeController",
         /* Route config for request friend */
         'sentFriendRequest_POST' => "FriendController",
         'acceptFriendship_POST' => "FriendController",
@@ -63,15 +62,15 @@ class RouteConfig
         'loadFriend_POST' => "FriendController",
         'searchFriend_POST' => "FriendController",
         /* Route config for ajax page */
-        'photoBrowser_POST|GET' => "AjaxController",
-        'uploadCover_POST' => "AjaxController",
-        'uploadAvatar_POST' => "AjaxController",
-        'savePhoto_POST' => "AjaxController",
-        'remove_POST' => "AjaxController",
-        'choosePhoto_POST' => "AjaxController",
-        'reposition_POST' => "AjaxController",
-        'cancel_POST' => "AjaxController",
-        'upload_POST' => "AjaxController"
+        'photoBrowser_POST' => "UploadController",
+        'uploadCover_POST' => "UploadController",
+        'uploadAvatar_POST' => "UploadController",
+        'savePhoto_POST' => "UploadController",
+        'remove_POST' => "UploadController",
+        'choosePhoto_POST' => "UploadController",
+        'reposition_POST' => "UploadController",
+        'cancel_POST' => "UploadController",
+        'uploading_POST' => "UploadController"
     );
     public $modules = array(
         /* Route config for modules */

@@ -10,9 +10,10 @@ class AjaxController extends AppController
 
     public function addFriend()
     {
-        if (!empty($_GET['id']))
+        if (!empty($_POST['groupID']))
         {
-            $this->render('group/addFriend', array('groupID' => $_GET['id']));
+            $this->f3->set('groupID', $_POST['groupID']);
+            $this->renderModule('addFriend', 'group');
         }
     }
 
@@ -98,7 +99,8 @@ class AjaxController extends AppController
             }
             $json = json_encode($data);
             $obj = json_decode($json);
-            $this->renderPartial('group/viewMember', array('members' => $obj));
+            $this->f3->set('members', $obj);
+            $this->renderModule('viewMember', 'group');
         }
     }
 
@@ -110,7 +112,7 @@ class AjaxController extends AppController
             $group = $this->facade->findByPk('group', $_POST['groupID']);
             $this->f3->set('user', $user);
             $this->f3->set('group', $group);
-            $this->renderPartial('group/removeGroup', array('user' => $user, 'group' => $group));
+            $this->renderModule('removeGroup', 'group');
         }
     }
 
@@ -145,14 +147,16 @@ class AjaxController extends AppController
             if ($make->data->role == 'admin')
             {
                 $button = 'Remove Admin';
-                $message = 'You are about to remove ' . $name . ' as a group admin.';
+                $this->f3->set('message', 'You are about to remove ' . $name . ' as a group admin.');
             }
             else
             {
                 $button = 'Make Admin';
-                $message = 'As a group admin, ' . $name . ' will be able to edit group settings, remove members and give other members admin status.';
+                $this->f3->set('message', 'As a group admin, ' . $name . ' will be able to edit group settings, remove members and give other members admin status.');
             }
-            $this->renderPartial('group/role', array('button' => $button, 'message' => $message));
+
+            $this->f3->set('button', $button);
+            $this->renderModule('rolegroup', 'group');
         }
     }
 
@@ -183,9 +187,9 @@ class AjaxController extends AppController
                 $name = 'yourself';
             else
                 $name = $user->data->fullName;
-            $message = 'You are about to remove ' . $name . ' as a group admin.';
-            $button = 'Remove Admin';
-            $this->renderPartial('group/makeAdmin', array('button' => $button, 'message' => $message));
+            $this->f3->set('message', 'You are about to remove ' . $name . ' as a group admin.');
+            $this->f3->set('button', 'Remove Admin');
+            $this->renderModule('makeAdmin', 'group');
         }
     }
 

@@ -14,7 +14,6 @@ class RouteModuleConfig {
         'deleteImage_POST' => "PostController",
         'detailStatus_GET' => "PostController",
         'delete_POST' => "PostController",
-        'postWrap_POST' => "ElementController",
     );
 
 }
