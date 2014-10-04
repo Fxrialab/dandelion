@@ -36,12 +36,3 @@ $start = $time;
     </div>
 </body>
 </html>
-<?php
-$time = microtime();
-$time = explode(" ", $time);
-$time = $time[1] + $time[0];
-$finish = $time;
-$totaltime = ($finish - $start);
-printf ("Page Loaded in %f Seconds.", $totaltime);
-echo "<br />";
-?>

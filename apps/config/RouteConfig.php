@@ -24,10 +24,10 @@ class RouteConfig
         'newPassword_POST' => "UserController",
         /* Route config for home page */
         'home_GET' => "HomeController,UserController",
-        'listenPost_POST'    => "HomeController",
-        'notifications_POST'    => "HomeController",
-        'loadNotifications_POST'    => "HomeController",
-        'loadFriendRequests_POST'    => "HomeController",
+        'listenPost_POST' => "HomeController",
+        'notifications_POST' => "HomeController",
+        'loadNotifications_POST' => "HomeController",
+        'loadFriendRequests_POST' => "HomeController",
         'moreCommentHome_POST' => "HomeController",
         'loading_POST' => "HomeController",
         /* Route config for request friend */
@@ -50,7 +50,7 @@ class RouteConfig
         'search_POST' => "HomeController",
         'moreSearch_GET' => "HomeController",
         /* Route config for about page */
-        'about_GET' => "UserController",
+        'about_GET' => "ProfileController",
         'loadBasicInfo_POST' => "UserController",
         'editBasicInfo_POST' => "UserController",
         'loadEduWork_POST' => "UserController",
@@ -70,7 +70,14 @@ class RouteConfig
         'choosePhoto_POST' => "UploadController",
         'reposition_POST' => "UploadController",
         'cancel_POST' => "UploadController",
-        'uploading_POST' => "UploadController"
+        'uploading_POST' => "UploadController",
+        /* Route config for info profile */
+        'work_POST|GET' => 'ProfileController',
+        'college_POST|GET' => 'ProfileController',
+        'school_POST|GET' => 'ProfileController',
+        'currentCity_POST|GET' => 'ProfileController',
+        'homeCity_POST|GET' => 'ProfileController',
+        'searchLocation_POST' => 'ProfileController'
     );
     public $modules = array(
         /* Route config for modules */

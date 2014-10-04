@@ -1,4 +1,5 @@
 <?php
+
 class HelperController extends Controller
 {
 
@@ -37,6 +38,13 @@ class HelperController extends Controller
         return $model->data->gender;
     }
 
+    static public function findLocation($id)
+    {
+        $facade = new DataFacade;
+        $model = $facade->findByPk('location', $id);
+        return $model->data->city . ', ' . $model->data->country;
+    }
+
     static public function findUser($id)
     {
         $facade = new DataFacade;
@@ -48,7 +56,7 @@ class HelperController extends Controller
     {
         $facade = new DataFacade;
         $model = $facade->findByPk('user', $id);
-        $fullName = ucfirst($model->data->firstName).' '.ucfirst($model->data->lastName);
+        $fullName = ucfirst($model->data->firstName) . ' ' . ucfirst($model->data->lastName);
         return $fullName;
     }
 
@@ -91,12 +99,15 @@ class HelperController extends Controller
 
     static public function getAvatar($user)
     {
-        if ($user->data->profilePic != 'none'){
+        if ($user->data->profilePic != 'none')
+        {
             $photo = HelperController::findPhoto($user->data->profilePic);
             $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
-        }else {
+        }
+        else
+        {
             $gender = HelperController::findGender($user->recordID);
-            if ($gender =='male')
+            if ($gender == 'male')
                 $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
             else
                 $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
@@ -110,4 +121,5 @@ class HelperController extends Controller
         $model = $facade->findByPk('album', $id);
         return $model;
     }
+
 }

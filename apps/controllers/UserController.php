@@ -521,25 +521,7 @@ class UserController extends AppController
         }
     }
 
-    public function about()
-    {
-        if ($this->isLogin())
-        {
-            $this->layout = "other";
 
-            $username = $this->f3->get('GET.user');
-            $currentUser = $this->getCurrentUser();
-            $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $username));
-            $currentProfileID = $currentProfileRC->recordID;
-            //get status friendship
-            $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
-            //set currentUser and otherUser for check in profile element and header
-            $this->f3->set('currentUser', $this->getCurrentUser());
-            $this->f3->set('otherUser', $this->getCurrentUser());
-            $this->f3->set('statusFriendShip', $statusFriendShip);
-            $this->render('user/about.php', 'default');
-        }
-    }
 
     public function loadBasicInfo()
     {

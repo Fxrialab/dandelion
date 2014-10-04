@@ -1328,11 +1328,44 @@ a{
 .leftAboutCol {
     padding: 5px 5px 5px 0;
 }
-
-.rightAboutCol {
-    padding: 5px 0 5px 5px;
+.menu-about li{
+    padding: 10px;
+    font-size: 15px
 }
-
+.menu-about li.active{
+    border-left: 3px solid #0069d6;
+    font-weight: bold;
+}
+.rightAboutCol {
+    border-left: 1px solid #ccc;
+    padding-left: 15px;
+    min-height: 500px;
+}
+.menu-about-list li{
+    overflow: hidden;
+    padding:10px 0;
+    font-size: 15px
+}
+.menu-about-list h6{
+    padding-bottom: 5px;
+    margin: 20px 0;
+}
+.menu-about-list li a.location{
+    font-weight: bold;
+}
+.menu-about-list li.active, .menu-about-list h6.active{
+    border-bottom: 1px solid #ccc;
+}
+.dropdown .option-about{
+    min-width: 80px !important;
+}
+.dropdown .option-about li a{
+     font-size: 12px !important;
+}
+.formAbout{
+    margin-top: 20px;
+    padding:0 50px;
+}
 .uiAboutBoxItem {
     background-color: #f6f7f8;
     border: 1px solid #e4e4e4;
