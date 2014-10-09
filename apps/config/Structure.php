@@ -12,7 +12,7 @@ $dir = dirname(__FILE__);
 $dirSource = substr($dir, 0, strpos($dir, 'apps') - 1);
 
 define('DS', '/');
-define('BASE_URL', 'http://dandelion.local/');
+define('BASE_URL', 'http://dandelion.local:8080/');
 define('DOCUMENT_ROOT', $dirSource . DS);
 define('F3', DOCUMENT_ROOT . 'lib' . DS);
 define('CONFIG', DOCUMENT_ROOT . 'apps' . DS . 'config' . DS);
@@ -36,7 +36,7 @@ define('WEBROOT', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS .'webroo
 define('IMAGES', WEBROOT . 'images' . DS);
 define('JS', WEBROOT . 'js' . DS);
 define('CSS', WEBROOT . 'css' . DS);
-define('UPLOAD', VIEWS . TEMPLATE . DS . 'upload' . DS);
+define('UPLOAD', VIEWS . TEMPLATE . DS .'webroot'. DS . 'upload' . DS);
 define('UPLOAD_URL', WEBROOT . 'upload' . DS);
 
 

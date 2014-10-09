@@ -1,9 +1,11 @@
 <?php
 $model = $this->f3->get('model');
 $target = $this->f3->get('target');
+$userID = $this->f3->get('userID');
 if (!empty($model))
 {
     //var_dump($model);
+    $user = HelperController::findUser($userID);
     if ($target == 'photos')
     {
         $countPhoto = count($model);

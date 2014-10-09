@@ -24,16 +24,18 @@ class HomeController extends AppController
             $this->layout = 'home';
 
             //load js file of all modules existed
-            $js = glob(MODULES . '*/webroot/js/*.js');
-            $loadJS = array();
+            //$js = glob(MODULES . '*/webroot/js/*.js');
+            /*$loadJS = array();
             foreach ($js as $jsFile)
             {
                 $jsMod = substr($jsFile, strpos($jsFile, 'app'));
                 array_push($loadJS, BASE_URL . $jsMod);
             }
-            $this->f3->set('js', $loadJS);
+            $this->f3->set('js', $loadJS);*/
+            $this->f3->clear("SESSION");
             $this->f3->set('loggedUserID', $this->f3->get('SESSION.userID'));
             $this->render('home/home.php', 'default');
+
         }
         else
         {

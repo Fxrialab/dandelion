@@ -118,7 +118,7 @@ class PhotoController extends AppController
                     $model = $this->facade->findAll('album', $obj);
                     $target = 'album';
                 }
-                $this->renderModule('mains/dataPhoto', 'photo', array('model'=>$model, 'target'=>$target));
+                $this->renderModule('mains/dataPhoto', 'photo', array('model'=>$model, 'target'=>$target, 'userID'=>$userID));
             }
         }
     }

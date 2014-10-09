@@ -81,7 +81,7 @@ class UserController extends AppController
                     // sent mail for confirmation account
                     $this->EmailHelper->sendConfirmationEmail($data['email'], $confirmationCode);
                     $this->render('user/index.php', 'default', array(
-                        'msgSignUp' => 'You are registered success. Please check mail and confirm !'
+                        'msgSignIn' => 'You are registered success. Please check mail and confirm !'
                     ));
                 }
                 else
@@ -97,6 +97,8 @@ class UserController extends AppController
                     'msgSignUp' => $this->ValidateHelper->validation($data, $isUsedEmail, false)
                 ));
             }
+        }else {
+            header("Location:/");
         }
     }
 
@@ -267,7 +269,7 @@ class UserController extends AppController
         }
         else
         {
-            $this->render('user/index.php', 'default');
+            header("Location:/");
         }
     }
 
