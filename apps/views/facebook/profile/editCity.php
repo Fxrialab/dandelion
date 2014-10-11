@@ -51,14 +51,10 @@ $name = F3::get('name');
 
             return false; // avoid to execute the actual submit of the form.
         });
-        $('#city').tokenInput("/searchLocation", {
-            theme: "facebook",
-            method: 'POST',
-            queryParam: 'q',
-            placeholder: "<?php echo $location->data->city . ' ,' . $location->data->country ?>",
-            hintText: "",
-            noResultsText: "Nothing' found.",
-            preventDuplicates: true
+        $(function() {
+            $("#city").autocomplete({
+                source: "/searchLocation"
+            });
         });
     });
 </script>

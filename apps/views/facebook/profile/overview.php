@@ -1,5 +1,5 @@
 <?php
-$location = F3::get('location');
+$information = F3::get('information');
 $f3 = require('navAbout.php');
 ?>
 <div class="rightAboutCol large-70">
@@ -10,7 +10,7 @@ $f3 = require('navAbout.php');
                     <img src="<?php echo IMAGES ?>location.png">
                 </div>
                 <div class="large-90">
-                    Web Developer tai <a href="#"><?php echo $location->data->city . ', ' . $location->data->country ?></a>
+                    Web Developer tai <a href="#"><?php echo $information->data->work_location ?></a>
                 </div>
 
             </li>

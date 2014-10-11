@@ -19,7 +19,7 @@ $information = F3::get('information');
         <div class="control-group column-group ">
             <label for="school_location" class="large-30 align-right">Location school</label>
             <div class="control large-70">
-                <input type="text" id="concentrations" name="school_location" class="large-100" value="<?php echo HelperController::findLocation($information->data->school_location) ?>">
+                <input type="text" id="school_location" name="school_location" class="large-100" value="<?php echo $information->data->school_location ?>">
             </div>
         </div>
         <div class="control-group column-group">
@@ -58,14 +58,11 @@ $information = F3::get('information');
 
             return false; // avoid to execute the actual submit of the form.
         });
-        $('#city').tokenInput("/searchLocation", {
-            theme: "facebook",
-            method: 'POST',
-            queryParam: 'q',
-            placeholder: "<?php echo $location->data->city . ' ,' . $location->data->country ?>",
-            hintText: "",
-            noResultsText: "Nothing' found.",
-            preventDuplicates: true
+        $("#school").autocomplete({
+            source: "/searchInfoUser?act=school"
+        });
+        $("#school_location").autocomplete({
+            source: "/searchLocation"
         });
     });
 </script>

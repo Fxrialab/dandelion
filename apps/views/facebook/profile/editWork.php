@@ -3,11 +3,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-$location = F3::get('location');
 $information = F3::get('information');
 ?>
 <div class="large-100 workForm">
-    <form class="ink-form" id="submitFormWork">
+    <form class="ink-form formAbout" id="submitFormWork">
         <div class="error"></div>
         <input type="hidden" id="infoID" name="infoID" value="<?php echo $information->recordID ?>">
         <div class="control-group column-group ">
@@ -19,8 +18,9 @@ $information = F3::get('information');
         <div class="control-group column-group" id="friends">
             <label for="city" class="large-30 align-right">City</label>
             <div class="control large-70">
-                <input type="text" id="city" name="city"  class="large-100">
+                <input type="text" id="city" name="city" class="large-100" placeholder="<?php echo $information->data->work_location ?>">
             </div>
+
         </div>
         <div class="control-group column-group">
             <label for="description" class="large-30 align-right">Description</label>
@@ -63,14 +63,13 @@ $information = F3::get('information');
 
             return false; // avoid to execute the actual submit of the form.
         });
-        $('#city').tokenInput("/searchLocation", {
-            theme: "facebook",
-            method: 'POST',
-            queryParam: 'q',
-            placeholder: "<?php echo $location->data->city . ' ,' . $location->data->country ?>",
-            hintText: "",
-            noResultsText: "Nothing' found.",
-            preventDuplicates: true
+    });
+</script>
+
+<script>
+    $(function() {
+        $("#city").autocomplete({
+            source: "/searchLocation"
         });
     });
 </script>

@@ -13,13 +13,13 @@ $information = F3::get('information');
         <div class="control-group column-group ">
             <label for="university" class="large-30 align-right">University</label>
             <div class="control large-70">
-                <input type="text" id="university" name="university" class="large-100" value="<?php echo $information->data->university ?>">
+                <input type="text" id="university" name="university" class="large-100" placeholder="<?php echo $information->data->university ?>">
             </div>
         </div>
         <div class="control-group column-group ">
             <label for="concentrations" class="large-30 align-right">Concentrations</label>
             <div class="control large-70">
-                <input type="text" id="concentrations" name="concentrations" class="large-100" value="<?php echo $information->data->concentrations ?>">
+                <input type="text" id="concentrations" name="concentrations" class="large-100" placeholder="<?php echo $information->data->concentrations ?>">
             </div>
         </div>
         <div class="control-group column-group">
@@ -58,14 +58,14 @@ $information = F3::get('information');
 
             return false; // avoid to execute the actual submit of the form.
         });
-        $('#city').tokenInput("/searchLocation", {
-            theme: "facebook",
-            method: 'POST',
-            queryParam: 'q',
-            placeholder: "<?php echo $location->data->city . ' ,' . $location->data->country ?>",
-            hintText: "",
-            noResultsText: "Nothing' found.",
-            preventDuplicates: true
+        $(function() {
+            $("#university").autocomplete({
+                source: "/searchInfoUser?act=university"
+            });
+
+            $("#concentrations").autocomplete({
+                source: "/searchInfoUser?act=concentrations"
+            });
         });
     });
 </script>

@@ -19,31 +19,35 @@ class PhotoController extends AppController
     {
         if (!empty($entry))
         {
-            $currentUser= $this->getCurrentUser();
-            $albumRC   = $this->facade->findByAttributes('album', array('@rid'=>'#'.$entry->data->object));
+            $currentUser = $this->getCurrentUser();
+            $albumRC = $this->facade->findByAttributes('album', array('@rid' => '#' . $entry->data->object));
 
             if (!empty($albumRC))
             {
                 $albumID = $albumRC->recordID;
                 $userRC = $this->facade->findByPk("user", $albumRC->data->owner);
 
-                $photos = $this->facade->findAllAttributes('photo', array('owner' => $albumRC->data->owner,'albumID'=>$albumID));
+                $photos = $this->facade->findAllAttributes('photo', array('owner' => $albumRC->data->owner, 'albumID' => $albumID));
                 $entry = array(
-                    'type'      => 'photo',
-                    'key'       => $key,
-                    'like'      => true,
-                    'user'      => $userRC,
-                    'username'  => $userRC->data->username,
-                    'profilePic'=> $userRC->data->profilePic,
-                    'actions'   => $photos,
-                    'objectID'  => $albumID,
-                    'path'      => Register::getPathModule('photo'),
+                    'type' => 'photo',
+                    'key' => $key,
+                    'like' => true,
+                    'user' => $userRC,
+                    'username' => $userRC->data->username,
+                    'profilePic' => $userRC->data->profilePic,
+                    'actions' => $photos,
+                    'objectID' => $albumID,
+                    'path' => Register::getPathModule('photo'),
                 );
                 return $entry;
-            }else{
+            }
+            else
+            {
                 return false;
             }
-        }else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -71,18 +75,17 @@ class PhotoController extends AppController
                 }
                 else
                 {
-                    $albumID = 'allPhoto';//Untitled album
+                    $albumID = 'allPhoto'; //Untitled album
                 }
                 $this->f3->set('userID', $currentProfileID);
                 $this->render($viewPath . "mains/myPhoto.php", 'modules', array(
-                    'currentUser'   => $currentUser,
-                    'otherUser'     => $currentProfileRC,
-                    'statusFriendShip'  => $statusFriendShip,
-                    'userID'        => str_replace(':','_',$currentProfileID),
-                    'albumID'       => $albumID
+                    'currentUser' => $currentUser,
+                    'otherUser' => $currentProfileRC,
+                    'statusFriendShip' => $statusFriendShip,
+                    'userID' => str_replace(':', '_', $currentProfileID),
+                    'albumID' => $albumID
                 ));
             }
-
         }
     }
 
@@ -98,27 +101,31 @@ class PhotoController extends AppController
 
             if (!empty($_POST['userID']))
             {
-                $userID = str_replace('_',':',$_POST['userID']);
+                $userID = str_replace('_', ':', $_POST['userID']);
                 $obj = new ObjectHandler();
                 $obj->owner = $userID;
                 $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
 
                 if ($_POST['albumID'] != '')
                 {
-                    $albumID = str_replace('_',':',$_POST['albumID']);
+                    $albumID = str_replace('_', ':', $_POST['albumID']);
                     if ($albumID == 'allPhoto')//load all photos of all album
                     {
                         $model = $this->facade->findAll('photo', $obj);
-                    }else {//load all photos of determine an album
+                    }
+                    else
+                    {//load all photos of determine an album
                         $obj->albumID = $albumID;
                         $model = $this->facade->findAll('photo', $obj);
                     }
                     $target = 'photos';
-                }else {//this mean is load all album on myAlbum
+                }
+                else
+                {//this mean is load all album on myAlbum
                     $model = $this->facade->findAll('album', $obj);
                     $target = 'album';
                 }
-                $this->renderModule('mains/dataPhoto', 'photo', array('model'=>$model, 'target'=>$target, 'userID'=>$userID));
+                $this->renderModule('mains/dataPhoto', 'photo', array('model' => $model, 'target' => $target, 'userID' => $userID));
             }
         }
     }
@@ -183,14 +190,13 @@ class PhotoController extends AppController
                 $currentUser = $this->getCurrentUser();
                 //get status friendship
                 $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
-                $this->render(Register::getPathModule('photo')."mains/myAlbum.php", 'modules', array(
-                    'currentUser'   => $currentUser,
-                    'otherUser'     => $currentProfileRC,
-                    'statusFriendShip'  => $statusFriendShip,
-                    'userID'        => str_replace(':','_',$currentProfileID)
+                $this->render(Register::getPathModule('photo') . "mains/myAlbum.php", 'modules', array(
+                    'currentUser' => $currentUser,
+                    'otherUser' => $currentProfileRC,
+                    'statusFriendShip' => $statusFriendShip,
+                    'userID' => str_replace(':', '_', $currentProfileID)
                 ));
             }
-
         }
     }
 
@@ -209,14 +215,16 @@ class PhotoController extends AppController
                 if (!empty($albumTitle))
                 {
                     $albumEntry = array(
-                        'owner'     => $this->getCurrentUser()->recordID,
-                        'name'      => $albumTitle,
+                        'owner' => $this->getCurrentUser()->recordID,
+                        'name' => $albumTitle,
                         'description' => $albumDes,
                         'published' => $published
                     );
                     $albumID = $this->facade->save('album', $albumEntry);
-                }else {
-                    $albumID = 'none';//of untitled album
+                }
+                else
+                {
+                    $albumID = 'none'; //of untitled album
                 }
                 $imagesName = $_POST['imgName'];
                 $imagesDir = UPLOAD . "images/";
@@ -225,15 +233,15 @@ class PhotoController extends AppController
                     list($imageName, $name) = explode(",", $image);
                     $description = $_POST["description_" . $name];
                     //images are waiting in tmp folder
-                    $file = UPLOAD.'tmp/'.$imageName;
+                    $file = UPLOAD . 'tmp/' . $imageName;
                     list($width, $height) = getimagesize($file);
                     //check IF size of images are larger than 960px then resize us ELSE move us from tmp folder to images folder
                     if ($width > 960 || $height > 960)
-                        $this->resizeImageFile($file, 960, $imagesDir.$imageName, 100);
+                        $this->resizeImageFile($file, 960, $imagesDir . $imageName, 100);
                     else
-                        rename($file, $imagesDir.$imageName);
+                        rename($file, $imagesDir . $imageName);
                     //save to DB
-                    list($nWidth, $nHeight) = getimagesize(UPLOAD.'images/'.$imageName);
+                    list($nWidth, $nHeight) = getimagesize(UPLOAD . 'images/' . $imageName);
                     $photoEntry = array(
                         'owner' => $this->f3->get('SESSION.userID'),
                         'albumID' => $albumID,
@@ -305,11 +313,11 @@ class PhotoController extends AppController
                 $photo = $this->facade->findByPk('photo', $id);
                 $this->renderModule('mains/detail', 'photo', array(
                     'photo' => $photo,
-                    'next'  => $next,
-                    'prev'  => $prev,
-                    'p'     => $k,
-                    'count'  => count($array) - 1,
-                    'currentUser'  => $currentUser,
+                    'next' => $next,
+                    'prev' => $prev,
+                    'p' => $k,
+                    'count' => count($array) - 1,
+                    'currentUser' => $currentUser,
                 ));
             }
         }

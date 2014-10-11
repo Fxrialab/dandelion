@@ -1,16 +1,27 @@
 <?php
 $f3 = require('navAbout.php');
+$information = F3::get('information');
 ?>
 <div class="rightAboutCol large-70">
     <nav class="ink-navigation">
         <ul class="menu-about-list">
             <h6 class="active">CONTACT INFORMATION</h6>
-            <li class="active">
-                <div class="large-30">
-                    Mobile Phones
-                </div>
-                <div class="large-70">
-                    0905 951 699
+            <li class="active contactPhone">
+                <div>
+                    <div class="large-30">
+                        Mobile Phones
+                    </div>
+                    <div class="large-60 phone">
+                        <?php  if (!empty($information->data->phone_mobile)) echo $information->data->phone_mobile ?>
+                    </div>
+                    <?php
+                    if ($userID == $profileID)
+                    {
+                        ?>
+                        <div class="large-5 option">
+                            <a href="javascript:void(0)" class="editAboutCity" rel="contactPhone">Edit</a>
+                        </div>
+                    <?php } ?>
                 </div>
             </li>
             <li>
@@ -18,24 +29,45 @@ $f3 = require('navAbout.php');
                     Email
                 </div>
                 <div class="large-70">
+                    <?php echo $email ?>
                 </div>
             </li>
             <h6 class="active">BASIC INFORMATION</h6>
-            <li class="active">
-                <div class="large-30">
-                    Birthday
-                </div>
-                <div class="large-70">
-                    June 1 1987
+            <li class="active birthday">
+                <div>
+                    <div class="large-30">
+                        Birthday
+                    </div>
+                    <div class="large-60">
+                        <?php if (!empty($information->data->birthday)) echo $information->data->birthday ?>
+                    </div> 
+                    <?php
+                    if ($userID == $profileID)
+                    {
+                        ?>
+                        <div class="large-5 option">
+                            <a href="javascript:void(0)" class="editAboutCity" rel="birthday">Edit</a>
+                        </div>
+                        <?php
+                    }
+                    ?>
                 </div>
             </li>
-            <li>
+            <li class="gender">
                 <div class="large-30">
                     Gender
                 </div>
-                <div class="large-70">
-                    Male
+                <div class="large-60">
+                    <?php if (!empty($information->data->gender)) echo $information->data->gender ?>
                 </div>
+                <?php
+                if ($userID == $profileID)
+                {
+                    ?>
+                    <div class="large-5 option">
+                        <a href="javascript:void(0)" class="editAboutCity" rel="gender">Edit</a>
+                    </div>
+                <?php } ?>
             </li>
         </ul>
     </nav>

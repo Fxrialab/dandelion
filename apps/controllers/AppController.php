@@ -33,7 +33,6 @@ class AppController extends Controller
      */
     public function isLogin()
     {
-        //@TODO assign Loc: check if able session MAC address is wrong
         $session = $this->f3->get("SESSION");
         if (isset($session["loggedUser"]))
         {

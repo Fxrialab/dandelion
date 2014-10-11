@@ -1,17 +1,12 @@
 <?php
 $f3 = require('navAbout.php');
 $information = F3::get('information');
-$location = F3::get('location');
-if (!empty($location))
-    $address = $location->data->city . ', ' . $location->data->country;
-else
-    $address = '';
 
 if (!empty($information))
 {
     $position = $information->data->position;
     $university = $information->data->university;
-    $concentrations = $information->data->concentrations . ' ' . $address;
+    $concentrations = $information->data->concentrations . ' ' . $information->data->work_location;
 }
 else
 {
@@ -29,18 +24,23 @@ else
                     <img src="<?php echo IMAGES ?>location.png">
                 </div>
                 <div class="large-80">
-                    <a href="#" class="location"><?php echo $address ?></a>
-                    <p class="position"><span><?php echo $position ?></span> <?php echo $address ?></p>
+                    <a href="#" class="location"><?php if (!empty($information->data->work_location)) echo $information->data->work_location ?></a>
+                    <p class="position"><span><?php echo $position ?></span> <?php if (!empty($information->data->work_location)) echo $information->data->work_location ?></p>
                 </div>
-                <div class="large-5 option">
-                    <a data-dropdown="#dropdown-work" class="button icon settings"></a>
-                    <div id="dropdown-work" class="dropdown dropdown-tip dropdown-anchor-right">
-                        <ul class="dropdown-menu option-about">
-                            <li><a href="javascript:void(0)" class="editAbout" rel="work">Edit</a></li>
-                            <li><a href="javascript:void(0)" class="workDelete">Delete</a></li>
-                        </ul>
+                <?php
+                if ($userID == $profileID)
+                {
+                    ?>
+                    <div class="large-5 option">
+                        <a data-dropdown="#dropdown-work" class="button icon settings"></a>
+                        <div id="dropdown-work" class="dropdown dropdown-tip dropdown-anchor-right">
+                            <ul class="dropdown-menu option-about">
+                                <li><a href="javascript:void(0)" class="editAbout" rel="work">Edit</a></li>
+                                <li><a href="javascript:void(0)" class="workDelete">Delete</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
             </li>
             <h6 class="active">COLLEGE</h6>
             <li class="college">
@@ -51,15 +51,22 @@ else
                     <a href="#" class="location"><?php echo $university ?></a>
                     <p class="position"><?php echo $concentrations ?></p>
                 </div>
-                <div class="large-5 option">
-                    <a data-dropdown="#dropdown-college" class="button icon settings"></a>
-                    <div id="dropdown-college" class="dropdown dropdown-tip dropdown-anchor-right">
-                        <ul class="dropdown-menu option-about">
-                            <li><a href="javascript:void(0)" class="editAbout" rel="college">Edit</a></li>
-                            <li><a href="javascript:void(0)" class="workDelete">Delete</a></li>
-                        </ul>
+                <?php
+                if ($userID == $profileID)
+                {
+                    ?>
+                    <div class="large-5 option">
+                        <a data-dropdown="#dropdown-college" class="button icon settings"></a>
+                        <div id="dropdown-college" class="dropdown dropdown-tip dropdown-anchor-right">
+                            <ul class="dropdown-menu option-about">
+                                <li><a href="javascript:void(0)" class="editAbout" rel="college">Edit</a></li>
+                                <li><a href="javascript:void(0)" class="workDelete">Delete</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                    <?php
+                }
+                ?>
             </li>
             <h6 class="active">HIGH SCHOOL</h6>
             <li class="school">
@@ -67,18 +74,25 @@ else
                     <img src="<?php echo IMAGES ?>people.png">
                 </div>
                 <div class="large-80">
-                    <a href="#" class="location"><?php echo $information->data->school ?></a>
-                    <p class="position"><?php echo HelperController::findLocation($information->data->school_location) ?></p>
+                    <a href="#" class="location"><?php if (!empty($information->data->school)) echo $information->data->school ?></a>
+                    <p class="position"><?php if (!empty($information->data->school_location)) echo $information->data->school_location ?></p>
                 </div>
-                <div class="large-5 option">
-                    <a data-dropdown="#dropdown-school" class="button icon settings"></a>
-                    <div id="dropdown-school" class="dropdown dropdown-tip dropdown-anchor-right">
-                        <ul class="dropdown-menu option-about">
-                            <li><a href="javascript:void(0)" class="editAbout" rel="school">Edit</a></li>
-                            <li><a href="javascript:void(0)" class="workDelete">Delete</a></li>
-                        </ul>
+                <?php
+                if ($userID == $profileID)
+                {
+                    ?>
+                    <div class="large-5 option">
+                        <a data-dropdown="#dropdown-school" class="button icon settings"></a>
+                        <div id="dropdown-school" class="dropdown dropdown-tip dropdown-anchor-right">
+                            <ul class="dropdown-menu option-about">
+                                <li><a href="javascript:void(0)" class="editAbout" rel="school">Edit</a></li>
+                                <li><a href="javascript:void(0)" class="workDelete">Delete</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                    <?php
+                }
+                ?>
             </li>
         </ul>
     </nav>

@@ -47,7 +47,7 @@ class RouteConfig
         'pull_GET' => "HomeController",
         'loadSuggest_POST' => "HomeController",
         /* Route config for search */
-        'search_POST' => "HomeController",
+        'search_POST|GET' => "HomeController",
         'moreSearch_GET' => "HomeController",
         /* Route config for about page */
         'about_GET' => "ProfileController",
@@ -77,7 +77,13 @@ class RouteConfig
         'school_POST|GET' => 'ProfileController',
         'currentCity_POST|GET' => 'ProfileController',
         'homeCity_POST|GET' => 'ProfileController',
-        'searchLocation_POST' => 'ProfileController'
+        'contactPhone_POST|GET' => 'ProfileController',
+        'birthday_POST|GET' => 'ProfileController',
+        'gender_POST|GET' => 'ProfileController',
+        'editname_POST|GET' => 'ProfileController',
+        'editabout_POST|GET' => 'ProfileController',
+        'searchLocation_POST|GET' => 'ProfileController',
+        'searchInfoUser_GET' => 'ProfileController'
     );
     public $modules = array(
         /* Route config for modules */
