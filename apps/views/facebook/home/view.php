@@ -1,18 +1,22 @@
 <?php
+if (!empty($page))
+    $p = $page;
+else
+    $p = '';
 if (!empty($activities))
 {
     $rand = rand(100, 100000);
     foreach ($activities as $mod)
     {
-        foreach (glob(MODULES . $mod['type'] . '/views/'.TEMPLATE.'/mains/viewMod.php') as $views)
+        foreach (glob(MODULES . $mod['type'] . '/views/' . TEMPLATE . '/mains/viewMod.php') as $views)
         {
-            $status     = $mod["actions"];
-            $userID     = $mod['user']->recordID;
-            $username   = $mod['username'];
+            $status = $mod["actions"];
+            $userID = $mod['user']->recordID;
+            $username = $mod['username'];
             $profilePic = $mod['profilePic'];
-            $like       = $mod['like'];
-            $objectID   = $mod['objectID'];
-            $actorName  = HelperController::getFullNameUser($userID);
+            $like = $mod['like'];
+            $objectID = $mod['objectID'];
+            $actorName = HelperController::getFullNameUser($userID);
             if ($profilePic == 'none')
             {
                 $gender = HelperController::findGender($userID);

@@ -1,7 +1,10 @@
 <?php
+
 class GroupController extends AppController
 {
+
     protected $helpers = array("String");
+
     public function __construct()
     {
         parent::__construct();
@@ -61,7 +64,7 @@ class GroupController extends AppController
 
                 $obj = new ObjectHandler();
                 $obj->typeID = $groupID;
-                $obj->type  = 'group';
+                $obj->type = 'group';
                 $obj->active = 1;
                 $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
                 $statusRC = $this->facade->findAll('status', $obj);
@@ -72,7 +75,7 @@ class GroupController extends AppController
                     {
                         $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $status->recordID));
                     }
-                    $this->renderModule('mains/post', 'post', array('listStatus'=>$statusRC, 'likeStatus'=>$likeStatus));
+                    $this->renderModule('mains/post', 'post', array('listStatus' => $statusRC, 'likeStatus' => $likeStatus, 'page' => 'group'));
                 }
             }
         }
@@ -263,17 +266,17 @@ class GroupController extends AppController
         {
             $tempDir = UPLOAD . "tmp/";
             $coverDir = UPLOAD . "cover/750px";
-
             if (isset($_FILES["myfile"]))
             {
-                if (!is_array($_FILES["myfile"]['name'])) //single file
-                {
-                    $file = $_FILES["myfile"];
-                    $code = $this->StringHelper->generateRandomString(5);
-                    $newName = $code.time();
-                    $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true, $tempDir);
-                    $this->renderModule('mains/cover', 'group', array('image'=> $image, 'target'=>'uploadCover'));
-                }
+//                if (!is_array($_FILES["myfile"]['name'])) //single file
+//                {
+                $file = $_FILES["myfile"];
+                $code = $this->StringHelper->generateRandomString(5);
+                $newName = $code . time();
+                $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true, $tempDir);
+//                    var_dump($image);
+                $this->renderModule('mains/cover', 'group', array('image' => $image, 'target' => 'uploadCover'));
+//                }
             }
         }
     }
@@ -293,13 +296,13 @@ class GroupController extends AppController
             $dragX = $_POST['dragX'];
             $dragY = $_POST['dragY'];
             $groupID = $_POST['groupID'];
-            $pathFile = UPLOAD.'tmp/'.$file;
+            $pathFile = UPLOAD . 'tmp/' . $file;
             switch ($target)
             {
                 case 'uploadCover':
                     //resize image to thumbnail, cover folder and move image from tmp folder to images folder
-                    $this->resizeImageFile($pathFile, 150, $thumbnailDir.$file, 80);
-                    rename($pathFile, $imagesDir.$file);
+                    $this->resizeImageFile($pathFile, 150, $thumbnailDir . $file, 80);
+                    rename($pathFile, $imagesDir . $file);
                     //prepare data for save
                     $entry = array(
                         'owner' => $currentUser->recordID,

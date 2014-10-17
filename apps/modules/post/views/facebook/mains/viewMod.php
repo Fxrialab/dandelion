@@ -15,7 +15,16 @@ $status_published = $status->data->published;
         </div>
         <div class="large-85">
             <div class="postContent">
-                <a href="/content/post?user=<?php echo $username ?>" class="timeLineLink"><?php echo $actorName; ?></a>
+                <a href="/content/post?user=<?php echo $username ?>" class="timeLineLink"><?php
+                    echo $actorName;
+                    ?></a> 
+                    <?php
+                    if (!empty($p) && $p == 'home' && $status->data->type == 'group')
+                    {
+                        $group = HelperController::findGroup($status->data->typeID);
+                        echo " - <a class='timeLineLink' href='/content/group/groupdetail?id=".str_replace(':', '_',$group->recordID)."'>".$group->data->name.'</a>';
+                    }
+                    ?>
                 <div class="column-group">
                     <?php
                     if ($status_contentShare == 'none')
@@ -85,16 +94,16 @@ $status_published = $status->data->published;
                     <?php
                     if (!empty($status->data->embedType) && $status->data->embedType == 'photo')
                     {
-                        $photosName = explode(',',$status->data->embedSource);
-                        foreach ($photosName as $k=>$value)
+                        $photosName = explode(',', $status->data->embedSource);
+                        foreach ($photosName as $k => $value)
                         {
                             $photo = HelperController::getFindPhotoByPhotoName($value);
                             if (count($photosName) == 1)
-                                echo '<div class="large-100"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $photo->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL .'images/'. $photo->data->fileName . '></a></div>';
+                                echo '<div class="large-100"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $photo->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . 'images/' . $photo->data->fileName . '></a></div>';
                             elseif (count($photosName) == 3)
-                                echo '<div class="large-30"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $photo->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL .'images/'. $photo->data->fileName . '></a></div></div>';
+                                echo '<div class="large-30"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $photo->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . 'images/' . $photo->data->fileName . '></a></div></div>';
                             else
-                                echo '<div class="large-50"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $photo->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL .'images/'. $photo->data->fileName . '></a></div></div>';
+                                echo '<div class="large-50"><div class="imgPost"><a class="detailPhoto" url="/content/photo/detail?typeID=' . str_replace(":", "_", $status->recordID) . '&id=' . str_replace(":", "_", $photo->recordID) . '&p=' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . 'images/' . $photo->data->fileName . '></a></div></div>';
                         }
                     }
                     ?>

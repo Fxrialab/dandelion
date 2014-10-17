@@ -49,8 +49,8 @@ class HomeController extends AppController
             $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
             $obj = new ObjectHandler();
             $obj->owner = $this->getCurrentUser()->recordID;
-            $obj->type = 'post';
-            $obj->OR = "type = 'photo'";
+//            $obj->type = 'post';
+//            $obj->OR = "type = 'photo'";
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
             $homes = array();
@@ -67,7 +67,7 @@ class HomeController extends AppController
                     }
                 }
             }
-            $this->render('home/view.php', 'default', array('activities' => $homes));
+            $this->render('home/view.php', 'default', array('activities' => $homes,'page'=>'home'));
         }
     }
 

@@ -121,5 +121,11 @@ class HelperController extends Controller
         $model = $facade->findByPk('album', $id);
         return $model;
     }
+    
+     public static function countGroup()
+    {
+        $facade = new DataFacade();
+        return $facade->count('groupMember', array('member' => F3::get('SESSION.userID')));
+    }
 
 }

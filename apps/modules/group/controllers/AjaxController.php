@@ -35,7 +35,7 @@ class AjaxController extends AppController
                     {
                         $member = $this->facade->findAllAttributes('groupMember', array('member' => $people, 'groupID' => str_replace("_", ":", $groupID)));
                         if (!empty($member))
-                            $mess = 'Đã tham gia';
+                            $mess = 'has been added.';
                         else
                             $mess = '';
                     }
