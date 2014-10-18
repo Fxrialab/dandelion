@@ -54,7 +54,6 @@ class UserController extends AppController
                     unset($data['sex']);
                     unset($data['emailSignUp']);
                     unset($data['pwSignUp']);
-                    unset($data['birthdayDay']);
                     unset($data['birthdayMonth']);
                     unset($data['birthdayYear']);
                     unset($data['regCheckbox']);
@@ -69,7 +68,19 @@ class UserController extends AppController
                     // add user info to class
                     $infoData = array(
                         'user' => $userRC,
-                        'gender' => $this->f3->get('POST.sex')
+                        'gender' => $this->f3->get('POST.sex'),
+                        'position' => '',
+                        'work_description' => '',
+                        'work_location' => '',
+                        'university' => '',
+                        'concentrations' => '',
+                        'school' => '',
+                        'school_location' => '',
+                        'current_city' => '',
+                        'home_city' => '',
+                        'phone_mobile' => '',
+                        'birthday' => $data['birthday'],
+                        'about' => ''
                     );
                     $this->facade->save('information', $infoData);
                     // set default permission for user
@@ -97,7 +108,9 @@ class UserController extends AppController
                     'msgSignUp' => $this->ValidateHelper->validation($data, $isUsedEmail, false)
                 ));
             }
-        }else {
+        }
+        else
+        {
             header("Location:/");
         }
     }
@@ -522,10 +535,5 @@ class UserController extends AppController
             header("Location:/");
         }
     }
-
-
-
-
-
 
 }
