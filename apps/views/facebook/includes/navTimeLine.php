@@ -6,9 +6,10 @@
 ?>
 <nav class="ink-navigation uiTimeLineHeadLine">
     <ul class="menu horizontal">
-        <li><a href="/content/post?user=<?php echo $username; ?>">TimeLine</a></li>
+        <li><a href="/user/<?php echo $username; ?>">TimeLine</a></li>
         <li><a href="/about?user=<?php echo $username; ?>&section=overview">About</a></li>
         <li><a href="/friends?user=<?php echo $username; ?>">Friends</a></li>
+        <li><a href="/content/post?user=<?php echo $username; ?>">Post</a></li>
         <li><a href="/content/photo?user=<?php echo $username; ?>">Photos</a></li>
         <li><a href="#">More</a></li>
     </ul>

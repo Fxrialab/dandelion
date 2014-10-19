@@ -242,10 +242,11 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
     <div>
     <nav class="ink-navigation uiTimeLineHeadLine">
     <ul class="menu horizontal">
-    <li><a href="/content/post?username=${username}">TimeLine</a></li>
-    <li><a href="/about?username=${username}">About</a></li>
-    <li><a href="/friends?username=${username}">Friends</a></li>
-    <li><a href="/content/photo?username=${username}">Photos</a></li>
+    <li><a href="/user/${username}">TimeLine</a></li>
+    <li><a href="/about?user=${username}">About</a></li>
+    <li><a href="/friends?user=${username}">Friends</a></li>
+    <li><a href="/content/post?user=${username}">Post</a></li>
+    <li><a href="/content/photo?user=${username}">Photos</a></li>
     <li><a href="#">More</a></li>
     </ul>
     </nav>

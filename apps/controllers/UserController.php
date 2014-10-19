@@ -175,7 +175,7 @@ class UserController extends AppController
                     //Check status of user. If status='pending' must enter confirm code
                     if ($existUser->data->status == 'pending')
                     {
-                        $this->f3->set('MsgSignIn', 'We have sent an confirmation email to you. Please check the email and confirm your email with us !');
+                        $this->f3->set('msgSignIn', 'We have sent an confirmation email to you. Please check the email and confirm your email with us !');
                         $this->render('user/index.php', 'default');
                     }
                     else
@@ -536,4 +536,35 @@ class UserController extends AppController
         }
     }
 
+    public function user()
+    {
+        if ($this->isLogin())
+        {
+            $url            = $_SERVER["REQUEST_URI"];
+            $params_full    = explode('/',$url);
+            $lastParams     = explode('?',$params_full[count($params_full)-1]);
+            $username          = $lastParams[0];
+            if (count($params_full)== 3 && $params_full[1] == 'user')
+            {
+                $userRC = $this->facade->findByAttributes('user', array('username'=>$username));
+                if (!empty($userRC))
+                {
+                    $this->layout = 'timeline';
+
+                    $currentProfileID = $userRC->recordID;
+                    $this->f3->set('SESSION.userProfileID', $currentProfileID);
+                    $currentUser = $this->getCurrentUser();
+                    //get status friendship
+                    $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileID);
+
+                    $this->render('user/userPage.php', 'default',array(
+                        'currentUser'   => $currentUser,
+                        'otherUser'     => $userRC,
+                        'statusFriendShip'  => $statusFriendShip,
+                        'currentProfileID'  => $currentProfileID
+                    ));
+                }
+            }
+        }
+    }
 }

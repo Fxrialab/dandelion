@@ -6,7 +6,7 @@ if($data['type'] == 'like')
     ?>
     <div class="whoLikeThisPost verGapBox likeSentenceView" id="likeSentence-<?php echo $data['target']; ?>">
         <span><i class="statusCounterIcon-like"></i>
-            <a href="/content/post?user=<?php echo $user->data->username; ?>">
+            <a href="/user/<?php echo $user->data->username; ?>">
                 <?php echo $likeBy; ?>
             </a> like this.
         </span>
@@ -29,11 +29,11 @@ if($data['type'] == 'like')
 ?>
     <div class="eachCommentItem verGapBox column-group">
         <div class="large-10 uiActorCommentPicCol">
-            <a href="/content/post?user=<?php echo $user->data->username; ?>"><img src="<?php echo $profilePic; ?>"></a>
+            <a href="/user/<?php echo $user->data->username; ?>"><img src="<?php echo $profilePic; ?>"></a>
         </div>
         <div class="large-85 uiCommentContent">
             <p>
-                <a class="timeLineCommentLink" href="/content/post?user=<?php echo $user->data->username; ?>"><?php echo $commentBy; ?></a>
+                <a class="timeLineCommentLink" href="/user/<?php echo $user->data->username; ?>"><?php echo $commentBy; ?></a>
                 <span class="textComment"><?php echo $data['content']; ?></span>
             </p>
             <span><a class="linkColor-999999 swTimeComment" name="<?php echo $data['published']; ?>"></a></span>

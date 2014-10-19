@@ -6,7 +6,7 @@ $friendID   = str_replace(':','_',$friends->recordID);
 <div class="large-50 uiBoxFriends">
     <div class="friendContainers">
         <img src="<?php echo $avatar; ?>">
-        <a class="friendName" href="/content/post?user=<?php echo $friends->data->username; ?>"><?php echo $fullName; ?></a>
+        <a class="friendName" href="/user/<?php echo $friends->data->username; ?>"><?php echo $fullName; ?></a>
         <span style="position: absolute; top: 50px; left: 110px;">123 friends</span>
 
         <div style="position: absolute; top: 35px; right: 10px; margin: 0;">

@@ -44,7 +44,7 @@ $currentUserAvatar = HelperController::getAvatar($currentUser);
                 </div>
                 <div class="large-85">
                     <div class="infoProfile">
-                        <a href="/content/post?user=<?php echo $user->data->username ?>" class="timeLineLink"><?php echo $fullName; ?></a>
+                        <a href="/user/<?php echo $user->data->username ?>" class="timeLineLink"><?php echo $fullName; ?></a>
                         <div><a class="swTimeComment time" name="<?php echo $photo->data->published; ?>"></a></div>
                     </div>
                     <a class="closeDialog float-right">Close</a>
@@ -159,11 +159,11 @@ $currentUserAvatar = HelperController::getAvatar($currentUser);
 
                                                 <div class="eachCommentItem verGapBox column-group">
                                                     <div class="large-10 uiActorCommentPicCol">
-                                                        <a href="/content/post?user=<?php echo $profile->data->username; ?>"><img src="<?php echo $avatarComment; ?>"></a>
+                                                        <a href="/user/<?php echo $profile->data->username; ?>"><img src="<?php echo $avatarComment; ?>"></a>
                                                     </div>
                                                     <div class="large-85 uiCommentContent">
                                                         <p>
-                                                            <a class="timeLineCommentLink" href="/content/post?user=<?php echo $profile->data->username; ?>"><?php echo $profile->data->fullName; ?></a>
+                                                            <a class="timeLineCommentLink" href="/user/<?php echo $profile->data->username; ?>"><?php echo $profile->data->fullName; ?></a>
                                                             <span class="textComment"><?php echo $value->data->content; ?></span>
                                                         </p>
                                                         <a class="swTimeComment" name="<?php echo $value->data->published; ?>"></a>
@@ -178,7 +178,7 @@ $currentUserAvatar = HelperController::getAvatar($currentUser);
                                 </div>
                                 <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $recordID ?>">
                                     <div class="large-10 uiActorCommentPicCol">
-                                        <a href="/content/post?user=<?php echo $currentUser->data->username; ?>"><img src="<?php echo $currentUserAvatar ?>"></a>
+                                        <a href="/user/<?php echo $currentUser->data->username; ?>"><img src="<?php echo $currentUserAvatar ?>"></a>
                                     </div>
                                     <div class="large-90 uiTextCommentArea">
                                         <form class="ink-form" id="formcm_<?php echo $recordID ?>">

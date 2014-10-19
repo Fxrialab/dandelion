@@ -97,13 +97,13 @@ $countAdmin = $this->f3->get('countAdmin');
                     ?>
                     <div class="large-30" id="user_<?php echo str_replace(":", "_", $user->recordID) ?>">
                         <div class="large-35">
-                            <a href="/content/myPost?username=<?php echo $user->data->username ?>">
+                            <a href="/user/<?php echo $user->data->username ?>">
                                 <img src="<?php echo $profilePic; ?>" width="50" height="50">
                             </a>
                         </div>
                         <div class="large-65">
                             <div class="userItem">
-                                <a class="fullName" href="/content/post?user=<?php echo $user->data->username ?>"><?php echo $fullName; ?></a>
+                                <a class="fullName" href="/user/<?php echo $user->data->username ?>"><?php echo $fullName; ?></a>
                                 <div class="tiptip action">
                                     <div class="dropdown">
                                         <a class="button" title="Setting"><span class="icon icon96"></span></a>

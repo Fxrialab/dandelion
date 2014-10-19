@@ -36,8 +36,8 @@ define('WEBROOT', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS .'webroo
 define('IMAGES', WEBROOT . 'images' . DS);
 define('JS', WEBROOT . 'js' . DS);
 define('CSS', WEBROOT . 'css' . DS);
-define('UPLOAD', VIEWS . TEMPLATE . DS . 'upload' . DS);
-define('UPLOAD_URL', WEBROOT . 'upload' . DS);
+define('UPLOAD', DOCUMENT_ROOT . 'apps' . DS . 'upload' . DS);
+define('UPLOAD_URL', BASE_URL . 'apps' . DS . 'upload' . DS);
 
 
 // vendors

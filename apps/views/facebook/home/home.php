@@ -32,17 +32,11 @@ $loggedUserID = str_replace(':', '_', $loggedUserID);
     });
 </script>
 
-<style>
-    #uploaded_images {width: 800px;margin: 0 auto}
-    #uploaded_images div{float:left;padding-left: 10px;}
-    .hide{display:none}
-</style>
-
 <div class="uiMainContainer">
     <?php
     FactoryUtils::elementModule('formPost','post');
     ?>
-	<input type="hidden" id="type" name="type" value="post">
+	<input type="hidden" id="whereIs" value="homePage">
     <div class="wrapperContainer">
         <div id="contentContainer">
 

@@ -124,12 +124,12 @@ $loggedUserID = str_replace(':', '_', $this->f3->get('SESSION.userID'));
                 </div>
             </div>
             <div class="large-5">
-                <a class="float-right" href="/content/post?user=<?php echo $this->f3->get('SESSION.username'); ?>">
+                <a class="float-right" href="/user/<?php echo $this->f3->get('SESSION.username'); ?>">
                     <img src="<?php echo $this->f3->get('SESSION.avatar'); ?>" style="width: 30px; height: 30px">
                 </a>
             </div>
             <div class="large-5">
-                <a style="line-height: 30px; color: #fff; font-weight: bold; padding-left: 10px" href="/content/post?user=<?php echo $this->f3->get('SESSION.username'); ?>">
+                <a style="line-height: 30px; color: #fff; font-weight: bold; padding-left: 10px" href="/user/<?php echo $this->f3->get('SESSION.username'); ?>">
                     <?php echo $this->f3->get('SESSION.firstname'); ?>
                 </a>
             </div>

@@ -5,11 +5,11 @@ $album = HelperController::findAlbum($objectID);
 <div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
     <div class="uiBoxPostContainer column-group">
         <div class="large-10 uiActorPicCol">
-            <a href="/content/post?user=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+            <a href="/user/<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
         </div>
         <div class="large-85">
             <div class="postContent">
-                <a href="/content/post?user=<?php echo $username ?>" class="timeLineLink"><?php echo $actorName; ?> </a>
+                <a href="/user/<?php echo $username ?>" class="timeLineLink"><?php echo $actorName; ?> </a>
                 <span>added <?php echo count($status); ?> photos to <a href="/content/photo?user=<?php echo $username ?>&album=<?php echo $rpStatusID; ?>"><?php echo $album->data->name; ?></a> album</span>
                 <div class="column-group">
                     <div class="textPostContainer">
@@ -65,7 +65,7 @@ $album = HelperController::findAlbum($objectID);
                         </div>
                         <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID ?>">
                             <div class="large-10 uiActorCommentPicCol">
-                                <a href="/content/post?user=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+                                <a href="/user/<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
                             </div>
                             <div class="large-90 uiTextCommentArea">
                                 <form class="ink-form" id="fmComment-<?php echo $rpStatusID ?>">

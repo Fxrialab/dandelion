@@ -48,9 +48,20 @@ class HomeController extends AppController
             $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
             $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
             $obj = new ObjectHandler();
-            $obj->owner = $this->getCurrentUser()->recordID;
-//            $obj->type = 'post';
-//            $obj->OR = "type = 'photo'";
+            $whereIs = $this->f3->get('POST.type');
+            $profileID = $this->f3->get('POST.profile');
+            if (!empty($whereIs) && $whereIs == 'userPage')//loading all activities on user page
+            {
+                if (!empty($profileID))
+                {
+                    $obj->owner = $profileID;
+                    $obj->actor = $profileID;
+                }
+            }elseif (!empty($whereIs) && $whereIs == 'homePage') {//loading all activities on home page
+                $obj->owner = $this->getCurrentUser()->recordID;
+            }
+            $obj->type = 'post';
+            $obj->OR = "type = 'photo'";
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
             $homes = array();

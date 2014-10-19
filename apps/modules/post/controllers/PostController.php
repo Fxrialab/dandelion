@@ -131,7 +131,6 @@ class PostController extends AppController
         {
             $published = time();
             $currentUser = $this->getCurrentUser();
-            $friendProfileID = $this->f3->get('SESSION.userProfileID');
             $content = $this->f3->get("POST.status");
             $type = $this->f3->get("POST.type");
             //determine embed type if existing

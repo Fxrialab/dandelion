@@ -272,7 +272,7 @@ $(document).ready(function()
                             $.each(data.results, function()
                             {
                                 $('#resultsList').append("<li rel='" + this.recordID + "'>" +
-                                        "<a href='/content/post?user=" + this.username + "'>" +
+                                        "<a href='/user/" + this.username + "'>" +
                                         "<span>" +
                                         "<img class='imgFindPeople' src='" + this.profilePic + "' width='40' height='40'/>" +
                                         "<span class='infoPeople'>" + this.firstName + " " + this.lastName + "</span>" +
@@ -692,7 +692,7 @@ $("body").on('click', '.cancel', function(e) {
                 $('.actionCover').css('display', 'block');
                 $("#navInfoUserTemplate").tmpl(user).appendTo(".timeLineMenuNav");
             } else if (target == 'profilePic') {
-                $('.profilePic').html('<a class="infoUser" href="/content/post?user=' + obj.username + '"><img src="' + obj.src + '"></a>')
+                $('.profilePic').html('<a class="infoUser" href="/user/' + obj.username + '"><img src="' + obj.src + '"></a>')
             }
             return false;
 

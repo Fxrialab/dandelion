@@ -9,7 +9,6 @@ require_once (CONTROLLERS . "AppController.php");
 require_once (CONTROLLERS . "HelperController.php");
 $url            = $_SERVER["REQUEST_URI"];
 $params_full    = explode('/',$url);
-//var_dump($params_full);
 $lastParams     = explode('?',$params_full[count($params_full)-1]);
 $param          = $lastParams[0];
 
@@ -61,7 +60,6 @@ if ($params_full)
                         $controllers = explode(',', $value);
                         if ($mod)
                         {
-
                             if ($param == $params || $params_full[2] == $mod)
                             {
                                // echo "param: ".$param." params: ".$params." param2: ".$params_full[2]." mod: ".$mod."<br />";
@@ -109,6 +107,17 @@ if ($params_full)
                         }*/
                     }
                 }
+            }elseif (count($params_full) > 1 && $params_full[1] == 'user') {
+                $userControllerFile = CONTROLLERS.'UserController.php';
+                $registerFile   = CONTROLLERS.'Register.php';
+                if (file_exists($userControllerFile) && file_exists($registerFile))
+                {
+                    require_once $userControllerFile;
+                    require_once $registerFile;
+                    $f3->route('GET /user/*',
+                        array(new UserController, 'user')
+                    );
+                }
             }else {
                 //echo "default route <br />";
                 foreach($routes as $key=>$value)
@@ -143,6 +152,7 @@ if ($params_full)
                         $f3->route($method." /".$params,
                             array(new $controllers[0], $function)
                         );
+                        break;
                     }
                 }
             }

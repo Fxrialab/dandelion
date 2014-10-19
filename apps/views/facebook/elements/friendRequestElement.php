@@ -31,7 +31,7 @@ if ($neighborCurrentUser && current($neighborCurrentUser) != '')
                         <img src="<?php echo $avatar; ?>" width="50" height="50">
                     </div>
                     <div class="profileInfoDiv large-70">
-                        <p class="timeLineName fixMarginBottom-5"><a class="timeLineLink large-100" href="/content/post?user=<?php echo $requestProfile;?>"><?php echo $requestUserName; ?></a></p>
+                        <p class="timeLineName fixMarginBottom-5"><a class="timeLineLink large-100" href="/user/<?php echo $requestProfile;?>"><?php echo $requestUserName; ?></a></p>
                         <?php
                         if (!empty($numMutualFriends[$randYourFriend]))
                         {

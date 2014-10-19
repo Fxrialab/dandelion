@@ -37,13 +37,13 @@ if ($resultSearch)
         <div class="control-group">
             <div class="resultItem" style="">
                 <div class="large-25">
-                    <a class="linkProfile" href="/content/post?user=<?php echo $linkProfile; ?>">
+                    <a class="linkProfile" href="/user/<?php echo $linkProfile; ?>">
                         <img src="<?php echo $avatar; ?>">
                     </a>
                 </div>
                 <div class="large-75">
                     <div class="info">
-                        <a href="/content/post?user=<?php echo $linkProfile; ?>" class="title"><?php echo $fullName; ?></a>
+                        <a href="/user/<?php echo $linkProfile; ?>" class="title"><?php echo $fullName; ?></a>
                     </div>
                 </div>
             </div>

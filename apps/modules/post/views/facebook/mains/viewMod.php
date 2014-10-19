@@ -11,11 +11,11 @@ $status_published = $status->data->published;
 <div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
     <div class="uiBoxPostContainer column-group">
         <div class="large-10 uiActorPicCol">
-            <a href="/content/post?user=<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+            <a href="/user/<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
         </div>
         <div class="large-85">
             <div class="postContent">
-                <a href="/content/post?user=<?php echo $username ?>" class="timeLineLink"><?php
+                <a href="/user/<?php echo $username ?>" class="timeLineLink"><?php
                     echo $actorName;
                     ?></a> 
                     <?php
@@ -212,7 +212,7 @@ $status_published = $status->data->published;
                         </div>
                         <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID; ?>">
                             <div class="large-10 uiActorCommentPicCol">
-                                <a href="/content/post?user=<?php echo $username; ?>"><img src="<?php echo $avatar; ?>"></a>
+                                <a href="/user/<?php echo $username; ?>"><img src="<?php echo $avatar; ?>"></a>
                             </div>
                             <div class="large-90 uiTextCommentArea">
                                 <form class="ink-form" id="fmComment-<?php echo $rpStatusID; ?>">

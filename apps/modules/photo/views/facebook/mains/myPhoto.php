@@ -52,11 +52,11 @@ $photos = $this->f3->get('photos');
 <script id="commentPhotoTemplate1" type="text/x-jQuery-tmpl">
     <div class="eachCommentItem verGapBox column-group">
     <div class="large-10 uiActorCommentPicCol">
-    <a href="/content/post?user=">  <img src="<?php echo IMAGES ?>/avatarMenDefault.png"></a>
+    <a href="/user/">  <img src="<?php echo IMAGES ?>/avatarMenDefault.png"></a>
     </div>
     <div class="large-85 uiCommentContent">
     <p>
-    <a class="timeLineCommentLink" href="/content/post?user=">${name}</a>
+    <a class="timeLineCommentLink" href="/user/">${name}</a>
     <span class="textComment">${content}</span>
     </p>
     <a class="swTimeComment" name="${time}"></a>

@@ -238,11 +238,8 @@
             $settings = settings;
             var offset = $settings.offset;
             var busy = false; // Checks if the scroll action is happening 
-            var type = $("#type").val();
-            if (type == 'group')
-                var typeID = $("#typeID").val();
-            else
-                var typeID = false;
+            var whereIs = $("#whereIs").val();
+            var profileID = $("#currentProfile").val();
             // so we don't run it multiple times
 
             // Custom messages based on settings
@@ -259,8 +256,8 @@
                     action: 'scrollpagination',
                     number: $settings.nop,
                     offset: offset,
-                    type: type,
-                    typeID: typeID
+                    type: whereIs,
+                    profile: profileID
                 }, function(data) {
 
                     // Change loading bar content (it may have been altered)
