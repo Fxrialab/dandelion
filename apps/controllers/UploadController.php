@@ -1,7 +1,10 @@
 <?php
+
 class UploadController extends AppController
 {
+
     protected $helpers = array("String");
+
     //Uploading photo when choose us, it's not submit
     public function uploading()
     {
@@ -10,9 +13,9 @@ class UploadController extends AppController
             $tempDir = UPLOAD . "tmp/";
             $thumbnailDir = UPLOAD . "thumbnails/150px"; //The folder will display like gallery images on "Choose from my photos"
             $data = array(
-                'results'   => array(),
-                'success'   => false,
-                'error'     => ''
+                'results' => array(),
+                'success' => false,
+                'error' => ''
             );
 
             if (isset($_FILES["myfile"]))
@@ -21,20 +24,23 @@ class UploadController extends AppController
                 if (!is_array($_FILES["myfile"]['name'])) //single file
                 {
                     echo 'single file';
-                }else {//multiple files
+                }
+                else
+                {//multiple files
                     $file = $_FILES["myfile"];
                     $code = $this->StringHelper->generateRandomString(5);
-                    $newName = $code.time();
-                    $photo = $this->changeImage($file, 150, $thumbnailDir, $newName, 80, true, $tempDir);//upload to thumbnail folder
-                    //var_dump($photo);
+                    $newName = $code . time();
+                    $photo = $this->changeImage($file, 150, $thumbnailDir, $newName, 80, true, $tempDir); //upload to thumbnail folder
                     $data['results'][] = array(
                         'photoName' => $photo['name'],
-                        'nameNotExt'=> substr($photo['name'], 0, strpos($photo['name'], '.')),
-                        'url'       => UPLOAD_URL. 'thumbnails/150px/'.$photo['name']
+                        'nameNotExt' => substr($photo['name'], 0, strpos($photo['name'], '.')),
+                        'url' => UPLOAD_URL . 'thumbnails/150px/' . $photo['name']
                     );
                     $data['success'] = true;
                 }
-            }else {
+            }
+            else
+            {
                 $data['error'] = "Upload is failed, pls try again !";
             }
             header("Content-Type: application/json; charset=UTF-8");
@@ -56,9 +62,9 @@ class UploadController extends AppController
                 {
                     $file = $_FILES["myfile"];
                     $code = $this->StringHelper->generateRandomString(5);
-                    $newName = $code.time();
+                    $newName = $code . time();
                     $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true, $tempDir);
-                    $this->render('ajax/confirmPhoto.php', 'default', array('image'=> $image, 'target'=>'uploadCover'));
+                    $this->render('ajax/confirmPhoto.php', 'default', array('image' => $image, 'target' => 'uploadCover'));
                 }
             }
         }
@@ -78,9 +84,9 @@ class UploadController extends AppController
                 {
                     $file = $_FILES["myfile"];
                     $code = $this->StringHelper->generateRandomString(5);
-                    $newName = $code.time();
-                    $image = $this->changeImage($file, 170, $avatarDir, $newName, 100, true,$tempDir);
-                    $this->render('ajax/confirmAvatar.php', 'default', array('image'=> $image, 'target'=>'uploadAvatar'));
+                    $newName = $code . time();
+                    $image = $this->changeImage($file, 170, $avatarDir, $newName, 100, true, $tempDir);
+                    $this->render('ajax/confirmAvatar.php', 'default', array('image' => $image, 'target' => 'uploadAvatar'));
                 }
             }
         }
@@ -151,7 +157,7 @@ class UploadController extends AppController
                 $height = $_POST['height'];
                 $dragX = $_POST['dragX'];
                 $dragY = $_POST['dragY'];
-                $pathFile = UPLOAD.'tmp/'.$file;
+                $pathFile = UPLOAD . 'tmp/' . $file;
                 switch ($target)
                 {
                     case 'isReposition':
@@ -193,9 +199,9 @@ class UploadController extends AppController
                         break;
                     case 'uploadCover':
                         //resize image to thumbnail, cover folder and move image from tmp folder to images folder
-                        $this->resizeImageFile($pathFile, 150, $thumbnailDir.$file, 80);
-                        $this->resizeImageFile($pathFile, 170, $avatarDir.$file, 100);
-                        rename($pathFile, $imagesDir.$file);
+                        $this->resizeImageFile($pathFile, 150, $thumbnailDir . $file, 80);
+                        $this->resizeImageFile($pathFile, 170, $avatarDir . $file, 100);
+                        rename($pathFile, $imagesDir . $file);
                         //prepare data for save
                         $entry = array(
                             'owner' => $currentUser->recordID,
@@ -220,9 +226,9 @@ class UploadController extends AppController
                         break;
                     case 'uploadAvatar':
                         //resize image to thumbnail, cover folder and move image from tmp folder to images folder
-                        $this->resizeImageFile($pathFile, 150, $thumbnailDir.$file, 80);
-                        $this->resizeImageFile($pathFile, 750, $coverDir.$file, 100);
-                        rename($pathFile, $imagesDir.$file);
+                        $this->resizeImageFile($pathFile, 150, $thumbnailDir . $file, 80);
+                        $this->resizeImageFile($pathFile, 750, $coverDir . $file, 100);
+                        rename($pathFile, $imagesDir . $file);
                         //prepare data for save
                         $entry = array(
                             'owner' => $currentUser->recordID,
@@ -267,17 +273,17 @@ class UploadController extends AppController
             $image = array('name' => $photo->data->fileName, 'width' => $photo->data->width, 'height' => $photo->data->height);
             $this->f3->set('image', $image);
             $this->f3->set('target', 'choosePhoto');
-            $pathFile = $imagesDir.$photo->data->fileName;
+            $pathFile = $imagesDir . $photo->data->fileName;
             if ($_POST['role'] == 'avatar')
             {
-                if (!file_exists($avatarDir.$photo->data->fileName))
-                    $this->resizeImageFile($pathFile, 170, $avatarDir.$photo->data->fileName, 100);
+                if (!file_exists($avatarDir . $photo->data->fileName))
+                    $this->resizeImageFile($pathFile, 170, $avatarDir . $photo->data->fileName, 100);
                 $this->render('ajax/confirmAvatar.php', 'ajax');
             }
             else
             {//when role such as cover
-                if (!file_exists($coverDir.$photo->data->fileName))
-                    $this->resizeImageFile($pathFile, 750, $coverDir.$photo->data->fileName, 100);
+                if (!file_exists($coverDir . $photo->data->fileName))
+                    $this->resizeImageFile($pathFile, 750, $coverDir . $photo->data->fileName, 100);
                 $this->render('ajax/confirmPhoto.php', 'ajax');
             }
         }

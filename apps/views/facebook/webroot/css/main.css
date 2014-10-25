@@ -18,6 +18,10 @@ h1,h2,h3,h4,h5,h6{
 a{
     cursor: pointer;
 }
+.ink-button{
+    font-size: 12px !important;
+    padding: 5px 10px !important;
+}
 
 #uiGlobalContainer {
     width: 100%;
@@ -2168,7 +2172,7 @@ a{
     background-image: linear-gradient(top, rgb(249, 249, 249), rgb(233, 233, 233));
     filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f9f9f9', EndColorStr='#e9e9e9');
     border-top:1px solid #bababa;
-
+    text-align: right;
 }
 
 .mainColWrapper .groupWrapper {
@@ -2559,4 +2563,45 @@ span.countNotifies, span.countFriendRequest {
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     background-image: none;
+}
+/*Popup Photo*/
+
+.popupImg {
+    position: relative;
+}
+.popupImg .img
+{
+    height: 520px;
+    line-height: 520px; 
+    border: 1px solid black;
+    text-align: center;
+    overflow: hidden;
+}
+
+.popupImg .pev{
+    position: absolute;
+    top: 45%;
+    left: 10px;
+    z-index: 9999;
+    display: none
+}
+.popupImg .next{
+    position: absolute;
+    top: 45%;
+    right: 10px;
+    z-index: 9999;
+    display: none
+}
+.popupImg:hover .next, .popupImg:hover .pev{
+    display: block
+}
+.popupComment{
+    background: #fff;
+    min-height: 520px;
+    position: relative;
+}
+.popupComment .close{
+    position: absolute;
+    top: 5px;
+    right:-7px;
 }

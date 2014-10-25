@@ -16,9 +16,6 @@
     }
     ?>
 </div>
-<div class="footerDialog">
-    <button type="button" class="closeDialog ink-button">Cancel</button>
-</div>
 <script type="text/javascript">
     $(document).ready(function() {
         //        $('#scrollbar1').tinyscrollbar();

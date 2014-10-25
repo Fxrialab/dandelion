@@ -36,9 +36,9 @@ $(".autoloadModuleElement").ready(function()
     })
 });
 //hide search result if click anywhere
-$(document).click(function(){
+$(document).click(function() {
     var existedSearch = $('#resultsHolder').length;
-    if (existedSearch){
+    if (existedSearch) {
         $('#resultsHolder').hide();
     }
 });
@@ -336,7 +336,7 @@ $(document).on('keypress', '.submitComment', function(event) {
                 cache: false,
                 success: function(html) {
                     $("#numC-" + statusID).html(numComment + 1);
-                    $("#commentBox-" + statusID).before(html);
+                    $(".moreComment_" + statusID).before(html);
                     $("#textComment-" + statusID).val('');
                     updateTime();
                 }
@@ -914,21 +914,8 @@ $(document).on('keypress', '.submitCommentDialog', function(event) {
                 data: $('#formcm_' + photoID).serialize(),
                 cache: false,
                 success: function(data) {
-                    var obj = jQuery.parseJSON(data);
-                    var rs = [
-                        {
-                            id: obj.id,
-                            content: obj.content,
-                            userID: obj.userID,
-                            name: obj.name,
-                            photoID: obj.photoID,
-                            time: obj.time
-                        }
-                    ];
+                    $(".viewComment_" + photoID).append(data);
                     $("#textComment_" + photoID).val('');
-//                    $(".comment_" + photoID).html(obj.count);
-                    $("#commentPhotoTemplate1").tmpl(rs).appendTo(".moreComment-" + obj.photoID + " div.mCustomScrollbar");
-//                    $(".viewComment_" + obj.photoID).mCustomScrollbar("scrollTo", " div.mCustomScrollBox div.mCSB_container li.item_" + obj.id);
                     updateTime();
                 }
             });
@@ -951,5 +938,35 @@ $("body").on('click', '.removeImgGroup', function(e) {
             $(".ui-dialog-titlebar-close").hide();
             $("#alertTemplate").tmpl().appendTo(".dialog");
         }
+    });
+});
+
+$("body").on('click', '.popup', function(e) {
+    e.preventDefault();
+    $.pgwModal({
+        url: $(this).attr('href'),
+        title: $(this).attr('title'),
+        minWidth: 400,
+        maxWidth: 450
+    });
+});
+
+$("body").on('click', '.popupPhoto', function(e) {
+    e.preventDefault();
+    $.pgwModal({
+        url: $(this).attr('href'),
+        title: '',
+        minWidth: 880,
+        maxWidth: 1024
+    });
+});
+
+$("body").on('click', '.popupMyPhoto', function(e) {
+    e.preventDefault();
+    $.pgwModal({
+        url: $(this).attr('href'),
+        title: $(this).attr('title'),
+        minWidth: 800,
+        maxWidth: 900
     });
 });

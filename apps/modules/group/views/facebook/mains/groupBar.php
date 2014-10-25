@@ -23,15 +23,15 @@
                     </div>
                 </div>
             </div>
-            <div class="large-15 tiptip">
-                <a title="Create Group" class="button icon add" id="createGroup" href="/content/group/create"><span class="label">Create Group</span></a>
+            <div class="large-15 ">
+                <a class="button icon add popup" href="/content/group/create"  title="Create Group"><span class="label">Create Group</span></a>
             </div>
             <div class="large-5">
                 <a data-dropdown="#dropdown-setting-notify" class="button icon settings"></a>
                 <div id="dropdown-setting-notify" class="dropdown dropdown-tip dropdown-anchor-right">
                     <ul class="dropdown-menu">
                         <li><a href="#">Edit Notification Settings</a></li>
-                        <li><a id="leaveGroup" rel="<?php echo str_replace(":", "_", $group->recordID) ?>" href="/content/group/leave" title="<?php echo $group->data->name ?>">Leave Group</a></li>
+                        <li><a class="popup" href="/content/group/leave?id=<?php echo str_replace(":", "_", $group->recordID) ?>" title="<?php echo $group->data->name ?>">Leave Group</a></li>
                     </ul>
                 </div>
 

@@ -65,7 +65,7 @@
 
 .statusDialog{
     padding: 10px;
-    line-height: 20px;
+    line-height: 50px;
 }
 .permision{
     margin: 0 !important;
@@ -121,4 +121,8 @@
 }*/
 .uploadCoverGroup {
     border: 1px solid #ccc; padding: 70px 0;
+}
+.formGroup{
+    padding: 10px;
+    min-height: 350px;
 }

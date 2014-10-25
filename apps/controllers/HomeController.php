@@ -1,4 +1,5 @@
 <?php
+
 class HomeController extends AppController
 {
 
@@ -15,6 +16,26 @@ class HomeController extends AppController
             header("Location:/home");
         else
             $this->render('user/index.php', 'default');
+    }
+
+    public function popup()
+    {
+        $photo = $this->facade->findByPk('photo', str_replace('_', ':', $_GET['id']));
+        $findAll = $this->facade->findAllAttributes('photo', array('typeID' => str_replace('_', ':', $_GET['typeID'])));
+        foreach ($findAll as $key => $value)
+            if ($findAll[$key]->recordID == $photo->recordID)
+                $k = $key;
+
+        $currentUser = $this->getCurrentUser();
+        $this->f3->set('photo', $photo);
+        if ($k + 1 < count($findAll))
+            $this->f3->set('idn', $findAll[$k + 1]->recordID);
+
+        if ($k > 0)
+            $this->f3->set('idp', $findAll[$k - 1]->recordID);
+        $this->f3->set('typeID', $_GET['typeID']);
+        $this->f3->set('currentUser', $currentUser);
+        $this->render('home/popup.php', 'default');
     }
 
     public function home()
@@ -78,7 +99,7 @@ class HomeController extends AppController
                     }
                 }
             }
-            $this->render('home/view.php', 'default', array('activities' => $homes,'page'=>'home'));
+            $this->render('home/view.php', 'default', array('activities' => $homes, 'page' => 'home'));
         }
     }
 
@@ -95,7 +116,9 @@ class HomeController extends AppController
                 if ($mod == 'post')
                 {
                     $status = $this->facade->findByPk('status', $activity->data->object);
-                }elseif ($mod == 'photo') {
+                }
+                elseif ($mod == 'photo')
+                {
                     //@TODO: check it later
                     $status = $this->facade->findByPk('photo', $activity->data->object);
                 }
@@ -133,12 +156,12 @@ class HomeController extends AppController
             $isRead = array(
                 'notifications' => 0,
             );
-            $this->facade->updateByAttributes('notify', $isRead, array('userID'=>$currentUserID));
+            $this->facade->updateByAttributes('notify', $isRead, array('userID' => $currentUserID));
             //load all notifications
             $obj = new ObjectHandler();
             $obj->owner = $currentUserID;
-            $obj->type  = 'notifications';
-            $obj->select= "ORDER BY timers DESC";
+            $obj->type = 'notifications';
+            $obj->select = "ORDER BY timers DESC";
             $notification = $this->facade->findAll('activity', $obj);
             $this->f3->set('notification', $notification);
             $this->f3->set('currentUserID', $currentUserID);
@@ -155,12 +178,12 @@ class HomeController extends AppController
             $isRead = array(
                 'friendRequests' => 0,
             );
-            $this->facade->updateByAttributes('notify', $isRead, array('userID'=>$currentUserID));
+            $this->facade->updateByAttributes('notify', $isRead, array('userID' => $currentUserID));
             //load all friend requests
             $obj = new ObjectHandler();
             $obj->owner = $currentUserID;
-            $obj->type  = 'friendRequests';
-            $obj->select= "ORDER BY timers DESC";
+            $obj->type = 'friendRequests';
+            $obj->select = "ORDER BY timers DESC";
             $notification = $this->facade->findAll('activity', $obj);
             $this->f3->set('notification', $notification);
             $this->f3->set('currentUserID', $currentUserID);
@@ -189,7 +212,7 @@ class HomeController extends AppController
                     array_push($actionElement, $suggestAction[$actionIDArrays[$key]][0]->data->actionElement);
                 }
                 //check if suggest by friend request is null. Will not return to load element
-                $this->render('elements/loadedSuggestElement.php', 'default', array('actionElement'=>$actionElement));
+                $this->render('elements/loadedSuggestElement.php', 'default', array('actionElement' => $actionElement));
             }
         }
     }
@@ -228,12 +251,15 @@ class HomeController extends AppController
                 foreach ($result as $people)
                 {
                     $infoOfSearchFound[$people] = Model::get('user')->callGremlin("current.map", array('@rid' => '#' . $people));
-                    if ($infoOfSearchFound[$people][0]->profilePic != 'none'){
+                    if ($infoOfSearchFound[$people][0]->profilePic != 'none')
+                    {
                         $photo = HelperController::findPhoto($infoOfSearchFound[$people][0]->profilePic);
                         $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
-                    }else {
+                    }
+                    else
+                    {
                         $gender = HelperController::findGender($people);
-                        if ($gender =='male')
+                        if ($gender == 'male')
                             $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                         else
                             $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
@@ -272,7 +298,7 @@ class HomeController extends AppController
                 {
                     $infoOfSearchFound[$people] = Model::get('user')->callGremlin("current.map", array('@rid' => '#' . $people));
                 }
-                $this->render('home/searchResult.php', 'default', array('resultSearch'=>$resultSearch,'infoOfSearchFound'=>$infoOfSearchFound));
+                $this->render('home/searchResult.php', 'default', array('resultSearch' => $resultSearch, 'infoOfSearchFound' => $infoOfSearchFound));
             }
         }
     }

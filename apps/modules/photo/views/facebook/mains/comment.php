@@ -1,19 +1,16 @@
 <?php
-$content    = $this->f3->get('content');
-$published  = $this->f3->get('published');
-$authorName = $this->f3->get('actorName');
-$currentUser= $this->f3->get('currentUser');
-$username   = $currentUser->data->username;
+$comment = $this->f3->get('comment');
+$user = $this->f3->get('user');
 ?>
 <div class="eachCommentItem verGapBox column-group">
-    <div class="large-20 uiActorCommentPicCol">
-        <a href=""><img src="<?php echo $currentUser->data->profilePic; ?>"></a>
+    <div class="large-10 uiActorCommentPicCol">
+        <a href="/content/post?user=">  <img src="<?php echo IMAGES ?>/avatarMenDefault.png"></a>
     </div>
-    <div class="large-80 uiCommentContent">
+    <div class="large-85 uiCommentContent">
         <p>
-            <a class="timeLineCommentLink" href="/content/myPost?username=<?php echo $username; ?>"><?php echo $authorName; ?></a>
-            <span class="textComment"><?php echo $content; ?></span>
+            <a class="timeLineCommentLink" href="/content/post?user="><?php echo $user->data->fullName ?></a>
+            <span class="textComment"> <?php echo $comment->data->content ?></span>
         </p>
-        <span><a class="linkColor-999999 swTimeComment" name="<?php echo $published; ?>"></a></span>
+        <a class="swTimeComment" name="<?php echo $comment->data->published; ?>"></a>
     </div>
 </div>

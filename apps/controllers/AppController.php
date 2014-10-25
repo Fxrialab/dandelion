@@ -92,11 +92,18 @@ class AppController extends Controller
             throw New Exception('File is not existed !');
     }
 
+
+
     public function loadModules($path)
     {
-        if ($path != '')
-            require_once(MODULES . $path);
+        if (file_exists($path))
+            require_once $path;
+        else
+            echo View::instance()->render($path);
     }
+
+
+
 
     public function element($param)
     {
@@ -188,9 +195,8 @@ class AppController extends Controller
                         $this->facade->save('activity', $data);
                     }
                     $yourFriends = str_replace(':', '_', $friends[$i]->data->userB);
-                    $this->service->exchange('dandelion', 'topic')->routingKey('newsFeed.post.'.$yourFriends)->dispatch('post', $activities);
+                    $this->service->exchange('dandelion', 'topic')->routingKey('newsFeed.post.' . $yourFriends)->dispatch('post', $activities);
                 }
-
             }
         }
     }
@@ -422,13 +428,14 @@ class AppController extends Controller
              */
             if (!empty($moveDefaultFileTo))
             {
-                move_uploaded_file($tmpName, $moveDefaultFileTo.$newImage);
+                move_uploaded_file($tmpName, $moveDefaultFileTo . $newImage);
             }
             if (!empty($returnInfo))
                 return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
             else
                 return false;
-        }else {//multiple files
+        }else
+        {//multiple files
             $fileCount = count($file["name"]);
             for ($i = 0; $i < $fileCount; $i++)
             {
@@ -473,50 +480,51 @@ class AppController extends Controller
                  */
                 if (!empty($moveDefaultFileTo))
                 {
-                    move_uploaded_file($tmpName, $moveDefaultFileTo.$newImage);
+                    move_uploaded_file($tmpName, $moveDefaultFileTo . $newImage);
                 }
                 if (!empty($returnInfo))
                     return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
                 else
                     return false;
-
             }
         }
     }
 
-    public function resizeImageFile($imgFile="",$thumbSize=0,$savePath=NULL,$quality)
+    public function resizeImageFile($imgFile = "", $thumbSize = 0, $savePath = NULL, $quality)
     {
-        list($width,$height)=getimagesize($imgFile);
+        list($width, $height) = getimagesize($imgFile);
         /* The width and the height of the image also the getimagesize retrieve other information as well   */
 
-        $imgRatio=$width/$height;
+        $imgRatio = $width / $height;
         /*
-        To compress the image we will calculate the ration
-        For eg. if the image width=700 and the height = 921 then the ration is 0.77...
-        if means the image must be compression from its height and the width is based on its height
-        so the newheight = thumbsize and the newwidth is thumbsize*0.77...
-        */
-        if($imgRatio>1)
+          To compress the image we will calculate the ration
+          For eg. if the image width=700 and the height = 921 then the ration is 0.77...
+          if means the image must be compression from its height and the width is based on its height
+          so the newheight = thumbsize and the newwidth is thumbsize*0.77...
+         */
+        if ($imgRatio > 1)
         {
-            $newWidth   = $thumbSize;
-            $newHeight  = $thumbSize/$imgRatio;
-        } else {
-            $newHeight  = $thumbSize;
-            $newWidth   = $thumbSize*$imgRatio;
+            $newWidth = $thumbSize;
+            $newHeight = $thumbSize / $imgRatio;
+        }
+        else
+        {
+            $newHeight = $thumbSize;
+            $newWidth = $thumbSize * $imgRatio;
         }
 
-        $thumb=imagecreatetruecolor($newWidth,$newHeight); // Making a new true color image
-        $source=imagecreatefromjpeg($imgFile); // Now it will create a new image from the source
-        imagecopyresampled($thumb,$source,0,0,0,0,$newWidth,$newHeight,$width,$height);  // Copy and resize the image
-        imagejpeg($thumb,$savePath,$quality);
+        $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
+        $source = imagecreatefromjpeg($imgFile); // Now it will create a new image from the source
+        imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);  // Copy and resize the image
+        imagejpeg($thumb, $savePath, $quality);
         /*
-        Out put of image
-        if the $savePath is null then it will display the image in the browser
-        */
+          Out put of image
+          if the $savePath is null then it will display the image in the browser
+         */
         imagedestroy($thumb);
         /*
-            Destroy the image
-        */
+          Destroy the image
+         */
     }
 
     public function move_uploaded_file($file, $i, $dir, $newName)

@@ -25,7 +25,7 @@ class Controller
     {
         $f3 = Base::instance();
         $facade = new DataFacade();
-        $amq    = new AMQFacade();
+        $amq = new AMQFacade();
 
         $this->f3 = $f3;
         $this->facade = $facade;
@@ -80,41 +80,50 @@ class Controller
      * @param $type
      * @param array $set
      */
-    public function render($page, $type, $set=array())
+    public function render($page, $type, $set = array())
     {
         foreach ($set as $k => $value)
-        {
             $this->f3->set($k, $value);
-        }
-
         if ($this->layout != '')
-        {
             require_once(UI . LAYOUTS . $this->layout . '.php');
-        }else {
+        else
             echo View::instance()->render($page);
-        }
     }
 
-    public function renderModule($action, $type, $set=array())
+    public function renderModule($action, $type, $set = array())
     {
         foreach ($set as $k => $value)
+            $this->f3->set($k, $value);
+
+        $page = MODULES . $type . '/views/' . TEMPLATE . '/' . $action . '.php';
+        if (!empty($this->layout))
+            require_once(UI . LAYOUTS . $this->layout . '.php');
+        else
+            require_once $page;
+        
+        
+    }
+
+    public function inc($param, $type, $array = array())
+    {
+        foreach ($array as $k => $value)
         {
             $this->f3->set($k, $value);
         }
+        if (file_exists(MODULES . $type . '/views/' . TEMPLATE . '/' . $param . '.php'))
+            require MODULES . $type . '/views/' . TEMPLATE . '/' . $param . '.php';
+        else if (file_exists(LAYOUTS . '/views/' . TEMPLATE . '/' . $param . '.php'))
+            require LAYOUTS . '/views/' . TEMPLATE . '/' . $param . '.php';
+        else
+            throw New Exception('File is not existed !');
+    }
 
-        $pathMod = Register::getPathModule($type);
-        if (is_array($pathMod))
-        {
-            foreach ($pathMod as $path){
-                if ($path['mod'] == $type)
-                {
-                    $themePath = $path['viewPath'];
-                }
-            }
-        }else {
-            $themePath = $pathMod;
-        }
-        require_once(MODULES . $themePath . $action . ".php");
+    public function loadContent($path)
+    {
+        if (file_exists($path))
+            require_once $path;
+        else
+            echo View::instance()->render($path);
     }
 
 }

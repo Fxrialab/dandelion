@@ -14,7 +14,6 @@
     <div class="footerDialog" >
         <button type="submit" id="submitLeave" class="ink-button green-button">Leave Group</button>
         <button type="submit" class="ink-button">Turn Off Notifications</button>
-        <button type="button" id="dialogLeaveGroup" class="closeDialog ink-button">Cancel</button>
     </div>
 </form>
 <script>

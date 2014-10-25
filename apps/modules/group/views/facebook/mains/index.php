@@ -11,8 +11,8 @@
                 </ul>
             </nav>
         </div>
-        <div class="large-15 tiptip">
-            <a class="button" rel="Greate New Group" title="Greate Group" id="createGroup" href="/content/group/create">Create Group</a>
+        <div class="large-15">
+            <a class="button popup" rel="Greate New Group" title="Greate Group" href="/content/group/create">Create Group</a>
         </div>
 
     </div>

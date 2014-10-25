@@ -11,10 +11,11 @@
                     <?php $this->including('leftCol'); ?>
                     <div class="uiMainCol large-60 borderLineLeft">
                         <?php
-                        if ($type == 'modules')
-                            $this->loadModules($page);
-                        else
-                            echo View::instance()->render($page);
+//                        if (!empty($type) && $type != 'default')
+                            $this->loadContent($page);
+//                        else
+//                            echo View::instance()->render($page);
+//                        $this->content($page);
                         ?>
                     </div>
                     <div class="uiRightCol large-20">

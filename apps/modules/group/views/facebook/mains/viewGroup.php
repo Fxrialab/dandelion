@@ -23,7 +23,7 @@ if (!empty($group))
                 <div id="dropdown-<?php echo str_replace(":", "_", $group->recordID) ?>" class="dropdown dropdown-tip dropdown-anchor-right">
                     <ul class="dropdown-menu">
                         <li><a href="#1">Edit Notification Settings</a></li>
-                        <li><a id="leaveGroup" rel="<?php echo str_replace(":", "_", $group->recordID) ?>" href="/content/group/leave" title="<?php echo $group->data->name ?>">Leave Group</a></li>
+                        <li><a href="/content/group/leave?id=<?php echo str_replace(":", "_", $group->recordID) ?>" title="Leave Group" class="popup">Leave Group</a></li>
                     </ul>
                 </div>
 

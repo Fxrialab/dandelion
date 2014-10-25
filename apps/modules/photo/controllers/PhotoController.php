@@ -52,13 +52,20 @@ class PhotoController extends AppController
         }
     }
 
-    public function photo($viewPath)
+    public function photo()
     {
         if ($this->isLogin())
         {
             $this->layout = "other";
             $username = $this->f3->get('GET.user');
-            $album = $this->f3->get('GET.album');
+//            $album = $this->f3->get('GET.album');
+//            $user = $this->facade->findByAttributes('user', array('username' => $username));
+//            $photo = $this->facade->findAllAttributes('photo', array('actor' => $user->recordID));
+//            $currentProfileID = $user->recordID;
+//            $this->f3->set('SESSION.userProfileID', $currentProfileID);
+//            $currentProfileRC = $this->facade->load('user', $currentProfileID);
+//             $currentUser = $this->getCurrentUser();
+//            $this->render('mains/viewphoto', 'photo', array('otherUser' => $currentProfileRC, 'photo' => $photo,'currentUser' => $currentUser));
             //echo $username;
             if (!empty($username))
             {
@@ -77,13 +84,15 @@ class PhotoController extends AppController
                 {
                     $albumID = 'allPhoto'; //Untitled album
                 }
+                $model = $this->facade->findAllAttributes('photo', array('actor' => $currentProfileRC->recordID));
                 $this->f3->set('userID', $currentProfileID);
-                $this->render($viewPath . "mains/myPhoto.php", 'modules', array(
+                $this->renderModule("mains/myPhoto", 'photo', array(
                     'currentUser' => $currentUser,
                     'otherUser' => $currentProfileRC,
                     'statusFriendShip' => $statusFriendShip,
                     'userID' => str_replace(':', '_', $currentProfileID),
-                    'albumID' => $albumID
+                    'albumID' => $albumID,
+                    'model' => $model
                 ));
             }
         }
@@ -147,16 +156,17 @@ class PhotoController extends AppController
                 $count = $this->facade->count('comment', array('typeID' => str_replace('_', ':', $_POST['photoID'])));
                 $height = $count * 40 + 50;
                 $user = $this->facade->findByPk('user', $commentRC->data->userID);
-                echo json_encode(array(
-                    'id' => str_replace(':', '_', $commentID),
-                    'photoID' => str_replace(':', '_', $_POST['photoID']),
-                    'count' => $count,
-                    'height' => $height,
-                    'content' => $commentRC->data->content,
-                    'name' => $user->data->fullName,
-                    'userID' => $user->recordID,
-                    'time' => $commentRC->data->published
-                ));
+                $this->renderModule('mains/comment', 'photo', array('comment' => $commentRC, 'user' => $user));
+//                echo json_encode(array(
+//                    'id' => str_replace(':', '_', $commentID),
+//                    'photoID' => str_replace(':', '_', $_POST['photoID']),
+//                    'count' => $count,
+//                    'height' => $height,
+//                    'content' => $commentRC->data->content,
+//                    'name' => $user->data->fullName,
+//                    'userID' => $user->recordID,
+//                    'time' => $commentRC->data->published
+//                ));
             }
         }
     }
@@ -190,14 +200,34 @@ class PhotoController extends AppController
                 $currentUser = $this->getCurrentUser();
                 //get status friendship
                 $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
-                $this->render(Register::getPathModule('photo') . "mains/myAlbum.php", 'modules', array(
+                $album = $this->facade->findAllAttributes('album', array('owner' => $currentProfileID));
+                $this->renderModule("mains/myAlbum", 'photo', array(
                     'currentUser' => $currentUser,
                     'otherUser' => $currentProfileRC,
                     'statusFriendShip' => $statusFriendShip,
-                    'userID' => str_replace(':', '_', $currentProfileID)
+                    'userID' => str_replace(':', '_', $currentProfileID),
+                    'album' => $album
                 ));
             }
         }
+    }
+
+    public function media()
+    {
+        $this->layout = "other";
+        $album = $this->facade->findByPk('album', str_replace('_', ':', $_GET['id']));
+        $photo = $this->facade->findAllAttributes('photo', array('album' => str_replace('_', ':', $_GET['id'])));
+        $currentProfileRC = $this->facade->findByPk('user', $album->data->owner);
+        $currentProfileID = $currentProfileRC->recordID;
+        $currentProfileRC = $this->facade->load('user', $currentProfileID);
+        $currentUser = $this->getCurrentUser();
+        $this->renderModule('mains/media', 'photo', array(
+            'otherUser' => $currentProfileRC,
+            'currentUser' => $currentUser,
+            'userID' => str_replace(':', '_', $currentProfileID),
+            'album' => $album,
+            'photo' => $photo
+        ));
     }
 
     public function createAlbum()
@@ -271,55 +301,81 @@ class PhotoController extends AppController
         }
     }
 
-    public function detail()
+//    public function detail()
+//    {
+//        if ($this->isLogin())
+//        {
+//            if (!empty($_GET['id']))
+//            {
+//                $id = str_replace('_', ':', $_GET['id']);
+//                $k = str_replace('_', ':', $_GET['p']);
+//                $kc = $k + 1;
+//                $kt = $k - 1;
+//                if (!empty($_GET['typeID']))
+//                {
+//                    $array = $this->facade->findAllAttributes('photo', array('actor' => F3::get('SESSION.userID'), 'typeID' => str_replace('_', ':', $_GET['typeID'])));
+//                    if ($k >= 0 && $k < count($array) - 1)
+//                        $idn = str_replace(':', '_', $array[$kc]->recordID);
+//                    else
+//                        $idn = str_replace(':', '_', $array[$k]->recordID);
+//                    if ($k == 0)
+//                        $idp = 0;
+//                    else
+//                        $idp = str_replace(':', '_', $array[$kt]->recordID);
+//                    $next = '/content/photo/detail?typeID=' . str_replace(':', '_', $_GET['typeID']) . '&id=' . $idn . '&p=' . $kc;
+//                    $prev = '/content/photo/detail?typeID=' . str_replace(':', '_', $_GET['typeID']) . '&id=' . $idp . '&p=' . $kt;
+//                }
+//                else
+//                {
+//                    $array = $this->facade->findAllAttributes('photo', array('owner' => F3::get('SESSION.userID')));
+//                    if ($k >= 0 && $k < count($array) - 1)
+//                        $idn = str_replace(':', '_', $array[$kc]->recordID);
+//                    else
+//                        $idn = str_replace(':', '_', $array[$k]->recordID);
+//                    if ($k == 0)
+//                        $idp = 0;
+//                    else
+//                        $idp = str_replace(':', '_', $array[$kt]->recordID);
+//                    $next = '/content/photo/detail?id=' . $idn . '&p=' . $kc;
+//                    $prev = '/content/photo/detail?id=' . $idp . '&p=' . $kt;
+//                }
+//                $currentUser = $this->getCurrentUser();
+//                $photo = $this->facade->findByPk('photo', $id);
+//                $this->renderModule('mains/detail', 'photo', array(
+//                    'photo' => $photo,
+//                    'next' => $next,
+//                    'prev' => $prev,
+//                    'p' => $k,
+//                    'count' => count($array) - 1,
+//                    'currentUser' => $currentUser,
+//                ));
+//            }
+//        }
+//    }
+
+    public function popupPhoto()
     {
-        if ($this->isLogin())
+        $pID = explode('_', $_GET['pID']);
+//        $pID[0]:userID;
+//        $pID[1]:typeID
+//        $pID[2]:photoID
+//        $pID[3]:key
+        if (!empty($pID[0]) && !empty($pID[2]))
         {
-            if (!empty($_GET['id']))
-            {
-                $id = str_replace('_', ':', $_GET['id']);
-                $k = str_replace('_', ':', $_GET['p']);
-                $kc = $k + 1;
-                $kt = $k - 1;
-                if (!empty($_GET['typeID']))
-                {
-                    $array = $this->facade->findAllAttributes('photo', array('actor' => F3::get('SESSION.userID'), 'typeID' => str_replace('_', ':', $_GET['typeID'])));
-                    if ($k >= 0 && $k < count($array) - 1)
-                        $idn = str_replace(':', '_', $array[$kc]->recordID);
-                    else
-                        $idn = str_replace(':', '_', $array[$k]->recordID);
-                    if ($k == 0)
-                        $idp = 0;
-                    else
-                        $idp = str_replace(':', '_', $array[$kt]->recordID);
-                    $next = '/content/photo/detail?typeID=' . str_replace(':', '_', $_GET['typeID']) . '&id=' . $idn . '&p=' . $kc;
-                    $prev = '/content/photo/detail?typeID=' . str_replace(':', '_', $_GET['typeID']) . '&id=' . $idp . '&p=' . $kt;
-                }
-                else
-                {
-                    $array = $this->facade->findAllAttributes('photo', array('owner' => F3::get('SESSION.userID')));
-                    if ($k >= 0 && $k < count($array) - 1)
-                        $idn = str_replace(':', '_', $array[$kc]->recordID);
-                    else
-                        $idn = str_replace(':', '_', $array[$k]->recordID);
-                    if ($k == 0)
-                        $idp = 0;
-                    else
-                        $idp = str_replace(':', '_', $array[$kt]->recordID);
-                    $next = '/content/photo/detail?id=' . $idn . '&p=' . $kc;
-                    $prev = '/content/photo/detail?id=' . $idp . '&p=' . $kt;
-                }
-                $currentUser = $this->getCurrentUser();
-                $photo = $this->facade->findByPk('photo', $id);
-                $this->renderModule('mains/detail', 'photo', array(
-                    'photo' => $photo,
-                    'next' => $next,
-                    'prev' => $prev,
-                    'p' => $k,
-                    'count' => count($array) - 1,
-                    'currentUser' => $currentUser,
-                ));
-            }
+            $photo = $this->facade->findByPk('photo', $pID[2]);
+            if ($pID[1] != 0)
+                $findAll = $this->facade->findAllAttributes('photo', array('typeID' => $pID[1], 'actor' => $pID[0]));
+            else
+                $findAll = $this->facade->findAllAttributes('photo', array('actor' => $pID[0]));
+            $k = $pID[3];
+            $currentUser = $this->getCurrentUser();
+            $this->f3->set('photo', $photo);
+            if ($k + 1 < count($findAll))
+                $this->f3->set('idn', $findAll[$k + 1]->recordID);
+
+            if ($k > 0)
+                $this->f3->set('idp', $findAll[$k - 1]->recordID);
+            $this->renderModule('mains/popup', 'photo', array('tID' => $pID[1], 'k' => $pID[3], 'currentUser' => $currentUser));
         }
     }
 

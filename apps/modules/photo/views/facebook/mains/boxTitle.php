@@ -13,7 +13,7 @@
         <nav class="ink-navigation">
             <ul class="menu horizontal">
                 <li><a href="/content/photo?user=<?php echo $this->f3->get('SESSION.username') ?>">Photos of you</a></li>
-                <li><a href="/content/photo/album?user=<?php echo $this->f3->get('SESSION.username') ?>">Albums</a></li>
+                <li><a href="/content/photo/album?user=<?php echo $user->data->username ?>">Albums</a></li>
             </ul>
         </nav>
     </div>

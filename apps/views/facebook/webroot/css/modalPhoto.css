@@ -1,0 +1,22 @@
+/* 
+    Document   : modalPhoto
+    Created on : Oct 21, 2014, 11:00:55 AM
+    Author     : Asus
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#pgwModal .pm-title{
+    background: none !important;
+    border-bottom: none !important;
+    padding: 0;
+    min-height: 0;
+}
+#pgwModal .pm-body {
+    background: #000 !important;
+    border-radius: 0 !important;
+}
+#pgwModal .pm-content {
+    padding: 0 !important;
+    background: #000 !important;
+}

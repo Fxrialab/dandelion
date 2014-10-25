@@ -1,6 +1,5 @@
 <?php
 
-//var_dump(F3::get('SESSION.userID'));
 if (!empty($objectID))
     $records = HelperController::getFindComment($objectID);
 else

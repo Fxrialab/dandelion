@@ -405,3 +405,36 @@
     height: 54px;
     display: inherit;
 }
+[class^="icon16-"], [class*=" icon16-"] {
+    display: inline-block;
+    width: 16px;
+    height:16px;
+    margin-right: .3em;
+    line-height: 16px;
+    vertical-align: text-top;
+    background-image: url("../images/icon/icon.png");
+    background-position: 0;
+    background-repeat: no-repeat;
+}
+
+.icon16-closepopup{
+    background-position: -57px -80px;
+}
+[class^="icon40-"], [class*=" icon40-"] {
+    display: inline-block;
+    width: 36px;
+    height:70px;
+    margin-right: .3em;
+    line-height: 20px;
+    vertical-align: text-top;
+    background-image: url("../images/icon/icon.png");
+    background-position: 0;
+    background-repeat: no-repeat;
+}
+
+.icon40-pev{
+    background-position: -9px -113px;
+}
+.icon40-next{
+    background-position: -47px -114px;
+}

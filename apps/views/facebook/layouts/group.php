@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <?php $this->including('head');?>
+    <?php $this->including('head'); ?>
     <body>
         <div id="topBar">
             <?php $this->including('topBar'); ?>
@@ -12,10 +12,11 @@
                     <div class="uiMainColTimeLine large-80 borderLineLeft">
                         <div class="mainColWrapper">
                             <?php
-                            if ($type == 'modules')
-                                $this->loadModules($page);
-                            else
-                                echo View::instance()->render($page);
+                            $this->loadContent($page);
+//                            if ($type == 'modules')
+//                                $this->loadModules($page);
+//                            else
+//                                echo View::instance()->render($page);
                             ?>
                         </div>
                         <div class="uiRightCol large-30">

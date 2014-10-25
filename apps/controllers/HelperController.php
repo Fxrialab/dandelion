@@ -31,6 +31,20 @@ class HelperController extends Controller
         return $model;
     }
 
+    static public function findAllPhoto($id)
+    {
+        $facade = new DataFacade;
+        $model = $facade->findAllAttributes('photo', array('typeID' => $id));
+        return $model;
+    }
+
+    static public function photoAlbum($id)
+    {
+        $facade = new DataFacade;
+        $model = $facade->findAllAttributes('photo', array('album' => $id));
+        return $model;
+    }
+
     static public function findGender($id)
     {
         $facade = new DataFacade;
@@ -121,8 +135,8 @@ class HelperController extends Controller
         $model = $facade->findByPk('album', $id);
         return $model;
     }
-    
-     public static function countGroup()
+
+    public static function countGroup()
     {
         $facade = new DataFacade();
         return $facade->count('groupMember', array('member' => F3::get('SESSION.userID')));

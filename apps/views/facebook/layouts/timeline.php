@@ -20,10 +20,7 @@ $start = $time;
                         <?php $this->including('coverTimeLine'); ?>
                         <div class="mainColWrapper">
                             <?php
-                            if ($type == 'modules')
-                                $this->loadModules($page);
-                            else
-                                echo View::instance()->render($page);
+                            $this->loadContent($page);
                             ?>
                         </div>
                         <div class="uiRightCol large-30">
