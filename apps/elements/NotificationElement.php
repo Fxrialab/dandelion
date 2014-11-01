@@ -9,7 +9,7 @@ class NotificationElement extends AppController
 
     public function getNotificationElement()
     {
-        $this->render('elements/notificationPopUpOver.php','default');
+        $this->render('elements/notificationPopUpOver');
     }
 
 }

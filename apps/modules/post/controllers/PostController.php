@@ -28,16 +28,38 @@ class PostController extends AppController
                     $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
 
                 $like = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $statusID));
+                $photo = $this->facade->findAllAttributes('photo', array('typeID' => $statusRC->recordID));
+                $comment = $this->facade->findAllAttributes('comment', array('typeID' => $statusRC->recordID));
+                $commentArray = array();
+                if (!empty($comment))
+                {
+                    foreach ($comment as $value)
+                    {
+                        $userComment = $this->facade->findByPk("user", $value->data->owner);
+                        $avatarComment = $this->facade->findByPk("photo", $userRC->recordID);
+                        $likeComment = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $value->recordID));
+                        if (!empty($avatarComment))
+                            $photoC = $avatarComment->data->fileName;
+                        else
+                            $photoC = 'avatarMenDefault.png';
+                        $commentArray[] = array('comment' => $value, 'user' => $userComment, 'avatar' => $photoC, 'like' => $likeComment);
+                    }
+                }
+                $avatar = $this->facade->findByPk("photo", $userRC->recordID);
+                if (!empty($avatar))
+                    $photoAvatar = $avatar->data->fileName;
+                else
+                    $photoAvatar = 'avatarMenDefault.png';
                 $entry = array(
                     'type' => 'post',
                     'key' => $key,
                     'like' => $like,
                     'user' => $userRC,
-                    'username' => $userRC->data->username,
-                    'profilePic' => $userRC->data->profilePic,
+                    'avatar' => $photoAvatar,
+                    'photo' => $photo,
+                    'comment' => $commentArray,
                     'actions' => $statusRC,
-                    'objectID' => $statusID,
-                    'path' => Register::getPathModule('post'),
+//                    'path' => Register::getPathModule('post'),
                 );
                 return $entry;
             }else
@@ -225,7 +247,14 @@ class PostController extends AppController
             $this->trackActivity($currentUser, 'Post', $statusID, $type, $typeID, $published);
 
             $status = $this->facade->findByPk('status', $statusID);
-            $this->renderModule('mains/postStatus', 'post', array('status' => $status, 'statusID' => $statusID, 'content' => $content, 'currentUser' => $ccurrentUser, 'published' => $published));
+            $photo = $this->facade->findAllAttributes('photo', array('typeID' => $status->recordID));
+            $avatar = $this->facade->findByPk("photo", $currentUser->recordID);
+            if (!empty($avatar))
+                $photoAvatar = $avatar->data->fileName;
+            else
+                $photoAvatar = 'avatarMenDefault.png';
+            $data = array('status' => $status, 'photo' => $photo, 'avatar' => $avatar, 'user' => $currentUser);
+            $this->renderModule('postStatus', 'post', array('data' => $data));
         }
     }
 
@@ -242,7 +271,7 @@ class PostController extends AppController
             $content = $this->f3->get('POST.comment');
             //target for count who comments to post on notification, will check later
             $commentEntryCase = array(
-                "userID" => $currentUser->recordID,
+                "owner" => $currentUser->recordID,
                 "content" => $content,
                 "typeID" => $postID,
                 "published" => $published,
@@ -369,14 +398,18 @@ class PostController extends AppController
                 $duplicate->data->timers = $published;
                 $this->facade->updateByPk('activity', $duplicate->recordID, $duplicate);
             }
-
-            $this->f3->set('comments', $commentRC);
-
-            $this->renderModule('mains/viewComment', 'post');
-        }
-        else
-        {
-            
+            if (!empty($commentRC))
+            {
+                $userComment = $this->facade->findByPk("user", $commentRC->data->owner);
+                $avatarComment = $this->facade->findByPk("photo", $currentUser->recordID);
+                $likeComment = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $commentRC->recordID));
+                if (!empty($avatarComment))
+                    $photoC = $avatarComment->data->fileName;
+                else
+                    $photoC = 'avatarMenDefault.png';
+                $data = array('comment' => $commentRC, 'user' => $userComment, 'avatar' => $photoC, 'like' => $likeComment, 'is_object' => 1);
+                $this->renderModule('viewComment', 'post', array('comment' => $data));
+            }
         }
     }
 

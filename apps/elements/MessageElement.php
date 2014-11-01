@@ -9,7 +9,7 @@ class MessageElement extends AppController
 
     public function getMessageElement()
     {
-        $this->render('elements/messagePopUpOver.php','default');
+        $this->render('elements/messagePopUpOver');
     }
 
 }

@@ -10,13 +10,12 @@ class GroupController extends AppController
         parent::__construct();
     }
 
-    public function addGroup($viewPath)
+    public function addGroup()
     {
         if ($this->isLogin())
         {
             $this->layout = 'group';
-
-            $this->render($viewPath . 'mains/addGroup.php', 'modules');
+            $this->renderModule("addGroup", 'photo');
         }
     }
 
@@ -42,7 +41,7 @@ class GroupController extends AppController
 //                $this->f3->set('groupMember', $model);
 //            else
 //                $this->f3->set('groupMember', 'null');
-            $this->renderModule('mains/index', 'group', array('role' => $role));
+            $this->renderModule('index', 'group', array('role' => $role));
         }
     }
 
@@ -74,7 +73,7 @@ class GroupController extends AppController
                     {
                         $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $status->recordID));
                     }
-                    $this->renderModule('mains/post', 'post', array('listStatus' => $statusRC, 'likeStatus' => $likeStatus, 'page' => 'group'));
+                    $this->renderModule('post', 'post', array('listStatus' => $statusRC, 'likeStatus' => $likeStatus, 'page' => 'group'));
                 }
             }
         }
@@ -97,7 +96,7 @@ class GroupController extends AppController
                 $this->f3->set('groupMember', $model);
             else
                 $this->f3->set('groupMember', 'null');
-            $this->renderModule('mains/loadData', 'group');
+            $this->renderModule('loadData', 'group');
         }
     }
 
@@ -176,7 +175,7 @@ class GroupController extends AppController
             $group = $this->facade->findByPk('group', str_replace("_", ":", $groupID));
             $countAdmin = $this->facade->count('groupMember', array('groupID' => $groupID, 'role' => 'admin'));
             $count = $this->facade->count('groupMember', array('groupID' => $groupID));
-            $this->render('mains/members', 'group', array('group' => $group, 'members' => $members, 'countMember' => $count, 'countAdmin' => $countAdmin));
+            $this->render('members', 'group', array('group' => $group, 'members' => $members, 'countMember' => $count, 'countAdmin' => $countAdmin));
         }
     }
 
@@ -209,7 +208,7 @@ class GroupController extends AppController
         else
         {
             $this->f3->set('groupID', $_GET['id']);
-            $this->renderModule('mains/leave', 'group');
+            $this->renderModule('leave', 'group');
         }
     }
 
@@ -227,7 +226,7 @@ class GroupController extends AppController
             $this->f3->set('group', $group);
             $this->f3->set('member', $member);
             $this->f3->set('countMember', $count);
-            $this->renderModule('mains/detail', 'group');
+            $this->renderModule('detail', 'group');
         }
     }
 
@@ -238,7 +237,7 @@ class GroupController extends AppController
             $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
             $this->f3->set('photos', $photos);
             $this->f3->set('groupID', $_GET['id']);
-            $this->renderModule('mains/photoGalleries', 'group');
+            $this->renderModule('photoGalleries', 'group');
         }
     }
 
@@ -251,7 +250,7 @@ class GroupController extends AppController
             $image = array('name' => $photo->data->fileName, 'width' => $photo->data->width, 'height' => $photo->data->height);
             $this->f3->set('image', $image);
             $this->f3->set('target', 'choosePhoto');
-            $this->renderModule('mains/cover', 'group');
+            $this->renderModule('cover', 'group');
         }
     }
 
@@ -270,7 +269,7 @@ class GroupController extends AppController
                 $newName = $code . time();
                 $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true, $tempDir);
 //                    var_dump($image);
-                $this->renderModule('mains/cover', 'group', array('image' => $image, 'target' => 'uploadCover'));
+                $this->renderModule('cover', 'group', array('image' => $image, 'target' => 'uploadCover'));
 //                }
             }
         }
@@ -390,7 +389,7 @@ class GroupController extends AppController
             $photoID = $_POST['id'];
             $photo = $this->facade->findByPk('photo', $photoID);
             $this->f3->set('photo', $photo);
-            $this->renderModule('mains/reposition', 'group');
+            $this->renderModule('reposition', 'group');
         }
     }
 
@@ -452,11 +451,11 @@ class GroupController extends AppController
                     $model = Model::get('group')->find($group);
                     $this->f3->set('group', $model);
                 }
-                $this->renderModule('mains/viewGroup', 'group');
+                $this->renderModule('viewGroup', 'group');
             }
             else
             {
-                $this->renderModule('mains/form', 'group');
+                $this->renderModule('form', 'group');
             }
         }
     }

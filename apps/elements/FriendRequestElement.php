@@ -9,7 +9,7 @@ class FriendRequestElement extends AppController
 
     public function getFriendRequestElement()
     {
-        $this->render('elements/friendRequestPopUpOver.php', 'default');
+        $this->render('elements/friendRequestPopUpOver');
     }
 
 }

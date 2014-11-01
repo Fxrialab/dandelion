@@ -62,7 +62,7 @@ class RouteConfig
         'loadFriend_POST' => "FriendController",
         'searchFriend_POST' => "FriendController",
         /* Route config for ajax page */
-        'photoBrowser_POST' => "UploadController",
+        'photoBrowser_GET' => "ProfileController",
         'uploadCover_POST' => "UploadController",
         'uploadAvatar_POST' => "UploadController",
         'savePhoto_POST' => "UploadController",

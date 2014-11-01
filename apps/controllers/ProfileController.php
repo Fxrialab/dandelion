@@ -32,25 +32,25 @@ class ProfileController extends AppController
                 switch ($_GET['section'])
                 {
                     case 'overview':
-                        $this->render('profile/overview.php', 'default', array('username' => $username, 'active' => 'overview', 'information' => $information));
+                        $this->render('profile/overview', array('username' => $username, 'active' => 'overview', 'information' => $information));
                         break;
                     case 'education':
-                        $this->render('profile/education.php', 'default', array('username' => $username, 'active' => 'education', 'information' => $information));
+                        $this->render('profile/education', array('username' => $username, 'active' => 'education', 'information' => $information));
                         break;
                     case 'living':
-                        $this->render('profile/living.php', 'default', array('username' => $username, 'active' => 'living', 'information' => $information));
+                        $this->render('profile/living', array('username' => $username, 'active' => 'living', 'information' => $information));
                         break;
                     case 'contact':
-                        $this->render('profile/contact.php', 'default', array('username' => $username, 'active' => 'contact', 'email' => $currentProfileRC->data->email, 'information' => $information));
+                        $this->render('profile/contact', array('username' => $username, 'active' => 'contact', 'email' => $currentProfileRC->data->email, 'information' => $information));
                         break;
                     case 'relationship':
-                        $this->render('profile/relationship.php', 'default', array('username' => $username, 'active' => 'relationship'));
+                        $this->render('profile/relationship', array('username' => $username, 'active' => 'relationship'));
                         break;
                     case 'bio':
-                        $this->render('profile/bio.php', 'default', array('username' => $username, 'active' => 'bio', 'fullname' => $currentProfileRC->data->fullName, 'information' => $information));
+                        $this->render('profile/bio', array('username' => $username, 'active' => 'bio', 'fullname' => $currentProfileRC->data->fullName, 'information' => $information));
                         break;
                     case 'year-overviews':
-                        $this->render('profile/yearOverviews.php', 'default', array('username' => $username, 'active' => 'year-overviews'));
+                        $this->render('profile/yearOverviews', array('username' => $username, 'active' => 'year-overviews'));
                         break;
                 }
             }
@@ -73,7 +73,7 @@ class ProfileController extends AppController
         else
         {
             $information = $this->facade->findByAttributes('information', array('user' => $this->f3->get('SESSION.userID')));
-            $this->render('profile/editWork.php', 'default', array('information' => $information));
+            $this->render('profile/editWork', array('information' => $information));
         }
     }
 
@@ -92,7 +92,7 @@ class ProfileController extends AppController
         else
         {
             $information = $this->facade->findByAttributes('information', array('user' => $this->f3->get('SESSION.userID')));
-            $this->render('profile/editCollege.php', 'default', array('information' => $information));
+            $this->render('profile/editCollege', array('information' => $information));
         }
     }
 
@@ -111,7 +111,7 @@ class ProfileController extends AppController
         else
         {
             $information = $this->facade->findByAttributes('information', array('user' => $this->f3->get('SESSION.userID')));
-            $this->render('profile/editSchool.php', 'default', array('information' => $information));
+            $this->render('profile/editSchool', array('information' => $information));
         }
     }
 
@@ -129,7 +129,7 @@ class ProfileController extends AppController
         else
         {
             $information = $this->facade->findByAttributes('information', array('user' => $this->f3->get('SESSION.userID')));
-            $this->render('profile/editCity.php', 'default', array('information' => $information));
+            $this->render('profile/editCity', array('information' => $information));
         }
     }
 
@@ -147,7 +147,7 @@ class ProfileController extends AppController
         else
         {
             $information = $this->facade->findByAttributes('information', array('user' => $this->f3->get('SESSION.userID')));
-            $this->render('profile/editCity.php', 'default', array('information' => $information));
+            $this->render('profile/editCity', array('information' => $information));
         }
     }
 
@@ -165,7 +165,7 @@ class ProfileController extends AppController
         else
         {
             $information = $this->facade->findByAttributes('information', array('user' => $this->f3->get('SESSION.userID')));
-            $this->render('profile/editContactPhone.php', 'default', array('information' => $information));
+            $this->render('profile/editContactPhone', array('information' => $information));
         }
     }
 
@@ -184,7 +184,7 @@ class ProfileController extends AppController
         else
         {
             $information = $this->facade->findByAttributes('information', array('user' => $this->f3->get('SESSION.userID')));
-            $this->render('profile/editBirthday.php', 'default', array('information' => $information));
+            $this->render('profile/editBirthday', array('information' => $information));
         }
     }
 
@@ -203,7 +203,7 @@ class ProfileController extends AppController
         else
         {
             $information = $this->facade->findByAttributes('information', array('user' => $this->f3->get('SESSION.userID')));
-            $this->render('profile/editGender.php', 'default', array('information' => $information));
+            $this->render('profile/editGender', array('information' => $information));
         }
     }
 
@@ -223,7 +223,7 @@ class ProfileController extends AppController
         else
         {
             $user = $this->facade->findByAttributes('user', array('@rid' => '#' . $this->f3->get('SESSION.userID')));
-            $this->render('profile/editName.php', 'default', array('firstName' => $user->data->firstName, 'lastName' => $user->data->lastName));
+            $this->render('profile/editName', array('firstName' => $user->data->firstName, 'lastName' => $user->data->lastName));
         }
     }
 
@@ -242,7 +242,7 @@ class ProfileController extends AppController
         else
         {
             $information = $this->facade->findByAttributes('information', array('user' => $this->f3->get('SESSION.userID')));
-            $this->render('profile/editAbout.php', 'default', array('information' => $information));
+            $this->render('profile/editAbout.php', array('information' => $information));
         }
     }
 
@@ -306,6 +306,43 @@ class ProfileController extends AppController
             }
             header("Content-Type: application/json; charset=UTF-8");
             echo json_encode($data);
+        }
+    }
+
+    public function photoBrowser()
+    {
+        if ($this->isLogin())
+        {
+            if (!empty($_GET['act']))
+            {
+                $album = $this->facade->findAllAttributes('album', array('owner' => $this->f3->get('SESSION.userID')));
+                $this->render('profile/albumBrowsers.php', 'profile', array('album' => $album, 'user_id' => $_GET['user_id'], 'type' => $_GET['type']));
+            }
+            else
+            {
+                if (!empty($_GET['aid']))
+                {
+                    $album = $this->facade->findByPk('album', $_GET['aid']);
+                    if (!empty($album))
+                    {
+                        $albumName = $album->data->name;
+                        $photos = $this->facade->findAllAttributes('photo', array('album' => $album->recordID));
+                    }
+                    else
+                    {
+                        $albumName = '';
+                    }
+                }
+                else
+                {
+                    $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
+                    $albumName = 'Recent Uploads';
+                }
+                $this->f3->set('albumName', $albumName);
+                $this->f3->set('photos', $photos);
+                $this->f3->set('type', $_GET['type']);
+                $this->render('profile/photoBrowsers');
+            }
         }
     }
 

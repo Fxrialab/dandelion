@@ -193,6 +193,57 @@ class AjaxController extends AppController
         }
     }
 
+    public function photoBrowser()
+    {
+        if ($this->isLogin())
+        {
+            if (!empty($_GET['act']))
+            {
+                $album = $this->facade->findAllAttributes('album', array('owner' => $this->f3->get('SESSION.userID')));
+             
+                $this->renderModule('mains/albumBrowsers', 'group', array('album' => $album, 'rid' => $_GET['id']));
+            }
+            else
+            {
+                if (!empty($_GET['aid']))
+                {
+                    $album = $this->facade->findByPk('album', $_GET['aid']);
+                    if (!empty($album))
+                    {
+                        $albumName = $album->data->name;
+                        $photos = $this->facade->findAllAttributes('photo', array('album' => $album->recordID));
+                    }
+                    else
+                    {
+                        $albumName = '';
+                    }
+                }
+                else
+                {
+                    $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
+                    $albumName = 'Recent Uploads';
+                }
+                $this->f3->set('albumName', $albumName);
+                $this->f3->set('photos', $photos);
+                $this->f3->set('rid', $_GET['id']);
+                $this->renderModule('mains/photoBrowsers', 'group');
+            }
+        }
+    }
+
+    public function changePhoto()
+    {
+        if ($this->isLogin())
+        {
+            $photoID = $_GET['photo_id'];
+            $photo = $this->facade->findByPk('photo', $photoID);
+            $image = array('name' => $photo->data->fileName, 'width' => $photo->data->width, 'height' => $photo->data->height);
+            $this->f3->set('image', $image);
+            $this->f3->set('target', 'choosePhoto');
+            $this->renderModule('cover', 'group');
+        }
+    }
+
 }
 
 ?>

@@ -84,23 +84,6 @@ class AppController extends Controller
         return $ip;
     }
 
-    public function including($file)
-    {
-        if (file_exists(UI . 'includes/' . $file . '.php'))
-            require_once (UI . 'includes/' . $file . '.php');
-        else
-            throw New Exception('File is not existed !');
-    }
-
-
-
-    public function loadModules($path)
-    {
-        if (file_exists($path))
-            require_once $path;
-        else
-            echo View::instance()->render($path);
-    }
 
 
 

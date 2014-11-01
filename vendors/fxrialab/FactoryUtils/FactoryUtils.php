@@ -1,4 +1,5 @@
 <?php
+
 class FactoryUtils
 {
 
@@ -10,34 +11,27 @@ class FactoryUtils
             $get = 'get' . $param;
             $element = new $param;
             return $element->$get();
-        }else
+        }
+        else
             return false;
     }
 
     static public function elementModule($element, $module)
     {
-        $pathMod = Register::getPathModule($module);
-        if (is_array($pathMod))
-        {
-            foreach ($pathMod as $path){
-                if ($path['mod'] == $module)
-                {
-                    $viewPath = $path['viewPath'];
-                }
-            }
-        }else {
-            $viewPath = $pathMod;
-        }
-        if (file_exists(MODULES  .$viewPath.'elements/'. $element . '.php'))
+
+        if (file_exists(MODULES . $module . '/views/elements/' . $element . '.php'))
         {
             $get = 'get' . $element;
-            $elementController = 'Element'.ucfirst($module).'Controller';
-            require_once MODULES.$module.'/controllers/'.$elementController.'.php';
+            $elementController = 'Element' . ucfirst($module) . 'Controller';
+            require_once MODULES . $module . '/views/elements/' . $element . '.php';
+            require_once MODULES . $module . '/controllers/' . $elementController . '.php';
             $element = new $elementController;
             return $element->$get();
-        }else
+        }
+        else
             return false;
     }
+
 }
 
 ?>

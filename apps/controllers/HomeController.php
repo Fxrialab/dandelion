@@ -15,7 +15,7 @@ class HomeController extends AppController
         if ($this->isLogin())
             header("Location:/home");
         else
-            $this->render('user/index.php', 'default');
+            $this->render('user/index');
     }
 
     public function popup()
@@ -54,7 +54,7 @@ class HomeController extends AppController
             }
             $this->f3->set('js', $loadJS);
             $this->f3->set('loggedUserID', $this->f3->get('SESSION.userID'));
-            $this->render('home/home.php', 'default');
+            $this->render('home/home',array('loggedUserID'=>$this->f3->get('SESSION.userID')));
         }
         else
         {
@@ -71,18 +71,18 @@ class HomeController extends AppController
             $obj = new ObjectHandler();
             $whereIs = $this->f3->get('POST.type');
             $profileID = $this->f3->get('POST.profile');
-            if (!empty($whereIs) && $whereIs == 'userPage')//loading all activities on user page
-            {
-                if (!empty($profileID))
-                {
-                    $obj->owner = $profileID;
-                    $obj->actor = $profileID;
-                }
-            }elseif (!empty($whereIs) && $whereIs == 'homePage') {//loading all activities on home page
-                $obj->owner = $this->getCurrentUser()->recordID;
-            }
+//            if (!empty($whereIs) && $whereIs == 'userPage')//loading all activities on user page
+//            {
+//                if (!empty($profileID))
+//                {
+//                    $obj->owner = $profileID;
+//                    $obj->actor = $profileID;
+//                }
+//            }elseif (!empty($whereIs) && $whereIs == 'homePage') {//loading all activities on home page
+//                $obj->owner = $this->getCurrentUser()->recordID;
+//            }
             $obj->type = 'post';
-            $obj->OR = "type = 'photo'";
+            $obj->OR = "type = 'group'";
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
             $homes = array();
@@ -99,7 +99,7 @@ class HomeController extends AppController
                     }
                 }
             }
-            $this->render('home/view.php', 'default', array('activities' => $homes, 'page' => 'home'));
+            $this->render('home/view', array('activities' => $homes, 'page' => 'home'));
         }
     }
 

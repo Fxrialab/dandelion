@@ -11,8 +11,6 @@ $url = $_SERVER["REQUEST_URI"];
 $params_full = explode('/', $url);
 $lastParams = explode('?', $params_full[count($params_full) - 1]);
 $param = $lastParams[0];
-
-
 if ($params_full && count($params_full) > 3)
 {
     $routeModuleConfigFile = MODULES . $params_full[2] . "/RouteModuleConfig.php";

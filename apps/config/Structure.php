@@ -32,7 +32,7 @@ define('LAYOUTS', 'layouts' . DS);
 define('EMAILS', 'emails' . DS);
 
 // static
-define('WEBROOT', BASE_URL . 'apps' . DS . 'views' . DS . TEMPLATE . DS .'webroot' . DS);
+define('WEBROOT', BASE_URL . 'apps' . DS . 'views' . DS .'webroot' . DS);
 define('IMAGES', WEBROOT . 'images' . DS);
 define('JS', WEBROOT . 'js' . DS);
 define('CSS', WEBROOT . 'css' . DS);

@@ -91,20 +91,20 @@ class UserController extends AppController
                     $this->facade->save('permission', $permissionDefault);
                     // sent mail for confirmation account
                     $this->EmailHelper->sendConfirmationEmail($data['email'], $confirmationCode);
-                    $this->render('user/index.php', 'default', array(
+                    $this->render('user/index', array(
                         'msgSignIn' => 'You are registered success. Please check mail and confirm !'
                     ));
                 }
                 else
                 {
-                    $this->render('user/index.php', 'default', array(
+                    $this->render('user/index', array(
                         'msgSignUp' => 'Please agree to the Terms and Privacy Policy'
                     ));
                 }
             }
             else
             {
-                $this->render('user/index.php', 'default', array(
+                $this->render('user/index', array(
                     'msgSignUp' => $this->ValidateHelper->validation($data, $isUsedEmail, false)
                 ));
             }
@@ -176,7 +176,7 @@ class UserController extends AppController
                     if ($existUser->data->status == 'pending')
                     {
                         $this->f3->set('msgSignIn', 'We have sent an confirmation email to you. Please check the email and confirm your email with us !');
-                        $this->render('user/index.php', 'default');
+                        $this->render('user/index', 'default');
                     }
                     else
                     {
@@ -268,14 +268,14 @@ class UserController extends AppController
                 }
                 else
                 {
-                    $this->render('user/index.php', 'default', array(
+                    $this->render('user/index',array(
                         'msgSignIn' => 'Your password is incorrect'
                     ));
                 }
             }
             else
             {
-                $this->render('user/index.php', 'default', array(
+                $this->render('user/index',  array(
                     'msgSignIn' => 'Your email is not exist. Please sign up !'
                 ));
             }
@@ -299,17 +299,17 @@ class UserController extends AppController
                 setcookie('codeConfirmUser', $code, time() + 3600);
                 setcookie('email', $email, time() + 3600);
                 $this->EmailHelper->sendCodeConfirmEmail($email, $code);
-                $this->render("user/confirmCode.php", 'default', array('email' => $email));
+                $this->render("user/confirmCode", array('email' => $email));
             }
             else
             {
-                $this->render("user/authentication.php", 'default', array(
+                $this->render("user/authentication", array(
                     'MsgValidate' => $this->ValidateHelper->validation($email, $existEmail, true)
                 ));
             }
         }
         else
-            $this->render("user/authentication.php", 'default');
+            $this->render("user/authentication");
     }
 
     public function confirmCode()
@@ -355,7 +355,7 @@ class UserController extends AppController
         }
         else
         {
-            $this->render('user/confirmCode.php', 'default', array(
+            $this->render('user/confirmCode', array(
                 'email' => $_COOKIE["email"],
                 'msgValidate' => 'The code is incorrect. Please try again!'
             ));
@@ -384,7 +384,7 @@ class UserController extends AppController
             }
         }
         else
-            $this->render('user/forgotPassword.php', 'default');
+            $this->render('user/forgotPassword');
     }
 
     public function resetPassword()
@@ -401,7 +401,7 @@ class UserController extends AppController
         }
         else
         {
-            $this->render('user/resetPassword.php', 'default');
+            $this->render('user/resetPassword');
         }
     }
 
@@ -422,14 +422,14 @@ class UserController extends AppController
             }
             else
             {
-                $this->render('user/confirmPassword.php', 'default', array(
+                $this->render('user/confirmPassword', array(
                     'email' => $email,
                     'msgValidate' => 'The code is not correct!'
                 ));
             }
         }
         else
-            $this->render('user/forgotPassword.php', 'default');
+            $this->render('user/forgotPassword');
     }
 
     public function newPassword()
@@ -454,7 +454,7 @@ class UserController extends AppController
                     setcookie($email, '', time() - 3600);
                     if ($user->data->status == 'pending')
                     {
-                        $this->render('user/newPassword.php', 'default', array(
+                        $this->render('user/newPassword', array(
                             'msgValidate' => 'Reset password is success. However you still not confirm this account, we had send an link confirmation email to you!'
                         ));
                     }
@@ -512,11 +512,11 @@ class UserController extends AppController
             }
             else
             {
-                $this->render('user/newPassword.php', 'default', array('msgValidate' => 'Two password does not match!'));
+                $this->render('user/newPassword', array('msgValidate' => 'Two password does not match!'));
             }
         }
         else
-            $this->render('user/forgotPassword.php', 'default');
+            $this->render('user/forgotPassword');
     }
 
     public function logout()
@@ -557,7 +557,7 @@ class UserController extends AppController
                     //get status friendship
                     $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileID);
 
-                    $this->render('user/userPage.php', 'default',array(
+                    $this->render('user/userPage', array(
                         'currentUser'   => $currentUser,
                         'otherUser'     => $userRC,
                         'statusFriendShip'  => $statusFriendShip,

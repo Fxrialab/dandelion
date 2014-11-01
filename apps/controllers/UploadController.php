@@ -64,7 +64,7 @@ class UploadController extends AppController
                     $code = $this->StringHelper->generateRandomString(5);
                     $newName = $code . time();
                     $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true, $tempDir);
-                    $this->render('ajax/confirmPhoto.php', 'default', array('image' => $image, 'target' => 'uploadCover'));
+                    $this->render('ajax/confirmPhoto', array('image' => $image, 'target' => 'uploadCover'));
                 }
             }
         }
@@ -86,7 +86,7 @@ class UploadController extends AppController
                     $code = $this->StringHelper->generateRandomString(5);
                     $newName = $code . time();
                     $image = $this->changeImage($file, 170, $avatarDir, $newName, 100, true, $tempDir);
-                    $this->render('ajax/confirmAvatar.php', 'default', array('image' => $image, 'target' => 'uploadAvatar'));
+                    $this->render('ajax/confirmAvatar', array('image' => $image, 'target' => 'uploadAvatar'));
                 }
             }
         }
@@ -99,8 +99,8 @@ class UploadController extends AppController
         {
             $photos = $this->facade->findAllAttributes('photo', array('owner' => $this->f3->get('SESSION.userID')));
             $this->f3->set('photos', $photos);
-            $this->f3->set('role', $_POST['role']);
-            $this->render('ajax/photoGalleries.php', 'ajax');
+            $this->f3->set('role', $_GET['r']);
+            $this->render('ajax/photoGalleriesajax');
         }
     }
 
@@ -284,7 +284,7 @@ class UploadController extends AppController
             {//when role such as cover
                 if (!file_exists($coverDir . $photo->data->fileName))
                     $this->resizeImageFile($pathFile, 750, $coverDir . $photo->data->fileName, 100);
-                $this->render('ajax/confirmPhoto.php', 'ajax');
+                $this->render('ajax/confirmPhoto');
             }
         }
     }
@@ -296,7 +296,7 @@ class UploadController extends AppController
         {
             $photo = $this->facade->findByPk('photo', $_POST['id']);
             $this->f3->set('photo', $photo);
-            $this->render('ajax/reposition.php', 'ajax');
+            $this->render('ajax/reposition');
         }
     }
 

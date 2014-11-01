@@ -73,7 +73,7 @@ class FriendController extends AppController
             $this->f3->set('addFriend', false);
             $this->f3->set('isFriend', false);
             $this->f3->set('toUser', $toUser);
-            $this->render('home/friend.php', 'default');
+            $this->render('home/friend');
         }
     }
 
@@ -116,7 +116,7 @@ class FriendController extends AppController
             $this->f3->set('addFriend', false);
             $this->f3->set('isFriend', true);
             $this->f3->set('toUser', $toUser);
-            $this->render('home/friend.php', 'default');
+            $this->render('home/friend');
         }
     }
 
@@ -148,7 +148,7 @@ class FriendController extends AppController
             $this->f3->set('addFriend', true);
             $this->f3->set('isFriend', false);
             $this->f3->set('toUser', $toUser);
-            $this->render('home/friend.php', 'default');
+            $this->render('home/friend');
         }
     }
 
@@ -167,7 +167,7 @@ class FriendController extends AppController
                 $friends = $this->facade->findAllAttributes('friendship', array('userA'=>$currentProfileRC->recordID, 'relationship'=>'friend','status'=>'ok'));
                 //get status friendship
                 $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
-                $this->render('user/friends.php', 'default',array(
+                $this->render('user/friends',array(
                     'currentUser'   => $currentUser,
                     'otherUser'     => $currentProfileRC,
                     'statusFriendShip'  => $statusFriendShip,
@@ -197,7 +197,7 @@ class FriendController extends AppController
                     {
                         $user = $this->facade->findByPk('user', $value->data->userB);
                     }
-                    $this->render('user/viewFriend.php', 'default', array('friends'=>$user));
+                    $this->render('user/viewFriend', array('friends'=>$user));
                 }
             }
         }
@@ -240,7 +240,7 @@ class FriendController extends AppController
                     }
                 }
             }
-            $this->render('user/viewFriend.php', 'default', array('friends'=>$user));
+            $this->render('user/viewFriend', array('friends'=>$user));
         }
     }
 

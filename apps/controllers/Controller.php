@@ -80,28 +80,26 @@ class Controller
      * @param $type
      * @param array $set
      */
-    public function render($page, $type, $set = array())
+    public function render($path, $set = array())
     {
+        $page = VIEWS . $path . '.php';
         foreach ($set as $k => $value)
             $this->f3->set($k, $value);
         if ($this->layout != '')
-            require_once(UI . LAYOUTS . $this->layout . '.php');
+            require_once(VIEWS . LAYOUTS . $this->layout . '.php');
         else
-            echo View::instance()->render($page);
+            require_once $page;
     }
 
     public function renderModule($action, $type, $set = array())
     {
         foreach ($set as $k => $value)
             $this->f3->set($k, $value);
-
-        $page = MODULES . $type . '/views/' . TEMPLATE . '/' . $action . '.php';
+        $page = MODULES . $type . '/views/' . $action . '.php';
         if (!empty($this->layout))
-            require_once(UI . LAYOUTS . $this->layout . '.php');
+            require_once(VIEWS . LAYOUTS . $this->layout . '.php');
         else
             require_once $page;
-        
-        
     }
 
     public function inc($param, $type, $array = array())
@@ -110,10 +108,18 @@ class Controller
         {
             $this->f3->set($k, $value);
         }
-        if (file_exists(MODULES . $type . '/views/' . TEMPLATE . '/' . $param . '.php'))
-            require MODULES . $type . '/views/' . TEMPLATE . '/' . $param . '.php';
-        else if (file_exists(LAYOUTS . '/views/' . TEMPLATE . '/' . $param . '.php'))
-            require LAYOUTS . '/views/' . TEMPLATE . '/' . $param . '.php';
+        if (file_exists(MODULES . $type . VIEWS . $param . '.php'))
+            require MODULES . $type . VIEWS . $param . '.php';
+        else if (file_exists(VIEWS . $param . '.php'))
+            require VIEWS . $param . '.php';
+        else
+            throw New Exception('File is not existed !');
+    }
+
+    public function including($file)
+    {
+        if (file_exists(VIEWS . 'includes/' . $file . '.php'))
+            require_once (VIEWS . 'includes/' . $file . '.php');
         else
             throw New Exception('File is not existed !');
     }
@@ -125,6 +131,7 @@ class Controller
         else
             echo View::instance()->render($path);
     }
+
 
 }
 
