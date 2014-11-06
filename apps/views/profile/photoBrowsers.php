@@ -22,9 +22,22 @@ $type = F3::get('type');
             ?>
             <div class=" large-25">
                 <div class="photoItems">
-                    <a class="changePhoto_<?php echo $type ?>" href="/changePhoto?profile_id=<?php echo F3::get('SESSION.userID') ?>&photo_id=<?php echo $value->recordID ?>">
-                        <i class="mediaThumb" style="background-image:url(<?php echo UPLOAD_URL . 'images/' . $value->data->fileName; ?>)"></i>
-                    </a>
+                    <?php
+                    if ($type == 'avatar')
+                    {
+                        ?>
+                        <a class="popupPhoto" href="/content/photo/popupPhoto?pID=<?php echo $this->f3->get('SESSION.userID') ?>_0_<?php echo $value->recordID ?>_0&set=drap">
+                            <i class="mediaThumb" style="background-image:url(<?php echo UPLOAD_URL . 'images/' . $value->data->fileName; ?>)"></i>
+                        </a>
+                        <?php
+                    }
+                    else
+                    {
+                        ?>
+                        <a class="changePhoto_<?php echo $type ?>" data-rel="<?php echo $type . ';' . $value->recordID ?>">
+                            <i class="mediaThumb" style="background-image:url(<?php echo UPLOAD_URL . 'images/' . $value->data->fileName; ?>)"></i>
+                        </a>
+                    <?php } ?>
                 </div>
             </div>
             <?php

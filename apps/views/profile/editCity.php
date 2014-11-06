@@ -3,8 +3,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-$location = F3::get('location');
-$name = F3::get('name');
+$location = $this->f3->get('location');
+$name = $this->f3->get('name');
 ?>
 <div class="large-100 <?php echo $name ?>">
     <form class="ink-form formAbout" id="submitCity">

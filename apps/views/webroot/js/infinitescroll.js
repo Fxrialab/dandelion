@@ -329,7 +329,7 @@
                 $initmessage = '<div></div>';
             else
                 $initmessage = 'Click for more';
-            $this.append('<div class="viewMoreGroups"></div><div class="loading-bar">' + $initmessage + '</div>');
+            $this.append('<div class="column-group"></div>');
             function getData() {
                 $.post('/content/group/successGroup', {
                     action: 'scrollpagination',
@@ -338,10 +338,10 @@
                     roleGroup: roleGroup
                 }, function(data) {
                     if (data == "") {
-                        $this.find('.loading-bar').html($settings.error);
+                        $this.find('.loading-bar').html($initmessage);
                     } else {
                         offset = offset + $settings.nop;
-                        $this.find('.viewMoreGroups').append(data);
+                        $this.find('.column-group').append(data);
                         busy = false;
                     }
                     updateTime();

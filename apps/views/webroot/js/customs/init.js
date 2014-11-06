@@ -51,38 +51,7 @@ $(document).ready(function() {
     $('body').on('click', '.uiLike', function() {
         var data = $(this).attr('data-like');
         var url = $(this).attr('data-rel');
-        $.ajax({
-            type: "POST",
-            url: "/" + url,
-            data: {data: data},
-            cache: false,
-            success: function(result) {
-                var obj = jQuery.parseJSON(result);
-                if (obj) {
-                    $('a.like_' + obj.id).attr('data-rel', function() {
-                        return obj.liked;
-                    });
-                    $('a.like_' + obj.id).html(obj.title);
-
-                    if (obj.type == 'status') {
-                        $('.l1_' + obj.id).html(obj.count);
-                        if (obj.count == 1) {
-                            $(".tempLike-" + obj.id).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + obj.id + "'>" +
-                                    "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
-                                    "</div>");
-
-                        } else if ((obj.count > 1)) {
-                            $("<span>You and </span>").prependTo("#likeSentence-" + obj.id);
-                        } else {
-                            $("#likeSentence-" + obj.id).remove()
-                        }
-                    } else {
-                        $('.l2_' + obj.id).html(obj.count);
-                    }
-
-                }
-            }
-        });
+        $(this).like(data, url);
     });
 
     $('body').on('click', '.shareStatus', function() {
@@ -118,77 +87,42 @@ $(document).ready(function() {
 });
 
 (function($) {
-    $.fn.like = function(type, objectID)
+    $.fn.like = function(data, url)
     {
-        if (type == 'photoDialog' || type == 'photo') {
-            var recordID = 'photo';
-        } else {
-            var recordID = 'status';
-        }
-
         $.ajax({
             type: "POST",
-            url: "/like",
-            data: {type: recordID, objectID: objectID},
+            url: "/" + url,
+            data: {data: data},
             cache: false,
-            success: function(html) {
-                if (type == 'status' || type == 'photoDialog') {
-                    var getNumLike = parseInt($("#numLike-" + objectID).html());
-                    $('.like-' + objectID).html(html);
-                    $('.postItem-' + objectID).fadeIn("slow");
-                    var likeSentence = $('#likeSentence-' + objectID).length;
-                    $('#numLike-' + objectID).html(getNumLike + 1);
-                    if (likeSentence)
-                    {
-                        $("<span>You and </span>").prependTo("#likeSentence-" + objectID);
-                    } else {
-                        $(".tempLike-" + objectID).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + objectID + "'>" +
-                                "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
-                                "</div>");
-                    }
-                } else {
-                    var getNumLike = parseInt($(".numLike-" + objectID).html());
-                    $('.like_' + objectID).html(html);
-                    $('.numLike-' + objectID).html(getNumLike + 1);
-                }
+            success: function(result) {
+                var obj = jQuery.parseJSON(result);
+                if (obj) {
+                    $('a.like_' + obj.id).attr('data-rel', function() {
+                        return obj.liked;
+                    });
+                    $('a.like_' + obj.id).html(obj.title);
 
-            }
-        });
-    };
-    $.fn.unlike = function(type, objectID)
-    {
-        if ((type == 'photoDialog') || (type == 'photo')) {
-            var recordID = 'photo';
-        } else {
-            var recordID = 'status';
-        }
-        $.ajax({
-            type: "POST",
-            url: "/unlike",
-            data: {type: recordID, objectID: objectID},
-            cache: false,
-            success: function(html) {
-                if (type == 'status' || type == 'photoDialog') {
-                    var getNumLike = parseInt($("#numLike-" + objectID).html());
-                    $('.like-' + objectID).html(html);
-                    $('#numLike-' + objectID).html(getNumLike - 1);
-                    $('.postItem-' + objectID).fadeIn("slow");
-                    var otherLike = $('#likeSentence-' + objectID + ' a').length;
-                    if (otherLike)
-                    {
-                        $('#likeSentence-' + objectID + ' span').remove();
+                    if (obj.type == 'status') {
+                        $('.l1_' + obj.id).html(obj.count);
+                        if (obj.count == 1) {
+                            $(".tempLike-" + obj.id).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + obj.id + "'>" +
+                                    "<span><i class='statusCounterIcon-like'></i>You like this</span>" +
+                                    "</div>");
+
+                        } else if ((obj.count > 1)) {
+                            $("<span>You and </span>").prependTo("#likeSentence-" + obj.id);
+                        } else {
+                            $("#likeSentence-" + obj.id).remove()
+                        }
                     } else {
-                        $('#likeSentence-' + objectID).detach();
+                        $('.l2_' + obj.id).html(obj.count);
                     }
-                }
-                else {
-                    var getNumLike = parseInt($(".numLike-" + objectID).html());
-                    $('.like_' + objectID).html(html);
-                    $('.numLike-' + objectID).html(getNumLike - 1);
+
                 }
             }
         });
     };
+
     $.fn.share = function(objectID)
     {
         $('#fade').show();
@@ -343,87 +277,8 @@ $(document).ready(function()
     };
 })(jQuery);
 
-/*Comment Function*/
-$(document).on('keypress', '.submitComment', function(event) {
-    var code = (event.keyCode ? event.keyCode : event.which);
-    if (code == '13' && !event.shiftKey)
-    {
-        var statusID = $(this).attr('id').replace('textComment-', '');
-        var comment = $("#textComment-" + statusID).val();
-        var numComment = parseInt($(".c1_" + statusID).html());
-        if (comment == '')
-        {
-            return false;
-        } else {
-            $.ajax({
-                type: "POST",
-                url: "/content/post/postComment",
-                data: $('#fmComment-' + statusID).serialize(),
-                cache: false,
-                success: function(html) {
-                    $(".c1_" + statusID).html(numComment + 1);
-                    $(".moreComment_" + statusID).before(html);
-                    $("#textComment-" + statusID).val('');
-                    updateTime();
-                }
-            });
-            //exit();
-        }
-    }
-    //return false;
-});
 
-$("body").on('click', '#createGroup', function(e) {
-    e.preventDefault();
-    var title = $(this).attr('rel');
-    var href = $(this).attr('href');
-    $.ajax({
-        type: "POST",
-        url: href,
-        success: function(data) {
-            $(".dialog").html(data);
-            $(".dialog").dialog({
-                width: "450",
-                height: "400",
-                position: ['top', 120],
-                title: title,
-                resizable: false,
-                modal: true,
-                open: function(event, ui) {
-                    $(".ui-dialog-titlebar-close").hide();
-                    $('body').css('overflow', 'hidden');
-                }
-            });
-        }
-    });
-});
-$("body").on('click', '#leaveGroup', function(e) {
-    e.preventDefault();
-    var title = $(this).attr('title');
-    var href = $(this).attr('href');
-    var groupID = $(this).attr('rel');
-    $(".dialog").dialog({
-        width: "500",
-        height: "150",
-        position: ['top', 120],
-        title: "Leave " + title,
-        resizable: false,
-        modal: true,
-        open: function(event, ui) {
-            $(".ui-dialog-titlebar-close").hide();
-            $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
-        }
-    });
-    $.ajax({
-        type: "POST",
-        url: href,
-        data: {groupID: groupID},
-        success: function(data) {
-            $(".dialog").html(data);
 
-        }
-    });
-});
 
 $("body").on('click', '#addMember', function(e) {
     e.preventDefault();
@@ -581,18 +436,15 @@ $("body").on('click', '.comfirmDialogGroup', function(e) {
     });
 });
 
-$("body").on('click', '.choosePhoto_cover', function(e) {
+$("body").on('click', '.changePhoto_cover', function(e) {
     e.preventDefault();
-    var id = $(this).attr('rel');
-    var role = $(this).attr('role');
+    var data = $(this).attr('data-rel');
     $.ajax({
         type: "POST",
-        url: "/choosePhoto",
-        data: {id: id, role: role},
+        url: "/changePhoto",
+        data: {data: data},
         success: function(data) {
             $('.displayPhoto').html(data);
-            $(".dialog").dialog("close");
-            $('body').css('overflow', 'scroll'); //this line does the actual hiding
             $('.profilePic img').css('display', 'none');
             $('.dropdown').css('display', 'none');
             $('.profilePic .profileInfo').css('display', 'none ');
@@ -600,19 +452,20 @@ $("body").on('click', '.choosePhoto_cover', function(e) {
             $('.actionCover').css('display', 'none');
             $('.timeLineMenuNav div').remove();
             $("#navCoverUserTemplate").tmpl(data).appendTo(".timeLineMenuNav");
+
         }
     });
+    $.pgwModal('close');
 });
-$("body").on('click', '.choosePhoto_avatar', function(e) {
+$("body").on('click', '.changePhoto_avatar', function(e) {
     e.preventDefault();
-    var id = $(this).attr('rel');
-    var role = $(this).attr('role');
+    var data = $(this).attr('data-rel');
     $.ajax({
         type: "POST",
         url: "/choosePhoto",
-        data: {id: id, role: role},
-        success: function(data) {
-            $('.infoUser').html(data);
+        data: {data: data},
+        success: function(rs) {
+            $('.infoUser').html(rs);
             $('.profileInfo .dropdown').css('display', 'none');
             $('.profilePic .profileInfo').css('display', 'none');
             $(".dialog").dialog("close");
@@ -778,7 +631,35 @@ $(document).ready(function() {
         }
     });
 });
-
+/*Comment Function*/
+$(document).on('keypress', '.submitComment', function(event) {
+    var code = (event.keyCode ? event.keyCode : event.which);
+    if (code == '13' && !event.shiftKey)
+    {
+        var uni = $(this).attr('id').replace('comment_', '');
+        var typeID = $("#" + uni).val();
+        var comment = $("#comment_" + uni).val();
+        var numComment = parseInt($(".c1_" + typeID).html());
+        var data = $('#formcm_' + uni).serialize();
+        if (data)
+        {
+            $.ajax({
+                type: "POST",
+                url: "/commentStatus",
+                data: data,
+                cache: false,
+                success: function(html) {
+                    $(".c1_" + typeID).html(numComment + 1);
+                    $(".moreComment_" + typeID).append(html);
+                    $("#comment_" + uni).val('');
+                    updateTime();
+                }
+            });
+            //exit();
+        }
+    }
+    //return false;
+});
 $(document).on('keypress', '.commentPhoto', function(event) {
     var code = (event.keyCode ? event.keyCode : event.which);
     if (code == '13' && !event.shiftKey)
@@ -789,7 +670,7 @@ $(document).on('keypress', '.commentPhoto', function(event) {
         if (comment) {
             $.ajax({
                 type: "POST",
-                url: "/content/photo/comment",
+                url: "/commentPhoto",
                 data: $('#formcm_' + uni).serialize(),
                 cache: false,
                 success: function(data) {
@@ -845,7 +726,8 @@ $("body").on('click', '.popupPhoto', function(e) {
         url: $(this).attr('href'),
         title: '',
         minWidth: 880,
-        maxWidth: 1024
+        maxWidth: 1024,
+        minHeight: 500
     });
 });
 

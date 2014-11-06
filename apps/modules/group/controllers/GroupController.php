@@ -48,6 +48,52 @@ class GroupController extends AppController
     /**
      *  This is loading all activity on group module
      */
+    public function dataPost($entry, $key)
+    {
+        if (!empty($entry))
+        {
+            $currentUser = $this->getCurrentUser();
+            if (!empty($entry->data->object))
+                $id = $entry->data->object;
+            else
+                $id = $entry->recordID;
+            $statusRC = $this->facade->findByAttributes('status', array('@rid' => '#' . $id, 'active' => 1));
+
+            if (!empty($statusRC))
+            {
+                $statusID = $statusRC->recordID;
+                if ($currentUser->recordID != $statusRC->data->actor)
+                    $userRC = $this->facade->findByPk("user", $statusRC->data->actor);
+                else
+                    $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
+
+                $like = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $statusID));
+                $photo = $this->facade->findAllAttributes('photo', array('typeID' => $statusRC->recordID));
+                $comment = $this->facade->findAllAttributes('comment', array('typeID' => $statusRC->recordID));
+                $commentArray = array();
+                if (!empty($comment))
+                {
+                    foreach ($comment as $value)
+                    {
+                        $userComment = $this->facade->findByPk("user", $value->data->owner);
+                        $likeComment = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $value->recordID));
+                        $commentArray[] = array('comment' => $value, 'user' => $userComment, 'like' => $likeComment);
+                    }
+                }
+                $entry = array(
+                    'type' => 'post',
+                    'key' => $key,
+                    'like' => $like,
+                    'user' => $userRC,
+                    'photo' => $photo,
+                    'comment' => $commentArray,
+                    'actions' => $statusRC,
+                );
+                return $entry;
+            }
+        }
+    }
+
     public function loading()
     {
         if ($this->isLogin())
@@ -66,15 +112,46 @@ class GroupController extends AppController
                 $obj->active = 1;
                 $obj->select = "ORDER BY published DESC offset " . $offset . " LIMIT " . $limit;
                 $statusRC = $this->facade->findAll('status', $obj);
-                //var_dump($statusRC);
+                $data = array();
                 if (!empty($statusRC))
-                {
-                    foreach ($statusRC as $status)
+                    foreach ($statusRC as $key => $status)
                     {
-                        $likeStatus[($status->recordID)] = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $status->recordID));
+                        $statusRC = $this->facade->findByAttributes('status', array('@rid' => '#' . $status->recordID, 'active' => 1));
+
+                        if (!empty($statusRC))
+                        {
+                            $statusID = $statusRC->recordID;
+                            if ($currentUser->recordID != $statusRC->data->actor)
+                                $userRC = $this->facade->findByPk("user", $statusRC->data->actor);
+                            else
+                                $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
+
+                            $like = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $statusID));
+                            $photo = $this->facade->findAllAttributes('photo', array('typeID' => $statusRC->recordID));
+                            $comment = $this->facade->findAllAttributes('comment', array('typeID' => $statusRC->recordID));
+                            $commentArray = array();
+                            if (!empty($comment))
+                            {
+                                foreach ($comment as $value)
+                                {
+                                    $userComment = $this->facade->findByPk("user", $value->data->owner);
+                                    $likeComment = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $value->recordID));
+                                    $commentArray[] = array('comment' => $value, 'user' => $userComment, 'like' => $likeComment);
+                                }
+                            }
+                            $data[] = array(
+                                'type' => 'post',
+                                'key' => $key,
+                                'like' => $like,
+                                'user' => $userRC,
+                                'photo' => $photo,
+                                'comment' => $commentArray,
+                                'actions' => $statusRC,
+                            );
+                        }
                     }
-                    $this->renderModule('post', 'post', array('listStatus' => $statusRC, 'likeStatus' => $likeStatus, 'page' => 'group'));
-                }
+
+                $this->renderModule('post', 'group', array('data' => $data, 'page' => 'group'));
             }
         }
     }
@@ -92,11 +169,18 @@ class GroupController extends AppController
                 $obj->role = 'admin';
             $obj->select = 'and published > 1399543903 LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $model = $this->facade->findAll('groupMember', $obj);
+            $groupArray = array();
             if (!empty($model))
-                $this->f3->set('groupMember', $model);
-            else
-                $this->f3->set('groupMember', 'null');
-            $this->renderModule('loadData', 'group');
+            {
+
+                foreach ($model as $value)
+                {
+                    $group = $this->facade->findByPk('group', $value->data->groupID);
+                    $groupArray[] = array('group' => $group);
+                }
+            }
+
+            $this->renderModule('loadData', 'group', array('group' => $groupArray));
         }
     }
 
@@ -119,7 +203,7 @@ class GroupController extends AppController
         }
     }
 
-    public function members($viewPath)
+    public function members()
     {
         if ($this->isLogin())
         {
@@ -130,12 +214,13 @@ class GroupController extends AppController
                 $searchText = $this->f3->get("POST.search");
                 $act = $this->f3->get("GET.act");
                 $data = array();
-                $command = $this->getSearchCommand(array('fullName'), $searchText);
+                $command = $this->getSearchCommand(array('fullName', 'username'), $searchText);
                 $result = Model::get('user')->callGremlin($command);
                 if (!empty($result))
                 {
                     foreach ($result as $people)
                     {
+
                         if ($act == 'admin')
                         {
                             $member = $this->facade->findByAttributes('groupMember', array('member' => $people, 'groupID' => str_replace("_", ":", $groupID), 'role' => 'admin'));
@@ -144,6 +229,7 @@ class GroupController extends AppController
                         else
                         {
                             $member = $this->facade->findByAttributes('groupMember', array('member' => $people, 'groupID' => str_replace("_", ":", $groupID)));
+
                             $this->f3->set('admin', 'membership');
                         }
                         $data[] = array(
@@ -157,7 +243,7 @@ class GroupController extends AppController
                     }
                 }
                 $json = json_encode($data);
-                $members = json_decode($json);
+                $memberArray = json_decode($json);
             }
             else
             {
@@ -171,11 +257,22 @@ class GroupController extends AppController
                     $members = $this->facade->findAllAttributes('groupMember', array('groupID' => $groupID));
                     $this->f3->set('admin', 'membership');
                 }
+                $memberArray = array();
+                foreach ($members as $value)
+                {
+                    $user = $this->facade->findByPk('user', $value->data->member);
+                    $avatar = $this->facade->findByPk("photo", $user->recordID);
+                    if (!empty($avatar))
+                        $photoAvatar = $avatar->data->fileName;
+                    else
+                        $photoAvatar = 'avatarMenDefault.png';
+                    $memberArray[] = array('member' => $value, 'user' => $user, 'avatar' => $avatar);
+                }
             }
             $group = $this->facade->findByPk('group', str_replace("_", ":", $groupID));
             $countAdmin = $this->facade->count('groupMember', array('groupID' => $groupID, 'role' => 'admin'));
             $count = $this->facade->count('groupMember', array('groupID' => $groupID));
-            $this->render('members', 'group', array('group' => $group, 'members' => $members, 'countMember' => $count, 'countAdmin' => $countAdmin));
+            $this->renderModule('members', 'group', array('group' => $group, 'members' => $memberArray, 'countMember' => $count, 'countAdmin' => $countAdmin));
         }
     }
 
@@ -186,7 +283,7 @@ class GroupController extends AppController
             $this->f3->set('groupID', $_POST['id']);
             $group = $this->facade->findByPk('group', str_replace("_", ":", $_POST['id']));
             $this->f3->set('group', $group);
-            $this->renderModule('mains/formDescription', 'group');
+            $this->renderModule('formDescription', 'group');
         }
         elseif (!empty($_POST['groupDescription']))
         {
@@ -219,14 +316,15 @@ class GroupController extends AppController
             $this->layout = 'group';
             $groupID = $this->f3->get('GET.id');
             $group = $this->facade->findByPk('group', str_replace("_", ":", $groupID));
-            $member = $this->facade->findAllAttributes('groupMember', array('groupID' => str_replace("_", ":", $groupID)));
+            $member = $this->facade->findByAttributes('groupMember', array('groupID' => str_replace("_", ":", $groupID)));
             $photo = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
             $count = $this->facade->count('groupMember', array('groupID' => $groupID));
+            $profile = $this->facade->findByAttributes("information", array('user' => $member->data->member));
             $this->f3->set('photo', $photo);
             $this->f3->set('group', $group);
             $this->f3->set('member', $member);
             $this->f3->set('countMember', $count);
-            $this->renderModule('detail', 'group');
+            $this->renderModule('detail', 'group', array('group' => $group, 'member' => $member, 'photo' => $photo, 'countMember' => $count, 'avatar' => $profile->data->avatar));
         }
     }
 
@@ -448,7 +546,7 @@ class GroupController extends AppController
                             $groupMember = $this->facade->save('groupMember', $arrayMember);
                         }
                     }
-                    $model = Model::get('group')->find($group);
+                    $model = $this->facade->findByPk('group', $group);
                     $this->f3->set('group', $model);
                 }
                 $this->renderModule('viewGroup', 'group');

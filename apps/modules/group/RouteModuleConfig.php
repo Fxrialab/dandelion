@@ -19,7 +19,7 @@ class RouteModuleConfig
         'uploadCover_POST' => "GroupController",
         'search_POST' => "GroupController",
         'leave_POST|GET' => "GroupController",
-        'addFriend_POST' => "AjaxController",
+        'addFriend_POST|GET' => "AjaxController",
         'searchFriends_POST' => "AjaxController",
         'addMemberGroup_POST' => "AjaxController",
         'removeGroup_POST' => "AjaxController",

@@ -11,7 +11,7 @@
                     <?php $this->including('leftCol'); ?>
                     <div class="uiMainCol large-60 borderLineLeft">
                         <?php
-                            $this->loadContent($page);
+                        $this->loadContent($page);
                         ?>
                     </div>
                     <div class="uiRightCol large-20">
@@ -26,3 +26,4 @@
         <?php $this->including('footer'); ?>
     </body>
 </html>
+

@@ -125,7 +125,7 @@ $loggedUserID = str_replace(':', '_', $this->f3->get('SESSION.userID'));
             </div>
             <div class="large-5">
                 <a class="float-right" href="/user/<?php echo $this->f3->get('SESSION.username'); ?>">
-                    <img src="<?php echo $this->f3->get('SESSION.avatar'); ?>" style="width: 30px; height: 30px">
+                    <img src="<?php echo $this->getAvatar($this->f3->get('SESSION.userID')) ?>" style="width: 30px; height: 30px">
                 </a>
             </div>
             <div class="large-5">

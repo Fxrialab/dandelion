@@ -1,40 +1,57 @@
 <?php
-
-if (!empty($mod['comment']))
-    $records = $mod['comment'];
-else
-    $records = $this->f3->get('comment');
-
-
+$records = $mod['comment'];
 if (!empty($records))
 {
-    if (!empty($records['is_object']))
+
+    $pos = (count($records) < 3 ? count($records) : 3);
+    for ($j = count($records) - $pos; $j < count($records); $j++)
     {
-        $id = str_replace(":", "_", $records['comment']->recordID);
-        $recordID = $records['comment']->recordID;
-        $content = $records['comment']->data->content;
-        $published = $records['comment']->data->published;
-        $numberLike = $records['comment']->data->numberLike;
-        $like = $records['like'];
-        $profile = $records['user'];
-        $avatar = UPLOAD_URL . 'avatar/170px/' . $records['avatar'];
-        $f3 = require('commentItem.php');
-    }
-    else
-    {
-        $pos = (count($records) < 3 ? count($records) : 3);
-        for ($j = count($records) - $pos; $j < count($records); $j++)
-        {
-            $id = str_replace(":", "_", $records[$j]['comment']->recordID);
-            $recordID = $records[$j]['comment']->recordID;
-            $content = $records[$j]['comment']->data->content;
-            $published = $records[$j]['comment']->data->published;
-            $numberLike = $records[$j]['comment']->data->numberLike;
-            $like = $records[$j]['like'];
-            $profile = $records[$j]['user'];
-            $avatar = UPLOAD_URL . 'avatar/170px/' . $records[$j]['avatar'];
-            $f3 = require('commentItem.php');
-        }
+        $id = str_replace(":", "_", $records[$j]['comment']->recordID);
+        $recordID = $records[$j]['comment']->recordID;
+        $content = $records[$j]['comment']->data->content;
+        $published = $records[$j]['comment']->data->published;
+        $numberLike = $records[$j]['comment']->data->numberLike;
+        $like = $records[$j]['like'];
+        $profile = $records[$j]['user'];
+        ?>
+        <div class="eachCommentItem verGapBox column-group">
+            <div class="large-10 uiActorCommentPicCol">
+                <a href="/user/<?php echo $profile->data->username; ?>"><img src="<?php echo $this->getAvatar($profile->recordID); ?>"></a>
+            </div>
+            <div class="large-85 uiCommentContent">
+                <p>
+                    <a class="timeLineCommentLink" href="/user/<?php echo $profile->data->username; ?>"><?php echo $profile->data->fullName; ?></a>
+                    <span class="textComment"><?php echo $content; ?></span>
+                </p>
+                <a class="swTimeComment" name="<?php echo $published; ?>"></a>
+                <a class="uiLike like_<?php echo $id ?>" data-like="comment;<?php echo $this->f3->get('SESSION.userID') . ';' . $recordID ?>" data-rel="<?php echo $like ? "unlike" : "like" ?>"><?php echo $like ? "Unlike" : "Like" ?></a>
+                <a href="#" class="l2_<?php echo $id ?>"> <?php echo $numberLike ?></a>
+            </div>
+            <div class="large-5">
+                <?php
+                if ($this->f3->get('SESSION.userID') == $profile->recordID)
+                {
+                    ?>
+                    <a data-dropdown="#dropdown_oc<?php echo $id; ?>"><i class="icon30-options"></i></a>
+                    <div id="dropdown_oc<?php echo $id; ?>" class="dropdown dropdown-tip dropdown-anchor-right dropdown-right">
+                        <ul class="dropdown-menu">
+
+                            <li><a class="test" href="#">Edit..</a></li>
+                            <li><a class="deleteAction" id="<?php echo $id; ?>">Delete...</a></li>
+
+                        </ul>
+                    </div>
+                    <?php
+                }
+                else
+                {
+                    ?>
+                    <a class="hideComment" href="#"><i class="icon30-close"></i></a></li>
+                    <?php } ?>
+
+            </div>
+        </div>
+        <?php
     }
 }
 ?>

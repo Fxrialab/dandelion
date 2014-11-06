@@ -3,7 +3,7 @@ if (!empty($page))
     $p = $page;
 else
     $p = '';
-$activities = F3::get('activities');
+$activities = $this->f3->get('activities');
 if (!empty($activities))
 {
     $rand = rand(100, 100000);
@@ -14,11 +14,11 @@ if (!empty($activities))
             $photo = $mod["photo"];
             $status = $mod["actions"];
             $userID = $mod['user']->recordID;
-            $username = $mod['user']->data->fullName;
+            $username = $mod['user']->data->username;
             $like = $mod['like'];
             $actorName = $mod['user']->data->fullName;
             $comment = $mod['comment'];
-            $avatar = UPLOAD_URL . 'avatar/170px/' . $mod['avatar'];
+            $avatar = UPLOAD_URL . 'avatar/170px/' . $mod['user']->data->avatar;
             require $views;
         }
     }

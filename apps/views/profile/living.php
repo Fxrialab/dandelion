@@ -1,7 +1,8 @@
 <?php
 $information = $this->f3->get('information');
-$username = $this->f3->get('username');
+$user = $this->f3->get('user');
 $active = $this->f3->get('active');
+$userID = $this->f3->get('SESSION.userID');
 $f3 = require('navAbout.php');
 ?>
 <div class="rightAboutCol large-70">
@@ -18,7 +19,7 @@ $f3 = require('navAbout.php');
                         <p>Current City</p>
                     </div>
                     <?php
-                    if ($userID == $profileID)
+                    if ($userID == $user->recordID)
                     {
                         ?>
                         <div class="large-5 option">
@@ -45,7 +46,7 @@ $f3 = require('navAbout.php');
                         <p>Home City</p>
                     </div>
                     <?php
-                    if ($userID == $profileID)
+                    if ($userID == $user->recordID)
                     {
                         ?>
                         <div class="large-5 option">

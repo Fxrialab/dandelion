@@ -3,14 +3,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-$photo = F3::get('photo');
-$tID = F3::get('tID');
-$idn = F3::get('idn');
-$idp = F3::get('idp');
-$k = F3::get('k');
+$photo = $this->f3->get('photo');
+$avatar = $this->f3->get('avatar');
+$tID = $this->f3->get('tID');
+$idn = $this->f3->get('idn');
+$idp = $this->f3->get('idp');
+$k = $this->f3->get('k');
+$user = $this->f3->get('user');
+$like = $this->f3->get('like');
+$comment = $this->f3->get('comment');
 $recordID = str_replace(':', '_', $photo->recordID);
-$photoID = str_replace(':', '_', $photo->recordID);
-
 ?>
 <link rel="stylesheet" href="<?php echo F3::get('CSS'); ?>modalPhoto.css" type="text/css" />
 
@@ -46,7 +48,7 @@ $photoID = str_replace(':', '_', $photo->recordID);
                     </div>
                     <div class="large-85">
                         <div class="infoProfile">
-                            <a href="/content/post?user=<?php echo $user->data->username ?>" class="timeLineLink"><?php echo $fullName; ?></a>
+                            <a href="/content/post?user=<?php echo $user->data->username ?>" class="timeLineLink"><?php echo $user->data->fullName; ?></a>
                             <div><a class="swTimeComment time" name="<?php echo $photo->data->published; ?>"></a></div>
                         </div>
                     </div>
@@ -138,7 +140,7 @@ $photoID = str_replace(':', '_', $photo->recordID);
                                         <?php
                                     }
                                     ?>
-                                    <div class="mCustomScrollbar">
+                                    <div class="mCustomScrollbar" style="max-height: 365px;">
                                         <ul class="commentContentWrapper viewComment_<?php echo $recordID ?>" style="list-style: none; margin: 0; padding: 0">
 
                                             <?php
@@ -146,22 +148,23 @@ $photoID = str_replace(':', '_', $photo->recordID);
                                             {
                                                 foreach ($comment as $k => $value)
                                                 {
-                                                    $profile = HelperController::findUser($value->data->userID);
-                                                    if ($profile->data->profilePic != 'none')
-                                                    {
-                                                        $photo = HelperController::findPhoto($user->data->profilePic);
-                                                        $avatarComment = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
-                                                    }
-                                                    else
-                                                    {
-                                                        $gender = HelperController::findGender($user->recordID);
-                                                        if ($gender == 'male')
-                                                            $avatarComment = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-                                                        else
-                                                            $avatarComment = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
-                                                    }
-                                                    $this->inc('mains/comment', 'photo', array('comment' => $value, 'user' => $profile));
+                                                    $commentID = str_replace(':', '_', $value['comment']->recordID);
+//                                                    $this->inc('viewComment', 'photo', array('comment' => $value['comment'], ?'user' => $value['user'], 'like' => $value['like']));
                                                     ?>
+                                                    <li class="eachCommentItem verGapBox column-group" style="margin:1px 0; padding: 5px 10px">
+                                                        <div class="large-15 uiActorCommentPicCol">
+                                                            <a href="/user/<?php echo $value['user']->data->username ?>">  <img style="min-width: 40px; height:40px" src="<?php echo IMAGES ?>/avatarMenDefault.png"></a>
+                                                        </div>
+                                                        <div class="large-85 uiCommentContent uiComment_<?php echo $commentID ?>">
+                                                            <p>
+                                                                <a class="timeLineCommentLink" href="/user/<?php echo $value['user']->data->username ?>"><?php echo $value['user']->data->fullName ?></a>
+                                                                <span class="textComment"> <?php echo $value['comment']->data->content ?></span>
+                                                            </p>
+                                                            <a class="swTimeComment" name="<?php echo $value['comment']->data->published; ?>"></a>
+                                                            <a class="uiLike like_<?php echo $commentID ?>" data-like="comment;<?php echo $this->f3->get('SESSION.userID') . ';' . $value['comment']->recordID ?>" data-rel="<?php echo $value['like'] ? "unlike" : "like" ?>"><?php echo $value['like'] ? "Unlike" : "Like" ?></a>
+                                                            <a href="#" class="l2_<?php echo $commentID ?>"> <?php echo $value['comment']->data->numberLike ?></a>
+                                                        </div>
+                                                    </li>
                                                     <?php
                                                 }
                                             }
@@ -171,7 +174,7 @@ $photoID = str_replace(':', '_', $photo->recordID);
 
                                     <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $recordID ?>" style="padding: 10px;">
                                         <div class="large-15 uiActorCommentPicCol">
-                                            <a href="/user/<?php echo $currentUser->data->username; ?>"><img src="<?php echo $currentUserAvatar ?>"></a>
+                                            <a href="/user/<?php echo $this->f3->get('SESSION.username') ?>"><img src="<?php echo $this->f3->get('SESSION.avatar') ?>"></a>
                                         </div>
                                         <div class="large-85 uiTextCommentArea">
                                             <?php

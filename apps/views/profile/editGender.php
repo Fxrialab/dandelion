@@ -3,7 +3,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-$information = F3::get('information');
+$information = $this->f3->get('information');
 ?>
 <div class="large-100 formGender">
     <form class="ink-form formAbout" id="submitGender">

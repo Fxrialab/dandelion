@@ -14,31 +14,31 @@ $countAdmin = $this->f3->get('countAdmin');
             <div class="large-100">
                 <div class="column-group">
                     <div style ="padding:10px 0 40px; margin-bottom: 10px">
-                        <div class="large-25 tiptip">
+                        <div class="large-25" style="position: relative">
                             <?php
+                            $uni = uniqid();
                             if (($admin) == 'admin')
                                 $act = 'Admins (' . $countAdmin . ')';
                             else
                                 $act = 'All members (' . $countMember . ')';
                             ?>
-                            <div class="dropdown">
-                                <a title="<?php echo $act ?>" class="button"><span class="label"><?php echo $act ?></span></a>
-                                <div class="dropdown-slider left w150">
-                                    <a class="ddm" href="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>&act=membership"><span class="icon <?php
-                                        if ($admin == 'membership')
-                                            echo ' icon43';
-                                        else
-                                            echo 'icon0';
-                                        ?> "></span><span class="label">All members (<?php echo $countMember ?>)</span></a>
-                                    <a class="ddm" href="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>&act=admin"><span class="icon <?php
-                                        if ($admin == 'admin')
-                                            echo ' icon43';
-                                        else
-                                            echo 'icon0';
-                                        ?>"></span><span class="label">Admins (<?php echo $countAdmin ?>)</span></a>
-                                </div> <!-- /.dropdown-slider -->
-                            </div> <!-- /.dropdown -->
-
+                            <a data-dropdown="#dropdown-<?php echo $uni ?>" class="button"><span class="label"><?php echo $act ?></span></a>
+                            <div id="dropdown-<?php echo $uni ?>" class="dropdown dropdown-tip">
+                                <ul class="dropdown-menu">
+                                    <li>         <a href="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>&act=membership"><span class="icon <?php
+                                            if ($admin == 'membership')
+                                                echo ' icon43';
+                                            else
+                                                echo 'icon0';
+                                            ?> "></span><span class="label">All members (<?php echo $countMember ?>)</span></a></li>
+                                    <li> <a href="/content/group/members?id=<?php echo str_replace(":", "_", $group->recordID) ?>&act=admin"><span class="icon <?php
+                                            if ($admin == 'admin')
+                                                echo ' icon43';
+                                            else
+                                                echo 'icon0';
+                                            ?>"></span><span class="label">Admins (<?php echo $countAdmin ?>)</span></a></li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="large-75">
                             <div style ="padding-left: 20px;">
@@ -52,8 +52,8 @@ $countAdmin = $this->f3->get('countAdmin');
                                                 <input type="hidden">
                                             </form>
                                         </li>
-                                        <li class="large-40 tiptip">
-                                            <a rel="<?php echo str_replace(":", "_", $group->recordID) ?>" class="button" title="Add People to Group" id="addMember" href="/content/group/ajax/addFriend"><span class="icon icon3"></span><span class="label">Add people</span></a>
+                                        <li class="large-40">
+                                            <a class="button popup" title="Add People to Group" href="/content/group/ajax/addFriend?id=<?php echo $group->recordID ?>"><span class="icon icon3"></span><span class="label">Add people</span></a>
                                         </li>
                                     </ul>
                                 </nav>
@@ -69,11 +69,11 @@ $countAdmin = $this->f3->get('countAdmin');
 
                 foreach ($members as $key => $value)
                 {
-                    if (!empty($value->data->member))
+                    if (!empty($value['member']->data->member))
                     {
-                        $userID = $value->data->member;
-                        $role = $value->data->role;
-                        $action = $value->data->action;
+                        $userID = $value['member']->data->member;
+                        $role = $value['member']->data->role;
+                        $action = $value['member']->data->action;
                     }
                     else
                     {
@@ -81,29 +81,18 @@ $countAdmin = $this->f3->get('countAdmin');
                         $role = $value->role;
                         $action = $value->action;
                     }
-                    $user = HelperController::findUser($userID);
-                    $fullName = ucfirst($user->data->firstName)." ".ucfirst($user->data->lastName);
-                    if ($user->data->profilePic != 'none')
-                    {
-                        $photo = HelperController::findPhoto($user->data->profilePic);
-                        $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
-                    }else {
-                        $gender = HelperController::findGender($user->recordID);
-                        if ($gender =='male')
-                            $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-                        else
-                            $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
-                    }
+                    $user = $value['user'];
+                    $avatar = $value['avatar'];
                     ?>
                     <div class="large-30" id="user_<?php echo str_replace(":", "_", $user->recordID) ?>">
                         <div class="large-35">
                             <a href="/user/<?php echo $user->data->username ?>">
-                                <img src="<?php echo $profilePic; ?>" width="50" height="50">
+                                <img src="<?php echo $avatar; ?>" width="50" height="50">
                             </a>
                         </div>
                         <div class="large-65">
                             <div class="userItem">
-                                <a class="fullName" href="/user/<?php echo $user->data->username ?>"><?php echo $fullName; ?></a>
+                                <a class="fullName" href="/user/<?php echo $user->data->username ?>"><?php echo $user->data->fullName; ?></a>
                                 <div class="tiptip action">
                                     <div class="dropdown">
                                         <a class="button" title="Setting"><span class="icon icon96"></span></a>
@@ -114,7 +103,7 @@ $countAdmin = $this->f3->get('countAdmin');
                                                 ?>
                                                 <a rel="<?php echo $user->recordID ?>" title="Remove as admin" class="removeGroup ddm" href="/content/group/ajax/removeAdmin"><span class="label"> Remove as admin</span></a>
                                                 <a id="leaveGroup" class="ddm" rel="<?php echo str_replace(":", "_", $group->recordID) ?>" href="/content/group/leave" title="<?php echo $groupName ?>"><span class="label"> Leave Group</span></a>
-                                            <?php
+                                                <?php
                                             }
                                             else
                                             {
@@ -122,7 +111,7 @@ $countAdmin = $this->f3->get('countAdmin');
                                                 {
                                                     ?>
                                                     <a class="roleGroup ddm" rel="<?php echo $user->recordID ?>" title="Remove as admin" href="/content/group/ajax/rolegroup"><span class="label"> Remove as admin</span></a>
-                                                <?php
+                                                    <?php
                                                 }
                                                 else
                                                 {
@@ -139,7 +128,7 @@ $countAdmin = $this->f3->get('countAdmin');
                         </div>
 
                     </div>
-                <?php
+                    <?php
                 }
             }
             ?>

@@ -1,7 +1,8 @@
 <?php
 $information = $this->f3->get('information');
-$username = $this->f3->get('username');
+$user = $this->f3->get('user');
 $active = $this->f3->get('active');
+$userID = $this->f3->get('SESSION.userID');
 $f3 = require('navAbout.php');
 ?>
 <div class="rightAboutCol large-70">
@@ -17,7 +18,7 @@ $f3 = require('navAbout.php');
                         <?php  if (!empty($information->data->phone_mobile)) echo $information->data->phone_mobile ?>
                     </div>
                     <?php
-                    if ($userID == $profileID)
+                    if ($userID == $user->recordID)
                     {
                         ?>
                         <div class="large-5 option">
@@ -31,7 +32,7 @@ $f3 = require('navAbout.php');
                     Email
                 </div>
                 <div class="large-70">
-                    <?php echo $email ?>
+                    <?php echo $user->data->email ?>
                 </div>
             </li>
             <h6 class="active">BASIC INFORMATION</h6>
@@ -44,7 +45,7 @@ $f3 = require('navAbout.php');
                         <?php if (!empty($information->data->birthday)) echo $information->data->birthday ?>
                     </div> 
                     <?php
-                    if ($userID == $profileID)
+                    if ($userID == $user->recordID)
                     {
                         ?>
                         <div class="large-5 option">
@@ -63,7 +64,7 @@ $f3 = require('navAbout.php');
                     <?php if (!empty($information->data->gender)) echo $information->data->gender ?>
                 </div>
                 <?php
-                if ($userID == $profileID)
+                if ($userID == $user->recordID)
                 {
                     ?>
                     <div class="large-5 option">

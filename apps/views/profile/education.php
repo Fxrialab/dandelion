@@ -1,7 +1,8 @@
 <?php
 $information = $this->f3->get('information');
-$username = $this->f3->get('username');
+$user = $this->f3->get('user');
 $active = $this->f3->get('active');
+$userID = $this->f3->get('SESSION.userID');
 $f3 = require('navAbout.php');
 
 if (!empty($information))
@@ -30,7 +31,7 @@ else
                     <p class="position"><span><?php echo $position ?></span> <?php if (!empty($information->data->work_location)) echo $information->data->work_location ?></p>
                 </div>
                 <?php
-                if ($userID == $profileID)
+                if ($user->recordID == $userID)
                 {
                     ?>
                     <div class="large-5 option">
@@ -54,7 +55,7 @@ else
                     <p class="position"><?php echo $concentrations ?></p>
                 </div>
                 <?php
-                if ($userID == $profileID)
+                if ($user->recordID == $userID)
                 {
                     ?>
                     <div class="large-5 option">
@@ -80,7 +81,7 @@ else
                     <p class="position"><?php if (!empty($information->data->school_location)) echo $information->data->school_location ?></p>
                 </div>
                 <?php
-                if ($userID == $profileID)
+                if ($user->recordID == $userID)
                 {
                     ?>
                     <div class="large-5 option">

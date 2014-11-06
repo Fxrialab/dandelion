@@ -3,11 +3,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-$getGroup = $this->f3->get('group');
-if (!empty($getGroup))
-    $group = $this->f3->get('group');
+if (!empty($data))
+    $group = $data;
 else
-    $group = HelperController::findGroup(str_replace("_", ":", $value->data->groupID));
+    $group = $this->f3->get('group');
+
+$uni = uniqid();
 if (!empty($group))
 {
     ?>
@@ -18,9 +19,9 @@ if (!empty($group))
                     <a href="/content/group/groupdetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><?php echo $group->data->name ?></a>
                 </div>
             </div>
-            <div class="large-5">
-                <a data-dropdown="#dropdown-<?php echo str_replace(":", "_", $group->recordID) ?>" class="button icon settings"></a>
-                <div id="dropdown-<?php echo str_replace(":", "_", $group->recordID) ?>" class="dropdown dropdown-tip dropdown-anchor-right">
+            <div class="large-5" style=" position: relative">
+                <a data-dropdown="#dropdown_<?php echo str_replace(":", "_", $group->recordID) ?>_<?php echo $uni?>" class="button icon settings"></a>
+                <div id="dropdown_<?php echo str_replace(":", "_", $group->recordID) ?>_<?php echo $uni?>" class="dropdown dropdown-tip dropdown-anchor-right dropdown-right">
                     <ul class="dropdown-menu">
                         <li><a href="#1">Edit Notification Settings</a></li>
                         <li><a href="/content/group/leave?id=<?php echo str_replace(":", "_", $group->recordID) ?>" title="Leave Group" class="popup">Leave Group</a></li>

@@ -26,9 +26,9 @@
             <div class="large-15 ">
                 <a class="button icon add popup" href="/content/group/create"  title="Create Group"><span class="label">Create Group</span></a>
             </div>
-            <div class="large-5">
+            <div class="large-5" style="position: relative">
                 <a data-dropdown="#dropdown-setting-notify" class="button icon settings"></a>
-                <div id="dropdown-setting-notify" class="dropdown dropdown-tip dropdown-anchor-right">
+                <div id="dropdown-setting-notify" class="dropdown dropdown-tip">
                     <ul class="dropdown-menu">
                         <li><a href="#">Edit Notification Settings</a></li>
                         <li><a class="popup" href="/content/group/leave?id=<?php echo str_replace(":", "_", $group->recordID) ?>" title="<?php echo $group->data->name ?>">Leave Group</a></li>

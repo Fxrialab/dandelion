@@ -1,4 +1,5 @@
 <?php
+$currentProfile = $this->f3->get('SESSION.loggedUser');
 $otherUser = $this->f3->get('otherUser');
 $currentUser = $this->f3->get('currentUser');
 $statusFriendShip = $this->f3->get('statusFriendShip');
@@ -71,43 +72,41 @@ $rpOtherUserID = str_replace(':', '_', $otherUser->recordID);
                     <?php
                     if ($otherUser->data->profilePic != 'none')
                     {
-                        $photo = HelperController::findPhoto($otherUser->data->profilePic);
-                        $src = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
                         $labelStt = 'Change avatar';
                         $photoID = str_replace(':', '_', $photo->recordID);
-                        $viewAvatar = '/content/photo/detail?id=' . $photoID . '&p=';
                     }
                     else
                     {
-                        $gender = HelperController::findGender($otherUser->recordID);
-                        if ($gender == 'male')
-                            $src = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-                        else
-                            $src = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
                         $labelStt = 'Add avatar';
                         $viewAvatar = '';
                     }
                     ?>
-                    <a class="infoUser page" url="<?php echo $viewAvatar; ?>">
-                        <img src="<?php echo $src; ?>">
+                    <a class="infoUser page" >
+                        <img src="<?php echo $this->getAvatar($otherUser->recordID); ?>">
                     </a>
                 </div>
-                <div class="profileInfo">
-                    <a data-dropdown="#dropdown-uploadAvatar" class="button icon add"><span><?php echo $labelStt ?></span></a>
-                    <div id="dropdown-uploadAvatar" class="dropdown dropdown-tip">
-                        <ul class="dropdown-menu">
-                            <li><a class="photoBrowse" role="avatar" title="My Photos">Choose from Photos...</a></li>
-                            <li><a id="uploadAvatar">Upload photo</a></li>
-                            <?php
-                            if ($otherUser->data->profilePic != 'none')
-                            {
-                                ?>
-                                <li><a href="#" class="removeImgUser" id="removeAvatar" role="avatar" title="Remove">Remove</a></li>
-                            <?php } ?>
-                        </ul>
+                <?php
+                if ($currentUser->recordID == $otherUser->recordID)
+                {
+                    $uni = uniqid();
+                    ?>
+                    <div class="profileInfo">
+                        <a data-dropdown="#dropdown_<?php echo $uni ?>" class="button icon add"><span><?php echo $labelStt ?></span></a>
+                        <div id="dropdown_<?php echo $uni ?>" class="dropdown dropdown-tip">
+                            <ul class="dropdown-menu">
+                                <li><a href="/photoBrowser?profile_id=<?php echo $currentUser->recordID ?>&photo_id=<?php echo $currentUser->recordID ?>&type=avatar" class="popupMyPhoto"  title="Choose From My Photos">Choose from Photos...</a></li>
+                                <li><a id="uploadAvatar">Upload photo</a></li>
+                                <?php
+                                if ($otherUser->data->profilePic != 'none')
+                                {
+                                    ?>
+                                    <li><a href="#" class="removeImgUser" id="removeAvatar" role="avatar" title="Remove">Remove</a></li>
+                                <?php } ?>
+                            </ul>
 
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
             <a class="name" href="#"><?php echo $otherUserName; ?></a>
             <div class="timeLineMenuNav ">

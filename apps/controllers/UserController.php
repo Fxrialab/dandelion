@@ -198,11 +198,7 @@ class UserController extends AppController
                         }
                         else
                         {
-                            $gender = HelperController::findGender($existUser->recordID);
-                            if ($gender == 'male')
-                                $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-                            else
-                                $profilePic = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
+                            $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
                         }
                         $fullName = ucfirst($existUser->data->firstName) . " " . ucfirst($existUser->data->lastName);
                         $this->f3->set('SESSION.loggedUser', $existUser);
@@ -211,7 +207,7 @@ class UserController extends AppController
                         $this->f3->set('SESSION.email', $existUser->data->email);
                         $this->f3->set('SESSION.fullname', $fullName);
                         $this->f3->set('SESSION.birthday', $existUser->data->birthday);
-                        $this->f3->set('SESSION.avatar', $profilePic);
+                        $this->f3->set('SESSION.avatar', $existUser->data->avatar);
                         $this->f3->set('SESSION.userID', $existUser->recordID);
                         // start initial sessions.
                         $sessionID = rand(1000, 10000000);
@@ -268,14 +264,14 @@ class UserController extends AppController
                 }
                 else
                 {
-                    $this->render('user/index',array(
+                    $this->render('user/index', array(
                         'msgSignIn' => 'Your password is incorrect'
                     ));
                 }
             }
             else
             {
-                $this->render('user/index',  array(
+                $this->render('user/index', array(
                     'msgSignIn' => 'Your email is not exist. Please sign up !'
                 ));
             }
@@ -540,13 +536,13 @@ class UserController extends AppController
     {
         if ($this->isLogin())
         {
-            $url            = $_SERVER["REQUEST_URI"];
-            $params_full    = explode('/',$url);
-            $lastParams     = explode('?',$params_full[count($params_full)-1]);
-            $username          = $lastParams[0];
-            if (count($params_full)== 3 && $params_full[1] == 'user')
+            $url = $_SERVER["REQUEST_URI"];
+            $params_full = explode('/', $url);
+            $lastParams = explode('?', $params_full[count($params_full) - 1]);
+            $username = $lastParams[0];
+            if (count($params_full) == 3 && $params_full[1] == 'user')
             {
-                $userRC = $this->facade->findByAttributes('user', array('username'=>$username));
+                $userRC = $this->facade->findByAttributes('user', array('username' => $username));
                 if (!empty($userRC))
                 {
                     $this->layout = 'timeline';
@@ -558,13 +554,14 @@ class UserController extends AppController
                     $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileID);
 
                     $this->render('user/userPage', array(
-                        'currentUser'   => $currentUser,
-                        'otherUser'     => $userRC,
-                        'statusFriendShip'  => $statusFriendShip,
-                        'currentProfileID'  => $currentProfileID
+                        'currentUser' => $currentUser,
+                        'otherUser' => $userRC,
+                        'statusFriendShip' => $statusFriendShip,
+                        'currentProfileID' => $currentProfileID
                     ));
                 }
             }
         }
     }
+
 }

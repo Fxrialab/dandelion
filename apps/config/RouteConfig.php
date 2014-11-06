@@ -67,7 +67,7 @@ class RouteConfig
         'uploadAvatar_POST' => "UploadController",
         'savePhoto_POST' => "UploadController",
         'remove_POST' => "UploadController",
-        'choosePhoto_POST' => "UploadController",
+        'changePhoto_POST' => "UploadController",
         'reposition_POST' => "UploadController",
         'cancel_POST' => "UploadController",
         'uploading_POST' => "UploadController",
@@ -83,7 +83,10 @@ class RouteConfig
         'editname_POST|GET' => 'ProfileController',
         'editabout_POST|GET' => 'ProfileController',
         'searchLocation_POST|GET' => 'ProfileController',
-        'searchInfoUser_GET' => 'ProfileController'
+        'searchInfoUser_GET' => 'ProfileController',
+//        Comment
+        'commentStatus_POST' => 'CommentController',
+        'commentPhoto_POST' => 'CommentController',
     );
     public $modules = array(
         /* Route config for modules */

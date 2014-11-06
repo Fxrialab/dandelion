@@ -260,25 +260,25 @@ class UploadController extends AppController
     }
 
 //    Choose my photo
-    public function choosePhoto()
+    public function changePhoto()
     {
         if ($this->isLogin())
         {
             $imagesDir = UPLOAD . "images/";
             $avatarDir = UPLOAD . "avatar/170px/";
             $coverDir = UPLOAD . "cover/750px/";
-
-            $photoID = $_POST['id'];
+            $data = explode(';', $_POST['data']);
+            $photoID = $data[1];
             $photo = $this->facade->findByPk('photo', $photoID);
             $image = array('name' => $photo->data->fileName, 'width' => $photo->data->width, 'height' => $photo->data->height);
             $this->f3->set('image', $image);
             $this->f3->set('target', 'choosePhoto');
             $pathFile = $imagesDir . $photo->data->fileName;
-            if ($_POST['role'] == 'avatar')
+            if ($data[0] == 'avatar')
             {
                 if (!file_exists($avatarDir . $photo->data->fileName))
                     $this->resizeImageFile($pathFile, 170, $avatarDir . $photo->data->fileName, 100);
-                $this->render('ajax/confirmAvatar.php', 'ajax');
+                $this->render('ajax/confirmAvatar');
             }
             else
             {//when role such as cover

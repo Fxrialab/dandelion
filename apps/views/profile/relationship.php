@@ -1,5 +1,5 @@
 <?php
-$username = $this->f3->get('username');
+$user = $this->f3->get('user');
 $active = $this->f3->get('active');
 $f3 = require('navAbout.php');
 ?>

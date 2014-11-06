@@ -1,16 +1,15 @@
-<?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
 
-    <?php
-    if ($this->f3->get('groupMember') != 'null')
+
+<?php
+
+$group = $this->f3->get('group');
+
+if (!empty($group))
+{
+    foreach ($group as $key => $value)
     {
-        foreach ($this->f3->get('groupMember') as $key => $value)
-        {
-            $f3 = require('viewGroup.php');
-        }
+        $data = $value['group'];
+        $f3 = require('viewGroup.php');
     }
-    ?>
+}
+?>

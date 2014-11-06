@@ -31,9 +31,7 @@
         </h5>
     </div>
     <div id="viewGroup">
-        <div class="viewMoreGroups">
 
-        </div>
     </div>
 </div>
 <script>

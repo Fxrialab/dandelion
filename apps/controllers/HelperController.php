@@ -111,23 +111,6 @@ class HelperController extends Controller
         return $model;
     }
 
-    static public function getAvatar($user)
-    {
-        if ($user->data->profilePic != 'none')
-        {
-            $photo = HelperController::findPhoto($user->data->profilePic);
-            $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
-        }
-        else
-        {
-            $gender = HelperController::findGender($user->recordID);
-            if ($gender == 'male')
-                $avatar = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-            else
-                $avatar = UPLOAD_URL . 'avatar/170px/avatarWomenDefault.png';
-        }
-        return $avatar;
-    }
 
     static public function findAlbum($id)
     {

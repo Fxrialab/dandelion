@@ -71,6 +71,7 @@ class Controller
         return $this->f3->get("SESSION.loggedUser");
     }
 
+
     /**
      * How to use this render for get variables on view:
      * - If existed layout when render, need $this->f3->get('...') on view for get variables
@@ -108,8 +109,8 @@ class Controller
         {
             $this->f3->set($k, $value);
         }
-        if (file_exists(MODULES . $type . VIEWS . $param . '.php'))
-            require MODULES . $type . VIEWS . $param . '.php';
+        if (file_exists(MODULES . $type . '/views/' . $param . '.php'))
+            require MODULES . $type . '/views/' . $param . '.php';
         else if (file_exists(VIEWS . $param . '.php'))
             require VIEWS . $param . '.php';
         else
@@ -131,7 +132,8 @@ class Controller
         else
             echo View::instance()->render($path);
     }
-
+    
+    
 
 }
 

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>token-input-facebook.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>jquery.dropdown.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $this->f3->get('WEBROOT'); ?>libs/pgwmodal/pgwmodal.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $this->f3->get('WEBROOT'); ?>libs/jcrop/jquery.Jcrop.css" type="text/css" />
     <!--[if IE 7 ]>
     <link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>ink-ie.css" type="text/css" media="screen"
           title="no title">

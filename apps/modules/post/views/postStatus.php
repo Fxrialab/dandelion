@@ -1,13 +1,14 @@
 <?php
+$currentProfile = $this->f3->get('SESSION.loggedUser');
 $mod = $this->f3->get('data');
 $photo = $mod["photo"];
 $status = $mod["status"];
-$userID = $mod['user']->recordID;
-$username = $mod['user']->data->username;
+$userID = $currentProfile->recordID;
+$username = $currentProfile->data->username;
 $like = '';
-$actorName = $mod['user']->data->fullName;
+$actorName = $currentProfile->data->fullName;
 $comment = '';
-$avatar = UPLOAD_URL . 'avatar/170px/' . $mod['avatar'];
+$avatar = UPLOAD_URL . 'avatar/170px/' . $currentProfile->data->avatar;
 $f3 = require('viewMod.php');
 ?>
 <script type="text/javascript">

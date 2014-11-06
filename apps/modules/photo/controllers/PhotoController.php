@@ -91,11 +91,14 @@ class PhotoController extends AppController
                     $user = $this->facade->findByPk('user', $value->data->actor);
                     $comment = $this->facade->findAllAttributes('comment', array('typeID' => $value->recordID));
                     $dataComment = array();
-                    foreach ($comment as $val)
+                    if (!empty($comment))
                     {
-                        $userC = $this->facade->findByPk('user', $val->data->userID);
-                        $like = $this->facade->findByAttributes('like', array('actor' => $this->f3->get('SESSION.userID'), 'objID' => $val->recordID));
-                        $dataComment[] = array('comment' => $val, 'user' => $userC, 'like' => $like);
+                        foreach ($comment as $val)
+                        {
+                            $userC = $this->facade->findByPk('user', $val->data->owner);
+                            $like = $this->facade->findByAttributes('like', array('actor' => $this->f3->get('SESSION.userID'), 'objID' => $val->recordID));
+                            $dataComment[] = array('comment' => $val, 'user' => $userC, 'like' => $like);
+                        }
                     }
                     $like = $this->facade->findByAttributes('like', array('actor' => $this->f3->get('SESSION.userID'), 'objID' => $value->recordID));
                     $photo[] = array('photo' => $value, 'user' => $user, 'comment' => $dataComment, 'like' => $like);
@@ -150,42 +153,12 @@ class PhotoController extends AppController
                     $model = $this->facade->findAll('album', $obj);
                     $target = 'album';
                 }
-                $this->renderModule('mains/dataPhoto', 'photo', array('model' => $model, 'target' => $target, 'userID' => $userID));
+                $this->renderModule('dataPhoto', 'photo', array('model' => $model, 'target' => $target, 'userID' => $userID));
             }
         }
     }
 
-    public function comment()
-    {
-        if (!empty($_POST['comment']))
-        {
-            $data = array(
-                "userID" => $this->f3->get('SESSION.userID'),
-                "content" => $_POST['comment'],
-                "typeID" => str_replace('_', ':', $_POST['photoID']),
-                "published" => time(),
-            );
-            $commentID = $this->facade->save('comment', $data);
-            if (!empty($commentID))
-            {
-                $commentRC = $this->facade->findByPk('comment', $commentID);
-                $count = $this->facade->count('comment', array('typeID' => str_replace('_', ':', $_POST['photoID'])));
-                $height = $count * 40 + 50;
-                $user = $this->facade->findByPk('user', $commentRC->data->userID);
-                $this->renderModule('mains/comment', 'photo', array('comment' => $commentRC, 'user' => $user));
-//                echo json_encode(array(
-//                    'id' => str_replace(':', '_', $commentID),
-//                    'photoID' => str_replace(':', '_', $_POST['photoID']),
-//                    'count' => $count,
-//                    'height' => $height,
-//                    'content' => $commentRC->data->content,
-//                    'name' => $user->data->fullName,
-//                    'userID' => $user->recordID,
-//                    'time' => $commentRC->data->published
-//                ));
-            }
-        }
-    }
+
 
     public function deletePhoto()
     {
@@ -333,22 +306,34 @@ class PhotoController extends AppController
                 $findAll = $this->facade->findAllAttributes('photo', array('actor' => $pID[0]));
             $k = $pID[3];
             $currentUser = $this->getCurrentUser();
-            $this->f3->set('photo', $photo);
             if ($k + 1 < count($findAll))
                 $this->f3->set('idn', $findAll[$k + 1]->recordID);
 
             if ($k > 0)
                 $this->f3->set('idp', $findAll[$k - 1]->recordID);
 
-            $like = $this->facade->findByPk($photo->recordID);
-            $comment = HelperController::getFindComment($photo->recordID);
-            $user = HelperController::findUser($photo->data->actor);
-            $fullName = HelperController::getFullNameUser($photo->data->actor);
-            $avatar = HelperController::getAvatar($user);
-//info current user
-            $currentUser = F3::get('currentUser');
-            $currentUserAvatar = HelperController::getAvatar($currentUser);
-            $this->renderModule('popup', 'photo', array('tID' => $pID[1], 'k' => $pID[3], 'currentUser' => $currentUser));
+            $like = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $photo->recordID));
+            $comment = $this->facade->findAllAttributes('comment', array('typeID' => $photo->recordID));
+            $commentArray = array();
+            if (!empty($comment))
+            {
+                foreach ($comment as $value)
+                {
+                    $like = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $value->recordID));
+                    $userComment = $this->facade->findByPk('user', $value->data->owner);
+                    $commentArray[] = array('comment' => $value, 'like' => $like, 'user' => $userComment);
+                }
+            }
+            $user = $this->facade->findByPk('user', $photo->data->actor);
+            $avatar = $this->facade->findByPk('photo', $user->recordID);
+            if (!empty($avatar))
+                $photoAvatar = $avatar->data->fileName;
+            else
+                $photoAvatar = 'avatarMenDefault.png';
+            if (!empty($_GET['set']))
+                $this->renderModule('photoDrap', 'photo', array('photo' => $photo));
+            else
+                $this->renderModule('popup', 'photo', array('photo' => $photo, 'tID' => $pID[1], 'k' => $pID[3], 'avatar' => $photoAvatar, 'user' => $user, 'like' => $like, 'comment' => $commentArray));
         }
     }
 
@@ -388,6 +373,21 @@ class PhotoController extends AppController
                 $this->renderModule('mains/photoBrowsers', 'photo');
             }
         }
+    }
+
+    public function crop()
+    {
+        $targ_w = $targ_h = 160;
+        $jpeg_quality = 90;
+
+        $src = UPLOAD . 'images/5444dc8d99702.jpg';
+        $newfilename = UPLOAD . 'images/thumbnail/';
+        $img_r = imagecreatefromjpeg($src);
+        $dst_r = ImageCreateTrueColor($targ_w, $targ_h);
+        imagecopyresampled($dst_r, $img_r, 0, 0, $_POST['x1'], $_POST['y1'], $targ_w, $targ_h, $_POST['w'], $_POST['h']);
+        header('Content-type: image/jpeg');
+        //imagejpeg($dst_r,null,$jpeg_quality);
+        imagejpeg($dst_r, $newfilename . '/' . time() . '.jpg', 150);
     }
 
 }

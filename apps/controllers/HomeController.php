@@ -54,7 +54,7 @@ class HomeController extends AppController
             }
             $this->f3->set('js', $loadJS);
             $this->f3->set('loggedUserID', $this->f3->get('SESSION.userID'));
-            $this->render('home/home',array('loggedUserID'=>$this->f3->get('SESSION.userID')));
+            $this->render('home/home', array('loggedUserID' => $this->f3->get('SESSION.userID')));
         }
         else
         {
@@ -93,10 +93,7 @@ class HomeController extends AppController
                     $verbMod = $activity->data->verb . 'Controller';
                     $obj = new $verbMod;
                     if (method_exists($obj, 'bindingData'))
-                    {
-                        $home = $obj->bindingData($activity, $key);
-                        array_push($homes, $home);
-                    }
+                        $homes[] = $obj->bindingData($activity, $key);
                 }
             }
             $this->render('home/view', array('activities' => $homes, 'page' => 'home'));

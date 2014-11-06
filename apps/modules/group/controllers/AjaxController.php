@@ -10,9 +10,9 @@ class AjaxController extends AppController
 
     public function addFriend()
     {
-        if (!empty($_POST['groupID']))
+        if (!empty($_GET['id']))
         {
-            $this->f3->set('groupID', $_POST['groupID']);
+            $this->f3->set('groupID', $_GET['id']);
             $this->renderModule('addFriend', 'group');
         }
     }

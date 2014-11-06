@@ -32,25 +32,25 @@ class ProfileController extends AppController
                 switch ($_GET['section'])
                 {
                     case 'overview':
-                        $this->render('profile/overview', array('username' => $username, 'active' => 'overview', 'information' => $information));
+                        $this->render('profile/overview', array('user' => $currentProfileRC, 'active' => 'overview', 'information' => $information));
                         break;
                     case 'education':
-                        $this->render('profile/education', array('username' => $username, 'active' => 'education', 'information' => $information));
+                        $this->render('profile/education', array('user' => $currentProfileRC, 'active' => 'education', 'information' => $information));
                         break;
                     case 'living':
-                        $this->render('profile/living', array('username' => $username, 'active' => 'living', 'information' => $information));
+                        $this->render('profile/living', array('user' => $currentProfileRC, 'active' => 'living', 'information' => $information));
                         break;
                     case 'contact':
-                        $this->render('profile/contact', array('username' => $username, 'active' => 'contact', 'email' => $currentProfileRC->data->email, 'information' => $information));
+                        $this->render('profile/contact', array('user' => $currentProfileRC, 'active' => 'contact', 'email' => $currentProfileRC->data->email, 'information' => $information));
                         break;
                     case 'relationship':
-                        $this->render('profile/relationship', array('username' => $username, 'active' => 'relationship'));
+                        $this->render('profile/relationship', array('user' => $currentProfileRC, 'active' => 'relationship'));
                         break;
                     case 'bio':
-                        $this->render('profile/bio', array('username' => $username, 'active' => 'bio', 'fullname' => $currentProfileRC->data->fullName, 'information' => $information));
+                        $this->render('profile/bio', array('user' => $currentProfileRC, 'active' => 'bio', 'fullname' => $currentProfileRC->data->fullName, 'information' => $information));
                         break;
                     case 'year-overviews':
-                        $this->render('profile/yearOverviews', array('username' => $username, 'active' => 'year-overviews'));
+                        $this->render('profile/yearOverviews', array('user' => $currentProfileRC, 'active' => 'year-overviews'));
                         break;
                 }
             }
@@ -316,7 +316,7 @@ class ProfileController extends AppController
             if (!empty($_GET['act']))
             {
                 $album = $this->facade->findAllAttributes('album', array('owner' => $this->f3->get('SESSION.userID')));
-                $this->render('profile/albumBrowsers.php', 'profile', array('album' => $album, 'user_id' => $_GET['user_id'], 'type' => $_GET['type']));
+                $this->render('profile/albumBrowsers', array('album' => $album, 'user_id' => $_GET['user_id'], 'type' => $_GET['type']));
             }
             else
             {

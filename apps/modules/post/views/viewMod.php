@@ -1,6 +1,6 @@
 
 <?php
-$userID = $this->f3->get('SESSION.userID');
+$currentProfile = $this->f3->get('SESSION.loggedUser');
 $rpOwnerID = str_replace(':', '_', $status->data->owner);
 $rpStatusID = str_replace(":", "_", $status->recordID);
 $embedType = $status->data->embedType;
@@ -14,7 +14,7 @@ $status_published = $status->data->published;
 <div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
     <div class="uiBoxPostContainer column-group">
         <div class="large-10 uiActorPicCol">
-            <a href="/user/<?php echo $username ?>"><img src="<?php echo $avatar ?>"></a>
+            <a href="/user/<?php echo $username ?>"><img src="<?php echo $this->getAvatar($userID) ?>"></a>
         </div>
         <div class="large-85">
             <div class="postContent">
@@ -140,7 +140,7 @@ $status_published = $status->data->published;
                             }
                             ?>
 
-                            <li class="streamPostTime"><a href="" class="linkColor-999999 swTimeStatus" title="" name="<?php echo $status->data->published; ?>"></a></li>
+                            <li class="streamPostTime"><a href="" class="linkColor-999999 swTimeStatus" name="<?php echo $status->data->published; ?>"></a></li>
                             <!----article post counter---->
                             <li class="rightFix">
                                 <a href="#"  title="Like"><i class="statusCounterIcon-like"></i><span class="l1_<?php echo $rpStatusID ?>"><?php echo $status->data->numberLike ?></span></a>
@@ -197,15 +197,18 @@ $status_published = $status->data->published;
                         </div>
                         <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID; ?>">
                             <div class="large-10 uiActorCommentPicCol">
-                                <a href="/user/<?php echo $username; ?>"><img src="<?php echo $avatar; ?>"></a>
+                                <a href="/user/<?php echo $currentProfile->data->username; ?>"><img src="<?php echo $this->getAvatar($currentProfile->recordID) ?>"></a>
                             </div>
                             <div class="large-90 uiTextCommentArea">
-                                <form class="ink-form" id="fmComment-<?php echo $rpStatusID; ?>">
+                                <?php
+                                $uni = uniqid();
+                                ?>
+                                <form class="ink-form" id="formcm_<?php echo $uni ?>">
                                     <fieldset>
                                         <div class="control-group">
                                             <div class="control">
-                                                <input name="postID" type="hidden" value="<?php echo $rpStatusID; ?>" />
-                                                <textarea name="comment" class="taPostComment submitComment" id="textComment-<?php echo $rpStatusID; ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
+                                                <input name="typeID" type="hidden" id="<?php echo $uni ?>" value="<?php echo $rpStatusID; ?>" />
+                                                <textarea name="comment" class="taPostComment submitComment" id="comment_<?php echo $uni ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
                                             </div>
                                         </div>
                                     </fieldset>
