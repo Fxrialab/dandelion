@@ -18,7 +18,7 @@ $(document).ready(function()
             //$("#navCoverPhotoGroupTemplate").tmpl(data).appendTo(".displayPhoto");
         }
     };
-    var uploadPhotoSingleFile = {
+    var uploadCover = {
         url: "/uploadCover",
         method: "POST",
         allowedTypes: "jpg,png,gif",
@@ -32,9 +32,9 @@ $(document).ready(function()
         {
             $(".uploadCoverStatusBar").html("");
             $('.arrow_timeLineMenuNav').hide();
-            $('.displayPhoto').html(data);
-            $('.timeLineMenuNav div').remove();
+            $('.timeLineMenuNav div.nav').remove();
             $("#navCoverUserTemplate").tmpl(data).appendTo(".timeLineMenuNav");
+            $('.displayPhoto').html(data);
         }
     };
     var uploadAvatar = {
@@ -45,14 +45,13 @@ $(document).ready(function()
         multiple: false,
         onBeforeSend: function() {
             //Lets add a loading image
-            $(".uploadCoverStatusBar").html("<div class='loadingUpload'></div>");
+            $(".infoUser").html("<div class='loadingUpload'></div>");
         },
         onSuccess: function(files, data, xhr)
         {
             $('.ajax-file-upload-statusbar').fadeOut('slow');
-            $('.infoUser').html(data);
-            $('.profileInfo .dropdown').css('display', 'none');
-            $('.profilePic .profileInfo').css('display', 'none');
+            $('.profilePic').html(data);
+            $('#imgAvatar .profileInfo').css('display', 'none');
 
         }
     };
@@ -143,11 +142,11 @@ $(document).ready(function()
     };
 
     $("#uploadAvatar").uploadFile(uploadAvatar);
-    $("#uploadPhotoCover").uploadFile(uploadPhotoSingleFile);
+    $("#uploadCover").uploadFile(uploadCover);
     $("#uploadPhotoGroup").uploadFile(uploadPhotoGroup);
     $("#singleFile").uploadFile(settingSingleFile);
     $("#multiFiles").uploadFile(settingMultiFiles);
     $("#multiFiles2").uploadFile(settingMultiFiles);
     $("#multiFiles3").uploadFile(settingMultiFiles2);
-   
+
 });

@@ -1,6 +1,6 @@
 <?php
 $records = $mod['comment'];
-if (!empty($records))
+if (!empty($mod['comment']))
 {
 
     $pos = (count($records) < 3 ? count($records) : 3);
@@ -16,7 +16,7 @@ if (!empty($records))
         ?>
         <div class="eachCommentItem verGapBox column-group">
             <div class="large-10 uiActorCommentPicCol">
-                <a href="/user/<?php echo $profile->data->username; ?>"><img src="<?php echo $this->getAvatar($profile->recordID); ?>"></a>
+                <a href="/user/<?php echo $profile->data->username; ?>"><img src="<?php echo $this->getAvatar($profile->data->profilePic) ?>"></a>
             </div>
             <div class="large-85 uiCommentContent">
                 <p>

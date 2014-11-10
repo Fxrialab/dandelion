@@ -128,61 +128,7 @@ $rand = rand(100, 100000);
         $(".postPhoto").hide();
         $("#statusPhoto").hide();
     });
-    $("#submitFormStatus").submit(function() {
-        var embedPhotos = $('.embedElements #embedPhotos > div').length;
-        var embedVideo = $('.embedElements #embedVideo > div').length;
-        var status = $("#status").val();
-        $(".msg").html("<div class='loadingUpload'></div>");
-        if (status || embedPhotos)
-        {
-            if (embedPhotos > 0)
-            {
-                $('#embedType').attr('value', 'photo');
-            } else {
-                if (embedVideo > 0)
-                    $('#embedType').attr('value', 'video');
-                else
-                    $('#embedType').attr('value', 'none');
-            }
-            $.ajax({
-                type: "POST",
-                url: "/content/post/postStatus",
-                data: $("#submitFormStatus").serialize(), // serializes the form's elements.
-                success: function(html)
-                {
-                    $('#tagElements').css('display', 'none');
-                    $("#contentContainer").prepend(html);
-                    $('.photoWrap').remove();
-                    $('#imgID').val();
-                    $('#embedPhotos').html('');
-                    $('#status').val('');
-                    $(".msg").html("");
-                    updateTime();
-                }
-            });
-        }
-        return false; // avoid to execute the actual submit of the form.
-    });
+  
 </script>
-<script id="imgTemplate" type="text/x-jQuery-tmpl">
-    <div class="imgContainer">
-        <input type="hidden" name="imgName[]" value="${photoName}">
-        <img class="loadingImage" src="${url}">
-        <a href="javascript:void(0)" style="position: absolute; top:1px; right:5px" rel="${photoName}" relID="${imgName}" class="deleteImage"><span class="icon icon56">X</span></a>
-    </div>
-</script>
-<script id="imgTemplate2" type="text/x-jQuery-tmpl">
-    <div class="large-20 itemImg" id="${imgID}" style="position: relative">
-    <div style="margin-right:10px;">
-    <input type="hidden" name="imgID[]" value="${name},${width},${height}">
-    <img src="${url}" style="width:100%">
-    <a href="javascript:void(0)" style="position: absolute; top:5px; right:25px" rel="${name}" relID="${imgID}" class="deleteImage"><span class="icon icon56">X</span></a>
-    </div>
-    </div>
-</script>
-<script id="imgTemplate3" type="text/x-jQuery-tmpl">
-    <div class="control-group">
 
-    </div>
-</script>
 

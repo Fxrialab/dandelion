@@ -3,8 +3,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+$loggedUser = $this->f3->get('SESSION.loggedUser');
 $photo = $this->f3->get('photo');
-$avatar = $this->f3->get('avatar');
 $tID = $this->f3->get('tID');
 $idn = $this->f3->get('idn');
 $idp = $this->f3->get('idp');
@@ -23,18 +23,18 @@ $recordID = str_replace(':', '_', $photo->recordID);
             if (!empty($idp))
             {
                 ?>
-                <a  href="/content/photo/popupPhoto?pID=<?php echo $photo->data->actor ?>_<?php echo $tID ?>_<?php echo $idp ?>_<?php echo $k - 1 ?>" class="pev popupPhoto"><i class="icon40-pev"></i></a>
+                <a  href="/content/photo/popupPhoto?pID=<?php echo $photo->data->owner ?>_<?php echo $tID ?>_<?php echo $idp ?>_<?php echo $k - 1 ?>" class="pev popupPhoto"><i class="icon40-pev"></i></a>
                 <?php
             }
             ?>
             <div class="img">
-                <img style="vertical-align: middle" src="<?php echo UPLOAD_URL . 'images/' . $photo->data->fileName; ?>">
+                <img style="vertical-align: middle" src="<?php echo $this->getImg($photo->recordID) ?>">
             </div>
             <?php
             if (!empty($idn))
             {
                 ?>
-                <a href="/content/photo/popupPhoto?pID=<?php echo $photo->data->actor ?>_<?php echo $tID ?>_<?php echo $idn ?>_<?php echo $k + 1 ?>" class="next popupPhoto"><i class="icon40-next"></i></a>
+                <a href="/content/photo/popupPhoto?pID=<?php echo $photo->data->owner ?>_<?php echo $tID ?>_<?php echo $idn ?>_<?php echo $k + 1 ?>" class="next popupPhoto"><i class="icon40-next"></i></a>
             <?php } ?>
         </div>
     </div>
@@ -44,7 +44,7 @@ $recordID = str_replace(':', '_', $photo->recordID);
             <div class="fade mCustomScrollbar">
                 <div class="control-group">
                     <div class="large-15">
-                        <img src ="<?php echo $avatar ?>" style="width: 55px; height: 55px">
+                        <img src ="<?php echo $this->getAvatar($user->data->profilePic) ?>" style="width: 55px; height: 55px">
                     </div>
                     <div class="large-85">
                         <div class="infoProfile">
@@ -149,11 +149,10 @@ $recordID = str_replace(':', '_', $photo->recordID);
                                                 foreach ($comment as $k => $value)
                                                 {
                                                     $commentID = str_replace(':', '_', $value['comment']->recordID);
-//                                                    $this->inc('viewComment', 'photo', array('comment' => $value['comment'], ?'user' => $value['user'], 'like' => $value['like']));
                                                     ?>
                                                     <li class="eachCommentItem verGapBox column-group" style="margin:1px 0; padding: 5px 10px">
                                                         <div class="large-15 uiActorCommentPicCol">
-                                                            <a href="/user/<?php echo $value['user']->data->username ?>">  <img style="min-width: 40px; height:40px" src="<?php echo IMAGES ?>/avatarMenDefault.png"></a>
+                                                            <a href="/user/<?php echo $value['user']->data->username ?>">  <img style="min-width: 40px; height:40px" src="<?php echo $this->getAvatar($value['user']->data->profilePic) ?>"></a>
                                                         </div>
                                                         <div class="large-85 uiCommentContent uiComment_<?php echo $commentID ?>">
                                                             <p>
@@ -174,7 +173,9 @@ $recordID = str_replace(':', '_', $photo->recordID);
 
                                     <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $recordID ?>" style="padding: 10px;">
                                         <div class="large-15 uiActorCommentPicCol">
-                                            <a href="/user/<?php echo $this->f3->get('SESSION.username') ?>"><img src="<?php echo $this->f3->get('SESSION.avatar') ?>"></a>
+                                            <a href="/user/<?php echo $this->f3->get('SESSION.username') ?>">
+                                                <img src="<?php echo $this->getAvatar($loggedUser->data->profilePic) ?>">
+                                            </a>
                                         </div>
                                         <div class="large-85 uiTextCommentArea">
                                             <?php
@@ -193,8 +194,8 @@ $recordID = str_replace(':', '_', $photo->recordID);
     </div>
 </div>
 <script>
-                $(document).ready(function() {
-                    $('textarea').autosize();
+    $(document).ready(function() {
+    $('textarea').autosize();
 
-                });
+    });
 </script>

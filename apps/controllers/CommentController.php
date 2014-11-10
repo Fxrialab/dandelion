@@ -162,7 +162,7 @@ class CommentController extends AppController
 
     public function commentPhoto()
     {
-        $data = $this->dataComment($_POST['typeID'], 'photo', $_POST['comment']);
+        $data = $this->comment($_POST['typeID'], 'photo', $_POST['comment']);
         $this->render('comment/commentPhoto', array('comment' => $data['comment'], 'user' => $data['user'], 'like' => $data['like']));
     }
 

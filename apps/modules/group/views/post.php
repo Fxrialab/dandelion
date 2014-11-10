@@ -1,10 +1,11 @@
 <?php
+
 $data = $this->f3->get('data');
 if (!empty($data))
 {
     foreach ($data as $mod)
     {
-        foreach (glob(MODULES  . 'post/views/viewMod.php') as $views)
+        foreach (glob(MODULES . 'post/views/viewMod.php') as $views)
         {
             $photo = $mod["photo"];
             $status = $mod["actions"];
@@ -13,7 +14,7 @@ if (!empty($data))
             $like = $mod['like'];
             $actorName = $mod['user']->data->fullName;
             $comment = $mod['comment'];
-            $avatar = UPLOAD_URL . 'avatar/170px/' . $mod['user']->data->avatar;
+            $profilePic = $mod['user']->data->profilePic;
             require $views;
         }
     }

@@ -1,105 +1,106 @@
 <?php
+$loggedUser = $this->f3->get('SESSION.loggedUser');
 $loggedUserID = str_replace(':', '_', $this->f3->get('SESSION.userID'));
 ?>
 <script type="text/javascript">
     $(document).ready(function() {
-        swfobject.embedSWF(
-            "<?php echo WEBROOT;?>swfs/amqp.swf?" + Math.random().toString(),
-            "AMQPProxy",
-            "1",
-            "1",
-            "9",
-            "<?php echo WEBROOT;?>swfs/expressInstall.swf",
-            {},
-            {
-                allowScriptAccess: "always",
-                wmode: "opaque",
-                bgcolor: "#005B9F"
-            },
-            {},
-            function() {
-                //object loaded callback.. useful for debugging
-            }
-        );
-        /********** AMQP for notifications *********/
-        MQ.queue("userID<?php echo $loggedUserID; ?>").bind("dandelion", "notifications.*.<?php echo $loggedUserID; ?>").callback(function(m) {
-            console.log('amqp data: ', m.data);
+    swfobject.embedSWF(
+    "<?php echo WEBROOT; ?>swfs/amqp.swf?" + Math.random().toString(),
+    "AMQPProxy",
+    "1",
+    "1",
+    "9",
+    "<?php echo WEBROOT; ?>swfs/expressInstall.swf",
+    {},
+    {
+    allowScriptAccess: "always",
+    wmode: "opaque",
+    bgcolor: "#005B9F"
+    },
+    {},
+    function() {
+    //object loaded callback.. useful for debugging
+    }
+    );
+    /********** AMQP for notifications *********/
+    MQ.queue("userID<?php echo $loggedUserID; ?>").bind("dandelion", "notifications.*.<?php echo $loggedUserID; ?>").callback(function(m) {
+    console.log('amqp data: ', m.data);
 
-            $.ajax({
-                type: "POST",
-                url: "/notifications",
-                data: {data: m.data, exchange: m.exchange, routingKey: m.routingKey},
-                cache: false,
-                success: function(html) {
-                    $("span.countNotifies").css('display', 'block');
-                    $("span.countNotifies").html(m.data.count);
-                    if (m.data.type == 'like')
-                    {
-                        $(".tempLike-"+ m.data.target).prepend(html);
-                    }else if(m.data.type == 'comment')
-                    {
-                        $("#commentBox-"+ m.data.target).before(html);
-                    }
-                    updateTime();
-                }
-            });
-        });
-        $('body').on('click', '.notifications', function(){
-            if($('#dropdown-notification').css('display') == 'none')
-            {
-                $.ajax({
-                    type: "POST",
-                    url: "/loadNotifications",
-                    data: {},
-                    cache: false,
-                    beforeSend: function(){
-                        $('.notificationContainers').html('<li><div class="loading-bar"><div></div></div></li>');
-                    },
-                    success: function(html) {
-                        $("span.countNotifies").css('display', 'none');
-                        $('.notificationContainers li').detach();
-                        $('.notificationContainers').append(html);
-                        updateTime();
-                    }
-                });
-            }
-        });
-        /********** AMQP for friend requests *********/
-        MQ.queue("userID<?php echo $loggedUserID; ?>").bind("dandelion", "friendRequests.*.<?php echo $loggedUserID; ?>").callback(function(m) {
-            console.log('amqp data: ', m.data);
+    $.ajax({
+    type: "POST",
+    url: "/notifications",
+    data: {data: m.data, exchange: m.exchange, routingKey: m.routingKey},
+    cache: false,
+    success: function(html) {
+    $("span.countNotifies").css('display', 'block');
+    $("span.countNotifies").html(m.data.count);
+    if (m.data.type == 'like')
+    {
+    $(".tempLike-"+ m.data.target).prepend(html);
+    }else if(m.data.type == 'comment')
+    {
+    $("#commentBox-"+ m.data.target).before(html);
+    }
+    updateTime();
+    }
+    });
+    });
+    $('body').on('click', '.notifications', function(){
+    if($('#dropdown-notification').css('display') == 'none')
+    {
+    $.ajax({
+    type: "POST",
+    url: "/loadNotifications",
+    data: {},
+    cache: false,
+    beforeSend: function(){
+    $('.notificationContainers').html('<li><div class="loading-bar"><div></div></div></li>');
+    },
+    success: function(html) {
+    $("span.countNotifies").css('display', 'none');
+    $('.notificationContainers li').detach();
+    $('.notificationContainers').append(html);
+    updateTime();
+    }
+    });
+    }
+    });
+    /********** AMQP for friend requests *********/
+    MQ.queue("userID<?php echo $loggedUserID; ?>").bind("dandelion", "friendRequests.*.<?php echo $loggedUserID; ?>").callback(function(m) {
+    console.log('amqp data: ', m.data);
 
-            $.ajax({
-                type: "POST",
-                url: "/notifications",
-                data: {data: m.data, exchange: m.exchange, routingKey: m.routingKey},
-                cache: false,
-                success: function(html) {
-                    $("span.countFriendRequest").css('display', 'block');
-                    $("span.countFriendRequest").html(m.data.count);
-                    updateTime();
-                }
-            });
-        });
-        $('body').on('click', '.friendRequests', function(){
-            if($('#dropdown-friend').css('display') == 'none')
-            {
-                $.ajax({
-                    type: "POST",
-                    url: "/loadFriendRequests",
-                    data: {},
-                    cache: false,
-                    beforeSend: function(){
-                        $('.friendRqContainers').html('<li><div class="loading-bar"><div></div></div></li>');
-                    },
-                    success: function(html) {
-                        $("span.countFriendRequest").css('display', 'none');
-                        $('.friendRqContainers li').detach();
-                        $('.friendRqContainers').append(html);
-                        updateTime();
-                    }
-                });
-            }
-        });
+    $.ajax({
+    type: "POST",
+    url: "/notifications",
+    data: {data: m.data, exchange: m.exchange, routingKey: m.routingKey},
+    cache: false,
+    success: function(html) {
+    $("span.countFriendRequest").css('display', 'block');
+    $("span.countFriendRequest").html(m.data.count);
+    updateTime();
+    }
+    });
+    });
+    $('body').on('click', '.friendRequests', function(){
+    if($('#dropdown-friend').css('display') == 'none')
+    {
+    $.ajax({
+    type: "POST",
+    url: "/loadFriendRequests",
+    data: {},
+    cache: false,
+    beforeSend: function(){
+    $('.friendRqContainers').html('<li><div class="loading-bar"><div></div></div></li>');
+    },
+    success: function(html) {
+    $("span.countFriendRequest").css('display', 'none');
+    $('.friendRqContainers li').detach();
+    $('.friendRqContainers').append(html);
+    updateTime();
+    }
+    });
+    }
+    });
     });
 </script>
 <div id="amqp-wrap" style="position:absolute;z-index:10000;">
@@ -124,17 +125,17 @@ $loggedUserID = str_replace(':', '_', $this->f3->get('SESSION.userID'));
                 </div>
             </div>
             <div class="large-5">
-                <a class="float-right" href="/user/<?php echo $this->f3->get('SESSION.username'); ?>">
-                    <img src="<?php echo $this->getAvatar($this->f3->get('SESSION.userID')) ?>" style="width: 30px; height: 30px">
+                <a class="float-right" href="/user/<?php echo $loggedUser->data->username ?>">
+                    <img src="<?php echo $this->getAvatar($loggedUser->data->profilePic) ?>" style="width: 30px; height: 30px">
                 </a>
             </div>
             <div class="large-5">
-                <a style="line-height: 30px; color: #fff; font-weight: bold; padding-left: 10px" href="/user/<?php echo $this->f3->get('SESSION.username'); ?>">
-                    <?php echo $this->f3->get('SESSION.firstname'); ?>
+                <a style="line-height: 30px; color: #fff; font-weight: bold; padding-left: 10px;  text-transform: capitalize;" href="/user/<?php echo $loggedUser->data->username ?>">
+                    <?php echo $loggedUser->data->firstName ?>
                 </a>
             </div>
             <div class="large-5">
-                <a class="float-right" style="line-height: 30px; color: #fff; font-weight: bold" href="/home">Home</a>
+                <a class="float-right" style="line-height: 30px; color: #fff; font-weight: bold; text-transform: capitalize;" href="/home">Home</a>
             </div>
             <div class="large-5 friendRequests">
                 <span class="ink-badge red countFriendRequest">0</span>

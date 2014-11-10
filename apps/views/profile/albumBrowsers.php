@@ -1,7 +1,7 @@
 <?php
-$album = F3::get('album');
-$user_id =  F3::get('user_id');
-$type =  F3::get('type');
+$album = $this->f3->get('album');
+$user_id = $this->f3->get('user_id');
+$type = $this->f3->get('type');
 if (!empty($album))
 {
     ?>
@@ -17,16 +17,15 @@ if (!empty($album))
     </div>
     <div class="column-group mCustomScrollbar" style="height: 500px">
         <?php
-        foreach ($album as $key => $v)
+        foreach ($album as $key => $value)
         {
-            $value = HelperController::photoAlbum($v->recordID);
             ?>
             <div class="large-25">
                 <div class="photoItems">
-                    <a class="popupMax" href="/photoBrowser?user_id=<?php echo $user_id ?>&type=<?php echo $type ?>&aid=<?php echo $v->recordID ?>" title="Choose From My Photos" >
-                        <i class="mediaThumb" style="background-image:url(<?php echo UPLOAD_URL . 'images/' . $value[0]->data->fileName; ?>)"></i>
+                    <a class="popupMax" href="/photoBrowser?user_id=<?php echo $user_id ?>&type=<?php echo $type ?>&aid=<?php echo $value['album']->recordID ?>" title="Choose From My Photos" >
+                        <i class="mediaThumb" style="background-image:url(<?php echo UPLOAD_URL . 'images/' . $value['photo'][0]->data->fileName; ?>)"></i>
                     </a>
-                    <h6 style="text-align:center; line-height: 15px"><?php echo $v->data->name ?></h6>
+                    <h6 style="text-align:center; line-height: 15px"><?php echo $value['album']->data->name ?></h6>
                 </div>
             </div>
             <?php

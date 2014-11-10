@@ -316,13 +316,20 @@ class ProfileController extends AppController
             if (!empty($_GET['act']))
             {
                 $album = $this->facade->findAllAttributes('album', array('owner' => $this->f3->get('SESSION.userID')));
-                $this->render('profile/albumBrowsers', array('album' => $album, 'user_id' => $_GET['user_id'], 'type' => $_GET['type']));
+                $albumArray = array();
+                foreach ($album as $value)
+                {
+                    $photo = $this->facade->findAllAttributes('photo', array('albumID' => $value->recordID));
+                    $albumArray[] = array('album' => $value, 'photo' => $photo);
+                }
+                $this->render('profile/albumBrowsers', array('album' => $albumArray, 'user_id' => $_GET['user_id'], 'type' => $_GET['type']));
             }
             else
             {
                 if (!empty($_GET['aid']))
                 {
                     $album = $this->facade->findByPk('album', $_GET['aid']);
+                    $user = $this->facade->findByPk('user', $album->data->owner);
                     if (!empty($album))
                     {
                         $albumName = $album->data->name;
@@ -335,13 +342,11 @@ class ProfileController extends AppController
                 }
                 else
                 {
-                    $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
+                    $photos = $this->facade->findAllAttributes('photo', array('owner' => $this->f3->get('SESSION.userID')));
+                    $user = $this->facade->findByPk('user', $this->f3->get('SESSION.userID'));
                     $albumName = 'Recent Uploads';
                 }
-                $this->f3->set('albumName', $albumName);
-                $this->f3->set('photos', $photos);
-                $this->f3->set('type', $_GET['type']);
-                $this->render('profile/photoBrowsers');
+                $this->render('profile/photoBrowsers', array('albumName' => $albumName, 'photos' => $photos, 'type' => $_GET['type'], 'user' => $user));
             }
         }
     }

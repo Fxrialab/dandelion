@@ -226,8 +226,10 @@ a{
     margin: 10px 0;
 }
 
-.uiProfileInfo p {
+.uiProfileInfo .profileName {
     font-weight: bold;
+    text-transform: capitalize;
+    vertical-align: top;
 }
 
 .uiSideNav {
@@ -455,6 +457,7 @@ a{
 .timeLineLink {
     font-weight: bold;
     font-size: 12px;
+     text-transform: capitalize;
 }
 
 .uiTimeLineNav .tlProfileLink {
@@ -1215,8 +1218,8 @@ a{
     min-height: 130px;
 }
 .profilePic img{
-    height: 150px;
-    width: 150px;
+    height: auto;
+    width: 160px;
 }
 #imgAvatar .profileInfo{
     position: absolute;
@@ -1224,7 +1227,16 @@ a{
     left:30px;
     display: none;
 }
+.profilePicThumb {
+    height: 160px;
+    width: 160px;
+    overflow: hidden;
+}
 
+.profilePicThumbImg {
+    height: auto;
+
+}
 #imgAvatar:hover .profileInfo{
     display: block;
 }
@@ -1290,7 +1302,7 @@ a{
 }
 
 .uiTimeLineHeadLine {
-    margin-left: 180px;
+    margin-left: 190px;
 }
 
 .timeLineMenuNav .ink-navigation ul.menu.horizontal li a {
@@ -1547,6 +1559,15 @@ a{
     background-repeat: no-repeat;
     background-position-x: center; 
 
+}
+.imgContainer{
+    border: 1px solid #dcdee3;
+    padding: 3px;
+    text-align: center;
+    margin-bottom: 10px
+}
+.imgContainer:hover{
+    border: 1px solid #0069d6;
 }
 .large-33 .action{
     margin:-32px 5px 0 5px;
@@ -2495,8 +2516,8 @@ a{
 }
 
 .loadingImage {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
 }
 
 .dialogContainers .column-group {
@@ -2541,7 +2562,7 @@ a{
 }
 
 .actionAvatar {
-    position: absolute; top: 2px; left: 10px
+    position: absolute; bottom: 12px; left: 10px
 }
 
 .actionAvatar button {

@@ -13,10 +13,6 @@
                         <div class="mainColWrapper">
                             <?php
                             $this->loadContent($page);
-//                            if ($type == 'modules')
-//                                $this->loadModules($page);
-//                            else
-//                                echo View::instance()->render($page);
                             ?>
                         </div>
                         <div class="uiRightCol large-30">

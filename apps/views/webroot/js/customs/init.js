@@ -413,12 +413,6 @@ $("body").on('click', '.photoBrowse', function(e) {
         }
     });
 });
-$("body").on('click', '.closeDialog', function(e) {
-    e.preventDefault();
-    $(".dialog form").remove();
-    $(".dialog").dialog("close");
-    $('body').css('overflow', 'scroll'); //this line does the actual hiding
-});
 
 $("body").on('click', '.comfirmDialogGroup', function(e) {
     e.preventDefault();
@@ -444,7 +438,7 @@ $("body").on('click', '.changePhoto_cover', function(e) {
         url: "/changePhoto",
         data: {data: data},
         success: function(data) {
-            $('.displayPhoto').html(data);
+            $('.arrow_timeLineMenuNav').hide();
             $('.profilePic img').css('display', 'none');
             $('.dropdown').css('display', 'none');
             $('.profilePic .profileInfo').css('display', 'none ');
@@ -452,6 +446,7 @@ $("body").on('click', '.changePhoto_cover', function(e) {
             $('.actionCover').css('display', 'none');
             $('.timeLineMenuNav div').remove();
             $("#navCoverUserTemplate").tmpl(data).appendTo(".timeLineMenuNav");
+            $('.displayPhoto').html(data);
 
         }
     });
@@ -462,57 +457,15 @@ $("body").on('click', '.changePhoto_avatar', function(e) {
     var data = $(this).attr('data-rel');
     $.ajax({
         type: "POST",
-        url: "/choosePhoto",
+        url: "/changePhoto",
         data: {data: data},
         success: function(rs) {
-            $('.infoUser').html(rs);
-            $('.profileInfo .dropdown').css('display', 'none');
-            $('.profilePic .profileInfo').css('display', 'none');
-            $(".dialog").dialog("close");
+            $('.profilePic').html(rs);
+            $('#imgAvatar .profileInfo').css('display', 'none');
         }
     });
 });
 
-$("body").on('click', '.rCoverUser', function(e) {
-    e.preventDefault();
-    var id = $(this).attr('rel');
-    $.ajax({
-        type: "POST",
-        url: "/reposition",
-        data: {id: id},
-        success: function(data) {
-            $('.imgCover').html(data);
-            $('.profilePic img').css('display', 'none');
-            $('.profilePic .profileInfo').css('display', 'none');
-            $('.name').css('display', 'none');
-            $('.actionCover').css('display', 'none');
-            $('.timeLineMenuNav div').css('display', 'none');
-            $("#navCoverUserTemplate").tmpl(data).appendTo(".timeLineMenuNav");
-        }
-    });
-});
-//Remove ajax
-$("body").on('click', '.comfirmDialog', function(e) {
-    e.preventDefault();
-    var role = $('#role').val();
-    $.ajax({
-        type: "POST",
-        data: {role: role},
-        url: "/remove",
-        success: function(data) {
-            var obj = jQuery.parseJSON(data);
-            if (obj.role == 'avatar') {
-                $('.infoUser').html('<img src="' + obj.url + 'avatarMenDefault.png">');
-                $('#removeAvatar').remove();
-            } else {
-                $('.imgCover').remove();
-                $('#removeCover').remove();
-                $('.rCoverUser').remove();
-            }
-            $(".dialog").dialog("close");
-        }
-    });
-});
 
 $("body").on('click', '.cancel', function(e) {
     e.preventDefault();
@@ -616,16 +569,15 @@ $(document).ready(function() {
     $("body").on('click', '.deletePhoto', function(e) {
         e.preventDefault();
         var rel = $(this).attr('rel');
-        var relID = $(this).attr('relID');
         var r = confirm("Are you sure you want to delete this image?")
         if (r == true)
         {
             $.ajax({
                 type: "POST",
                 url: "/content/photo/deletePhoto",
-                data: {id: relID, name: rel},
+                data: {data: rel},
                 success: function(data) {
-                    $("#" + data).remove();
+                    $("." + data).remove();
                 }
             });
         }
@@ -686,7 +638,94 @@ $(document).on('keypress', '.commentPhoto', function(event) {
     //return false;
 });
 
-$("body").on('click', '.removeImgGroup', function(e) {
+$(document).on('submit', '#submitFormStatus', function(event) {
+    var embedPhotos = $('.embedElements #embedPhotos > div').length;
+    var embedVideo = $('.embedElements #embedVideo > div').length;
+    var status = $("#status").val();
+    $(".msg").html("<div class='loadingUpload'></div>");
+    if (status || embedPhotos)
+    {
+        if (embedPhotos > 0)
+        {
+            $('#embedType').attr('value', 'photo');
+        } else {
+            if (embedVideo > 0)
+                $('#embedType').attr('value', 'video');
+            else
+                $('#embedType').attr('value', 'none');
+        }
+        $.ajax({
+            type: "POST",
+            url: "/content/post/postStatus",
+            data: $("#submitFormStatus").serialize(), // serializes the form's elements.
+            success: function(html)
+            {
+                $('#tagElements').css('display', 'none');
+                $("#contentContainer").prepend(html);
+                $('.photoWrap').remove();
+                $('#imgID').val();
+                $('#embedPhotos').html('');
+                $('#status').val('');
+                $(".msg").html("");
+                updateTime();
+            }
+        });
+    }
+    return false; // avoid to execute the actual submit of the form.
+});
+
+$("body").on('submit', '#submitAvatar', function(e) {
+    e.preventDefault();
+    $.ajax({
+        type: "POST",
+        url: "/savePhoto",
+        data: $("#submitAvatar").serialize(), // serializes the form's elements.
+        success: function(data)
+        {
+            if (data) {
+                var obj = jQuery.parseJSON(data);
+                $('.infoUser').html(' <img src="' + obj.avatar + '">');
+                $('.green-button').remove();
+                $('.actionAvatar').remove();
+                $('#imgAvatar .profileInfo').css('display', 'block');
+            } else {
+                $('.infoUser').html('Error...');
+            }
+
+        }
+    });
+
+    return false; // avoid to execute the actual submit of the form.
+});
+
+$("body").on('submit', '#submitCover', function(e) {
+
+    $.ajax({
+        type: "POST",
+        url: "/savePhoto",
+        data: $("#submitCover").serialize(), // serializes the form's elements.
+        success: function(data)
+        {
+            var obj = jQuery.parseJSON(data);
+            var user = [
+                {username: obj.username}
+            ];
+            $("#navInfoUserTemplate").tmpl(user).appendTo(".timeLineMenuNav");
+            $('.arrow_timeLineMenuNav').show();
+            $('.profilePic a img').css('display', 'block');
+            $('.profilePic .profileInfo').css('display', 'block ');
+            $('.dropdown').css('display', '');
+            $('.name').css('display', 'block');
+            $('.actionCover').css('display', 'block');
+            $('.cancelCover').remove();
+            $('.dragCover').css('cursor', 'pointer');
+        }
+    });
+
+    return false; // avoid to execute the actual submit of the form.
+});
+
+$("body").on('click', '.deletePhotoStatus', function(e) {
     var title = $(this).attr('title');
     $(".dialog").dialog({
         width: "500",

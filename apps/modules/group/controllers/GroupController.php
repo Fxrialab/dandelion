@@ -328,16 +328,6 @@ class GroupController extends AppController
         }
     }
 
-    public function photoBrowsers()
-    {
-        if ($this->isLogin())
-        {
-            $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
-            $this->f3->set('photos', $photos);
-            $this->f3->set('groupID', $_GET['id']);
-            $this->renderModule('photoGalleries', 'group');
-        }
-    }
 
     public function choosePhoto()
     {
@@ -356,19 +346,20 @@ class GroupController extends AppController
     {
         if ($this->isLogin())
         {
-            $tempDir = UPLOAD . "tmp/";
-            $coverDir = UPLOAD . "cover/750px";
+            if (!file_exists(UPLOAD . 'images'))
+                mkdir(UPLOAD . 'images', 0777);
+
+            if (!file_exists(UPLOAD . "/thumbnail"))
+                mkdir(UPLOAD . "/thumbnail", 0777); //The folder will display like gallery images on "Choose from my photos"
+            $tempDir = UPLOAD . "images/";
+            $thumbnailDir = UPLOAD . "/thumbnail";
             if (isset($_FILES["myfile"]))
             {
-//                if (!is_array($_FILES["myfile"]['name'])) //single file
-//                {
                 $file = $_FILES["myfile"];
                 $code = $this->StringHelper->generateRandomString(5);
                 $newName = $code . time();
-                $image = $this->changeImage($file, 750, $coverDir, $newName, 100, true, $tempDir);
-//                    var_dump($image);
+                $image = $this->changeImage($file, 250, $thumbnailDir, $newName, 250, true, $tempDir);
                 $this->renderModule('cover', 'group', array('image' => $image, 'target' => 'uploadCover'));
-//                }
             }
         }
     }
@@ -377,9 +368,6 @@ class GroupController extends AppController
     {
         if ($this->isLogin())
         {
-            $thumbnailDir = UPLOAD . "thumbnails/150px/"; //The folder will display like gallery images on "Choose from my photos"
-            $imagesDir = UPLOAD . "images/";
-
             $currentUser = $this->getCurrentUser();
             $target = $_POST['target'];
             $file = $_POST['coverFile'];
@@ -388,13 +376,12 @@ class GroupController extends AppController
             $dragX = $_POST['dragX'];
             $dragY = $_POST['dragY'];
             $groupID = $_POST['groupID'];
-            $pathFile = UPLOAD . 'tmp/' . $file;
             switch ($target)
             {
                 case 'uploadCover':
                     //resize image to thumbnail, cover folder and move image from tmp folder to images folder
-                    $this->resizeImageFile($pathFile, 150, $thumbnailDir . $file, 80);
-                    rename($pathFile, $imagesDir . $file);
+//                    $this->resizeImageFile($pathFile, 150, $thumbnailDir . $file, 80);
+//                    rename($pathFile, $imagesDir . $file);
                     //prepare data for save
                     $entry = array(
                         'owner' => $currentUser->recordID,

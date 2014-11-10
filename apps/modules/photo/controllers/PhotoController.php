@@ -158,19 +158,19 @@ class PhotoController extends AppController
         }
     }
 
-
-
     public function deletePhoto()
     {
         if ($this->isLogin())
         {
 
-            $filename = $_POST['name'];
-            $link = UPLOAD_URL . $filename;
+            $filename = explode('_', $_POST['data']);
+            $link = UPLOAD . str_replace(':', '', $this->f3->get('SESSION.userID')) . '/' . $filename[1];
+            $thumb = UPLOAD . str_replace(':', '', $this->f3->get('SESSION.userID')) . '/thumbnail/' . $filename[1];
             if (!empty($link))
             {
                 unlink($link);
-                echo $_POST['id'];
+                unlink($thumb);
+                echo $filename[0];
             }
         }
     }
@@ -301,9 +301,9 @@ class PhotoController extends AppController
         {
             $photo = $this->facade->findByPk('photo', $pID[2]);
             if ($pID[1] != 0)
-                $findAll = $this->facade->findAllAttributes('photo', array('typeID' => $pID[1], 'actor' => $pID[0]));
+                $findAll = $this->facade->findAllAttributes('photo', array('typeID' => $pID[1], 'owner' => $pID[0]));
             else
-                $findAll = $this->facade->findAllAttributes('photo', array('actor' => $pID[0]));
+                $findAll = $this->facade->findAllAttributes('photo', array('owner' => $pID[0]));
             $k = $pID[3];
             $currentUser = $this->getCurrentUser();
             if ($k + 1 < count($findAll))
@@ -324,7 +324,7 @@ class PhotoController extends AppController
                     $commentArray[] = array('comment' => $value, 'like' => $like, 'user' => $userComment);
                 }
             }
-            $user = $this->facade->findByPk('user', $photo->data->actor);
+            $user = $this->facade->findByPk('user', $photo->data->owner);
             $avatar = $this->facade->findByPk('photo', $user->recordID);
             if (!empty($avatar))
                 $photoAvatar = $avatar->data->fileName;
@@ -333,7 +333,7 @@ class PhotoController extends AppController
             if (!empty($_GET['set']))
                 $this->renderModule('photoDrap', 'photo', array('photo' => $photo));
             else
-                $this->renderModule('popup', 'photo', array('photo' => $photo, 'tID' => $pID[1], 'k' => $pID[3], 'avatar' => $photoAvatar, 'user' => $user, 'like' => $like, 'comment' => $commentArray));
+                $this->renderModule('popup', 'photo', array('photo' => $photo, 'tID' => $pID[1], 'k' => $k, 'avatar' => $photoAvatar, 'user' => $user, 'like' => $like, 'comment' => $commentArray));
         }
     }
 
@@ -363,7 +363,7 @@ class PhotoController extends AppController
                 }
                 else
                 {
-                    $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
+                    $photos = $this->facade->findAllAttributes('photo', array('owner' => $this->f3->get('SESSION.userID')));
                     $albumName = 'Recent Uploads';
                 }
                 $this->f3->set('albumName', $albumName);

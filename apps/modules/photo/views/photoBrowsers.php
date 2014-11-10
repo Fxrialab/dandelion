@@ -24,7 +24,7 @@ $type = $this->f3->get('type');
             <div class=" large-25">
                 <div class="photoItems">
                     <a  class="changePhoto_group" href="/content/group/changePhoto?profile_id=<?php echo $this->f3->get('SESSION.userID') ?>&photo_id=<?php echo $value->recordID ?>">
-                        <i class="mediaThumb" style="background-image:url(<?php echo UPLOAD_URL . 'images/' . $value->data->fileName; ?>)"></i>
+                        <i class="mediaThumb" style="background-image:url(<?php echo UPLOAD_URL . str_replace(':', '_', $value->data->owner) . '/' . $value->data->fileName; ?>)"></i>
                     </a>
                 </div>
             </div>

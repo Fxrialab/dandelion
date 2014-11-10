@@ -6,7 +6,7 @@ $commentID = str_replace(':', '_', $comment->recordID);
 ?>
 <li class="eachCommentItem verGapBox column-group" style="margin:1px 0; padding: 5px 10px">
     <div class="large-15 uiActorCommentPicCol">
-        <a href="/user/<?php echo $user->data->username ?>">  <img style="min-width: 40px; height:40px" src="<?php echo IMAGES ?>/avatarMenDefault.png"></a>
+        <a href="/user/<?php echo $user->data->username ?>">  <img style="min-width: 40px; height:40px" src="<?php echo $this->getAvatar($user->data->profilePic); ?>"></a>
     </div>
     <div class="large-85 uiCommentContent uiComment_<?php echo $commentID ?>">
         <p>

@@ -168,22 +168,22 @@ class PostController extends AppController
                     foreach ($images as $image)
                     {
                         //images are waiting in tmp folder
-                        $file = UPLOAD . 'tmp/' . $image;
+                        $file = UPLOAD . str_replace(':', '', $this->f3->get('SESSION.userID')) . '/' . $image;
                         list($width, $height) = getimagesize($file);
-                        //check IF size of images are larger than 960px then resize us ELSE move us from tmp folder to images folder
-                        if ($width > 960 || $height > 960)
-                            $this->resizeImageFile($file, 960, $imagesDir . $image, 100);
-                        else
-                            rename($file, $imagesDir . $image);
-                        //save to DB
-                        list($nWidth, $nHeight) = getimagesize(UPLOAD . 'images/' . $image);
+//                        //check IF size of images are larger than 960px then resize us ELSE move us from tmp folder to images folder
+//                        if ($width > 960 || $height > 960)
+//                            $this->resizeImageFile($file, 960, $imagesDir . $image, 100);
+//                        else
+//                            rename($file, $imagesDir . $image);
+//                        //save to DB
+//                        list($nWidth, $nHeight) = getimagesize(UPLOAD . 'images/' . $image);
                         $entry = array(
                             'owner' => $currentUser->recordID,
                             'albumID' => 'none',
                             'typeID' => $statusID,
                             'fileName' => $image,
-                            'width' => $nWidth,
-                            'height' => $nHeight,
+                            'width' => $width,
+                            'height' => $height,
                             'dragX' => '0',
                             'dragY' => '0',
                             'thumbnail_url' => '',
@@ -219,7 +219,6 @@ class PostController extends AppController
             $this->renderModule('postStatus', 'post', array('data' => $data));
         }
     }
-
 
     //just implement
     public function moreComment()

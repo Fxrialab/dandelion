@@ -11,8 +11,8 @@ $target = $this->f3->get('target');
     <input type="hidden" name="width" value="<?php echo $image['width']; ?>">
     <input type="hidden" name="height" value="<?php echo $image['height']; ?>">
     <input type="hidden" name="target" value="<?php echo $target; ?>">
-    <div class="dragCover" style="width:<?php echo $image['width']; ?>px; height:<?php echo $image['height']; ?>px;cursor: move">
-        <img src="<?php echo UPLOAD_URL. "cover/750px/" . $image['name']; ?>" style="width:100%;">
+    <div class="dragCover" style="cursor: move">
+        <img src="<?php echo UPLOAD_URL. "images/" . $image['name']; ?>" style="width:100%;">
     </div>
     <script>
         $('.dragCover').draggable({

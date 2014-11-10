@@ -18,19 +18,19 @@ if (!empty($activities))
             $like = $mod['like'];
             $actorName = $mod['user']->data->fullName;
             $comment = $mod['comment'];
-            $avatar = UPLOAD_URL . 'avatar/170px/' . $mod['user']->data->avatar;
+            $profilePic = $mod['user']->data->profilePic;
             require $views;
         }
     }
     ?>
     <script type="text/javascript">
         $(".oembed<?php echo $rand; ?>").oembed(null,
-                {
-                    embedMethod: "append",
-                    maxWidth: 1024,
-                    maxHeight: 400,
-                    autoplay: false
-                });
+        {
+        embedMethod: "append",
+        maxWidth: 1024,
+        maxHeight: 400,
+        autoplay: false
+        });
         $('.taPostComment').autosize();
     </script>
     <?php

@@ -200,8 +200,8 @@ class AjaxController extends AppController
             if (!empty($_GET['act']))
             {
                 $album = $this->facade->findAllAttributes('album', array('owner' => $this->f3->get('SESSION.userID')));
-             
-                $this->renderModule('mains/albumBrowsers', 'group', array('album' => $album, 'rid' => $_GET['id']));
+
+                $this->renderModule('albumBrowsers', 'group', array('album' => $album, 'rid' => $_GET['id']));
             }
             else
             {
@@ -220,13 +220,13 @@ class AjaxController extends AppController
                 }
                 else
                 {
-                    $photos = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
+                    $photos = $this->facade->findAllAttributes('photo', array('owner' => $this->f3->get('SESSION.userID')));
                     $albumName = 'Recent Uploads';
                 }
                 $this->f3->set('albumName', $albumName);
                 $this->f3->set('photos', $photos);
                 $this->f3->set('rid', $_GET['id']);
-                $this->renderModule('mains/photoBrowsers', 'group');
+                $this->renderModule('photoBrowsers', 'group');
             }
         }
     }

@@ -3,14 +3,10 @@
     <?php
     if ($group->data->coverGroup != 'none')
         $photo = HelperController::findPhoto($group->data->coverGroup);
-    if (!empty($photo))
-    {
-        $a = 'Change cover';
-    }
-    else
-    {
+    if ($group->data->coverGroup != 'none')
         $a = 'Add a cover';
-    }
+    else
+        $a = 'Change cover';
     ?>
     <div class="column-group coverGroup">
         <div class="displayPhoto">
@@ -20,8 +16,8 @@
             {
                 ?>
                 <div class="imgCoverGroup">
-                    <div style="width:<?php echo $photo->data->width ?>px; height:<?php echo $photo->data->height; ?>px;  position: relative; <?php if (!empty($photo->data->dragX)) echo 'left: -' . $photo->data->dragX . 'px' ?>; <?php if (!empty($photo->data->dragY)) echo 'top: -' . $photo->data->dragY . 'px' ?>">
-                        <img src="<?php echo UPLOAD_URL . 'cover/750px/' . $photo->data->fileName; ?>" style="width:100%;">
+                    <div style="position: relative; <?php if (!empty($photo->data->dragX)) echo 'left: -' . $photo->data->dragX . 'px' ?>; <?php if (!empty($photo->data->dragY)) echo 'top: -' . $photo->data->dragY . 'px' ?>">
+                        <img src="<?php echo $this->getImg($group->data->coverGroup) ?>" style="width:100%;">
                     </div>
                 </div>
             <?php }
@@ -59,21 +55,21 @@
 </form>
 <script>
     $(function() {
-        $("#coverPhotoGroup").submit(function() {
+    $("#coverPhotoGroup").submit(function() {
 
-            $.ajax({
-                type: "POST",
-                url: "/content/group/saveCover",
-                data: $("#coverPhotoGroup").serialize(), // serializes the form's elements.
-                success: function()
-                {
-                    $('.actionCoverGroup').css('display', 'none');
-                    $('.actionCover').css('display', 'block');
-                    $('.dragCover').css('cursor', 'pointer');
-                }
-            });
-            return false; // avoid to execute the actual submit of the form.
-        });
+    $.ajax({
+    type: "POST",
+    url: "/content/group/saveCover",
+    data: $("#coverPhotoGroup").serialize(), // serializes the form's elements.
+    success: function()
+    {
+    $('.actionCoverGroup').css('display', 'none');
+    $('.actionCover').css('display', 'block');
+    $('.dragCover').css('cursor', 'pointer');
+    }
+    });
+    return false; // avoid to execute the actual submit of the form.
+    });
     });
 </script>
 <script id="navCoverPhotoGroupTemplate" type="text/x-jQuery-tmpl">

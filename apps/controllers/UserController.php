@@ -190,16 +190,7 @@ class UserController extends AppController
                             setcookie('email', $email, time() - 3600);
                             setcookie('password', $password, time() - 3600);
                         }
-                        //$this->f3->clear('SESSION');
-                        if ($existUser->data->profilePic != 'none')
-                        {
-                            $photo = $this->facade->findByPk('photo', $existUser->data->profilePic);
-                            $profilePic = UPLOAD_URL . "avatar/170px/" . $photo->data->fileName;
-                        }
-                        else
-                        {
-                            $profilePic = UPLOAD_URL . 'avatar/170px/avatarMenDefault.png';
-                        }
+     
                         $fullName = ucfirst($existUser->data->firstName) . " " . ucfirst($existUser->data->lastName);
                         $this->f3->set('SESSION.loggedUser', $existUser);
                         $this->f3->set('SESSION.username', $existUser->data->username);
@@ -207,7 +198,7 @@ class UserController extends AppController
                         $this->f3->set('SESSION.email', $existUser->data->email);
                         $this->f3->set('SESSION.fullname', $fullName);
                         $this->f3->set('SESSION.birthday', $existUser->data->birthday);
-                        $this->f3->set('SESSION.avatar', $existUser->data->avatar);
+                    
                         $this->f3->set('SESSION.userID', $existUser->recordID);
                         // start initial sessions.
                         $sessionID = rand(1000, 10000000);

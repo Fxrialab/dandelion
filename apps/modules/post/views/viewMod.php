@@ -14,7 +14,7 @@ $status_published = $status->data->published;
 <div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
     <div class="uiBoxPostContainer column-group">
         <div class="large-10 uiActorPicCol">
-            <a href="/user/<?php echo $username ?>"><img src="<?php echo $this->getAvatar($userID) ?>"></a>
+            <a href="/user/<?php echo $username ?>"><img src="<?php echo $this->getAvatar($profilePic) ?>"></a>
         </div>
         <div class="large-85">
             <div class="postContent">
@@ -99,7 +99,7 @@ $status_published = $status->data->published;
                     {
                         foreach ($photo as $k => $value)
                         {
-                            $img = '<a class="popupPhoto" href="/content/photo/popupPhoto?pID=' . $value->data->actor . '_' . $status->recordID . '_' . $value->recordID . '_' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . 'images/' . $value->data->fileName . '></a>';
+                            $img = '<a class="popupPhoto" href="/content/photo/popupPhoto?pID=' . $value->data->owner . '_' . $status->recordID . '_' . $value->recordID . '_' . $k . '"><img style="margin: 5px 0" src=' . UPLOAD_URL . 'images/' . $value->data->fileName . '></a>';
                             if (count($photo) == 1)
                                 echo '<div class="large-100">' . $img . '</div>';
                             elseif (count($photo) >= 2)
@@ -192,12 +192,13 @@ $status_published = $status->data->published;
                         ?>
                         <div class="moreComment_<?php echo $rpStatusID; ?>">
                             <?php
-                            $f3 = require('viewComment.php');
+                            if (!empty($mod['comment']))
+                                $f3 = require('viewComment.php');
                             ?>
                         </div>
                         <div class="uiStreamCommentBox verGapBox column-group" id="commentBox-<?php echo $rpStatusID; ?>">
                             <div class="large-10 uiActorCommentPicCol">
-                                <a href="/user/<?php echo $currentProfile->data->username; ?>"><img src="<?php echo $this->getAvatar($currentProfile->recordID) ?>"></a>
+                                <a href="/user/<?php echo $currentProfile->data->username; ?>"><img src="<?php echo $this->getAvatar($currentProfile->data->profilePic) ?>"></a>
                             </div>
                             <div class="large-90 uiTextCommentArea">
                                 <?php
@@ -237,29 +238,29 @@ $status_published = $status->data->published;
 <script type="text/javascript" charset="utf-8">
     $(function() {
 
-        function log_modal_event(event, modal) {
-            if (typeof console != 'undefined' && console.log)
-                console.log("[event] " + event.type);
-        }
-        ;
+    function log_modal_event(event, modal) {
+    if (typeof console != 'undefined' && console.log)
+    console.log("[event] " + event.type);
+    }
+    ;
 
-        $(document).on($.modal.BEFORE_BLOCK, log_modal_event);
-        $(document).on($.modal.BLOCK, log_modal_event);
-        $(document).on($.modal.BEFORE_OPEN, log_modal_event);
-        $(document).on($.modal.OPEN, log_modal_event);
-        $(document).on($.modal.BEFORE_CLOSE, log_modal_event);
-        $(document).on($.modal.CLOSE, log_modal_event);
-        $(document).on($.modal.AJAX_SEND, log_modal_event);
-        $(document).on($.modal.AJAX_SUCCESS, log_modal_event);
-        $(document).on($.modal.AJAX_COMPLETE, log_modal_event);
+    $(document).on($.modal.BEFORE_BLOCK, log_modal_event);
+    $(document).on($.modal.BLOCK, log_modal_event);
+    $(document).on($.modal.BEFORE_OPEN, log_modal_event);
+    $(document).on($.modal.OPEN, log_modal_event);
+    $(document).on($.modal.BEFORE_CLOSE, log_modal_event);
+    $(document).on($.modal.CLOSE, log_modal_event);
+    $(document).on($.modal.AJAX_SEND, log_modal_event);
+    $(document).on($.modal.AJAX_SUCCESS, log_modal_event);
+    $(document).on($.modal.AJAX_COMPLETE, log_modal_event);
 
 
-        $('.popup').click(function(event) {
-            event.preventDefault();
-            $.get(this.href, function(html) {
-                $(html).appendTo('body').modal();
-            });
-        });
+    $('.popup').click(function(event) {
+    event.preventDefault();
+    $.get(this.href, function(html) {
+    $(html).appendTo('body').modal();
+    });
+    });
 
 
 
