@@ -12,7 +12,7 @@ $f3 = require('navAbout.php');
                     <img src="<?php echo IMAGES ?>location.png">
                 </div>
                 <div class="large-90">
-                    Web Developer tai <a href="#"><?php echo $information->data->work_location ?></a>
+                    Web Developer tai <a href="#"><?php if (!empty($information->data->work_location)) echo $information->data->work_location ?></a>
                 </div>
 
             </li>

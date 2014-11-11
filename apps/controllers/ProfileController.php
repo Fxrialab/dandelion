@@ -25,7 +25,7 @@ class ProfileController extends AppController
                 $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
                 //set currentUser and otherUser for check in profile element and header
                 $this->f3->set('currentUser', $this->getCurrentUser());
-                $this->f3->set('otherUser', $this->getCurrentUser());
+                $this->f3->set('otherUser', $currentProfileRC);
                 $this->f3->set('statusFriendShip', $statusFriendShip);
                 $this->f3->set('userID', $this->f3->get('SESSION.userID'));
                 $this->f3->set('profileID', $currentProfileID);

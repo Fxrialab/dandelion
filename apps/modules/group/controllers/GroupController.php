@@ -324,7 +324,7 @@ class GroupController extends AppController
             $this->f3->set('group', $group);
             $this->f3->set('member', $member);
             $this->f3->set('countMember', $count);
-            $this->renderModule('detail', 'group', array('group' => $group, 'member' => $member, 'photo' => $photo, 'countMember' => $count, 'avatar' => $profile->data->avatar));
+            $this->renderModule('detail', 'group', array('group' => $group, 'member' => $member, 'photo' => $photo, 'countMember' => $count));
         }
     }
 

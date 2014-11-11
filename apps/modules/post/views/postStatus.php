@@ -8,7 +8,7 @@ $username = $currentProfile->data->username;
 $like = '';
 $actorName = $currentProfile->data->fullName;
 $comment = '';
-$avatar = UPLOAD_URL . 'avatar/170px/' . $currentProfile->data->avatar;
+$profilePic = $currentProfile->data->profilePic;
 $f3 = require('viewMod.php');
 ?>
 <script type="text/javascript">

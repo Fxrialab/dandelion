@@ -62,20 +62,28 @@ class AppController extends Controller
 
     public function getAvatar($id)
     {
-        $avatar = $this->facade->findByPk('photo', $id);
-        if (!empty($avatar))
-            return UPLOAD_URL . 'thumbnail/' . $avatar->data->fileName;
+        if ($id == 'none')
+        {
+            return UPLOAD_URL . 'thumbnail/avatar.png';
+        }
         else
-            return UPLOAD_URL . 'avatar/170px/avatar.png';
+        {
+            $avatar = $this->facade->findByPk('photo', $id);
+            return UPLOAD_URL . 'thumbnail/' . $avatar->data->fileName;
+        }
     }
 
     public function getImg($id)
     {
-        $photo = $this->facade->findByPk('photo', $id);
-        if (!empty($photo))
-            return UPLOAD_URL . 'images/' . $photo->data->fileName;
-        else
+        if ($id == 'none')
+        {
             return '';
+        }
+        else
+        {
+            $photo = $this->facade->findByPk('photo', $id);
+            return UPLOAD_URL . 'images/' . $photo->data->fileName;
+        }
     }
 
     public function getMacAddress()
