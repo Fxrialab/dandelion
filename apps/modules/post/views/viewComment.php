@@ -25,14 +25,14 @@ if (!empty($mod['comment']))
                 </p>
                 <a class="swTimeComment" name="<?php echo $published; ?>"></a>
                 <a class="uiLike like_<?php echo $id ?>" data-like="comment;<?php echo $this->f3->get('SESSION.userID') . ';' . $recordID ?>" data-rel="<?php echo $like ? "unlike" : "like" ?>"><?php echo $like ? "Unlike" : "Like" ?></a>
-                <a href="#" class="l2_<?php echo $id ?>"> <?php echo $numberLike ?></a>
+                <a href="#" class="l2_<?php echo $id ?>"> <?php if($numberLike==1) echo '<i class="fa fa-hand-o-right fa-14"></i> '. $numberLike; else $numberLike ?></a>
             </div>
-            <div class="large-5">
+            <div class="large-5 comment-pencil">
                 <?php
                 if ($this->f3->get('SESSION.userID') == $profile->recordID)
                 {
                     ?>
-                    <a data-dropdown="#dropdown_oc<?php echo $id; ?>"><i class="icon30-options"></i></a>
+                    <a data-dropdown="#dropdown_oc<?php echo $id; ?>"><i class="fa fa-pencil"></i></a>
                     <div id="dropdown_oc<?php echo $id; ?>" class="dropdown dropdown-tip dropdown-anchor-right dropdown-right">
                         <ul class="dropdown-menu">
 
@@ -46,7 +46,7 @@ if (!empty($mod['comment']))
                 else
                 {
                     ?>
-                    <a class="hideComment" href="#"><i class="icon30-close"></i></a></li>
+                    <a class="hideComment" href="#"><i class="fa fa-close"></i></a></li>
                     <?php } ?>
 
             </div>

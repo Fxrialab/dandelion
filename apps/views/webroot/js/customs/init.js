@@ -1,10 +1,10 @@
-$(".autoloadModuleElement").ready(function()
+$(".autoloadModuleElement").ready(function ()
 {
     $.ajax({
         type: "GET",
         url: "/pull",
         cache: false,
-        success: function(html) {
+        success: function (html) {
             $(".autoloadModuleElement").html(html);
             var lengthChild = $('.autoloadModuleElement > div').length;
             var actionArrays = [];
@@ -20,7 +20,7 @@ $(".autoloadModuleElement").ready(function()
                 url: "/loadSuggest",
                 data: {actionsName: actionArrays},
                 cache: false,
-                success: function(html) {
+                success: function (html) {
                     $(".autoloadModuleElement").html(html);
                     //new IsActionsForSuggest();
                     var existFriendRequests = $('.uiBoxFriendRequests .rowItemBox').length;
@@ -35,50 +35,54 @@ $(".autoloadModuleElement").ready(function()
         }
     })
 });
+
+$('body').on('click', '#status', function () {
+    $('.uiPostOption').show();
+});
 //hide search result if click anywhere
-$(document).click(function() {
+$(document).click(function () {
     var existedSearch = $('#resultsHolder').length;
     if (existedSearch) {
         $('#resultsHolder').hide();
     }
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
     $('.taPostStatus').autosize();
-    $('#resultsHolder').click(function(e) {
+    $('#resultsHolder').click(function (e) {
         e.stopPropagation();
     });
-    $('body').on('click', '.uiLike', function() {
+    $('body').on('click', '.uiLike', function () {
         var data = $(this).attr('data-like');
         var url = $(this).attr('data-rel');
         $(this).like(data, url);
     });
 
-    $('body').on('click', '.shareStatus', function() {
+    $('body').on('click', '.shareStatus', function () {
         var objectID = $(this).attr('id');
         $(this).share(objectID);
     });
-    $('body').on('click', '.deleteAction', function() {
+    $('body').on('click', '.deleteAction', function () {
         var objectID = $(this).attr('id');
         $(this).deleteEntry(objectID);
     });
-    $('body').on('click', '.viewAllComments', function() {
+    $('body').on('click', '.viewAllComments', function () {
         var objectID = $(this).attr('id');
         $(this).moreComment(objectID);
     });
-    $('body').on('click', '.addFriend', function() {
+    $('body').on('click', '.addFriend', function () {
         var objectID = $(this).attr('id');
         $(this).addFriend(objectID);
     });
-    $('body').on('click', '.cancelRequestFriend', function() {
+    $('body').on('click', '.cancelRequestFriend', function () {
         var objectID = $(this).attr('id');
         $(this).unAccept(objectID);
     });
-    $('body').on('click', '.confirmFriend', function() {
+    $('body').on('click', '.confirmFriend', function () {
         var objectID = $(this).attr('id');
         $(this).acceptFriend(objectID);
     });
-    jQuery.fn.center = function() {
+    jQuery.fn.center = function () {
         this.css("position", "absolute");
         this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
         this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
@@ -86,18 +90,18 @@ $(document).ready(function() {
     };
 });
 
-(function($) {
-    $.fn.like = function(data, url)
+(function ($) {
+    $.fn.like = function (data, url)
     {
         $.ajax({
             type: "POST",
             url: "/" + url,
             data: {data: data},
             cache: false,
-            success: function(result) {
+            success: function (result) {
                 var obj = jQuery.parseJSON(result);
                 if (obj) {
-                    $('a.like_' + obj.id).attr('data-rel', function() {
+                    $('a.like_' + obj.id).attr('data-rel', function () {
                         return obj.liked;
                     });
                     $('a.like_' + obj.id).html(obj.title);
@@ -123,7 +127,7 @@ $(document).ready(function() {
         });
     };
 
-    $.fn.share = function(objectID)
+    $.fn.share = function (objectID)
     {
         $('#fade').show();
         $('.uiShare').show();
@@ -132,10 +136,10 @@ $(document).ready(function() {
         $.ajax({
             async: true,
             type: 'POST',
-            beforeSend: function() {
+            beforeSend: function () {
                 $('.uiShare').addClass('loading');
             },
-            complete: function(request, json) {
+            complete: function (request, json) {
                 $('.uiShare').removeClass('loading');
                 $('.uiShare').html(request.responseText);
             },
@@ -143,61 +147,61 @@ $(document).ready(function() {
             data: {statusID: objectID}
         });
     };
-    $.fn.deleteEntry = function(objectID)
+    $.fn.deleteEntry = function (objectID)
     {
         $.ajax({
             type: 'POST',
             url: '/content/post/delete',
             data: {objectID: objectID},
-            success: function() {
+            success: function () {
                 $('.postItem-' + objectID).fadeOut('slow');
             }
         });
     }
 })(jQuery);
 
-(function($) {
-    $.fn.addFriend = function(to)
+(function ($) {
+    $.fn.addFriend = function (to)
     {
         $.ajax({
             type: 'POST',
             url: '/sentFriendRequest',
             data: {toUser: to},
             cache: false,
-            success: function(html) {
+            success: function (html) {
                 $('.uiActionUser').html(html);
             }
         });
     };
-    $.fn.acceptFriend = function(to)
+    $.fn.acceptFriend = function (to)
     {
         $.ajax({
             type: 'POST',
             url: '/acceptFriendship',
             data: {toUser: to},
             cache: false,
-            success: function(html) {
+            success: function (html) {
                 $('.uiActionUser').html(html);
             }
         });
     };
-    $.fn.unAccept = function(to)
+    $.fn.unAccept = function (to)
     {
         $.ajax({
             type: 'POST',
             url: '/unAcceptFriendship',
             data: {toUser: to},
             cache: false,
-            success: function(html) {
+            success: function (html) {
                 $('.uiActionUser').html(html);
             }
         });
     };
 })(jQuery);
 
-$(document).ready(function()
+$(document).ready(function ()
 {
-    $('#search').keyup(function()
+    $('#search').keyup(function ()
     {
         var searchText = $(this).val();
         if (searchText != '')
@@ -206,12 +210,12 @@ $(document).ready(function()
                 type: "POST",
                 url: "/search",
                 data: {data: searchText},
-                beforeSend: function() {
+                beforeSend: function () {
                     $('#resultsHolder').css('display', 'block');
                     //Lets add a loading image
                     $('#resultsHolder').addClass('loading');
                 },
-                success: function(data) {
+                success: function (data) {
                     $('#resultsHolder').removeClass('loading');
                     //Clear the results list
                     $('#resultsList').empty();
@@ -229,7 +233,7 @@ $(document).ready(function()
                                 }
                             }
                             //Loop through each result and add it to the list
-                            $.each(data.results, function()
+                            $.each(data.results, function ()
                             {
                                 $('#resultsList').append("<li rel='" + this.recordID + "'>" +
                                         "<a href='/user/" + this.username + "'>" +
@@ -257,18 +261,18 @@ $(document).ready(function()
     });
 });
 
-(function($) {
-    $.fn.moreComment = function(objectID)
+(function ($) {
+    $.fn.moreComment = function (objectID)
     {
         $.ajax({
             type: "POST",
             url: "/content/post/moreComment",
             data: {statusID: objectID},
             cache: false,
-            beforeSend: function() {
+            beforeSend: function () {
                 $(".loading_" + objectID).html("<div class='loading2'></div>");
             },
-            success: function(html) {
+            success: function (html) {
                 $('#viewComments-' + objectID).remove();
                 $('.moreComment-' + objectID).html(html);
                 updateTime();
@@ -280,7 +284,7 @@ $(document).ready(function()
 
 
 
-$("body").on('click', '#addMember', function(e) {
+$("body").on('click', '#addMember', function (e) {
     e.preventDefault();
     var title = $(this).attr('title');
     var href = $(this).attr('href');
@@ -289,7 +293,7 @@ $("body").on('click', '#addMember', function(e) {
         type: "POST",
         url: href,
         data: {groupID: groupID},
-        success: function(data) {
+        success: function (data) {
             $(".dialog").dialog({
                 width: "500",
                 height: "160",
@@ -297,7 +301,7 @@ $("body").on('click', '#addMember', function(e) {
                 title: title,
                 resizable: false,
                 modal: true,
-                open: function(event, ui) {
+                open: function (event, ui) {
                     $(".ui-dialog-titlebar-close").hide();
                     $(".dialog").html(data);
                 }
@@ -308,7 +312,7 @@ $("body").on('click', '#addMember', function(e) {
     });
 });
 
-$("body").on('click', '.removeGroup', function(e) {
+$("body").on('click', '.removeGroup', function (e) {
     e.preventDefault();
     var title = $(this).attr('title');
     var href = $(this).attr('href');
@@ -319,7 +323,7 @@ $("body").on('click', '.removeGroup', function(e) {
         type: "POST",
         url: href,
         data: {groupID: groupID, userID: userID},
-        success: function(data) {
+        success: function (data) {
             $(".dialog").dialog({
                 width: "500",
                 height: "160",
@@ -327,7 +331,7 @@ $("body").on('click', '.removeGroup', function(e) {
                 title: title,
                 resizable: false,
                 modal: true,
-                open: function(event, ui) {
+                open: function (event, ui) {
                     $(".ui-dialog-titlebar-close").hide();
                     $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
                 }
@@ -337,7 +341,7 @@ $("body").on('click', '.removeGroup', function(e) {
         }
     });
 });
-$("body").on('click', '.roleGroup', function(e) {
+$("body").on('click', '.roleGroup', function (e) {
     e.preventDefault();
     var title = $(this).attr('title');
     var href = $(this).attr('href');
@@ -347,7 +351,7 @@ $("body").on('click', '.roleGroup', function(e) {
         type: "POST",
         url: href,
         data: {groupID: groupID, userID: userID},
-        success: function(data) {
+        success: function (data) {
             $(".dialog").dialog({
                 width: "500",
                 height: "160",
@@ -355,7 +359,7 @@ $("body").on('click', '.roleGroup', function(e) {
                 title: title,
                 resizable: false,
                 modal: true,
-                open: function(event, ui) {
+                open: function (event, ui) {
                     $(".ui-dialog-titlebar-close").hide();
                     $('.dialog').html('<div><img src="<?php echo IMAGES ?>/loadingIcon.gif"</div>');
                 }
@@ -366,7 +370,7 @@ $("body").on('click', '.roleGroup', function(e) {
     });
 });
 
-$("body").on('click', '.removeImgUser', function(e) {
+$("body").on('click', '.removeImgUser', function (e) {
     var title = $(this).attr('title');
     var data = [
         {role: $(this).attr('role')},
@@ -378,7 +382,7 @@ $("body").on('click', '.removeImgUser', function(e) {
         title: title,
         resizable: false,
         modal: true,
-        open: function(event, ui) {
+        open: function (event, ui) {
             $(".ui-dialog-titlebar-close").hide();
             $('body').css('overflow', 'hidden'); //this line does the actual hiding
 //            $(".dialog").html(data);
@@ -388,14 +392,14 @@ $("body").on('click', '.removeImgUser', function(e) {
 });
 
 
-$("body").on('click', '.photoBrowse', function(e) {
+$("body").on('click', '.photoBrowse', function (e) {
     var title = $(this).attr('title');
     var role = $(this).attr('role');
     $.ajax({
         type: "POST",
         data: {role: role},
         url: "/photoBrowser",
-        success: function(data) {
+        success: function (data) {
             $('body').css('overflow', 'hidden');
             $(".dialog").dialog({
                 width: "700",
@@ -404,7 +408,7 @@ $("body").on('click', '.photoBrowse', function(e) {
                 title: title,
                 resizable: false,
                 modal: true,
-                open: function(event, ui) {
+                open: function (event, ui) {
                     $(".ui-dialog-titlebar-close").hide();
                     $(".dialog").html(data);
                 }
@@ -414,14 +418,14 @@ $("body").on('click', '.photoBrowse', function(e) {
     });
 });
 
-$("body").on('click', '.comfirmDialogGroup', function(e) {
+$("body").on('click', '.comfirmDialogGroup', function (e) {
     e.preventDefault();
     var groupID = $("#groupID").val();
     $.ajax({
         type: "POST",
         url: "/content/group/remove",
         data: {groupID: groupID},
-        success: function() {
+        success: function () {
             $('.imgCoverGroup').remove();
             $('.rCoverGroup').remove();
             $('.removeImgGroup').remove();
@@ -430,14 +434,14 @@ $("body").on('click', '.comfirmDialogGroup', function(e) {
     });
 });
 
-$("body").on('click', '.changePhoto_cover', function(e) {
+$("body").on('click', '.changePhoto_cover', function (e) {
     e.preventDefault();
     var data = $(this).attr('data-rel');
     $.ajax({
         type: "POST",
         url: "/changePhoto",
         data: {data: data},
-        success: function(data) {
+        success: function (data) {
             $('.arrow_timeLineMenuNav').hide();
             $('.profilePic img').css('display', 'none');
             $('.dropdown').css('display', 'none');
@@ -452,14 +456,14 @@ $("body").on('click', '.changePhoto_cover', function(e) {
     });
     $.pgwModal('close');
 });
-$("body").on('click', '.changePhoto_avatar', function(e) {
+$("body").on('click', '.changePhoto_avatar', function (e) {
     e.preventDefault();
     var data = $(this).attr('data-rel');
     $.ajax({
         type: "POST",
         url: "/changePhoto",
         data: {data: data},
-        success: function(rs) {
+        success: function (rs) {
             $('.profilePic').html(rs);
             $('#imgAvatar .profileInfo').css('display', 'none');
         }
@@ -467,14 +471,14 @@ $("body").on('click', '.changePhoto_avatar', function(e) {
 });
 
 
-$("body").on('click', '.cancel', function(e) {
+$("body").on('click', '.cancel', function (e) {
     e.preventDefault();
     var target = $(this).attr('id');
     $.ajax({
         type: "POST",
         url: "/cancel",
         data: {target: target},
-        success: function(data) {
+        success: function (data) {
             var obj = jQuery.parseJSON(data);
             if (target == 'coverPhoto')
             {
@@ -507,7 +511,7 @@ $("body").on('click', '.cancel', function(e) {
 
 });
 
-$("body").on('click', '.cancelCoverGroup', function(e) {
+$("body").on('click', '.cancelCoverGroup', function (e) {
     e.preventDefault();
     var target = $(this).attr('id');
     var groupID = $('#groupID').attr('value');
@@ -515,7 +519,7 @@ $("body").on('click', '.cancelCoverGroup', function(e) {
         type: "POST",
         url: "/content/group/cancelCover",
         data: {target: target, groupID: groupID},
-        success: function(data) {
+        success: function (data) {
             var obj = jQuery.parseJSON(data);
             if (target == 'coverGroup')
             {
@@ -536,14 +540,14 @@ $("body").on('click', '.cancelCoverGroup', function(e) {
 
 });
 
-$("body").on('click', '.changePhoto_group', function(e) {
+$("body").on('click', '.changePhoto_group', function (e) {
     e.preventDefault();
     $.pgwModal('close');
     var url = $(this).attr('href');
     $.ajax({
         type: "GET",
         url: url,
-        success: function(data) {
+        success: function (data) {
             $(".displayPhoto").html(data);
 
             $('.actionCover').css('display', 'none');
@@ -551,22 +555,22 @@ $("body").on('click', '.changePhoto_group', function(e) {
         }
     });
 });
-$("body").on('click', '.rCoverGroup', function(e) {
+$("body").on('click', '.rCoverGroup', function (e) {
     e.preventDefault();
     var id = $(this).attr('rel');
     $.ajax({
         type: "POST",
         url: "/content/group/reposition",
         data: {id: id},
-        success: function(data) {
+        success: function (data) {
             $('.imgCoverGroup').html(data);
             $('.actionCover').css('display', 'none');
         }
     });
 });
 
-$(document).ready(function() {
-    $("body").on('click', '.deletePhoto', function(e) {
+$(document).ready(function () {
+    $("body").on('click', '.deletePhoto', function (e) {
         e.preventDefault();
         var rel = $(this).attr('rel');
         var r = confirm("Are you sure you want to delete this image?")
@@ -576,7 +580,7 @@ $(document).ready(function() {
                 type: "POST",
                 url: "/content/photo/deletePhoto",
                 data: {data: rel},
-                success: function(data) {
+                success: function (data) {
                     $("." + data).remove();
                 }
             });
@@ -584,7 +588,7 @@ $(document).ready(function() {
     });
 });
 /*Comment Function*/
-$(document).on('keypress', '.submitComment', function(event) {
+$(document).on('keypress', '.submitComment', function (event) {
     var code = (event.keyCode ? event.keyCode : event.which);
     if (code == '13' && !event.shiftKey)
     {
@@ -600,7 +604,7 @@ $(document).on('keypress', '.submitComment', function(event) {
                 url: "/commentStatus",
                 data: data,
                 cache: false,
-                success: function(html) {
+                success: function (html) {
                     $(".c1_" + typeID).html(numComment + 1);
                     $(".moreComment_" + typeID).append(html);
                     $("#comment_" + uni).val('');
@@ -612,7 +616,7 @@ $(document).on('keypress', '.submitComment', function(event) {
     }
     //return false;
 });
-$(document).on('keypress', '.commentPhoto', function(event) {
+$(document).on('keypress', '.commentPhoto', function (event) {
     var code = (event.keyCode ? event.keyCode : event.which);
     if (code == '13' && !event.shiftKey)
     {
@@ -625,7 +629,7 @@ $(document).on('keypress', '.commentPhoto', function(event) {
                 url: "/commentPhoto",
                 data: $('#formcm_' + uni).serialize(),
                 cache: false,
-                success: function(data) {
+                success: function (data) {
                     $(".viewComment_" + photoID).append(data);
                     $("#comment_" + uni).val('');
                     updateTime();
@@ -638,7 +642,7 @@ $(document).on('keypress', '.commentPhoto', function(event) {
     //return false;
 });
 
-$(document).on('submit', '#submitFormStatus', function(event) {
+$(document).on('submit', '#submitFormStatus', function (event) {
     var embedPhotos = $('.embedElements #embedPhotos > div').length;
     var embedVideo = $('.embedElements #embedVideo > div').length;
     var status = $("#status").val();
@@ -658,7 +662,7 @@ $(document).on('submit', '#submitFormStatus', function(event) {
             type: "POST",
             url: "/content/post/postStatus",
             data: $("#submitFormStatus").serialize(), // serializes the form's elements.
-            success: function(html)
+            success: function (html)
             {
                 $('#tagElements').css('display', 'none');
                 $("#contentContainer").prepend(html);
@@ -674,13 +678,13 @@ $(document).on('submit', '#submitFormStatus', function(event) {
     return false; // avoid to execute the actual submit of the form.
 });
 
-$("body").on('submit', '#submitAvatar', function(e) {
+$("body").on('submit', '#submitAvatar', function (e) {
     e.preventDefault();
     $.ajax({
         type: "POST",
         url: "/savePhoto",
         data: $("#submitAvatar").serialize(), // serializes the form's elements.
-        success: function(data)
+        success: function (data)
         {
             if (data) {
                 var obj = jQuery.parseJSON(data);
@@ -698,13 +702,13 @@ $("body").on('submit', '#submitAvatar', function(e) {
     return false; // avoid to execute the actual submit of the form.
 });
 
-$("body").on('submit', '#submitCover', function(e) {
+$("body").on('submit', '#submitCover', function (e) {
 
     $.ajax({
         type: "POST",
         url: "/savePhoto",
         data: $("#submitCover").serialize(), // serializes the form's elements.
-        success: function(data)
+        success: function (data)
         {
             var obj = jQuery.parseJSON(data);
             var user = [
@@ -725,7 +729,7 @@ $("body").on('submit', '#submitCover', function(e) {
     return false; // avoid to execute the actual submit of the form.
 });
 
-$("body").on('click', '.deletePhotoStatus', function(e) {
+$("body").on('click', '.deletePhotoStatus', function (e) {
     var title = $(this).attr('title');
     $(".dialog").dialog({
         width: "500",
@@ -734,14 +738,14 @@ $("body").on('click', '.deletePhotoStatus', function(e) {
         title: title,
         resizable: true,
         modal: true,
-        open: function(event, ui) {
+        open: function (event, ui) {
             $(".ui-dialog-titlebar-close").hide();
             $("#alertTemplate").tmpl().appendTo(".dialog");
         }
     });
 });
 
-$("body").on('click', '.popup', function(e) {
+$("body").on('click', '.popup', function (e) {
     e.preventDefault();
     $.pgwModal({
         url: $(this).attr('href'),
@@ -750,7 +754,7 @@ $("body").on('click', '.popup', function(e) {
         maxWidth: 450
     });
 });
-$("body").on('click', '.popupMax', function(e) {
+$("body").on('click', '.popupMax', function (e) {
     e.preventDefault();
     $.pgwModal({
         url: $(this).attr('href'),
@@ -759,7 +763,7 @@ $("body").on('click', '.popupMax', function(e) {
         maxWidth: 1024
     });
 });
-$("body").on('click', '.popupPhoto', function(e) {
+$("body").on('click', '.popupPhoto', function (e) {
     e.preventDefault();
     $.pgwModal({
         url: $(this).attr('href'),
@@ -770,7 +774,7 @@ $("body").on('click', '.popupPhoto', function(e) {
     });
 });
 
-$("body").on('click', '.popupMyPhoto', function(e) {
+$("body").on('click', '.popupMyPhoto', function (e) {
     e.preventDefault();
     $.pgwModal({
         url: $(this).attr('href'),

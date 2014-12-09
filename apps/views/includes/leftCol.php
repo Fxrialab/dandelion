@@ -15,59 +15,26 @@ $userID = $this->f3->get('SESSION.userID');
 
         </div>
     </div>
-    <div class="uiSideNav column-group">
-        <nav class="uiVerticalNav">
-            <ul class="uiVerticalNav-menu">
-                <li>
-                    <a href="#" class="uiVerticalNav-item">
-                        <i class="icon30-newFeed"></i>
-                        News Feed
-                        <span class="uiVerticalNav-counter">4</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="uiVerticalNav-item">
-                        <i class="icon30-message"></i>
-                        Messages
-                        <span class="uiVerticalNav-counter">8</span>
-                    </a>
-                </li>
-                <li class="">
-                    <a href="/content/group?category=membership" class="uiVerticalNav-item">
-                        <i class="icon30-group"></i>
-                        Group
-                        <span class="uiVerticalNav-counter"><?php echo HelperController::countGroup() ?></span>
-                    </a>
-                    <ul class="uiVerticalNav-menu">
-                        <li class="active children"><a href="/content/group?category=admin"><i class="icon30-index"></i>Groups your Admin</a></li>
-                        <?php
-                        $memberGroup = HelperController::groupMember();
-                        if (!empty($memberGroup))
-                        {
-                            foreach ($memberGroup as $value)
-                            {
-                                $group = HelperController::findGroup($value->data->groupID);
-                                if (!empty($group))
-                                {
-                                    ?>
-                                    <li class="children"><a href="/content/group/groupdetail?id=<?php echo str_replace(":", "_", $group->recordID) ?>"><i class="icon30-index"></i><?php echo $group->data->name ?></a></li>
-                                    <?php
-                                }
-                            }
-                        }
-                        ?>
-                        <!--<li class="active"><a href="/content/group/addGroup">Create Group</a></li>-->
-                        <!--<li><a href="">Vacation <span class="uiVerticalNav-counter">23</span></a></li>-->
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" class="uiVerticalNav-item">
-                        <i class="icon30-event"></i>
-                        Event
-                        <span class="uiVerticalNav-counter">42</span>
-                    </a>
-                </li>
+    <div class="column-group">
+        <nav class="ink-navigation">
+            <ul class="menu sideNav">
+                <li><a href=""><i class="fa fa-files-o fa-16"></i> New Feed</a></li>
+                <li><a href=""><i class="fa fa-envelope fa-16"></i> Messages</a></li>
+                <li><a href=""><i class="fa fa-calendar fa-16"></i> Event</a></li>
+            </ul>
+
+            <?php
+            $this->element('GroupElement');
+            ?>
+
+            <ul class="menu sideNav">
+                <li><h6>DEVELOPERS</h6></li>
+            </ul>
+            <ul class="menu sideNav">
+                <li><h6>EVENT</h6></li>
+                    <li><a ><i class="fa fa-plus-square fa-14"></i> Greate Event</a></li>
             </ul>
         </nav>
+      
     </div>
 </div>

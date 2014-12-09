@@ -65,8 +65,7 @@ class AppController extends Controller
         if ($id == 'none')
         {
             return UPLOAD_URL . 'thumbnail/avatar.png';
-        }
-        else
+        } else
         {
             $avatar = $this->facade->findByPk('photo', $id);
             return UPLOAD_URL . 'thumbnail/' . $avatar->data->fileName;
@@ -78,8 +77,7 @@ class AppController extends Controller
         if ($id == 'none')
         {
             return '';
-        }
-        else
+        } else
         {
             $photo = $this->facade->findByPk('photo', $id);
             return UPLOAD_URL . 'images/' . $photo->data->fileName;
@@ -130,24 +128,20 @@ class AppController extends Controller
             if (!empty($friendShipAtoB) && !empty($friendShipBtoA))
             {
                 $statusFriendShip = $friendShipBtoA->data->relationship;
-            }
-            else
+            } else
             {
                 if (!empty($friendShipAtoB) && !$friendShipBtoA)
                 {
                     $statusFriendShip = 'request';
-                }
-                elseif (!$friendShipAtoB && !empty($friendShipBtoA))
+                } elseif (!$friendShipAtoB && !empty($friendShipBtoA))
                 {
                     $statusFriendShip = 'respondRequest';
-                }
-                else
+                } else
                 {
                     $statusFriendShip = 'addFriend';
                 }
             }
-        }
-        else
+        } else
         {
             $statusFriendShip = 'updateInfo';
         }
@@ -388,13 +382,63 @@ class AppController extends Controller
      * @param bool $moveDefaultFileTo
      * @return array|bool
      */
-    public function changeImage($file, $thumbSize = 0, $desImgFile, $newImgName, $quality, $returnInfo = false, $moveDefaultFileTo = false)
+    public function changeImageSingle($file, $thumbSize = 0, $desImgFile, $newImgName, $quality, $returnInfo = false, $moveDefaultFileTo = false)
     {
-        if (!is_array($file["name"]))//single file
+        $fileName = $file["name"];
+        $tmpName = $file['tmp_name'];
+        $formats = $file['type'];
+
+        list($width, $height) = getimagesize($tmpName);
+        /* The width and the height of the image also the getimagesize retrieve other information as well   */
+        $imgRatio = $width / $height;
+
+        if ($imgRatio > 1)
         {
-            $fileName = $file["name"];
-            $tmpName = $file['tmp_name'];
-            $formats = $file['type'];
+            $newWidth = $thumbSize;
+            $newHeight = (int) ($thumbSize / $imgRatio);
+        } else
+        {
+            $newHeight = $thumbSize;
+            $newWidth = (int) ($thumbSize * $imgRatio);
+        }
+        list($name, $ext) = explode(".", $fileName);
+
+        if ($formats == 'image/jpeg')// Now it will create a new image from the source
+            $source = imagecreatefromjpeg($tmpName);
+        elseif ($formats == 'image/gif')
+            $source = imagecreatefromgif($tmpName);
+        elseif ($formats == 'image/png')
+            $source = imagecreatefrompng($tmpName);
+
+        $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
+        $newImage = $newImgName . '.' . $ext;
+        imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
+        imagejpeg($thumb, $desImgFile . '/' . $newImage, $quality);
+        /*
+          Out put of image
+          if the $savePath is null then it will display the image in the browser
+         */
+        imagedestroy($thumb);
+        /*
+          Destroy the image
+         */
+        if (!empty($moveDefaultFileTo))
+            move_uploaded_file($tmpName, $moveDefaultFileTo . $newImage);
+
+        if (!empty($returnInfo))
+            return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
+        else
+            return false;
+    }
+
+    public function changeImageMultiple($file, $thumbSize = 0, $desImgFile, $newImgName, $quality, $returnInfo = false, $moveDefaultFileTo = false)
+    {
+        $fileCount = count($file["name"]);
+        for ($i = 0; $i < $fileCount; $i++)
+        {
+            $fileName = $file["name"][$i];
+            $tmpName = $file['tmp_name'][$i];
+            $formats = $file['type'][$i];
 
             list($width, $height) = getimagesize($tmpName);
             /* The width and the height of the image also the getimagesize retrieve other information as well   */
@@ -404,8 +448,7 @@ class AppController extends Controller
             {
                 $newWidth = $thumbSize;
                 $newHeight = (int) ($thumbSize / $imgRatio);
-            }
-            else
+            } else
             {
                 $newHeight = $thumbSize;
                 $newWidth = (int) ($thumbSize * $imgRatio);
@@ -432,65 +475,13 @@ class AppController extends Controller
               Destroy the image
              */
             if (!empty($moveDefaultFileTo))
+            {
                 move_uploaded_file($tmpName, $moveDefaultFileTo . $newImage);
-
+            }
             if (!empty($returnInfo))
-                return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
+                return array('name' => $newImage, 'minWidth' => $newWidth, 'minHeight' => $newHeight, 'width' => $width, 'height' => $height);
             else
                 return false;
-        }else
-        {//multiple files
-            $fileCount = count($file["name"]);
-            for ($i = 0; $i < $fileCount; $i++)
-            {
-                $fileName = $file["name"][$i];
-                $tmpName = $file['tmp_name'][$i];
-                $formats = $file['type'][$i];
-
-                list($width, $height) = getimagesize($tmpName);
-                /* The width and the height of the image also the getimagesize retrieve other information as well   */
-                $imgRatio = $width / $height;
-
-                if ($imgRatio > 1)
-                {
-                    $newWidth = $thumbSize;
-                    $newHeight = (int) ($thumbSize / $imgRatio);
-                }
-                else
-                {
-                    $newHeight = $thumbSize;
-                    $newWidth = (int) ($thumbSize * $imgRatio);
-                }
-                list($name, $ext) = explode(".", $fileName);
-
-                if ($formats == 'image/jpeg')// Now it will create a new image from the source
-                    $source = imagecreatefromjpeg($tmpName);
-                elseif ($formats == 'image/gif')
-                    $source = imagecreatefromgif($tmpName);
-                elseif ($formats == 'image/png')
-                    $source = imagecreatefrompng($tmpName);
-
-                $thumb = imagecreatetruecolor($newWidth, $newHeight); // Making a new true color image
-                $newImage = $newImgName . '.' . $ext;
-                imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height); // Copy and resize the image
-                imagejpeg($thumb, $desImgFile . '/' . $newImage, $quality);
-                /*
-                  Out put of image
-                  if the $savePath is null then it will display the image in the browser
-                 */
-                imagedestroy($thumb);
-                /*
-                  Destroy the image
-                 */
-                if (!empty($moveDefaultFileTo))
-                {
-                    move_uploaded_file($tmpName, $moveDefaultFileTo . $newImage);
-                }
-                if (!empty($returnInfo))
-                    return array('name' => $newImage, 'minWidth' => $newWidth, 'minHeight' => $newHeight, 'width' => $width, 'height' => $height);
-                else
-                    return false;
-            }
         }
     }
 
@@ -510,8 +501,7 @@ class AppController extends Controller
         {
             $newWidth = $thumbSize;
             $newHeight = $thumbSize / $imgRatio;
-        }
-        else
+        } else
         {
             $newHeight = $thumbSize;
             $newWidth = $thumbSize * $imgRatio;

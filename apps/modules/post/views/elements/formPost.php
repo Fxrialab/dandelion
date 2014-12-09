@@ -12,9 +12,9 @@ $rand = rand(100, 100000);
             return false;
         }
     }
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-        $('#status').mouseleave(function() {
+        $('#status').mouseleave(function () {
             var embedPhotos = $('.embedElements #embedPhotos > div').length;
             if (embedPhotos > 0)
             {
@@ -60,13 +60,14 @@ $rand = rand(100, 100000);
     });
 
 </script>
-<div class="ink-tabs top" style="position: relative"> <!-- Creates a tabbed view with top nav -->
-    <ul class="tabs-nav">
-        <li id="statusTab"><a href="#iStatus"><i class="icon30-status"></i>Update Status</a></li> <!-- Points to item 1 below -->
-        <li id="photoTab"><a href="#iPhoto"><i class="icon30-photo"></i>Add Photo</a></li> <!-- Points to item 2 below -->
-    </ul>
-    <div class="msg" style="position: absolute; top: 0; right: 20px"></div>
-    <div id="iStatus" class="tabs-content"> <!-- Item 1 -->
+<div style="border: 1px #dee0e3 solid; background-color: white;  border-radius: 3px;">
+    <nav class="ink-navigation">
+        <ul class="menu horizontal" style="font-weight: bold">
+            <li><a href="javascript:void(0)"  onclick="return tab('status');"><i class="fa fa-pencil-square fa-18"></i> Update Status</a></li>
+            <li><a href="javascript:void(0)" onclick="return tab('media');"><i class="fa fa-picture-o fa-18"></i> Add Photos/Video</a></li>
+        </ul>
+    </nav>
+    <div class="status" style=" margin: 0">
         <div class="uiPostArea column-group">
             <div class="uiPostStatusArea">
                 <form class="ink-form" id="submitFormStatus">
@@ -86,15 +87,13 @@ $rand = rand(100, 100000);
                             </div>
                         </div>
                     </div>
-                    <div class="uiPostOption control-group">
+                    <div class="uiPostOption control-group" style="display: none">
                         <nav class="ink-navigation">
                             <ul class="menu horizontal">
-                                <li title="Upload a photo">
-                                    <!--<input name="album_id" id="albumID" value="none" type="hidden">-->
-                                    <div id="multiFiles"><i class="icon30-upload"></i></div>
-                                </li>
-                                <li title="Add a location"><i class="icon30-location"></i></li>
-                                <li title="Attachment a file"><i class="icon30-attachment"></i></li>
+                                <li><span><i class="fa fa-user fa-18"></i></span></li>
+                                <li><span><i class="fa fa-map-marker fa-18"></i></span></li>
+                                <li><span id="multiFiles"><i class="fa fa-camera fa-18"></i></span> </li>
+                                <li><span><i class="fa fa-meh-o fa-18"></i></span></li>
                                 <li class="fixRightFloat"><button class="button active">Post</button></li>
                             </ul>
                         </nav>
@@ -103,7 +102,7 @@ $rand = rand(100, 100000);
             </div>
         </div>
     </div>
-    <div id="iPhoto" class="tabs-content"> <!-- Item 2 -->
+    <div class="media" style="display: none">
         <div class="uiPostArea column-group">
             <div class="uiPostPhotoArea">
                 <div class="content-center">
@@ -121,14 +120,24 @@ $rand = rand(100, 100000);
 </div>
 <!--Other part-->
 <script>
-    $(document).ready(function() {
+    function tab(id) {
+        if (id == 'status') {
+            $('.media').hide();
+            $('.status').show();
+        } else {
+            $('.status').hide();
+            $('.media').show();
+        }
+
+    }
+    $(document).ready(function () {
         $('textarea').autosize();
         $('#statusPhoto').autosize();
         $(".viewUpload").hide();
         $(".postPhoto").hide();
         $("#statusPhoto").hide();
     });
-  
+
 </script>
 
 

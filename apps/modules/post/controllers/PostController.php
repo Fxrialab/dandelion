@@ -55,13 +55,11 @@ class PostController extends AppController
 //                    'path' => Register::getPathModule('post'),
                 );
                 return $entry;
-            }
-            else
+            } else
             {
                 return false;
             }
-        }
-        else
+        } else
         {
             return false;
         }
@@ -158,8 +156,7 @@ class PostController extends AppController
             if (!$embedType || $embedType == 'none')
             {
                 $embedSource = false;
-            }
-            else
+            } else
             {
                 if ($embedType == 'photo')
                 {
@@ -168,7 +165,7 @@ class PostController extends AppController
                     foreach ($images as $image)
                     {
                         //images are waiting in tmp folder
-                        $file = UPLOAD . str_replace(':', '', $this->f3->get('SESSION.userID')) . '/' . $image;
+                        $file = UPLOAD . 'images/' . $image;
                         list($width, $height) = getimagesize($file);
 //                        //check IF size of images are larger than 960px then resize us ELSE move us from tmp folder to images folder
 //                        if ($width > 960 || $height > 960)
@@ -197,8 +194,7 @@ class PostController extends AppController
                         $this->facade->save('photo', $entry);
                     }
                     $embedSource = implode(',', $images);
-                }
-                else
+                } else
                 {
                     $video = $this->f3->get("POST.videoURL");
 

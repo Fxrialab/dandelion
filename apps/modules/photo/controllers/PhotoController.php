@@ -40,13 +40,11 @@ class PhotoController extends AppController
                     'path' => Register::getPathModule('photo'),
                 );
                 return $entry;
-            }
-            else
+            } else
             {
                 return false;
             }
-        }
-        else
+        } else
         {
             return false;
         }
@@ -79,8 +77,7 @@ class PhotoController extends AppController
                 if (!empty($album))
                 {
                     $albumID = $album;
-                }
-                else
+                } else
                 {
                     $albumID = 'allPhoto'; //Untitled album
                 }
@@ -140,15 +137,13 @@ class PhotoController extends AppController
                     if ($albumID == 'allPhoto')//load all photos of all album
                     {
                         $model = $this->facade->findAll('photo', $obj);
-                    }
-                    else
+                    } else
                     {//load all photos of determine an album
                         $obj->albumID = $albumID;
                         $model = $this->facade->findAll('photo', $obj);
                     }
                     $target = 'photos';
-                }
-                else
+                } else
                 {//this mean is load all album on myAlbum
                     $model = $this->facade->findAll('album', $obj);
                     $target = 'album';
@@ -164,8 +159,9 @@ class PhotoController extends AppController
         {
 
             $filename = explode('_', $_POST['data']);
-            $link = UPLOAD . str_replace(':', '', $this->f3->get('SESSION.userID')) . '/' . $filename[1];
-            $thumb = UPLOAD . str_replace(':', '', $this->f3->get('SESSION.userID')) . '/thumbnail/' . $filename[1];
+            $link = UPLOAD . 'i'
+                    . 'images/' . $filename[1];
+            $thumb = UPLOAD . 'thumbnail/' . $filename[1];
             if (!empty($link))
             {
                 unlink($link);
@@ -240,8 +236,7 @@ class PhotoController extends AppController
                         'published' => $published
                     );
                     $albumID = $this->facade->save('album', $albumEntry);
-                }
-                else
+                } else
                 {
                     $albumID = 'none'; //of untitled album
                 }
@@ -345,8 +340,7 @@ class PhotoController extends AppController
             {
                 $album = $this->facade->findAllAttributes('album', array('owner' => $this->f3->get('SESSION.userID')));
                 $this->renderModule('mains/albumBrowsers', 'photo', array('album' => $album, 'rid' => $_GET['rid'], 'type' => $_GET['type']));
-            }
-            else
+            } else
             {
                 if (!empty($_GET['aid']))
                 {
@@ -355,13 +349,11 @@ class PhotoController extends AppController
                     {
                         $albumName = $album->data->name;
                         $photos = $this->facade->findAllAttributes('photo', array('album' => $album->recordID));
-                    }
-                    else
+                    } else
                     {
                         $albumName = '';
                     }
-                }
-                else
+                } else
                 {
                     $photos = $this->facade->findAllAttributes('photo', array('owner' => $this->f3->get('SESSION.userID')));
                     $albumName = 'Recent Uploads';

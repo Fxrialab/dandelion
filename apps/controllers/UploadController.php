@@ -23,27 +23,19 @@ class UploadController extends AppController
                 'error' => ''
             );
 
-            if (isset($_FILES["myfile"]))
+            if (!empty($_FILES["myfile"]))
             {
-                //var_dump($_FILES["myfile"]['name']);
-                if (!is_array($_FILES["myfile"]['name'])) //single file
-                {
-                    echo 'single file';
-                }
-                else
-                {//multiple files
-                    $file = $_FILES["myfile"];
-                    $code = $this->StringHelper->generateRandomString(5);
-                    $newName = $code . time();
-                    $photo = $this->changeImage($file, 250, $thumbnailDir, $newName, 250, true, $tempDir); //upload to thumbnail folder
-                    $data['results'][] = array(
-                        'id' => uniqid(),
-                        'photoName' => $photo['name'],
-                        'nameNotExt' => substr($photo['name'], 0, strpos($photo['name'], '.')),
-                        'url' => UPLOAD_URL . "/thumbnail/" . $photo['name']
-                    );
-                    $data['success'] = true;
-                }
+                $file = $_FILES["myfile"];
+                $code = $this->StringHelper->generateRandomString(5);
+                $newName = $code . time();
+                $photo = $this->changeImageMultiple($file, 250, $thumbnailDir, $newName, 250, true, $tempDir); //upload to thumbnail folder
+                $data['results'][] = array(
+                    'id' => uniqid(),
+                    'photoName' => $photo['name'],
+                    'nameNotExt' => substr($photo['name'], 0, strpos($photo['name'], '.')),
+                    'url' => UPLOAD_URL . "/thumbnail/" . $photo['name']
+                );
+                $data['success'] = true;
             }
             else
             {
@@ -69,14 +61,11 @@ class UploadController extends AppController
 
             if (isset($_FILES["myfile"]))
             {
-                if (!is_array($_FILES["myfile"]['name'])) //single file
-                {
-                    $file = $_FILES["myfile"];
-                    $code = $this->StringHelper->generateRandomString(5);
-                    $newName = $code . time();
-                    $image = $this->changeImage($file, 250, $thumbnailDir, $newName, 250, true, $tempDir);
-                    $this->render('ajax/confirmPhoto', array('image' => $image, 'target' => 'uploadCover'));
-                }
+                $file = $_FILES["myfile"];
+                $code = $this->StringHelper->generateRandomString(5);
+                $newName = $code . time();
+                $image = $this->changeImageSingle($file, 250, $thumbnailDir, $newName, 250, true, $tempDir);
+                $this->render('ajax/confirmPhoto', array('image' => $image, 'target' => 'uploadCover'));
             }
         }
     }
@@ -90,20 +79,16 @@ class UploadController extends AppController
                 mkdir(UPLOAD . 'images', 0777);
 
             if (!file_exists(UPLOAD . "/thumbnail"))
-                mkdir(UPLOAD . "/thumbnail", 0777); //The folder will display like gallery images on "Choose from my photos"
+                mkdir(UPLOAD . "thumbnail", 0777); //The folder will display like gallery images on "Choose from my photos"
             $tempDir = UPLOAD . "images/";
-            $thumbnailDir = UPLOAD . "/thumbnail";
-
+            $thumbnailDir = UPLOAD . "thumbnail/";
             if (isset($_FILES["myfile"]))
             {
-                if (!is_array($_FILES["myfile"]['name'])) //single file
-                {
-                    $file = $_FILES["myfile"];
-                    $code = $this->StringHelper->generateRandomString(5);
-                    $newName = $code . time();
-                    $image = $this->changeImage($file, 250, $thumbnailDir, $newName, 250, true, $tempDir);
-                    $this->render('ajax/confirmAvatar', array('image' => $image, 'target' => 'uploadAvatar'));
-                }
+                $file = $_FILES["myfile"];
+                $code = $this->StringHelper->generateRandomString(5);
+                $newName = $code . time();
+                $image = $this->changeImageSingle($file, 250, $thumbnailDir, $newName, 250, true, $tempDir);
+                $this->render('ajax/confirmAvatar', array('image' => $image, 'target' => 'uploadAvatar'));
             }
         }
     }

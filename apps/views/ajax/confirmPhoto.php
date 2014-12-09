@@ -13,7 +13,7 @@ $target = $this->f3->get('target');
     <input type="hidden" name="target" value="<?php echo $target; ?>">
     <input type="hidden" name="chooseBy" value="cover">
     <div class="dragCover">
-        <img src="<?php echo UPLOAD_URL . '/' . $image['name']; ?>" style="width:100%;">
+        <img src="<?php echo UPLOAD_URL . 'images/' . $image['name']; ?>" style="width:100%;">
     </div>
     <script>
         $('.dragCover').draggable({

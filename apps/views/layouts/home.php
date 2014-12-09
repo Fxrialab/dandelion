@@ -9,12 +9,12 @@
             <div class="column-group">
                 <div class="large-80 borderLineRight">
                     <?php $this->including('leftCol'); ?>
-                    <div class="uiMainCol large-60 borderLineLeft">
+                    <div class="uiMainCol large-55 borderLineLeft">
                         <?php
                         $this->loadContent($page);
                         ?>
                     </div>
-                    <div class="uiRightCol large-20">
+                    <div class="uiRightCol large-25">
                         <?php $this->including('rightCol'); ?>
                     </div>
                 </div>
