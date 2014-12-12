@@ -81,26 +81,28 @@ class PhotoController extends AppController
                 {
                     $albumID = 'allPhoto'; //Untitled album
                 }
-                $model = $this->facade->findAllAttributes('photo', array('actor' => $currentProfileRC->recordID));
+                $model = $this->facade->findAllAttributes('photo', array('owner' => $currentProfileRC->recordID));
                 $photo = array();
-                foreach ($model as $value)
+                if (!empty($model))
                 {
-                    $user = $this->facade->findByPk('user', $value->data->actor);
-                    $comment = $this->facade->findAllAttributes('comment', array('typeID' => $value->recordID));
-                    $dataComment = array();
-                    if (!empty($comment))
+                    foreach ($model as $value)
                     {
-                        foreach ($comment as $val)
+                            $user = $this->facade->findByPk('user', $value->data->owner);
+                        $comment = $this->facade->findAllAttributes('comment', array('typeID' => $value->recordID));
+                        $dataComment = array();
+                        if (!empty($comment))
                         {
-                            $userC = $this->facade->findByPk('user', $val->data->owner);
-                            $like = $this->facade->findByAttributes('like', array('actor' => $this->f3->get('SESSION.userID'), 'objID' => $val->recordID));
-                            $dataComment[] = array('comment' => $val, 'user' => $userC, 'like' => $like);
+                            foreach ($comment as $val)
+                            {
+                                $userC = $this->facade->findByPk('user', $val->data->owner);
+                                $like = $this->facade->findByAttributes('like', array('actor' => $this->f3->get('SESSION.userID'), 'objID' => $val->recordID));
+                                $dataComment[] = array('comment' => $val, 'user' => $userC, 'like' => $like);
+                            }
                         }
+                        $like = $this->facade->findByAttributes('like', array('actor' => $this->f3->get('SESSION.userID'), 'objID' => $value->recordID));
+                        $photo[] = array('photo' => $value, 'user' => $user, 'comment' => $dataComment, 'like' => $like);
                     }
-                    $like = $this->facade->findByAttributes('like', array('actor' => $this->f3->get('SESSION.userID'), 'objID' => $value->recordID));
-                    $photo[] = array('photo' => $value, 'user' => $user, 'comment' => $dataComment, 'like' => $like);
                 }
-
                 $this->f3->set('userID', $currentProfileID);
                 $this->renderModule("myPhoto", 'photo', array(
                     'currentUser' => $currentUser,

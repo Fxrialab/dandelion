@@ -106,7 +106,7 @@ $(document).ready(function () {
                     });
                     $('a.like_' + obj.id).html(obj.title);
 
-                    if (obj.type == 'status') {
+                    if (obj.type == 'status' || obj.type == 'photo') {
                         $('.l1_' + obj.id).html(obj.count);
                         if (obj.count == 1) {
                             $(".tempLike-" + obj.id).prepend("<div class='whoLikeThisPost verGapBox likeSentenceView' id='likeSentence-" + obj.id + "'>" +
@@ -119,7 +119,13 @@ $(document).ready(function () {
                             $("#likeSentence-" + obj.id).remove()
                         }
                     } else {
-                        $('.l2_' + obj.id).html(obj.count);
+                        if (obj.liked == 'unlike') {
+                            var i = '<i class="fa fa-hand-o-right fa-14"></i> ';
+                        } else
+                        {
+                            var i = '';
+                        }
+                        $('.l2_' + obj.id).html(i + obj.count);
                     }
 
                 }
@@ -765,12 +771,27 @@ $("body").on('click', '.popupMax', function (e) {
 });
 $("body").on('click', '.popupPhoto', function (e) {
     e.preventDefault();
+    var location = window.location.href;
+    $('#location-href').attr('value', function () {
+        return location;
+    });
+    if (history.pushState)
+        history.pushState('', "", $(this).attr('href'));
     $.pgwModal({
         url: $(this).attr('href'),
         title: '',
         minWidth: 880,
         maxWidth: 1024,
-        minHeight: 500
+        minHeight: 500,
+        ajaxOptions: {
+            success: function (data) {
+                if (data) {
+                    $.pgwModal({pushContent: data});
+                } else {
+                    $.pgwModal({pushContent: 'An error has occured'});
+                }
+            }
+        }
     });
 });
 
@@ -782,4 +803,26 @@ $("body").on('click', '.popupMyPhoto', function (e) {
         minWidth: 800,
         maxWidth: 900
     });
+});
+
+$("body").on('click', '.carousel', function (e) {
+    e.preventDefault();
+    if (history.pushState)
+        history.pushState('', "", $(this).attr('href'));
+    $.ajax({
+        type: "GET",
+        url: $(this).attr('href'),
+        success: function (data)
+        {
+            $('.pm-content').html(data);
+        }
+    });
+});
+
+$("body").on('click', '.pgwclose', function (e) {
+    e.preventDefault();
+    var url = $('#location-href').attr('value');
+    if (history.pushState)
+        history.pushState('', "", url);
+    $.pgwModal('close');
 });

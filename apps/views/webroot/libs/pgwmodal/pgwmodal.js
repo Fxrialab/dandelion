@@ -1,1 +1,281 @@
-(function(a) {    a.pgwModal = function(h) {        var c = {};        var f = {close: true, maxWidth: 100, loading: "Loading...", error: "An error has occured. Please try again in a few moments."};        if (typeof window.pgwModalObject != "undefined") {            c = window.pgwModalObject        }        if ((typeof h == "object") && (!h.pushContent)) {            if (!h.url && !h.target && !h.content) {                throw new Error('PgwModal - There is no content to display,please provide a config parameter:"url","target" or "content"')            }            c.config = {};            c.config = a.extend({}, f, h);            window.pgwModalObject = c        }        var j = function() {            var n = '<div id="pgwModalWrapper"></div><div id="pgwModal"><div class="pm-container"><div class="pm-body"><a href="javascript:void(0)" class="pm-close" onclick="$.pgwModal(\'close\')"></a><div class="pm-title"></div><div class="pm-content cntr"></div></div></div></div>';            a("body").append(n);            a(document).trigger("PgwModal::Create");            return true        };        var k = function() {            a("#pgwModal .pm-title,#pgwModal .pm-content").html("");            return true        };        var e = function() {            angular.element('body').injector().invoke(function($compile) {                var scope = angular.element($('#pgwModal .pm-content')).scope();                $compile($('#pgwModal .pm-content'))(scope);                scope.$digest()            });            return true        };        var d = function(n) {            a("#pgwModal .pm-content").html(n);            if (c.config.angular) {                e()            }            l();            a(document).trigger("PgwModal::PushContent");            return true        };        var l = function() {            var p = a(window).height();            var o = a("#pgwModal .pm-body").height();            var n = Math.round((p - o) / 3);            if (n <= 0) {                n = 10            } else if(n>50) {                n= n            } else {                n=50            }            a("#pgwModal .pm-body").css("margin-top", n);            return true        };        var g = function() {            return c.config.modalData        };        var b = function() {            return a("body").hasClass("pgwModal")        };        var m = function() {            a("#pgwModal,#pgwModalWrapper").hide();            a("body").removeClass("pgwModal");            k();            try {                delete window.pgwModalObject            } catch (n) {                window.pgwModalObject = undefined            }            a(document).trigger("PgwModal::Close");            return true        };        var i = function() {            if (a("#pgwModal").length == 0) {                j()            } else {                k()            }            if (!c.config.close) {                a("#pgwModal .pm-close").hide()            } else {                a("#pgwModal .pm-close").show()            }            if (c.config.title) {                a("#pgwModal .pm-title").text(c.config.title)            }            if (c.config.maxWidth) {                a("#pgwModal .pm-body").css("max-width", c.config.maxWidth)            }            if (c.config.url) {                if (c.config.loading) {                    a("#pgwModal .pm-content").html(c.config.loading)                }                var n = {url: h.url, success: function(o) {                        d(o)                    }, error: function() {                        a("#pgwModal .pm-content").html(c.config.error)                    }};                if (c.config.ajaxOptions) {                    n = a.extend({}, n, c.config.ajaxOptions)                }                a.ajax(n)            } else {                if (c.config.target) {                    d(a(c.config.target).html())                } else {                    if (c.config.content) {                        d(c.config.content)                    }                }            }            a("#pgwModal,#pgwModalWrapper").show();            a("body").addClass("pgwModal");            a(document).trigger("PgwModal::Open");            return true        };        if ((typeof h == "string") && (h == "close")) {            return m()        } else {            if ((typeof h == "string") && (h == "reposition")) {                return l()            } else {                if ((typeof h == "string") && (h == "getData")) {                    return g()                } else {                    if ((typeof h == "string") && (h == "isOpen")) {                        return b()                    } else {                        if ((typeof h == "object") && (h.pushContent)) {                            return d(h.pushContent)                        } else {                            if (typeof h == "object") {                                return i()                            }                        }                    }                }            }        }    }})(window.Zepto || window.jQuery);
+/**
+ * PgwModal - Version 2.0
+ *
+ * Copyright 2014, Jonathan M. Piat
+ * http://pgwjs.com - http://pagawa.com
+ * 
+ * Released under the GNU GPLv3 license - http://opensource.org/licenses/gpl-3.0
+ */
+;(function($){
+    $.pgwModal = function(obj) {
+
+        var pgwModal = {};
+        var defaults = {
+            mainClassName : 'pgwModal',
+            backdropClassName : 'pgwModalBackdrop',
+            maxWidth : 500,
+            titleBar : true,
+            closable : true,
+            closeOnEscape : true,
+            closeOnBackgroundClick : true,
+            closeContent : '<span class="pm-icon"></span>',
+            loadingContent : 'Loading in progress...',
+            errorContent : 'An error has occured. Please try again in a few moments.'
+        };
+
+        if (typeof window.pgwModalObject != 'undefined') {
+            pgwModal = window.pgwModalObject;
+        }
+
+        // Merge the defaults and the user's config
+        if ((typeof obj == 'object') && (! obj.pushContent)) {
+            if (! obj.url && ! obj.target && ! obj.content) {
+                throw new Error('PgwModal - There is no content to display, please provide a config parameter : "url", "target" or "content"');
+            }
+
+            pgwModal.config = {};
+            pgwModal.config = $.extend({}, defaults, obj);
+            window.pgwModalObject = pgwModal;
+        }
+
+        // Create modal container
+        var create = function() {
+            // The backdrop must be outside the main container, otherwise Chrome displays the scrollbar of the modal below
+            var appendBody = '<div id="pgwModalBackdrop"></div>'
+                + '<div id="pgwModal">'
+                + '<div class="pm-container">'
+                + '<div class="pm-body">'
+                + '<span class="pm-close"></span>'
+                + '<div class="pm-title"></div>'
+                + '<div class="pm-content"></div>'
+                + '</div>'
+                + '</div>'
+                + '</div>';
+
+            $('body').append(appendBody);
+            $(document).trigger('PgwModal::Create');
+            return true;
+        };
+
+        // Reset modal container
+        var reset = function() {
+            $('#pgwModal .pm-title, #pgwModal .pm-content').html('');
+            $('#pgwModal .pm-close').html('').unbind('click');
+            return true;
+        };
+
+        // Angular compilation
+        var angularCompilation = function() {
+            angular.element('body').injector().invoke(function($compile) {
+                var scope = angular.element($('#pgwModal .pm-content')).scope();
+                $compile($('#pgwModal .pm-content'))(scope);
+                scope.$digest();
+            });
+            return true;
+        };
+
+        // Push content into the modal
+        var pushContent = function(content) {
+            $('#pgwModal .pm-content').html(content);
+
+            // Angular
+            if (pgwModal.config.angular) {
+                angularCompilation();
+            }
+
+            reposition();
+
+            $(document).trigger('PgwModal::PushContent');
+            return true;
+        };
+
+        // Repositions the modal
+        var reposition = function() {
+            // Elements must be visible before height calculation
+            $('#pgwModal, #pgwModalBackdrop').show();
+
+            var windowHeight = $(window).height();
+            var modalHeight = $('#pgwModal .pm-body').height();
+            var marginTop = Math.round((windowHeight - modalHeight) / 3);
+            if (marginTop <= 0) {
+                marginTop = 0;
+            }
+
+            $('#pgwModal .pm-body').css('margin-top', marginTop);
+            return true;
+        };
+
+        // Returns the modal data
+        var getData = function() {
+            return pgwModal.config.modalData;
+        };
+
+        // Returns the scrollbar width
+        var getScrollbarWidth = function() {
+            var container = $('<div style="width:50px;height:50px;overflow:auto"><div></div></div>').appendTo('body');
+            var child = container.children();
+
+            // Check for Zepto
+            if (typeof child.innerWidth != 'function') {
+                return 0;
+            }
+
+            var width = child.innerWidth() - child.height(90).innerWidth();
+            container.remove();
+
+            return width;
+        };
+
+        // Returns the modal status
+        var isOpen = function() {
+            return $('body').hasClass('pgwModalOpen');
+        };
+
+        // Close the modal
+        var close = function() {
+            $('#pgwModal, #pgwModalBackdrop').removeClass().hide();
+            $('body').css('padding-right', '').removeClass('pgwModalOpen');
+
+            // Reset modal
+            reset();
+
+            // Disable events
+            $(window).unbind('resize.PgwModal');
+            $(document).unbind('keyup.PgwModal');
+            $('#pgwModal').unbind('click.PgwModalBackdrop');
+
+            try {
+                delete window.pgwModalObject; 
+            } catch(e) {
+                window['pgwModalObject'] = undefined; 
+            }
+
+            $(document).trigger('PgwModal::Close');
+            return true;
+        };
+
+        // Open the modal
+        var open = function() {
+            if ($('#pgwModal').length == 0) {
+                create();
+            } else {
+                reset();
+            }
+
+            // Set CSS classes
+            $('#pgwModal').removeClass().addClass(pgwModal.config.mainClassName);
+            $('#pgwModalBackdrop').removeClass().addClass(pgwModal.config.backdropClassName);
+
+            // Close button
+            if (! pgwModal.config.closable) {
+                $('#pgwModal .pm-close').html('').unbind('click').hide();
+            } else {
+                $('#pgwModal .pm-close').html(pgwModal.config.closeContent).click(function() {
+                    close();
+                }).show();
+            }
+
+            // Title bar
+            if (! pgwModal.config.titleBar) {
+                $('#pgwModal .pm-title').hide();
+            } else {
+                $('#pgwModal .pm-title').show();
+            }
+
+            if (pgwModal.config.title) {
+                $('#pgwModal .pm-title').text(pgwModal.config.title);
+            }
+
+            if (pgwModal.config.maxWidth) {
+                $('#pgwModal .pm-body').css('max-width', pgwModal.config.maxWidth);
+            }
+
+            // Content loaded by Ajax
+            if (pgwModal.config.url) {
+                if (pgwModal.config.loadingContent) {
+                    $('#pgwModal .pm-content').html(pgwModal.config.loadingContent);
+                }
+
+                var ajaxOptions = {
+                    'url' : obj.url,
+                    'success' : function(data) {
+                        pushContent(data);
+                    },
+                    'error' : function() {
+                        $('#pgwModal .pm-content').html(pgwModal.config.errorContent);
+                    }
+                };
+
+                if (pgwModal.config.ajaxOptions) {
+                    ajaxOptions = $.extend({}, ajaxOptions, pgwModal.config.ajaxOptions);
+                }
+
+                $.ajax(ajaxOptions);
+                
+            // Content loaded by a html element
+            } else if (pgwModal.config.target) {
+                pushContent($(pgwModal.config.target).html());
+
+            // Content loaded by a html object
+            } else if (pgwModal.config.content) {
+                pushContent(pgwModal.config.content);
+            }
+
+            // Close on escape
+            if (pgwModal.config.closeOnEscape && pgwModal.config.closable) {
+                $(document).bind('keyup.PgwModal', function(e) {
+                    if (e.keyCode == 27) {
+                        close();
+                    }
+                });
+            }
+
+            // Close on background click
+            if (pgwModal.config.closeOnBackgroundClick && pgwModal.config.closable) {
+                $('#pgwModal').bind('click.PgwModalBackdrop', function(e) {
+                    var targetClass = $(e.target).hasClass('pm-container');
+                    var targetId = $(e.target).attr('id');
+                    if (targetClass || targetId == 'pgwModal') {
+                        close();
+                    }
+                });
+            }
+
+            // Add CSS class on the body tag
+            $('body').addClass('pgwModalOpen');
+
+            var currentScrollbarWidth = getScrollbarWidth();
+            if (currentScrollbarWidth > 0) {
+                $('body').css('padding-right', currentScrollbarWidth);
+            }
+
+            // Resize event for reposition
+            $(window).bind('resize.PgwModal', function() {
+                reposition();
+            });
+
+            $(document).trigger('PgwModal::Open');
+            return true;
+        };
+
+        // Choose the action
+        if ((typeof obj == 'string') && (obj == 'close')) {
+            return close();
+
+        } else if ((typeof obj == 'string') && (obj == 'reposition')) {
+            return reposition();
+
+        } else if ((typeof obj == 'string') && (obj == 'getData')) {
+            return getData();
+
+        } else if ((typeof obj == 'string') && (obj == 'isOpen')) {
+            return isOpen();
+
+        } else if ((typeof obj == 'object') && (obj.pushContent)) {
+            return pushContent(obj.pushContent);
+
+        } else if (typeof obj == 'object') {
+            return open();
+        }
+    }
+})(window.Zepto || window.jQuery);

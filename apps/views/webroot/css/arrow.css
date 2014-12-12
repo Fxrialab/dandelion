@@ -1,17 +1,17 @@
 
 .menu_arrow{
     border: 1px solid #d4d4d4;
-    background-color: #fff;
+    background-color: #e9eaed;
     margin-top: 10px !important;
     margin-right: -10px !important; 
     min-width: 150px
 }
 .arrow_timeLineMenuNav {
-    border:1px solid #FFFFFF; margin:38px 0 -40px;
+    border:1px solid #e9eaed; margin:38px 0 -40px;
 }
 .arrow_photo, .arrow_album,.arrow_box, .arrow_phototab, .arrow_timeLine, .arrow_firend_all, .arrow_menu {
     position: relative;
-    background: #fff;
+    background: #e9eaed;
 }
 .arrow_photo:after, .arrow_photo:before {
     bottom: 100%;
@@ -95,25 +95,25 @@
 }
 .arrow_photo:after, .arrow_album:after, .arrow_box:after, .arrow_phototab:after, .arrow_timeLine:after, .arrow_firend_all:after {
     border-color: rgba(136, 183, 213, 0);
-    border-bottom-color: #fff;
+    border-bottom-color: #e9eaed;
     border-width: 10px;
     margin-left: -10px;
 }
 .arrow_photo:before, .arrow_album:before, .arrow_box:before, .arrow_phototab:before, .arrow_timeLine:before, .arrow_firend_all:before {
     border-color: rgba(194, 225, 245, 0);
-    border-bottom-color: #ccc;
+    border-bottom-color: #e9eaed;
     border-width: 11px;
     margin-left: -11px;
 }
  .arrow_menu:after {
     border-color: rgba(136, 183, 213, 0);
-    border-bottom-color: #fff;
+    border-bottom-color: #e9eaed;
     border-width: 7px;
     margin-left: -7px;
 }
 .arrow_menu:before {
     border-color: rgba(194, 225, 245, 0);
-    border-bottom-color: #ccc;
+    border-bottom-color: #e9eaed;
     border-width: 8px;
     margin-left: -8px;
 }

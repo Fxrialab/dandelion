@@ -1,7 +1,8 @@
 <?php
 $currentProfile = $this->f3->get('SESSION.loggedUser');
 ?>
-<script type="text/javascript" src="<?php echo $this->f3->get('WEBROOT'); ?>libs/pgwmodal/jquery.pgw.js"></script>
+<input type="hidden" id="location-href" value="">
+<script type="text/javascript" src="<?php echo $this->f3->get('WEBROOT'); ?>libs/pgwmodal/jquery.min.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('WEBROOT'); ?>libs/jcrop/jquery.Jcrop.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>infinitescroll.js"></script>
 <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>jquery.uploadfile.min.js"></script>

@@ -185,12 +185,12 @@ class UserController extends AppController
                             setcookie('email', $email, time() + 7 * 24 * 60 * 60);
                             setcookie('password', $password, time() + 7 * 24 * 60 * 60);
                         }
-                        else
-                        {
-                            setcookie('email', $email, time() - 3600);
-                            setcookie('password', $password, time() - 3600);
-                        }
-     
+//                        else
+//                        {
+//                            setcookie('email', $email, time() - 3600);
+//                            setcookie('password', $password, time() - 3600);
+//                        }
+//     
                         $fullName = ucfirst($existUser->data->firstName) . " " . ucfirst($existUser->data->lastName);
                         $this->f3->set('SESSION.loggedUser', $existUser);
                         $this->f3->set('SESSION.username', $existUser->data->username);

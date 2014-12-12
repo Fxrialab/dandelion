@@ -25,7 +25,8 @@ if (!empty($mod['comment']))
                 </p>
                 <a class="swTimeComment" name="<?php echo $published; ?>"></a>
                 <a class="uiLike like_<?php echo $id ?>" data-like="comment;<?php echo $this->f3->get('SESSION.userID') . ';' . $recordID ?>" data-rel="<?php echo $like ? "unlike" : "like" ?>"><?php echo $like ? "Unlike" : "Like" ?></a>
-                <a href="#" class="l2_<?php echo $id ?>"> <?php if($numberLike==1) echo '<i class="fa fa-hand-o-right fa-14"></i> '. $numberLike; else $numberLike ?></a>
+                <a href="#" class="l2_<?php echo $id ?>"> <?php if ($numberLike >= 1) echo '<i class="fa fa-hand-o-right fa-14"></i> ' . $numberLike;
+        else $numberLike ?></a>
             </div>
             <div class="large-5 comment-pencil">
                 <?php
@@ -42,8 +43,7 @@ if (!empty($mod['comment']))
                         </ul>
                     </div>
                     <?php
-                }
-                else
+                } else
                 {
                     ?>
                     <a class="hideComment" href="#"><i class="fa fa-close"></i></a></li>
