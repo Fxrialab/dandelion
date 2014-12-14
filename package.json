@@ -1,0 +1,21 @@
+{
+    "name": "dandelion",
+    "description":"Realtime social network platform with nodejs, php, orientdb",
+    "title":"dandelion",
+    
+    "engines": {
+        "node": ">= 0.10.0"
+    },
+    "devDependencies": {
+        "gitbook": "^1.4.2",
+        "grunt": "^0.4.5",
+        "grunt-contrib-concat": "~0.4.0",
+        "grunt-contrib-jshint": "~0.10.0",
+        "grunt-contrib-qunit": "~0.5.2",
+        "grunt-contrib-uglify": "~0.5.0",
+        "grunt-contrib-watch": "~0.6.1",
+        "grunt-gitbook": "^0.5.6",
+        "grunt-phpdocumentor": "^0.4.1",
+        "jit-grunt": "^0.9.0"
+    }
+}

@@ -1,1 +1,4 @@
 /nbproject/private/
+Dockerfiles/.vagrant/
+node_modules/
+gen-docs/

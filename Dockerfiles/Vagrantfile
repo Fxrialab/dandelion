@@ -13,10 +13,9 @@ end
   # config.vm.network "private_network", ip: "172.12.8.150"
   # config.vm.synced_folder "Dockerfiles/", "/Dockerfiles", id: "core", :nfs => true,  :mount_options   => ['nolock,vers=3,udp']
 
-  config.vm.network :forwarded_port, guest: 6379, host: 6379
-  config.vm.network :forwarded_port, guest: 2200, host: 2200
-   config.vm.network :forwarded_port, guest: 80, host: 8080
-   config.vm.network :forwarded_port, guest: 2480, host: 2480
+  config.vm.network :forwarded_port, guest: 2200, host: 2202
+   config.vm.network :forwarded_port, guest: 80, host: 8085
+   config.vm.network :forwarded_port, guest: 2480, host: 2485
 
 
   # Fix docker not being able to resolve private registry in VirtualBox
