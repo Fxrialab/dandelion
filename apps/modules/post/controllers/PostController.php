@@ -21,15 +21,15 @@ class PostController extends AppController
                 $id = $entry->data->object;
             else
                 $id = $entry->recordID;
-            $statusRC = $this->facade->findByAttributes('status', array('@rid' => '#' . $id, 'active' => 1));
+            $statusRC = $this->facade->findByAttributes('status', array('@rid' => '#' . $id));
 
             if (!empty($statusRC))
             {
                 $statusID = $statusRC->recordID;
-                if ($currentUser->recordID != $statusRC->data->actor)
-                    $userRC = $this->facade->findByPk("user", $statusRC->data->actor);
-                else
-                    $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
+//                if ($currentUser->recordID != $statusRC->data->actor)
+                $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
+//                else
+//                    $userRC = $this->facade->findByPk("user", $statusRC->data->owner);
 
                 $like = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $statusID));
                 $photo = $this->facade->findAllAttributes('photo', array('typeID' => $statusRC->recordID));
@@ -103,13 +103,13 @@ class PostController extends AppController
     {
         if ($this->isLogin())
         {
-            $postID = str_replace('_', ':', $this->f3->get('POST.objectID'));
-            if (!empty($postID) && !is_array($postID))
+            $model = $this->facade->findByAttributes('activity', array('object' => $this->getRecordId($_POST['objectID'])));
+            if (!empty($model))
             {
                 $active = array(
-                    'active' => 0,
+                    'status' => 0,
                 );
-                $this->facade->updateByAttributes('status', $active, array('@rid' => '#' . $postID));
+                $update = $this->facade->updateByAttributes('activity', $active, array('object' => $this->getRecordId($_POST['objectID'])));
             }
         }
     }
@@ -127,10 +127,21 @@ class PostController extends AppController
             $embedType = $this->f3->get('POST.embedType');
             //typeID is available with group module
             if (!empty($_POST['typeID']))
+            {
                 $typeID = $_POST['typeID'];
-            else
-                $typeID = FALSE;
+                $group = $this->facade->findByPk('group', $typeID);
+                $param = $group->recordID . ', at ' . $group->data->name;
+            } else if ($embedType == 'photo')
+            {
+                $typeID = 'none';
+                $param = '0,added ' . count($_POST['imgName']) . ' new photos';
+            } else
+            {
+                $typeID = 'none';
+                $param = 'none';
+            }
             // prepare data
+
 
 
             $postEntry = array(
@@ -144,11 +155,10 @@ class PostController extends AppController
                 'published' => $published,
                 'numberShared' => '0',
                 'contentShare' => 'none',
-                'numberFollow' => '0',
                 'mainStatus' => 'none',
-                'active' => '1',
                 'type' => $type,
-                'typeID' => $typeID
+                'typeID' => $typeID,
+                'param' => $param
             );
 
             // save
@@ -217,26 +227,11 @@ class PostController extends AppController
     }
 
     //just implement
-    public function moreComment()
+    public function share()
     {
         if ($this->isLogin())
         {
-            $statusID = str_replace("_", ":", $this->f3->get('POST.statusID'));
-            if (!empty($statusID))
-            {
-                $comments = $this->facade->findAllAttributes('comment', array('typeID' => $statusID));
-                $this->f3->set("comments", $comments);
-                $this->renderModule('moreComment', 'post');
-            }
-        }
-    }
-
-    //just implement
-    public function shareStatus()
-    {
-        if ($this->isLogin())
-        {
-            $statusID = str_replace('_', ':', $this->f3->get('POST.statusID'));
+            $statusID = str_replace('_', ':', $_GET['id']);
             $statusRC = $this->facade->findByPk('status', $statusID);
             $user = $this->facade->findByPk('user', $statusRC->data->owner);
             $this->f3->set('status', $statusRC);
@@ -261,7 +256,6 @@ class PostController extends AppController
                 'actor' => $parentStatus->data->owner,
                 'content' => $parentStatus->data->content,
                 'embedType' => $parentStatus->data->embedType,
-                'embedSource' => $parentStatus->data->embedSource,
                 'actorName' => $parentStatus->data->actorName,
                 'numberLike' => '0',
                 'numberComment' => $parentStatus->data->numberComment,
@@ -270,7 +264,6 @@ class PostController extends AppController
                 'numberShared' => '0',
                 'numberFollow' => '0',
                 'mainStatus' => $statusID,
-                'active' => '1',
                 'type' => $parentStatus->data->type,
                 'typeID' => $parentStatus->data->typeID
             );

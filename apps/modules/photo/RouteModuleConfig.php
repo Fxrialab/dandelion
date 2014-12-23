@@ -21,7 +21,7 @@ class RouteModuleConfig
         'sharePhoto_POST' => "PhotoController",
         'comment_POST' => "PhotoController",
         'detail_GET' => "PhotoController",
-        'popupPhoto_GET' => "PhotoController",
+        'index_GET' => "PhotoController",
         'media_GET' => "PhotoController",
         'crop_POST' => "PhotoController"
     );

@@ -7,16 +7,19 @@
             <a class="timeLineCommentLink" href="/user/<?php echo $profile->data->username; ?>"><?php echo $profile->data->fullName; ?></a>
             <span class="textComment"><?php echo $content; ?></span>
         </p>
-        <a class="swTimeComment" name="<?php echo $published; ?>"></a>
+        <a class="swTimeComment">
+            <?php
+            echo $this->getTime($published);
+            ?></a>
         <a class="uiLike like_<?php echo $id ?>" data-like="comment;<?php echo $this->f3->get('SESSION.userID') . ';' . $recordID ?>" data-rel="<?php echo $like ? "unlike" : "like" ?>"><?php echo $like ? "Unlike" : "Like" ?></a>
         <a href="#" class="l2_<?php echo $id ?>"> <?php echo $numberLike ?></a>
     </div>
-    <div class="large-5">
+    <div class="large-5 comment-pencil">
         <?php
         if ($this->f3->get('SESSION.userID') == $profile->recordID)
         {
             ?>
-            <a data-dropdown="#dropdown_oc<?php echo $id; ?>"><i class="icon30-options"></i></a>
+            <a data-dropdown="#dropdown_oc<?php echo $id; ?>"><i class="fa fa-pencil"></i></a>
             <div id="dropdown_oc<?php echo $id; ?>" class="dropdown dropdown-tip dropdown-anchor-right dropdown-right">
                 <ul class="dropdown-menu">
 
@@ -26,8 +29,7 @@
                 </ul>
             </div>
             <?php
-        }
-        else
+        } else
         {
             ?>
             <a class="hideComment" href="#"><i class="icon30-close"></i></a></li>

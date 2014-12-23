@@ -8,7 +8,6 @@ $status_content = $status->data->content;
 $numberLikes = $status->data->numberLike;
 $numberComment = $status->data->numberComment;
 $status_contentShare = $status->data->contentShare;
-$status_published = $status->data->published;
 ?>
 
 <div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
@@ -19,8 +18,31 @@ $status_published = $status->data->published;
                     <a href="/user/<?php echo $username ?>"><img src="<?php echo $this->getAvatar($profilePic) ?>"></a>
                 </div>
                 <div class=" large-85">
-                    <a href="/user/<?php echo $username ?>" class="timeLineLink"><?php echo $actorName; ?></a> 
-                    <div class="streamPostTime"><a href="" class="linkColor-999999 swTimeStatus" name="<?php echo $status->data->published; ?>"></a> </div>
+                    <a href="/user/<?php echo $username ?>" class="timeLineLink"><?php echo $actorName ?></a> 
+
+                    <?php
+                    if ($status->data->embedType == 'photo')
+                    {
+                        $param = explode(',', $status->data->param);
+                    } else if ($status->data->contentShare != 'none')
+                    {
+
+                        $param = explode(',', $status->data->param);
+                        echo ' shared <a href="/user/' . $this->getUsername($param[0]) . '">' . $param[1] . '</a>';
+                    } else
+                    {
+                        if ($status->data->param != 'none')
+                        {
+                            $param = explode(',', $status->data->param);
+                            echo ' <i class="fa fa-caret-right"></i> <a href="/content/group/groupdetail?id=' . $this->getId($param[0]) . '" class="timeLineLink">' . $param[1] . '</a>';
+                        }
+                    }
+                    ?>
+                    <div class="streamPostTime">
+                        <?php
+                        echo $this->getTime($status->data->published);
+                        ?>
+                    </div>
 
                 </div>
                 <div class="large-5" style="text-align: right">
@@ -37,11 +59,24 @@ $status_published = $status->data->published;
             </div>
         </div>
         <?php
-        if (!empty($status->data->content))
+        if ($status->data->contentShare != 'none')
         {
             ?>
             <div class="column-group">
                 <div style="padding:10px">
+                    <?php echo $status->data->contentShare ?>
+                </div>
+            </div>
+
+            <?php
+        }
+        ?>
+        <?php
+        if (!empty($status->data->content))
+        {
+            ?>
+            <div class="column-group">
+                <div class="<?php echo $status->data->contentShare != 'none' ? 'contentShare' : 'content' ?>">
                     <?php echo $status->data->content ?>
                 </div>
             </div>
@@ -56,7 +91,7 @@ $status_published = $status->data->published;
             echo '<div style="padding:0 10px;"><div class="column-group">';
             foreach ($photo as $k => $value)
             {
-                $img = '<a class="popupPhoto" href="/content/photo/popupPhoto?pID=' . $value->data->owner . '_' . $status->recordID . '_' . $value->recordID . '_' . $k . '"><img src=' . UPLOAD_URL . 'images/' . $value->data->fileName . '></a>';
+                $img = '<a class="popupPhoto" href="/content/photo/index?uid=' . $this->getId($value->data->owner) . '&sid=' . $this->getId($status->recordID) . '&pid=' . $this->getId($value->recordID) . '&page=' . $k . '"><img src=' . UPLOAD_URL . 'images/' . $value->data->fileName . '></a>';
                 if (count($photo) == 1)
                     echo '<div class="large-100 img">' . $img . '</div>';
                 elseif (count($photo) >= 2)
@@ -84,13 +119,13 @@ $status_published = $status->data->published;
                     {
                         ?>
                         <!--Share Segments-->
-                        <li ><a class="shareStatus" id="<?php echo $rpStatusID; ?>" title="Share">Share</a></li>
+                        <li><a class="share_action_link" href="/content/post/share?id=<?php echo $rpStatusID; ?>" title="Share This Status">Share</a></li>
                         <?php
                     } else
                     {
                         ?>
                         <!--Share Segments-->
-                        <li ><a class="shareStatus" id="<?php echo str_replace(":", "_", $status->data->mainStatus); ?>" title="Share">Share</a></li>
+                        <li><a class="share_action_link" id="<?php echo str_replace(":", "_", $status->data->mainStatus); ?>" title="Share This Status">Share</a></li>
                         <?php
                     }
                     ?>
@@ -136,7 +171,11 @@ $status_published = $status->data->published;
                 {
                     ?>
                     <div class="whoCommentThisPost verGapBox" id="viewComments-<?php echo $rpStatusID; ?>">
-                        <i class="statusCounterIcon-comment"></i><a class="viewAllComments" id="<?php echo $rpStatusID; ?>">View all <?php echo $status->data->numberComment; ?> comments <span style="width: 10px" class="loading_<?php echo $rpStatusID; ?>"><div class='loading2'></div></span></a>
+                        <a class="pagerLink" id="<?php echo $rpStatusID; ?>">
+                            <i class="fa fa-comment-o"></i> View all <?php echo $status->data->numberComment - 3; ?> comments 
+
+                        </a>
+
                     </div>
                     <?php
                 }

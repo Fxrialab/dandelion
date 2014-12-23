@@ -81,8 +81,7 @@ class DataFacade
             $condition = substr($condition, strlen($operator));
 
             return Model::get($model)->findOne($condition, $value);
-        }
-        else
+        } else
         {
             return false;
         }
@@ -115,8 +114,7 @@ class DataFacade
             $condition = substr($condition, strlen($operator));
 
             return Model::get($model)->findByCondition($condition, $value);
-        }
-        else
+        } else
         {
             return false;
         }
@@ -149,8 +147,9 @@ class DataFacade
                 $select = $array['select'];
                 array_shift($array);
                 //add OR operator if condition have exist
-                if (array_key_exists('OR',$array)){
-                    $operatorOR = 'OR '.$array['OR'];
+                if (array_key_exists('OR', $array))
+                {
+                    $operatorOR = 'OR ' . $array['OR'];
                     unset($array['OR']);
                 }
 
@@ -162,19 +161,17 @@ class DataFacade
                     $value[] = $v;
                 }
                 $conditions = substr($conditions, strlen($operator));
-                $conditions = $conditions . (!isset($operatorOR) ? "" : " " . $operatorOR).(!isset($select) ? "" : " " . $select);
+                $conditions = $conditions . (!isset($operatorOR) ? "" : " " . $operatorOR) . (!isset($select) ? "" : " " . $select);
 
                 return Model::get($model)->findByCondition($conditions, $value);
-            }
-            else
+            } else
             {
                 $select = $array['select'];
                 $conditions = (!isset($select) ? "" : " " . $select);
 
                 return Model::get($model)->findCustomers($conditions);
             }
-        }
-        else
+        } else
         {
             return false;
         }
@@ -233,7 +230,8 @@ class DataFacade
             $condition = substr($condition, strlen($operator));
             $update = Model::get($model)->updateByCondition($data, $condition, $value);
             if ($update == 1)
-                return str_replace(array('!', '@', '#', '$', '%'), '', $value[0]);
+                return Model::get($model)->findOne($condition, $value);
+//                return str_replace(array('!', '@', '#', '$', '%'), '', $value[0]);
         }
         else
         {
@@ -289,8 +287,7 @@ class DataFacade
             $condition = substr($condition, strlen($operator));
 
             return Model::get($model)->deleteByCondition($condition, $value);
-        }
-        else
+        } else
         {
             return false;
         }
@@ -310,8 +307,7 @@ class DataFacade
             $condition = substr($condition, strlen($operator));
 
             return Model::get($model)->countByCondition($condition, $value);
-        }
-        else
+        } else
         {
             return false;
         }

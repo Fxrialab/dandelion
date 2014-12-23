@@ -34,28 +34,28 @@ class CommentController extends AppController
 //        $duplicate = $this->facade->findByAttributes('activity', array('owner' => $owner, 'verb' => 'comment', 'object' => str_replace('_', ':', $typeID)));
 //        if (empty($duplicate))
 //        {
-//            //create a activity for owner's status
-//            $entry = array(
-//                'owner' => $owner,
-//                'actor' => $currentUser->recordID,
-//                'verb' => 'comment',
-//                'object' => $postID,
-//                'type' => 'notifications',
-//                'timers' => $published,
-//                'details' => 'commented on your status',
-//            );
-//            $this->facade->save('activity', $entry);
-//            //update to notify class
-//            $curNotify = $this->facade->findByAttributes('notify', array('userID' => $owner));
-//            $updateNotify = array(
-//                'notifications' => $curNotify->data->notifications + 1,
-//            );
-//            $this->facade->updateByAttributes('notify', $updateNotify, array('userID' => $owner));
-//            //sent a notifications
-//            $newNotify = $this->facade->findByAttributes('notify', array('userID' => $owner));
-//            $notifications = $newNotify->data->notifications;
-//            $keys = 'notifications.comment.' . $owner;
-//            $keys = str_replace(':', '_', $keys);
+        //create a activity for owner's status
+        $entry = array(
+            'owner' => $owner,
+            'actor' => $currentUser->recordID,
+            'verb' => 'comment',
+            'object' => $this->getRecordId($typeID),
+            'type' => 'notifications',
+            'published' => $published,
+            'details' => 'commented on your status',
+        );
+        $this->facade->save('activity', $entry);
+        //update to notify class
+        $curNotify = $this->facade->findByAttributes('notify', array('userID' => $owner));
+        $updateNotify = array(
+            'notifications' => $curNotify->data->notifications + 1,
+        );
+        $this->facade->updateByAttributes('notify', $updateNotify, array('userID' => $owner));
+        //sent a notifications
+        $newNotify = $this->facade->findByAttributes('notify', array('userID' => $owner));
+        $notifications = $newNotify->data->notifications;
+        $keys = 'notifications.comment.' . $owner;
+        $keys = str_replace(':', '_', $keys);
 //            $data = array(
 //                'type' => 'comment',
 //                'target' => str_replace(':', '_', $postID),
@@ -164,6 +164,31 @@ class CommentController extends AppController
     {
         $data = $this->comment($_POST['typeID'], 'photo', $_POST['comment']);
         $this->render('comment/commentPhoto', array('comment' => $data['comment'], 'user' => $data['user'], 'like' => $data['like']));
+    }
+
+    //just implement
+    public function moreComment()
+    {
+        if ($this->isLogin())
+        {
+            $statusID = $this->getRecordId($_POST['statusID']);
+            $currentUser = $this->getCurrentUser();
+            if (!empty($statusID))
+            {
+                $comment = $this->facade->findAllAttributes('comment', array('typeID' => $statusID));
+                $commentArray = array();
+                if (!empty($comment))
+                {
+                    foreach ($comment as $value)
+                    {
+                        $userComment = $this->facade->findByPk("user", $value->data->owner);
+                        $likeComment = $this->facade->findAllAttributes('like', array('actor' => $currentUser->recordID, 'objID' => $value->recordID));
+                        $commentArray[] = array('comment' => $value, 'user' => $userComment, 'like' => $likeComment);
+                    }
+                }
+                $this->render('comment/moreComment', array('comment' => $commentArray));
+            }
+        }
     }
 
 }

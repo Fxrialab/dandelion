@@ -1,31 +1,40 @@
+
 <?php
-if (!empty($requestFriend))
+$data = $this->f3->get('data');
+if (!empty($data))
+{
+    foreach ($data as $value)
+    {
+        ?>
+        <li>
+            <div class="control-group">
+                <div class="large-15">
+                    <img src="<?php echo $this->getAvatar($value['user']->data->profilePic) ?>" width="50" height="50">
+                </div>
+                <div class="large-45">
+                    <div class="fullName">
+                        <a href="#" style="font-weight: bold"><?php echo $value['user']->data->fullName; ?></a>
+                        <p><?php echo $value['countFriend'] ?> mutual friends</p>
+                    </div>
+                </div>
+                <div class="large-40">
+                    <div class="option">
+                        <a href="#" class="button button35 active">Comfirm</a>
+                        <a href="#" class="button button35">Not now</a>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <?php
+    }
+} else
 {
     ?>
-    <a data-dropdown="#dropdown-requestFriend" class="requestFriend button blue"><span>Friend Request Sent</span></a>
-    <div id="dropdown-requestFriend" class="dropdown dropdown-tip">
-        <ul class="dropdown-menu">
-            <li><a>Report/Block</a></li>
-            <li><a class="cancelRequestFriend" id="<?php echo $toUser; ?>">Cancel Request</a></li>
-        </ul>
-    </div>
-<?php
+    <li>
+        <div class="control-group content-center">
+            <span>Nothing to display</span>
+        </div>
+    </li>
+    <?php
 }
-if (!empty($addFriend))
-{
-    ?>
-    <a class="addFriend button blue linkHover-fffff" id="<?php echo $toUser; ?>">Add Friend</a>
-<?php
-}
-if (!empty($isFriend))
-{
-    ?>
-    <a data-dropdown="#dropdown-isFriend" class="button blue"><span>Friend</span></a>
-    <div id="dropdown-isFriend" class="dropdown dropdown-tip">
-        <ul class="dropdown-menu">
-            <li><a>Report/Block</a></li>
-            <li><a class="cancelRequestFriend" id="<?php echo $toUser; ?>">Unfriend</a></li>
-        </ul>
-    </div>
-<?php
-}?>
+?>

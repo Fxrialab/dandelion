@@ -11,24 +11,19 @@ class FactoryUtils
             $get = 'get' . $param;
             $element = new $param;
             return $element->$get();
-        }
-        else
+        } else
             return false;
     }
 
-    static public function elementModule($element, $module)
+    static public function elementModule($param, $module)
     {
-
-        if (file_exists(MODULES . $module . '/views/elements/' . $element . '.php'))
+        if (file_exists(MODULES . $module . '/elements/' . $param . '.php'))
         {
-            $get = 'get' . $element;
-            $elementController = 'Element' . ucfirst($module) . 'Controller';
-            require_once MODULES . $module . '/views/elements/' . $element . '.php';
-            require_once MODULES . $module . '/controllers/' . $elementController . '.php';
-            $element = new $elementController;
+            require_once MODULES . $module . '/elements/' . $param . '.php';
+            $get = 'get' . $param;
+            $element = new $param;
             return $element->$get();
-        }
-        else
+        } else
             return false;
     }
 

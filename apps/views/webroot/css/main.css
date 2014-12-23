@@ -572,12 +572,19 @@ a{
 }
 
 .uiBoxPostItem {
-
     margin: 10px 0;
     /*padding: 10px 10px 10px 10px;*/
     border: 1px #dee0e3 solid;
     background-color: white;
     border-radius: 3px;
+}
+.uiBoxPostItem .uiBoxPostContainer .content{
+    padding: 10px
+}
+.uiBoxPostItem .uiBoxPostContainer .contentShare{
+    padding: 10px;
+    border-left: 3px solid #ccc;
+    margin-left: 10px;
 }
 .uiBoxPostItem .img{
     text-align: center;
@@ -2141,19 +2148,26 @@ a{
 }
 
 .actionPopUp {
-    padding: 5px;
+    padding: 10px;
+    margin-top: 10px;
     background-color: #f2f2f2;
+    text-align: right;
 }
 
 .shareFor {
-    padding-bottom: 10px;
+    border-bottom: 1px solid #d5d5d5;
+    padding: 10px;
 }
 
 .shareIcon {
     font-weight: bold;
     color: rgb(0,91,159);
 }
-
+.textareaNoResize{
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 10px 20px !important;
+}
 .textContainer {
     padding-left: 10px;
 }
@@ -2426,7 +2440,8 @@ a{
     max-height: 390px;
 }
 .dropdown-menu-topbar div.scroll .fullName{
-    padding-top:10px !important;
+    padding-top:5px !important;
+    text-transform: capitalize;
 }
 
 .dropdown-menu-topbar div.scroll .option{
@@ -2648,37 +2663,53 @@ span.countNotifies, span.countFriendRequest {
 }
 
 .status, .media {
-	position: relative;
-	border-top: 1px solid #e4e4e4;
+    position: relative;
+    border-top: 1px solid #e4e4e4;
 }
 .status:after, .status:before {
-	bottom: 100%;
-	left: 15%;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
+    bottom: 100%;
+    left: 15%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
 }
 .media:after, .media:before {
-	bottom: 100%;
-	left: 42%;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
+    bottom: 100%;
+    left: 42%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
 }
 .status:after, .media:after {
-	border-bottom-color: #fff;
-	border-width: 6px;
-	margin-left: -6px;
+    border-bottom-color: #fff;
+    border-width: 6px;
+    margin-left: -6px;
 }
 .status:before, .media:before {
-	border-bottom-color: #e4e4e4;
-	border-width: 8px;
-	margin-left: -8px;
+    border-bottom-color: #e4e4e4;
+    border-width: 8px;
+    margin-left: -8px;
 }
 
+.formStatus{
+    border: 1px #dee0e3 solid; background-color: white;  border-radius: 3px;
+}
+
+.formStatus nav ul.tab-status{
+    font-weight: bold
+}
+
+.avatar_40{
+    width: 40px;
+    height: 40px;
+}
+.avatar_50{
+    width: 50px;
+    height: 50px;
+}

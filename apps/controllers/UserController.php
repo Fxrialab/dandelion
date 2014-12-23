@@ -94,22 +94,19 @@ class UserController extends AppController
                     $this->render('user/index', array(
                         'msgSignIn' => 'You are registered success. Please check mail and confirm !'
                     ));
-                }
-                else
+                } else
                 {
                     $this->render('user/index', array(
                         'msgSignUp' => 'Please agree to the Terms and Privacy Policy'
                     ));
                 }
-            }
-            else
+            } else
             {
                 $this->render('user/index', array(
                     'msgSignUp' => $this->ValidateHelper->validation($data, $isUsedEmail, false)
                 ));
             }
-        }
-        else
+        } else
         {
             header("Location:/");
         }
@@ -148,8 +145,7 @@ class UserController extends AppController
                     $this->render('user/index.php', 'default', array(
                         'msgSignIn' => 'Thank you confirm email. Now, you can login !'
                     ));
-                }
-                else
+                } else
                 {
                     $this->render('user/index.php', 'default', array(
                         'msgSignIn' => 'The confirmation code or email are incorrect. Please, try check mail again !'
@@ -168,6 +164,7 @@ class UserController extends AppController
             $email = $request['emailLogIn'];
             $password = $request['pwLogIn'];
             $existUser = $this->facade->findByAttributes('user', array('email' => $email, 'role' => 'user'));
+
             if (!empty($existUser))
             {
                 if ($this->EncryptionHelper->CheckPassword($password, $existUser->data->password))
@@ -177,19 +174,17 @@ class UserController extends AppController
                     {
                         $this->f3->set('msgSignIn', 'We have sent an confirmation email to you. Please check the email and confirm your email with us !');
                         $this->render('user/index', 'default');
-                    }
-                    else
+                    } else
                     {
                         if (isset($request['persistent']) == true)
                         {
                             setcookie('email', $email, time() + 7 * 24 * 60 * 60);
                             setcookie('password', $password, time() + 7 * 24 * 60 * 60);
+                        } else
+                        {
+                            setcookie('email', $email, time() - 3600);
+                            setcookie('password', $password, time() - 3600);
                         }
-//                        else
-//                        {
-//                            setcookie('email', $email, time() - 3600);
-//                            setcookie('password', $password, time() - 3600);
-//                        }
 //     
                         $fullName = ucfirst($existUser->data->firstName) . " " . ucfirst($existUser->data->lastName);
                         $this->f3->set('SESSION.loggedUser', $existUser);
@@ -198,7 +193,7 @@ class UserController extends AppController
                         $this->f3->set('SESSION.email', $existUser->data->email);
                         $this->f3->set('SESSION.fullname', $fullName);
                         $this->f3->set('SESSION.birthday', $existUser->data->birthday);
-                    
+
                         $this->f3->set('SESSION.userID', $existUser->recordID);
                         // start initial sessions.
                         $sessionID = rand(1000, 10000000);
@@ -235,8 +230,7 @@ class UserController extends AppController
                             {
                                 header("Location: /authentication");
                             }
-                        }
-                        else
+                        } else
                         {
                             $newSession = array(
                                 'email' => $email,
@@ -252,22 +246,19 @@ class UserController extends AppController
                             header("Location: /home");
                         }
                     }
-                }
-                else
+                } else
                 {
                     $this->render('user/index', array(
                         'msgSignIn' => 'Your password is incorrect'
                     ));
                 }
-            }
-            else
+            } else
             {
                 $this->render('user/index', array(
                     'msgSignIn' => 'Your email is not exist. Please sign up !'
                 ));
             }
-        }
-        else
+        } else
         {
             header("Location:/");
         }
@@ -287,15 +278,13 @@ class UserController extends AppController
                 setcookie('email', $email, time() + 3600);
                 $this->EmailHelper->sendCodeConfirmEmail($email, $code);
                 $this->render("user/confirmCode", array('email' => $email));
-            }
-            else
+            } else
             {
                 $this->render("user/authentication", array(
                     'MsgValidate' => $this->ValidateHelper->validation($email, $existEmail, true)
                 ));
             }
-        }
-        else
+        } else
             $this->render("user/authentication");
     }
 
@@ -339,8 +328,7 @@ class UserController extends AppController
                     header("Location:/home");
                 }
             }
-        }
-        else
+        } else
         {
             $this->render('user/confirmCode', array(
                 'email' => $_COOKIE["email"],
@@ -362,15 +350,13 @@ class UserController extends AppController
                 $this->render('user/resetPassword.php', 'default', array(
                     'user' => $isUsedEmail
                 ));
-            }
-            else
+            } else
             {
                 $this->render('user/forgotPassword.php', 'default', array(
                     'msgValidate' => $this->ValidateHelper->validation($email, $isUsedEmail, true)
                 ));
             }
-        }
-        else
+        } else
             $this->render('user/forgotPassword');
     }
 
@@ -385,8 +371,7 @@ class UserController extends AppController
             setcookie('email', $email, time() + 3600);
             $this->EmailHelper->sendCodeConfirmPass($email, $codeConfirmPass);
             $this->render('user/confirmPassword.php', 'default', array('email' => $email));
-        }
-        else
+        } else
         {
             $this->render('user/resetPassword');
         }
@@ -406,16 +391,14 @@ class UserController extends AppController
             {
                 setcookie('codeConfirmPass', '', time() - 3600);
                 $this->render('user/newPassword.php', 'default');
-            }
-            else
+            } else
             {
                 $this->render('user/confirmPassword', array(
                     'email' => $email,
                     'msgValidate' => 'The code is not correct!'
                 ));
             }
-        }
-        else
+        } else
             $this->render('user/forgotPassword');
     }
 
@@ -444,8 +427,7 @@ class UserController extends AppController
                         $this->render('user/newPassword', array(
                             'msgValidate' => 'Reset password is success. However you still not confirm this account, we had send an link confirmation email to you!'
                         ));
-                    }
-                    else
+                    } else
                     {
                         $this->f3->clear('SESSION');
                         $this->f3->set('SESSION.loggedUser', $user);
@@ -477,8 +459,7 @@ class UserController extends AppController
                             );
                             $this->facade->save('sessions', $newSession);
                             header("Location: /home");
-                        }
-                        else
+                        } else
                         {
                             //create new session
                             $newSession = array(
@@ -496,13 +477,11 @@ class UserController extends AppController
                         }
                     }
                 }
-            }
-            else
+            } else
             {
                 $this->render('user/newPassword', array('msgValidate' => 'Two password does not match!'));
             }
-        }
-        else
+        } else
             $this->render('user/forgotPassword');
     }
 
@@ -527,6 +506,7 @@ class UserController extends AppController
     {
         if ($this->isLogin())
         {
+             $this->layout = 'timeline';
             $url = $_SERVER["REQUEST_URI"];
             $params_full = explode('/', $url);
             $lastParams = explode('?', $params_full[count($params_full) - 1]);
@@ -534,6 +514,7 @@ class UserController extends AppController
             if (count($params_full) == 3 && $params_full[1] == 'user')
             {
                 $userRC = $this->facade->findByAttributes('user', array('username' => $username));
+
                 if (!empty($userRC))
                 {
                     $this->layout = 'timeline';
@@ -541,7 +522,7 @@ class UserController extends AppController
                     $currentProfileID = $userRC->recordID;
                     $this->f3->set('SESSION.userProfileID', $currentProfileID);
                     $currentUser = $this->getCurrentUser();
-                    //get status friendship
+//                    get status friendship
                     $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileID);
 
                     $this->render('user/userPage', array(

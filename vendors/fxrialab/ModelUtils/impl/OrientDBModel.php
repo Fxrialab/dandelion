@@ -1,10 +1,12 @@
 <?php
+
 require_once CONFIG . 'ExtraConfig.php';
 require_once MODELS . "DB.php";
 require_once MODEL_UTILS . "interfaces/IDataModel.php";
 
 class OrientDBModel implements IDataModel
 {
+
     protected $helpers = array('Security', 'String');
     protected $_db;
     protected $_config;
@@ -14,12 +16,14 @@ class OrientDBModel implements IDataModel
 
     protected function loadHelpers()
     {
-        foreach ($this->helpers as $helper) {
+        foreach ($this->helpers as $helper)
+        {
             // get file name
             $helperFile = lcfirst($helper);
             $helper = $helper . 'Helper';
 
-            if (file_exists(HELPERS . $helperFile . '_helper.php')) {
+            if (file_exists(HELPERS . $helperFile . '_helper.php'))
+            {
                 require_once(HELPERS . $helperFile . '_helper.php');
                 $this->$helper = new $helper;
             }
@@ -50,7 +54,8 @@ class OrientDBModel implements IDataModel
         $record = new OrientDBRecord();
         $record->className = $this->_className;
 
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value)
+        {
             $record->data->$key = $value;
         }
         $this->_db->recordCreate($this->_clusterID, $record);
@@ -71,7 +76,7 @@ class OrientDBModel implements IDataModel
      */
     public function find($id)
     {
-        $sql = "SELECT FROM " . $this->_className ." WHERE @rid = #".$id;
+        $sql = "SELECT FROM " . $this->_className . " WHERE @rid = #" . $id;
         $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
 
         return $queryResult[0];
@@ -79,7 +84,8 @@ class OrientDBModel implements IDataModel
 
     public function findOne($conditions, $values)
     {
-        for ($i = 0; $i < count($values); $i++) {
+        for ($i = 0; $i < count($values); $i++)
+        {
             $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
             $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
         }
@@ -98,18 +104,19 @@ class OrientDBModel implements IDataModel
 
     public function findByCondition($conditions, $values)
     {
+
         for ($i = 0; $i < count($values); $i++)
         {
             $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
             $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
         }
         //$conditionQuery
-        $sql = "SELECT FROM " . $this->_className . (empty($conditions) ? "" : (" WHERE " . $conditions)) ;
-
+        $sql = "SELECT FROM " . $this->_className . (empty($conditions) ? "" : (" WHERE " . $conditions));
         $queryResult = $this->_db->command(OrientDB::COMMAND_QUERY, $sql);
 
         return $queryResult;
     }
+
 
     public function findCustomers($conditions)
     {
@@ -146,7 +153,8 @@ class OrientDBModel implements IDataModel
         //$conditionQuery
         $sql = "UPDATE " . $this->_className . " SET";
 
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value)
+        {
             $sql = $sql . ' ' . $key . " = " . "'" . $this->SecurityHelper->postIn($value) . "',";
         }
 
@@ -220,7 +228,8 @@ class OrientDBModel implements IDataModel
         if (is_array($data) && count($data) > 0)
         {
             $sql = $sql . " SET ";
-            foreach ($data as $key => $value) {
+            foreach ($data as $key => $value)
+            {
                 $sql = $sql . ' ' . $key . " = " . "'" . $this->SecurityHelper->postIn($value) . "',";
             }
             $sql = substr($sql, 0, -1);
@@ -234,8 +243,9 @@ class OrientDBModel implements IDataModel
         $sql = "DELETE EDGE FROM " . $sourceID . " TO " . $desID;
         if (is_array($data) && count($data) > 0)
         {
-            $sql = $sql . " WHERE @class = '".$this->_className."'";
-            foreach ($data as $key => $value) {
+            $sql = $sql . " WHERE @class = '" . $this->_className . "'";
+            foreach ($data as $key => $value)
+            {
                 $sql = $sql . ' ' . $key . " = " . "'" . $this->SecurityHelper->postIn($value) . "' AND";
             }
             $sql = substr($sql, 0, -3);
@@ -256,15 +266,17 @@ class OrientDBModel implements IDataModel
             $sql = "SELECT GREMLIN( '" . $command . "' ) FROM " . $this->_className;
             if (is_array($arrays) && count($arrays) > 0)
             {
-                $conditions  = "";
-                $operator   = " AND ";
-                foreach ($arrays as $key => $v) {
-                    $conditions = $conditions.$operator.$key." = ?";
+                $conditions = "";
+                $operator = " AND ";
+                foreach ($arrays as $key => $v)
+                {
+                    $conditions = $conditions . $operator . $key . " = ?";
                     $values[] = $v;
                 }
-                $conditions = substr($conditions,strlen($operator));
+                $conditions = substr($conditions, strlen($operator));
 
-                for ($i = 0; $i < count($values); $i++) {
+                for ($i = 0; $i < count($values); $i++)
+                {
                     $preparedValue = "'" . $this->SecurityHelper->postIn($values[$i]) . "'";
                     $conditions = $this->StringHelper->replaceFirst("?", $preparedValue, $conditions);
                 }
@@ -279,9 +291,10 @@ class OrientDBModel implements IDataModel
                 $result = $this->getContentResult($stringResult, $this->_className);
 
                 return $result;
-            }else
+            } else
                 return false;
-        }else {
+        }else
+        {
             return false;
         }
     }
@@ -313,30 +326,35 @@ class OrientDBModel implements IDataModel
             {
                 $replace[$i] = str_replace(array($toFirstFind, ')', '[', ']'), '', $resultGremlin[$i]);
                 $arrayResult = explode(',', $replace[$i]);
-            }else {
+            } else
+            {
                 $pos2[$i] = strpos($resultGremlin[$i], $toSecondFind);
                 if (isset($pos2[$i]) && is_numeric($pos2[$i]))
                 {
                     $replace[$i] = str_replace(array('v(' . $className . ')[#', ']', '#'), '', $resultGremlin[$i]);
                     array_push($arrayResult, $replace[$i]);
-                }else {
+                } else
+                {
                     $pos3[$i] = strpos($resultGremlin[$i], $toThirdFind);
                     if (isset($pos2[$i]) && is_numeric($pos3[$i]))
                     {
                         $startPos[$i] = strpos($resultGremlin[$i], '[');
                         $endPos[$i] = strpos($resultGremlin[$i], ']');
-                        if (!$startPos[$i] && !$endPos[$i]) {
+                        if (!$startPos[$i] && !$endPos[$i])
+                        {
                             $jsonString[$i] = '[' . $resultGremlin[$i] . ']';
-                        } else {
+                        } else
+                        {
                             $jsonString[$i] = $resultGremlin[$i];
                         }
 
                         $obj[$i] = json_decode($jsonString[$i]);
 
                         $arrayResult = $obj[$i];
-                    } else {
-                        /*$replace[$i] = str_replace(array('"', '[', ']'), '', $resultGremlin[$i]);
-                        $arrayResult = explode(',', $replace[$i]);*/
+                    } else
+                    {
+                        /* $replace[$i] = str_replace(array('"', '[', ']'), '', $resultGremlin[$i]);
+                          $arrayResult = explode(',', $replace[$i]); */
                         return false;
                     }
                 }
@@ -345,6 +363,7 @@ class OrientDBModel implements IDataModel
 
         return $arrayResult;
     }
+
 }
 
 ?>

@@ -1,3 +1,102 @@
+$(document).ready(function () {
+    $('textarea').autosize();
+    $('#statusPhoto').autosize();
+    $(".viewUpload").hide();
+    $(".postPhoto").hide();
+    $("#statusPhoto").hide();
+});
+
+function tab(id) {
+    if (id == 'status') {
+        $('.media').hide();
+        $('.status').show();
+    } else {
+        $('.status').hide();
+        $('.media').show();
+    }
+
+}
+
+function isValidURL(url) {
+    var RegExp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+
+    if (RegExp.test(url))
+    {
+        return true;
+    } else {
+        return false;
+    }
+}
+$(document).ready(function () {
+
+    $('#status').mouseleave(function () {
+        var embedPhotos = $('.embedElements #embedPhotos > div').length;
+        var rand = $('#rand').attr('value');
+        if (embedPhotos > 0)
+        {
+            $('#embedVideo').css('display', 'none');
+        }
+        var url, urlString, urlSpace, urlHttp, urlFirst, fullURL;
+        var text = $('#status').val();
+        text = $('<span>' + text + '</span>').text(); //strip html
+        urlHttp = text.indexOf('http');
+
+        if (urlHttp >= 0)
+        {
+            urlString = text.substr(urlHttp);
+            urlSpace = urlString.indexOf(" ");
+            if (urlSpace >= 0) {
+                urlFirst = text.substr(urlHttp, urlSpace);
+                if (isValidURL(urlFirst)) {
+                    fullURL = url = urlFirst;
+                    url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed' + rand + '">$2</a></div>');
+                    url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed' + rand + '">$2</a></div>');
+                }
+            } else {
+                if (isValidURL(urlString)) {
+                    fullURL = url = urlString;
+                    url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed' + rand + '">$2</a></div>');
+                    url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed' + rand + '">$2</a></div>');
+                }
+            }
+        }
+        //$('#tagElements').css('display', 'block');
+        $('#embedVideo').empty().html(url);
+        $(".oembed" + rand).oembed(null,
+                {
+                    embedMethod: "append",
+                    maxWidth: 1024,
+                    maxHeight: 400,
+                    vimeo: {autoplay: false, maxWidth: 200, maxHeight: 200}
+                });
+        $('#embedVideo').append("<input type='hidden' name='videoURL' value='" + fullURL + "'>");
+
+    });
+
+});
+
+$('body').on('click', '.friendRequests', function () {
+    if ($('#dropdown-friend').css('display') == 'none')
+    {
+        $.ajax({
+            type: "GET",
+            url: "/loadFriendRequests",
+            data: {},
+            cache: false,
+            beforeSend: function () {
+                $('.friendRqContainers').html('<li><div class="loading-bar"><div></div></div></li>');
+            },
+            success: function (html) {
+                $("span.countFriendRequest").css('display', 'none');
+                $('.friendRqContainers li').detach();
+                $('.friendRqContainers').append(html);
+                updateTime();
+            }
+        });
+    }
+});
+
+
 $(".autoloadModuleElement").ready(function ()
 {
     $.ajax({
@@ -66,7 +165,7 @@ $(document).ready(function () {
         var objectID = $(this).attr('id');
         $(this).deleteEntry(objectID);
     });
-    $('body').on('click', '.viewAllComments', function () {
+    $('body').on('click', '.pagerLink', function () {
         var objectID = $(this).attr('id');
         $(this).moreComment(objectID);
     });
@@ -272,15 +371,15 @@ $(document).ready(function ()
     {
         $.ajax({
             type: "POST",
-            url: "/content/post/moreComment",
+            url: "/moreComment",
             data: {statusID: objectID},
             cache: false,
             beforeSend: function () {
-                $(".loading_" + objectID).html("<div class='loading2'></div>");
+                $("#viewComments-" + objectID + ' a.pagerLink').append(' <i class="fa fa-circle-o-notch fa-spin"></i>');
             },
             success: function (html) {
                 $('#viewComments-' + objectID).remove();
-                $('.moreComment-' + objectID).html(html);
+                $('.moreComment_' + objectID).html(html);
                 updateTime();
             }
         })
@@ -652,7 +751,7 @@ $(document).on('submit', '#submitFormStatus', function (event) {
     var embedPhotos = $('.embedElements #embedPhotos > div').length;
     var embedVideo = $('.embedElements #embedVideo > div').length;
     var status = $("#status").val();
-    $(".msg").html("<div class='loadingUpload'></div>");
+    $(".uiPostOption nav ul").append("<li style='float:right; padding-top: 7px; padding-right: 10px' class='loadStatus'><i class='fa fa-spinner fa-spin fa-18'></i></li>");
     if (status || embedPhotos)
     {
         if (embedPhotos > 0)
@@ -676,7 +775,7 @@ $(document).on('submit', '#submitFormStatus', function (event) {
                 $('#imgID').val();
                 $('#embedPhotos').html('');
                 $('#status').val('');
-                $(".msg").html("");
+                $(".uiPostOption nav ul li.loadStatus").remove();
                 updateTime();
             }
         });
@@ -776,10 +875,10 @@ $("body").on('click', '.popupPhoto', function (e) {
         return location;
     });
     if (history.pushState)
-        history.pushState('', "", $(this).attr('href'));
+        history.pushState('', "", $(this).attr('href') + '&type=1');
     $.pgwModal({
         url: $(this).attr('href'),
-        title: '',
+        titleBar: false,
         minWidth: 880,
         maxWidth: 1024,
         minHeight: 500,
@@ -808,7 +907,7 @@ $("body").on('click', '.popupMyPhoto', function (e) {
 $("body").on('click', '.carousel', function (e) {
     e.preventDefault();
     if (history.pushState)
-        history.pushState('', "", $(this).attr('href'));
+        history.pushState('', "", $(this).attr('href') + '&type=1');
     $.ajax({
         type: "GET",
         url: $(this).attr('href'),
@@ -816,6 +915,16 @@ $("body").on('click', '.carousel', function (e) {
         {
             $('.pm-content').html(data);
         }
+    });
+});
+
+$("body").on('click', '.share_action_link', function (e) {
+    e.preventDefault();
+    $.pgwModal({
+        url: $(this).attr('href'),
+        title: $(this).attr('title'),
+        minWidth: 450,
+        maxWidth: 450
     });
 });
 

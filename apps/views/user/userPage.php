@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#contentContainer').scrollPaginationHomePage({
             nop: 5, // The number of posts per scroll to be loaded
             offset: 0, // Initial offset, begins at 0 in this case
@@ -8,7 +8,7 @@
             delay: 500, // When you scroll down the posts will load after a delayed amount of time.
             // This is mainly for usability concerns. You can alter this as you see fit
             scroll: true // The main bit, if set to false posts will not load as the user scrolls.
-            // but will still load if the user clicks.
+                    // but will still load if the user clicks.
         });
         $('#typeActivity').html('<input type=hidden id=type name=type value=post >');
     });
@@ -20,7 +20,7 @@
 <div class="uiMainColProfile large-70">
     <div class="uiMainContainer">
         <?php
-        FactoryUtils::elementModule('formPost','post');
+        $this->element('FormPostElement', 'post');
         ?>
         <input type="hidden" id="whereIs" value="userPage">
         <input type="hidden" id="currentProfile" value="<?php echo $this->f3->get('currentProfileID') ?>">

@@ -56,15 +56,6 @@ class PhotoController extends AppController
         {
             $this->layout = "other";
             $username = $this->f3->get('GET.user');
-//            $album = $this->f3->get('GET.album');
-//            $user = $this->facade->findByAttributes('user', array('username' => $username));
-//            $photo = $this->facade->findAllAttributes('photo', array('actor' => $user->recordID));
-//            $currentProfileID = $user->recordID;
-//            $this->f3->set('SESSION.userProfileID', $currentProfileID);
-//            $currentProfileRC = $this->facade->load('user', $currentProfileID);
-//             $currentUser = $this->getCurrentUser();
-//            $this->render('mains/viewphoto', 'photo', array('otherUser' => $currentProfileRC, 'photo' => $photo,'currentUser' => $currentUser));
-            //echo $username;
             if (!empty($username))
             {
                 $currentProfileRC = $this->facade->findByAttributes('user', array('username' => $username));
@@ -87,7 +78,7 @@ class PhotoController extends AppController
                 {
                     foreach ($model as $value)
                     {
-                            $user = $this->facade->findByPk('user', $value->data->owner);
+                        $user = $this->facade->findByPk('user', $value->data->owner);
                         $comment = $this->facade->findAllAttributes('comment', array('typeID' => $value->recordID));
                         $dataComment = array();
                         if (!empty($comment))
@@ -161,8 +152,7 @@ class PhotoController extends AppController
         {
 
             $filename = explode('_', $_POST['data']);
-            $link = UPLOAD . 'i'
-                    . 'images/' . $filename[1];
+            $link = UPLOAD . 'images/' . $filename[1];
             $thumb = UPLOAD . 'thumbnail/' . $filename[1];
             if (!empty($link))
             {
@@ -287,21 +277,19 @@ class PhotoController extends AppController
         }
     }
 
-    public function popupPhoto()
+    public function index()
     {
-        $pID = explode('_', $_GET['pID']);
-//        $pID[0]:userID;
-//        $pID[1]:typeID
-//        $pID[2]:photoID
-//        $pID[3]:key
-        if (!empty($pID[0]) && !empty($pID[2]))
+        if (!empty($_GET['type']) && $_GET['type'] == 1)
+            $this->layout = 'popupphoto';
+
+        if (!empty($_GET['uid']) && !empty($_GET['pid']))
         {
-            $photo = $this->facade->findByPk('photo', $pID[2]);
-            if ($pID[1] != 0)
-                $findAll = $this->facade->findAllAttributes('photo', array('typeID' => $pID[1], 'owner' => $pID[0]));
+            $photo = $this->facade->findByPk('photo', $this->getRecordId($_GET['pid']));
+            if ($_GET['sid'] != 0)
+                $findAll = $this->facade->findAllAttributes('photo', array('typeID' => $this->getRecordId($_GET['sid']), 'owner' => $this->getRecordId($_GET['uid'])));
             else
-                $findAll = $this->facade->findAllAttributes('photo', array('owner' => $pID[0]));
-            $k = $pID[3];
+                $findAll = $this->facade->findAllAttributes('photo', array('owner' => $this->getRecordId($_GET['uid'])));
+            $k = $_GET['page'];
             $currentUser = $this->getCurrentUser();
             if ($k + 1 < count($findAll))
                 $this->f3->set('idn', $findAll[$k + 1]->recordID);
@@ -327,10 +315,14 @@ class PhotoController extends AppController
                 $photoAvatar = $avatar->data->fileName;
             else
                 $photoAvatar = 'avatarMenDefault.png';
+
             if (!empty($_GET['set']))
+            {
                 $this->renderModule('photoDrap', 'photo', array('photo' => $photo));
-            else
-                $this->renderModule('popup', 'photo', array('photo' => $photo, 'tID' => $pID[1], 'k' => $k, 'avatar' => $photoAvatar, 'user' => $user, 'like' => $like, 'comment' => $commentArray));
+            } else
+            {
+                $this->renderModule('popup', 'photo', array('photo' => $photo, 'tID' => $_GET['sid'], 'k' => $k, 'avatar' => $photoAvatar, 'user' => $user, 'like' => $like, 'comment' => $commentArray));
+            }
         }
     }
 

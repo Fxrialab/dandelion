@@ -1,70 +1,11 @@
-<?php
-$rand = rand(100, 100000);
-?>
-<script>
-    function isValidURL(url) {
-        var RegExp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
-        if (RegExp.test(url))
-        {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    $(document).ready(function () {
-
-        $('#status').mouseleave(function () {
-            var embedPhotos = $('.embedElements #embedPhotos > div').length;
-            if (embedPhotos > 0)
-            {
-                $('#embedVideo').css('display', 'none');
-            }
-            var url, urlString, urlSpace, urlHttp, urlFirst, fullURL;
-            var text = $('#status').val();
-            text = $('<span>' + text + '</span>').text(); //strip html
-            urlHttp = text.indexOf('http');
-
-            if (urlHttp >= 0)
-            {
-                urlString = text.substr(urlHttp);
-                urlSpace = urlString.indexOf(" ");
-                if (urlSpace >= 0) {
-                    urlFirst = text.substr(urlHttp, urlSpace);
-                    if (isValidURL(urlFirst)) {
-                        fullURL = url = urlFirst;
-                        url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
-                        url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
-                    }
-                } else {
-                    if (isValidURL(urlString)) {
-                        fullURL = url = urlString;
-                        url = url.replace(/(\s|>|^)(https?:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
-                        url = url.replace(/(\s|>|^)(mailto:[^\s<]*)/igm, '$1<div><a href="$2" class="oembed<?php echo $rand; ?>">$2</a></div>');
-                    }
-                }
-            }
-            //$('#tagElements').css('display', 'block');
-            $('#embedVideo').empty().html(url);
-            $(".oembed<?php echo $rand; ?>").oembed(null,
-                    {
-                        embedMethod: "append",
-                        maxWidth: 1024,
-                        maxHeight: 400,
-                        vimeo: {autoplay: false, maxWidth: 200, maxHeight: 200}
-                    });
-            $('#embedVideo').append("<input type='hidden' name='videoURL' value='" + fullURL + "'>");
-
-        });
-
-    });
-
-</script>
-<div style="border: 1px #dee0e3 solid; background-color: white;  border-radius: 3px;">
+<input type="hidden" name="rand" id="rand" value="<?php echo rand(100, 100000); ?>">
+<div class="formStatus">
     <nav class="ink-navigation">
-        <ul class="menu horizontal" style="font-weight: bold">
+        <ul class="menu horizontal tab-status">
             <li><a href="javascript:void(0)"  onclick="return tab('status');"><i class="fa fa-pencil-square fa-18"></i> Update Status</a></li>
             <li><a href="javascript:void(0)" onclick="return tab('media');"><i class="fa fa-picture-o fa-18"></i> Add Photos/Video</a></li>
+
         </ul>
     </nav>
     <div class="status" style=" margin: 0">
@@ -118,26 +59,5 @@ $rand = rand(100, 100000);
         </div>
     </div>
 </div>
-<!--Other part-->
-<script>
-    function tab(id) {
-        if (id == 'status') {
-            $('.media').hide();
-            $('.status').show();
-        } else {
-            $('.status').hide();
-            $('.media').show();
-        }
-
-    }
-    $(document).ready(function () {
-        $('textarea').autosize();
-        $('#statusPhoto').autosize();
-        $(".viewUpload").hide();
-        $(".postPhoto").hide();
-        $("#statusPhoto").hide();
-    });
-
-</script>
 
 

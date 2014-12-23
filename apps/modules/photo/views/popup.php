@@ -5,17 +5,16 @@
  */
 $loggedUser = $this->f3->get('SESSION.loggedUser');
 $photo = $this->f3->get('photo');
-$tID = $this->f3->get('tID');
-$idn = $this->f3->get('idn');
-$idp = $this->f3->get('idp');
+$tID = $this->getId($this->f3->get('tID'));
+$idn = $this->getId($this->f3->get('idn'));
+$idp = $this->getId($this->f3->get('idp'));
 $k = $this->f3->get('k');
 $user = $this->f3->get('user');
 $like = $this->f3->get('like');
 $comment = $this->f3->get('comment');
 $recordID = str_replace(':', '_', $photo->recordID);
 ?>
-<link rel="stylesheet" href="<?php echo F3::get('CSS'); ?>modalPhoto.css" type="text/css" />
-<div id="123"></div>
+
 <div class="control-group">
     <div class="large-65">
         <div class="popupImg">
@@ -23,7 +22,7 @@ $recordID = str_replace(':', '_', $photo->recordID);
             if (!empty($idp))
             {
                 ?>
-                <a  href="/content/photo/popupPhoto?pID=<?php echo $photo->data->owner ?>_<?php echo $tID ?>_<?php echo $idp ?>_<?php echo $k - 1 ?>" class="pev carousel"><i class="icon40-pev"></i></a>
+                <a  href="/content/photo/index?uid=<?php echo $this->getId($photo->data->owner) ?>&sid=<?php echo $tID ?>&pid=<?php echo $idp ?>&page=<?php echo $k - 1 ?>" class="pev carousel"><i class="icon40-pev"></i></a>
                 <?php
             }
             ?>
@@ -34,7 +33,7 @@ $recordID = str_replace(':', '_', $photo->recordID);
             if (!empty($idn))
             {
                 ?>
-                <a href="/content/photo/popupPhoto?pID=<?php echo $photo->data->owner ?>_<?php echo $tID ?>_<?php echo $idn ?>_<?php echo $k + 1 ?>" class="next carousel"><i class="icon40-next"></i></a>
+                <a href="/content/photo/index?uid=<?php echo $this->getId($photo->data->owner) ?>&sid=<?php echo $tID ?>&pid=<?php echo $idn ?>&page=<?php echo $k + 1 ?>" class="next carousel"><i class="icon40-next"></i></a>
             <?php } ?>
         </div>
     </div>
@@ -49,7 +48,7 @@ $recordID = str_replace(':', '_', $photo->recordID);
                     <div class="large-85">
                         <div class="infoProfile">
                             <a href="/content/post?user=<?php echo $user->data->username ?>" class="timeLineLink"><?php echo $user->data->fullName; ?></a>
-                            <div><a class="swTimeComment time" name="<?php echo $photo->data->published; ?>"></a></div>
+                            <div><a class="time"> <?php echo $this->getTime($photo->data->published) ?></a></div>
                         </div>
                     </div>
                 </div>
@@ -151,7 +150,9 @@ $recordID = str_replace(':', '_', $photo->recordID);
                                                                 <a class="timeLineCommentLink" href="/user/<?php echo $value['user']->data->username ?>"><?php echo $value['user']->data->fullName ?></a>
                                                                 <span class="textComment"> <?php echo $value['comment']->data->content ?></span>
                                                             </p>
-                                                            <a class="swTimeComment" name="<?php echo $value['comment']->data->published; ?>"></a>
+                                                            <a class="swTimeComment">
+                                                                <?php echo $this->getTime($value['comment']->data->published) ?>
+                                                            </a>
                                                             <a class="uiLike like_<?php echo $commentID ?>" data-like="comment;<?php echo $this->f3->get('SESSION.userID') . ';' . $value['comment']->recordID ?>" data-rel="<?php echo $value['like'] ? "unlike" : "like" ?>"><?php echo $value['like'] ? "Unlike" : "Like" ?></a>
                                                             <a href="#" class="l2_<?php echo $commentID ?>"> <?php
                                                                 if ($value['comment']->data->numberLike >= 1)

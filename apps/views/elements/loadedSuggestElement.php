@@ -1,9 +1,13 @@
 <?php
 //var_dump($actionElement);
-foreach ($actionElement as $action)
+$actionElement = $this->f3->get('actionElement');
+if (!empty($actionElement))
 {
-?>
-    <div class="<?php echo $action;?>"></div>
-<?php
+    foreach ($actionElement as $action)
+    {
+        ?>
+        <div class="<?php echo $action; ?>"></div>
+        <?php
+    }
 }
 ?>

@@ -27,7 +27,7 @@ class RouteConfig
         'listenPost_POST' => "HomeController",
         'notifications_POST' => "HomeController",
         'loadNotifications_POST' => "HomeController",
-        'loadFriendRequests_POST' => "HomeController",
+        'loadFriendRequests_GET' => "FriendController",
         'moreCommentHome_POST' => "HomeController",
         'loading_POST' => "HomeController",
         /* Route config for request friend */
@@ -87,6 +87,7 @@ class RouteConfig
 //        Comment
         'commentStatus_POST' => 'CommentController',
         'commentPhoto_POST' => 'CommentController',
+        'moreComment_POST' => 'CommentController',
     );
     public $modules = array(
         /* Route config for modules */

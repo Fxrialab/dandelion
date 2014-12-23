@@ -6,21 +6,22 @@
  * 
  * Released under the GNU GPLv3 license - http://opensource.org/licenses/gpl-3.0
  */
-;(function($){
-    $.pgwModal = function(obj) {
+
+(function ($) {
+    $.pgwModal = function (obj) {
 
         var pgwModal = {};
         var defaults = {
-            mainClassName : 'pgwModal',
-            backdropClassName : 'pgwModalBackdrop',
-            maxWidth : 500,
-            titleBar : true,
-            closable : true,
-            closeOnEscape : true,
-            closeOnBackgroundClick : true,
-            closeContent : '<span class="pm-icon"></span>',
-            loadingContent : 'Loading in progress...',
-            errorContent : 'An error has occured. Please try again in a few moments.'
+            mainClassName: 'pgwModal',
+            backdropClassName: 'pgwModalBackdrop',
+            maxWidth: 500,
+            titleBar: true,
+            closable: true,
+            closeOnEscape: true,
+            closeOnBackgroundClick: true,
+            closeContent: '<span class="pm-icon"></span>',
+            loadingContent: 'Loading in progress...',
+            errorContent: 'An error has occured. Please try again in a few moments.'
         };
 
         if (typeof window.pgwModalObject != 'undefined') {
@@ -28,8 +29,8 @@
         }
 
         // Merge the defaults and the user's config
-        if ((typeof obj == 'object') && (! obj.pushContent)) {
-            if (! obj.url && ! obj.target && ! obj.content) {
+        if ((typeof obj == 'object') && (!obj.pushContent)) {
+            if (!obj.url && !obj.target && !obj.content) {
                 throw new Error('PgwModal - There is no content to display, please provide a config parameter : "url", "target" or "content"');
             }
 
@@ -39,18 +40,18 @@
         }
 
         // Create modal container
-        var create = function() {
+        var create = function () {
             // The backdrop must be outside the main container, otherwise Chrome displays the scrollbar of the modal below
             var appendBody = '<div id="pgwModalBackdrop"></div>'
-                + '<div id="pgwModal">'
-                + '<div class="pm-container">'
-                + '<div class="pm-body">'
-                + '<span class="pm-close"></span>'
-                + '<div class="pm-title"></div>'
-                + '<div class="pm-content"></div>'
-                + '</div>'
-                + '</div>'
-                + '</div>';
+                    + '<div id="pgwModal">'
+                    + '<div class="pm-container">'
+                    + '<div class="pm-body">'
+                    + '<span class="pm-close"></span>'
+                    + '<div class="pm-title"></div>'
+                    + '<div class="pm-content"></div>'
+                    + '</div>'
+                    + '</div>'
+                    + '</div>';
 
             $('body').append(appendBody);
             $(document).trigger('PgwModal::Create');
@@ -58,15 +59,15 @@
         };
 
         // Reset modal container
-        var reset = function() {
+        var reset = function () {
             $('#pgwModal .pm-title, #pgwModal .pm-content').html('');
             $('#pgwModal .pm-close').html('').unbind('click');
             return true;
         };
 
         // Angular compilation
-        var angularCompilation = function() {
-            angular.element('body').injector().invoke(function($compile) {
+        var angularCompilation = function () {
+            angular.element('body').injector().invoke(function ($compile) {
                 var scope = angular.element($('#pgwModal .pm-content')).scope();
                 $compile($('#pgwModal .pm-content'))(scope);
                 scope.$digest();
@@ -75,7 +76,7 @@
         };
 
         // Push content into the modal
-        var pushContent = function(content) {
+        var pushContent = function (content) {
             $('#pgwModal .pm-content').html(content);
 
             // Angular
@@ -90,7 +91,7 @@
         };
 
         // Repositions the modal
-        var reposition = function() {
+        var reposition = function () {
             // Elements must be visible before height calculation
             $('#pgwModal, #pgwModalBackdrop').show();
 
@@ -106,12 +107,12 @@
         };
 
         // Returns the modal data
-        var getData = function() {
+        var getData = function () {
             return pgwModal.config.modalData;
         };
 
         // Returns the scrollbar width
-        var getScrollbarWidth = function() {
+        var getScrollbarWidth = function () {
             var container = $('<div style="width:50px;height:50px;overflow:auto"><div></div></div>').appendTo('body');
             var child = container.children();
 
@@ -127,12 +128,12 @@
         };
 
         // Returns the modal status
-        var isOpen = function() {
+        var isOpen = function () {
             return $('body').hasClass('pgwModalOpen');
         };
 
         // Close the modal
-        var close = function() {
+        var close = function () {
             $('#pgwModal, #pgwModalBackdrop').removeClass().hide();
             $('body').css('padding-right', '').removeClass('pgwModalOpen');
 
@@ -145,9 +146,9 @@
             $('#pgwModal').unbind('click.PgwModalBackdrop');
 
             try {
-                delete window.pgwModalObject; 
-            } catch(e) {
-                window['pgwModalObject'] = undefined; 
+                delete window.pgwModalObject;
+            } catch (e) {
+                window['pgwModalObject'] = undefined;
             }
 
             $(document).trigger('PgwModal::Close');
@@ -155,7 +156,7 @@
         };
 
         // Open the modal
-        var open = function() {
+        var open = function () {
             if ($('#pgwModal').length == 0) {
                 create();
             } else {
@@ -167,16 +168,16 @@
             $('#pgwModalBackdrop').removeClass().addClass(pgwModal.config.backdropClassName);
 
             // Close button
-            if (! pgwModal.config.closable) {
+            if (!pgwModal.config.closable) {
                 $('#pgwModal .pm-close').html('').unbind('click').hide();
             } else {
-                $('#pgwModal .pm-close').html(pgwModal.config.closeContent).click(function() {
+                $('#pgwModal .pm-close').html(pgwModal.config.closeContent).click(function () {
                     close();
                 }).show();
             }
 
             // Title bar
-            if (! pgwModal.config.titleBar) {
+            if (!pgwModal.config.titleBar) {
                 $('#pgwModal .pm-title').hide();
             } else {
                 $('#pgwModal .pm-title').show();
@@ -197,11 +198,11 @@
                 }
 
                 var ajaxOptions = {
-                    'url' : obj.url,
-                    'success' : function(data) {
+                    'url': obj.url,
+                    'success': function (data) {
                         pushContent(data);
                     },
-                    'error' : function() {
+                    'error': function () {
                         $('#pgwModal .pm-content').html(pgwModal.config.errorContent);
                     }
                 };
@@ -211,19 +212,19 @@
                 }
 
                 $.ajax(ajaxOptions);
-                
-            // Content loaded by a html element
+
+                // Content loaded by a html element
             } else if (pgwModal.config.target) {
                 pushContent($(pgwModal.config.target).html());
 
-            // Content loaded by a html object
+                // Content loaded by a html object
             } else if (pgwModal.config.content) {
                 pushContent(pgwModal.config.content);
             }
 
             // Close on escape
             if (pgwModal.config.closeOnEscape && pgwModal.config.closable) {
-                $(document).bind('keyup.PgwModal', function(e) {
+                $(document).bind('keyup.PgwModal', function (e) {
                     if (e.keyCode == 27) {
                         close();
                     }
@@ -232,7 +233,7 @@
 
             // Close on background click
             if (pgwModal.config.closeOnBackgroundClick && pgwModal.config.closable) {
-                $('#pgwModal').bind('click.PgwModalBackdrop', function(e) {
+                $('#pgwModal').bind('click.PgwModalBackdrop', function (e) {
                     var targetClass = $(e.target).hasClass('pm-container');
                     var targetId = $(e.target).attr('id');
                     if (targetClass || targetId == 'pgwModal') {
@@ -250,7 +251,7 @@
             }
 
             // Resize event for reposition
-            $(window).bind('resize.PgwModal', function() {
+            $(window).bind('resize.PgwModal', function () {
                 reposition();
             });
 

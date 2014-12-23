@@ -28,24 +28,39 @@ class FriendController extends AppController
                     'published' => $published
                 );
                 //save data
-                Model::get('friendship')->createEdge('#' . $currentUser->recordID, '#' . $userB, $relationship);
+                $this->facade->save('friendship', $relationship);
+//                Model::get('friendship')->createEdge('#' . $currentUser->recordID, '#' . $userB, $relationship);
                 //also create a activity
                 $entry = array(
                     'owner' => $userB,
                     'actor' => $currentUser->recordID,
                     'verb' => 'sent',
                     'type' => 'friendRequests',
-                    'timers' => $published,
+                    'published' => $published,
                 );
                 $this->facade->save('activity', $entry);
                 //update to notify class
                 $curNotify = $this->facade->findByAttributes('notify', array('userID' => $userB));
-                $updateNotify = array(
-                    'friendRequests' => $curNotify->data->friendRequests + 1,
-                );
-                $this->facade->updateByAttributes('notify', $updateNotify, array('userID' => $userB));
+                if (!empty($curNotify))
+                {
+                    $updateNotify = array(
+                        'friendRequests' => $curNotify->data->friendRequests + 1,
+                    );
+
+                    $this->facade->updateByAttributes('notify', $updateNotify, array('userID' => $userB));
+                } else
+                {
+                    $entry = array(
+                        'userID' => $userB,
+                        'notifications' => 0,
+                        'friendRequests' => 1,
+                        'message' => 'sent'
+                    );
+                    $this->facade->save('notify', $entry);
+                }
                 //sent a notifications
                 $newNotify = $this->facade->findByAttributes('notify', array('userID' => $userB));
+
                 $friendRequests = $newNotify->data->friendRequests;
                 $keys = 'friendRequests.sent.' . $userB;
                 $keys = str_replace(':', '_', $keys);
@@ -99,7 +114,8 @@ class FriendController extends AppController
                 'published' => time()
             );
             //save data
-            Model::get('friendship')->createEdge('#' . $currentUser->recordID, '#' . $userB, $relationship);
+            $this->facade->save('friendship', $relationship);
+//            Model::get('friendship')->createEdge('#' . $currentUser->recordID, '#' . $userB, $relationship);
             //After friend is accept. The peopleYouMayKnow action will be create
             $existPeopleYouMayKnowAction = $this->facade->findByAttributes('actions', array('actionElement' => 'peopleYouMayKnow'));
             if (!$existPeopleYouMayKnowAction)
@@ -132,14 +148,12 @@ class FriendController extends AppController
             {
                 Model::get('friendship')->deleteEdge('#' . $currentUser->recordID, '#' . $toUser, array('userA' => $currentUser->recordID, 'relationship' => 'friend', 'userB' => $toUser));
                 Model::get('friendship')->deleteEdge('#' . $toUser, '#' . $currentUser->recordID, array('userA' => $toUser, 'relationship' => 'friend', 'userB' => $currentUser->recordID));
-            }
-            else
+            } else
             {
                 if (!empty($existRequestAtoB) && !$existRequestBtoA)
                 {
                     Model::get('friendship')->deleteEdge('#' . $currentUser->recordID, '#' . $toUser, array('userA' => $currentUser->recordID, 'relationship' => 'request', 'userB' => $toUser));
-                }
-                elseif (!$existRequestAtoB && !empty($existRequestBtoA))
+                } elseif (!$existRequestAtoB && !empty($existRequestBtoA))
                 {
                     Model::get('friendship')->deleteEdge('#' . $toUser, '#' . $currentUser->recordID, array('userA' => $toUser, 'relationship' => 'request', 'userB' => $currentUser->recordID));
                 }
@@ -225,8 +239,7 @@ class FriendController extends AppController
                         }
                     }
                 }
-            }
-            else
+            } else
             {
                 $obj = new ObjectHandler();
                 $obj->userA = $_POST['userID'];
@@ -241,6 +254,36 @@ class FriendController extends AppController
                 }
             }
             $this->render('user/viewFriend', array('friends' => $user));
+        }
+    }
+
+    public function loadFriendRequests()
+    {
+        if ($this->isLogin())
+        {
+            $currentUserID = $this->f3->get('SESSION.userID');
+            //update has read all notifications
+            $isRead = array(
+                'friendRequests' => 0,
+            );
+            $this->facade->updateByAttributes('notify', $isRead, array('userID' => $currentUserID));
+            //load all friend requests
+            $obj = new ObjectHandler();
+            $obj->owner = $currentUserID;
+            $obj->type = 'friendRequests';
+            $obj->select = "ORDER BY published DESC";
+            $notification = $this->facade->findAll('activity', $obj);
+            $data = array();
+            if (!empty($notification))
+            {
+                foreach ($notification as $value)
+                {
+                    $user = $this->facade->findByPk('user', $value->data->actor);
+                    $countFriend = $this->facade->count('friendship', array('userA' => $user->recordID, 'relationship' => 'friend', 'status' => 'ok'));
+                    $data[] = array('activity' => $value, 'user' => $user, 'countFriend' => $countFriend);
+                }
+            }
+            $this->render('friend/requestFriends', array('data' => $data));
         }
     }
 

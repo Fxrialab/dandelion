@@ -2,19 +2,19 @@
 $loggedUserID = str_replace(':', '_', F3::get('loggedUserID'));
 ?>
 <script type="text/javascript">
-    $(document).ready(function() {
-        MQ.queue("userID<?php echo $loggedUserID; ?>").bind("dandelion", "newsFeed.*.<?php echo $loggedUserID; ?>").callback(function(m) {
+    $(document).ready(function () {
+        MQ.queue("userID<?php echo $loggedUserID; ?>").bind("dandelion", "newsFeed.*.<?php echo $loggedUserID; ?>").callback(function (m) {
             //console.log('amqp data: ', m);
             $.ajax({
-                 type: "POST",
-                 url: "/listenPost",
-                 data: {data: m.data, exchange: m.exchange, routingKey: m.routingKey},
-                 cache: false,
-                 success: function(html) {
+                type: "POST",
+                url: "/listenPost",
+                data: {data: m.data, exchange: m.exchange, routingKey: m.routingKey},
+                cache: false,
+                success: function (html) {
                     $("#contentContainer").prepend(html);
                     updateTime();
-                 }
-             });
+                }
+            });
         });
         $('#contentContainer').scrollPaginationHomePage({
             nop: 5, // The number of posts per scroll to be loaded
@@ -34,9 +34,9 @@ $loggedUserID = str_replace(':', '_', F3::get('loggedUserID'));
 
 <div class="uiMainContainer">
     <?php
-    FactoryUtils::elementModule('formPost','post');
+    $this->element('FormPostElement', 'post');
     ?>
-	<input type="hidden" id="whereIs" value="homePage">
+    <input type="hidden" id="whereIs" value="homePage">
     <div class="wrapperContainer">
         <div id="contentContainer">
 

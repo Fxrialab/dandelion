@@ -1,23 +1,23 @@
 <form id="coverPhotoGroup">
-    <input type="hidden" id="groupID" name="groupID" value="<?php echo $group->recordID ?>">
+    <input type="hidden" id="groupID" name="groupID" value="<?php echo $data['group']->recordID ?>">
     <?php
-    if ($group->data->coverGroup != 'none')
-        $photo = HelperController::findPhoto($group->data->coverGroup);
-    if ($group->data->coverGroup != 'none')
-        $a = 'Add a cover';
-    else
-        $a = 'Change cover';
+//    if ($group->data->coverGroup != 'none')
+//        $photo = HelperController::findPhoto($group->data->coverGroup);
+//    if ($group->data->coverGroup != 'none')
+//        $a = 'Add a cover';
+//    else
+    $a = 'Change cover';
     ?>
     <div class="column-group coverGroup">
         <div class="displayPhoto">
             <div class="msg" style="position: absolute; top: 0; right: 20px"></div>
             <?php
-            if (!empty($photo))
+            if ($data['group']->data->coverGroup != 'none')
             {
                 ?>
                 <div class="imgCoverGroup">
-                    <div style="position: relative; <?php if (!empty($photo->data->dragX)) echo 'left: -' . $photo->data->dragX . 'px' ?>; <?php if (!empty($photo->data->dragY)) echo 'top: -' . $photo->data->dragY . 'px' ?>">
-                        <img src="<?php echo $this->getImg($group->data->coverGroup) ?>" style="width:100%;">
+                    <div >
+                        <img src="<?php echo $this->getImg($data['group']->data->coverGroup) ?>" style="width:100%;">
                     </div>
                 </div>
             <?php }
@@ -25,7 +25,7 @@
         </div>
         <?php
         $currentUser = $this->f3->get('SESSION.userID');
-        if ($currentUser == $group->data->owner)
+        if ($currentUser == $data['group']->data->owner)
         {
             ?>
             <div class="actionCover">
@@ -35,11 +35,11 @@
                         <li><a href="/content/group/photoBrowser?id=<?php echo $group->recordID ?>" class="popupMyPhoto"  title="Choose From My Photos">Choose from Photos...</a></li>
                         <li><a id="uploadPhotoGroup">Upload photo</a></li>
                         <?php
-                        if (!empty($photo))
+                        if (!empty($data['group']->data->coverGroup != 'none'))
                         {
                             ?>
-                            <li><a href="javascript:void(0)" class="rCoverGroup" rel="<?php echo $photo->recordID ?>">Reposition</a></li>
-                            <li><a href="javascript:void(0)" class="removeImgGroup" id="removeCover" rel="<?php echo $photo->recordID; ?> title="Remove">Remove</a></li>
+                            <li><a href="javascript:void(0)" class="rCoverGroup" rel="<?php echo $data['group']->data->coverGroup ?>">Reposition</a></li>
+                            <li><a href="javascript:void(0)" class="removeImgGroup" id="removeCover" rel="<?php echo $data['group']->data->coverGroup?>" title="Remove">Remove</a></li>
                             <?php
                         }
                         ?>
@@ -54,22 +54,22 @@
     </div>
 </form>
 <script>
-    $(function() {
-    $("#coverPhotoGroup").submit(function() {
+    $(function () {
+        $("#coverPhotoGroup").submit(function () {
 
-    $.ajax({
-    type: "POST",
-    url: "/content/group/saveCover",
-    data: $("#coverPhotoGroup").serialize(), // serializes the form's elements.
-    success: function()
-    {
-    $('.actionCoverGroup').css('display', 'none');
-    $('.actionCover').css('display', 'block');
-    $('.dragCover').css('cursor', 'pointer');
-    }
-    });
-    return false; // avoid to execute the actual submit of the form.
-    });
+            $.ajax({
+                type: "POST",
+                url: "/content/group/saveCover",
+                data: $("#coverPhotoGroup").serialize(), // serializes the form's elements.
+                success: function ()
+                {
+                    $('.actionCoverGroup').css('display', 'none');
+                    $('.actionCover').css('display', 'block');
+                    $('.dragCover').css('cursor', 'pointer');
+                }
+            });
+            return false; // avoid to execute the actual submit of the form.
+        });
     });
 </script>
 <script id="navCoverPhotoGroupTemplate" type="text/x-jQuery-tmpl">

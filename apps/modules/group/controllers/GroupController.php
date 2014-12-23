@@ -225,8 +225,7 @@ class GroupController extends AppController
                         {
                             $member = $this->facade->findByAttributes('groupMember', array('member' => $people, 'groupID' => str_replace("_", ":", $groupID), 'role' => 'admin'));
                             $this->f3->set('admin', 'admin');
-                        }
-                        else
+                        } else
                         {
                             $member = $this->facade->findByAttributes('groupMember', array('member' => $people, 'groupID' => str_replace("_", ":", $groupID)));
 
@@ -244,15 +243,13 @@ class GroupController extends AppController
                 }
                 $json = json_encode($data);
                 $memberArray = json_decode($json);
-            }
-            else
+            } else
             {
                 if ($_GET['act'] == 'admin')
                 {
                     $members = $this->facade->findAllAttributes('groupMember', array('groupID' => $groupID, 'role' => 'admin'));
                     $this->f3->set('admin', 'admin');
-                }
-                else
+                } else
                 {
                     $members = $this->facade->findAllAttributes('groupMember', array('groupID' => $groupID));
                     $this->f3->set('admin', 'membership');
@@ -284,8 +281,7 @@ class GroupController extends AppController
             $group = $this->facade->findByPk('group', str_replace("_", ":", $_POST['id']));
             $this->f3->set('group', $group);
             $this->renderModule('formDescription', 'group');
-        }
-        elseif (!empty($_POST['groupDescription']))
+        } elseif (!empty($_POST['groupDescription']))
         {
             $updateGroup = array(
                 'description' => $_POST['groupDescription']
@@ -301,8 +297,7 @@ class GroupController extends AppController
         {
             $delete = $this->facade->deleteByAttributes('groupMember', array('groupID' => str_replace("_", ":", $_POST['groupID']), 'member' => $this->f3->get('SESSION.userID')));
             echo json_encode(array('del' => $delete, 'groupID' => $_POST['groupID']));
-        }
-        else
+        } else
         {
             $this->f3->set('groupID', $_GET['id']);
             $this->renderModule('leave', 'group');
@@ -316,18 +311,21 @@ class GroupController extends AppController
             $this->layout = 'group';
             $groupID = $this->f3->get('GET.id');
             $group = $this->facade->findByPk('group', str_replace("_", ":", $groupID));
-            $member = $this->facade->findByAttributes('groupMember', array('groupID' => str_replace("_", ":", $groupID)));
-            $photo = $this->facade->findAllAttributes('photo', array('actor' => $this->f3->get('SESSION.userID')));
+            $member = $this->facade->findAllAttributes('groupMember', array('groupID' => $group->recordID));
+            $profileArr = array();
+            if (!empty($member))
+            {
+                foreach ($member as $value)
+                {
+                    $profileArr[] = $this->facade->findByAttributes("information", array('user' => $value->data->member));
+                }
+            }
             $count = $this->facade->count('groupMember', array('groupID' => $groupID));
-            $profile = $this->facade->findByAttributes("information", array('user' => $member->data->member));
-            $this->f3->set('photo', $photo);
-            $this->f3->set('group', $group);
-            $this->f3->set('member', $member);
-            $this->f3->set('countMember', $count);
-            $this->renderModule('detail', 'group', array('group' => $group, 'member' => $member, 'photo' => $photo, 'countMember' => $count));
+            $data = array('group' => $group, 'member' => $profileArr, 'countMember' => $count);
+
+            $this->renderModule('detail', 'group', array('data' => $data));
         }
     }
-
 
     public function choosePhoto()
     {
@@ -455,8 +453,7 @@ class GroupController extends AppController
                             'top' => $photo->data->dragY,
                             'photoID' => $photo->recordID,
                         ));
-                    }
-                    else
+                    } else
                     {
                         echo json_encode(array(
                             'src' => false
@@ -517,8 +514,7 @@ class GroupController extends AppController
                             {
                                 $action = 0;
                                 $admin = 'admin';
-                            }
-                            else
+                            } else
                             {
                                 $action = 1;
                                 $admin = 'member';
@@ -537,8 +533,7 @@ class GroupController extends AppController
                     $this->f3->set('group', $model);
                 }
                 $this->renderModule('viewGroup', 'group');
-            }
-            else
+            } else
             {
                 $this->renderModule('form', 'group');
             }

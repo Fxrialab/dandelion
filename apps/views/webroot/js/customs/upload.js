@@ -1,4 +1,4 @@
-$(document).ready(function()
+$(document).ready(function ()
 {
     var uploadPhotoGroup = {
         url: "/content/group/uploadCover",
@@ -6,11 +6,11 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: false,
-        onBeforeSend: function() {
+        onBeforeSend: function () {
             $('.ajax-file-upload-statusbar').hide();
             $(".msg").html("<div class='loadingUpload'></div>");
         },
-        onSuccess: function(files, data, xhr)
+        onSuccess: function (files, data, xhr)
         {
             $(".msg").html("");
             $('.displayPhoto').html(data);
@@ -24,11 +24,11 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: false,
-        onBeforeSend: function() {
+        onBeforeSend: function () {
             $('.ajax-file-upload-statusbar').hide();
             $(".uploadCoverStatusBar").html("<div class='loadingUpload'></div>");
         },
-        onSuccess: function(files, data, xhr)
+        onSuccess: function (files, data, xhr)
         {
             $(".uploadCoverStatusBar").html("");
             $('.arrow_timeLineMenuNav').hide();
@@ -43,11 +43,11 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: false,
-        onBeforeSend: function() {
+        onBeforeSend: function () {
             //Lets add a loading image
             $(".infoUser").html("<div class='loadingUpload'></div>");
         },
-        onSuccess: function(files, data, xhr)
+        onSuccess: function (files, data, xhr)
         {
             $('.ajax-file-upload-statusbar').fadeOut('slow');
             $('.profilePic').html(data);
@@ -61,13 +61,13 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: false,
-        onBeforeSend: function() {
+        onBeforeSend: function () {
             $('.ajax-file-upload-statusbar').hide();
             $(".msg").html("<div class='loadingUpload'></div>");
         },
-        onSuccess: function(files, data, xhr)
+        onSuccess: function (files, data, xhr)
         {
-            $.each(data.results, function() {
+            $.each(data.results, function () {
                 console.log(this.url);
                 $('#displayPhotoGroup').html("<div id='photoItem-" + this.photoID + "'>" +
                         "<input type='hidden' id ='imgID' name='imgID[]' value='" + this.photoID + "'/>" +
@@ -76,7 +76,7 @@ $(document).ready(function()
             });
             new Hover();
         },
-        onError: function(files, status, errMsg)
+        onError: function (files, status, errMsg)
         {
             $("#status").html("<font color='red'>Upload is Failed</font>");
         }
@@ -87,11 +87,11 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: true,
-        onBeforeSend: function() {
+        onBeforeSend: function () {
             $('.ajax-file-upload-statusbar').hide();
-            $(".msg").html("<div class='loadingUpload'></div>");
+            $(".tab-status").append("<li style='float:right; padding-top: 7px; padding-right: 10px' class='loadPhoto'><i class='fa fa-circle-o-notch fa-spin fa-18'></i></li>");
         },
-        onSuccess: function(files, data, xhr)
+        onSuccess: function (files, data, xhr)
         {
             if ($('#iStatus').hasClass('hide-all'))
             {
@@ -103,12 +103,12 @@ $(document).ready(function()
                 $('li#photoTab').removeClass('active');
             }
             $('.ajax-file-upload-statusbar').fadeOut('slow');
-            $(".msg").html('');
-            $.each(data.results, function() {
+            $(".tab-status li.loadPhoto").remove();
+            $.each(data.results, function () {
                 $("#imgTemplate").tmpl(data.results).appendTo("#embedPhotos");
             });
         },
-        onError: function(files, status, errMsg)
+        onError: function (files, status, errMsg)
         {
             $("#status").html("Upload is Failed");
         }
@@ -119,7 +119,7 @@ $(document).ready(function()
         allowedTypes: "jpg,png,gif",
         fileName: "myfile",
         multiple: true,
-        onBeforeSend: function() {
+        onBeforeSend: function () {
             $(".viewUpload").show();
             $('.ajax-file-upload-statusbar').hide();
             $(".msg").html("<div class='loadingUpload'></div>");
@@ -127,15 +127,15 @@ $(document).ready(function()
             $(".postPhoto").show();
             $("#statusPhoto").show();
         },
-        onSuccess: function(files, data, xhr)
+        onSuccess: function (files, data, xhr)
         {
             $(".msg").html("");
-            $.each(data.results, function() {
+            $.each(data.results, function () {
                 $("#imgTemplate2").tmpl(data.results).appendTo(".viewUpload");
             });
             new Hover();
         },
-        onError: function(files, status, errMsg)
+        onError: function (files, status, errMsg)
         {
             $(".imgUpload").html("Upload is Failed");
         }

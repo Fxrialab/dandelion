@@ -84,6 +84,43 @@ class AppController extends Controller
         }
     }
 
+    public function getTime($date)
+    {
+        $time = date('Y-m-d H:i:s', $date);
+        $ago = strtotime(date('Y-m-d H:i:s', time())) - strtotime($time);
+        if ($ago >= 86400)
+        {
+            $diff = date(" F d , h:i a", $date);
+        } elseif ($ago >= 3600)
+        {
+            $diff = floor($ago / 3600) . ' hr';
+        } elseif ($ago >= 60)
+        {
+            $diff = floor($ago / 60) . ' mins';
+        } else
+        {
+            $diff = 'just now ';
+        }
+        return $diff;
+    }
+
+    public function getId($id)
+    {
+        return str_replace(':', '_', $id);
+    }
+
+    public function getUsername($id)
+    {
+        $model = $this->facade->findByPk('user', $id);
+        if (!empty($model))
+            return $model->data->username;
+    }
+
+    public function getRecordId($id)
+    {
+        return str_replace('_', ':', $id);
+    }
+
     public function getMacAddress()
     {
         ob_start(); // Turn on output buffering
@@ -108,10 +145,13 @@ class AppController extends Controller
         return $ip;
     }
 
-    public function element($param)
+    public function element($param, $module = NULL)
     {
         $element = new FactoryUtils();
-        return $element->element($param);
+        if (!empty($module))
+            return $element->elementModule($param, $module);
+        else
+            return $element->element($param);
     }
 
     public function getFriendsStt($actor)
@@ -121,6 +161,7 @@ class AppController extends Controller
 
     public function getStatusFriendShip($userA, $userB)
     {
+        $statusFriendShip = 'updateInfo';
         if ($userA != $userB)
         {
             $friendShipAtoB = $this->facade->findByAttributes('friendship', array('userA' => $userA, 'userB' => $userB));
@@ -155,7 +196,6 @@ class AppController extends Controller
     public function trackActivity($actor, $verb, $object, $type, $typeID, $published)
     {
         $existActivity = $this->facade->findAllAttributes('activity', array('owner' => $actor->recordID, 'object' => $object));
-
         if (!$existActivity)
         {
             // prepare activity data
@@ -165,9 +205,12 @@ class AppController extends Controller
                 'verb' => $verb,
                 'object' => $object,
                 'type' => $type,
+                'status' => 1,
                 'typeID' => $typeID,
-                'published' => $published
+                'published' => $published,
+                'details' => 'post status'
             );
+
             // create activity for currentUser
             $activities = $this->facade->save('activity', $data);
             // check all friends of current user
@@ -189,7 +232,9 @@ class AppController extends Controller
                             'object' => $object,
                             'type' => $type,
                             'typeID' => $typeID,
-                            'published' => $published
+                            'status' => 1,
+                            'published' => $published,
+                            'details' => 'post status'
                         );
                         $this->facade->save('activity', $data);
                     }
@@ -319,7 +364,7 @@ class AppController extends Controller
                 $this->f3->set('randomKeys', $randomKeys);
                 $this->f3->set('neighborCurrentUser', $neighborCurrentUser);
 
-                $this->render("elements/friendRequestElement.php", 'default');
+                $this->render("elements/friendRequestElement", 'default');
             }
         }
     }

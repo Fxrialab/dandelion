@@ -18,26 +18,6 @@ class HomeController extends AppController
             $this->render('user/index');
     }
 
-    public function popup()
-    {
-        $photo = $this->facade->findByPk('photo', str_replace('_', ':', $_GET['id']));
-        $findAll = $this->facade->findAllAttributes('photo', array('typeID' => str_replace('_', ':', $_GET['typeID'])));
-        foreach ($findAll as $key => $value)
-            if ($findAll[$key]->recordID == $photo->recordID)
-                $k = $key;
-
-        $currentUser = $this->getCurrentUser();
-        $this->f3->set('photo', $photo);
-        if ($k + 1 < count($findAll))
-            $this->f3->set('idn', $findAll[$k + 1]->recordID);
-
-        if ($k > 0)
-            $this->f3->set('idp', $findAll[$k - 1]->recordID);
-        $this->f3->set('typeID', $_GET['typeID']);
-        $this->f3->set('currentUser', $currentUser);
-        $this->render('home/popup.php', 'default');
-    }
-
     public function home()
     {
         if ($this->isLogin())
@@ -55,8 +35,7 @@ class HomeController extends AppController
             $this->f3->set('js', $loadJS);
             $this->f3->set('loggedUserID', $this->f3->get('SESSION.userID'));
             $this->render('home/home', array('loggedUserID' => $this->f3->get('SESSION.userID')));
-        }
-        else
+        } else
         {
             header("Location: /");
         }
@@ -66,23 +45,24 @@ class HomeController extends AppController
     {
         if ($this->isLogin())
         {
+            $currentUser = $this->getCurrentUser();
             $offset = is_numeric($_POST['offset']) ? $_POST['offset'] : die();
             $limit = is_numeric($_POST['number']) ? $_POST['number'] : die();
+
             $obj = new ObjectHandler();
-            $whereIs = $this->f3->get('POST.type');
-            $profileID = $this->f3->get('POST.profile');
-//            if (!empty($whereIs) && $whereIs == 'userPage')//loading all activities on user page
-//            {
-//                if (!empty($profileID))
-//                {
-//                    $obj->owner = $profileID;
-//                    $obj->actor = $profileID;
-//                }
-//            }elseif (!empty($whereIs) && $whereIs == 'homePage') {//loading all activities on home page
-//                $obj->owner = $this->getCurrentUser()->recordID;
-//            }
-            $obj->type = 'post';
-            $obj->OR = "type = 'group'";
+            $friend = $this->facade->findByAttributes('friendship', array('userA' => $currentUser->recordID));
+            if (!empty($_POST['type']) && $_POST['type'] = 'group')
+            {
+                $obj->type = 'group';
+                $obj->typeID = $_POST['typeID'];
+            } else
+            {
+                $obj->type = 'post';
+            }
+            $obj->status = 1;
+//            $obj->owner = $currentUser->recordID;
+            $obj->owner = $friend->data->userB;
+//            $obj->OR = 'owner="'.$currentUser->recordID.'"';
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
             $homes = array();
@@ -90,10 +70,15 @@ class HomeController extends AppController
             {
                 foreach ($activitiesRC as $key => $activity)
                 {
-                    $verbMod = $activity->data->verb . 'Controller';
-                    $obj = new $verbMod;
-                    if (method_exists($obj, 'bindingData'))
-                        $homes[] = $obj->bindingData($activity, $key);
+
+                    if (!empty($friend) && $friend->data->userA == $currentUser->recordID)
+                    {
+
+                        $verbMod = $activity->data->verb . 'Controller';
+                        $obj = new $verbMod;
+                        if (method_exists($obj, 'bindingData'))
+                            $homes[$activity->recordID] = $obj->bindingData($activity, $key);
+                    }
                 }
             }
             $this->render('home/view', array('activities' => $homes, 'page' => 'home'));
@@ -113,8 +98,7 @@ class HomeController extends AppController
                 if ($mod == 'post')
                 {
                     $status = $this->facade->findByPk('status', $activity->data->object);
-                }
-                elseif ($mod == 'photo')
+                } elseif ($mod == 'photo')
                 {
                     //@TODO: check it later
                     $status = $this->facade->findByPk('photo', $activity->data->object);
@@ -137,8 +121,7 @@ class HomeController extends AppController
             $data = $this->f3->get('POST.data');
             if (!empty($data))
             {
-                $this->f3->set('data', $data);
-                $this->render('home/items.php', 'default');
+                $this->render('home/items', array('data' => $data));
             }
             //var_dump($data['type']);
         }
@@ -160,31 +143,7 @@ class HomeController extends AppController
             $obj->type = 'notifications';
             $obj->select = "ORDER BY timers DESC";
             $notification = $this->facade->findAll('activity', $obj);
-            $this->f3->set('notification', $notification);
-            $this->f3->set('currentUserID', $currentUserID);
-            $this->render('home/notifications.php', 'default');
-        }
-    }
-
-    public function loadFriendRequests()
-    {
-        if ($this->isLogin())
-        {
-            $currentUserID = $this->f3->get('SESSION.userID');
-            //update has read all notifications
-            $isRead = array(
-                'friendRequests' => 0,
-            );
-            $this->facade->updateByAttributes('notify', $isRead, array('userID' => $currentUserID));
-            //load all friend requests
-            $obj = new ObjectHandler();
-            $obj->owner = $currentUserID;
-            $obj->type = 'friendRequests';
-            $obj->select = "ORDER BY timers DESC";
-            $notification = $this->facade->findAll('activity', $obj);
-            $this->f3->set('notification', $notification);
-            $this->f3->set('currentUserID', $currentUserID);
-            $this->render('home/friendRequests.php', 'default');
+            $this->render('home/notifications', array('notification' => $notification, 'currentUserID' => $currentUserID));
         }
     }
 
@@ -209,7 +168,7 @@ class HomeController extends AppController
                     array_push($actionElement, $suggestAction[$actionIDArrays[$key]][0]->data->actionElement);
                 }
                 //check if suggest by friend request is null. Will not return to load element
-                $this->render('elements/loadedSuggestElement.php', 'default', array('actionElement' => $actionElement));
+                $this->render('elements/loadedSuggestElement', array('actionElement' => $actionElement));
             }
         }
     }
@@ -252,8 +211,7 @@ class HomeController extends AppController
                     {
                         $photo = HelperController::findPhoto($infoOfSearchFound[$people][0]->profilePic);
                         $avatar = UPLOAD_URL . 'avatar/170px/' . $photo->data->fileName;
-                    }
-                    else
+                    } else
                     {
                         $gender = HelperController::findGender($people);
                         if ($gender == 'male')

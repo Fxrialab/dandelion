@@ -17,6 +17,7 @@
     overflow: visible;
     padding: 0;
     margin: 0;
+    text-align: left;
 }
 
 .dropdown .dropdown-panel {
