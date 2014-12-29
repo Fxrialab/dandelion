@@ -14,13 +14,13 @@ $data = $this->f3->get('data');
             scroll: true // The main bit, if set to false posts will not load as the user scrolls.
                     // but will still load if the user clicks.
         });
-        $('#typeActivity').html('<input type=hidden id=type name=type value=post >');
+        $('#typeActivity').html('<input type=hidden id=type name=type value=post>');
         $('#typeActivityID').html('<input type=hidden id=typeID name=typeID value=<?php echo $data['group']->recordID ?>>');
     });
 </script>
 
-<?php // $f3 = require('coverPhotoGroup.php'); ?>
-<?php // $f3 = require('groupBar.php'); ?>
+<?php $f3 = require('coverPhotoGroup.php'); ?>
+<?php $f3 = require('groupBar.php'); ?>
 <div class="uiMainColProfile uiMainContainer large-70">
     <?php
     $this->element('FormPostElement', 'post');

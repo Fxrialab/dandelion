@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?php echo $this->f3->get('CSS'); ?>modalPhoto.css" type="text/css" />
 <?php
 /*
  * To change this template, choose Tools | Templates

@@ -15,8 +15,35 @@ h1{
 h1,h2,h3,h4,h5,h6{
     font-weight: bold;
 }
+._f14{
+    font-size: 14px;
+}
+._f16{
+    font-size: 16px;
+}
+._fw{
+    font-weight: bold
+}
+._box{
+    border: 1px solid;
+    border-color: #e9eaed #dfe0e4 #d0d1d5;
+    -webkit-border-radius: 3px;
+    background-color: white;
+}
+._box_t{
+    background-color: #f6f7f8;
+    line-height: 12px;
+    padding: 10px;
+}
+._fr{
+    float: right;
+    text-align: right
+}
 a{
     cursor: pointer;
+}
+a:hover{
+    text-decoration: none;
 }
 .ink-button{
     font-size: 12px !important;
@@ -1144,24 +1171,14 @@ a{
     overflow: hidden; width: 745px; height: 250px;
 }
 .uiCoverTimeLine .actionCover{
-    position: absolute; top: 10px; right: 10px;
-    display: none;
+    position: absolute; top: 10px; left: 10px;
 }
-.uiCoverTimeLine:hover .actionCover{
-    display: block;
-}
+
 
 #imgAvatar:hover .profileInfo{
     display: block;
 }
 
-.coverGroup .actionCover{
-    position: absolute; top: 10px; right: 10px;
-    display: none;
-}
-.coverGroup:hover .actionCover{
-    display: block;
-}
 
 .uiProfilePicTimeLine .coverEmptyWrap{
     min-height: 150px;
@@ -1215,7 +1232,6 @@ a{
     position: absolute;
     bottom:-10px;
     left:30px;
-    display: none;
 }
 .profilePicThumb {
     height: 160px;
@@ -1227,9 +1243,7 @@ a{
     height: auto;
 
 }
-#imgAvatar:hover .profileInfo{
-    display: block;
-}
+
 
 .name{
     overflow: hidden;
@@ -2194,7 +2208,6 @@ a{
     cursor: inherit;
     padding:10px 0;
     position: relative;
-    border: 1px solid #cccccc;
     text-align: center;
 }
 .loading-bar div{

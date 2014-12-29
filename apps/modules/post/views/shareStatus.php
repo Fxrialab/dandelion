@@ -10,38 +10,6 @@ $userName = ucfirst($user->data->firstName) . ' ' . ucfirst($user->data->lastNam
 $profilePic = $user->data->profilePic;
 $statusID = str_replace(':', '_', $status->recordID);
 ?>
-<script type="text/javascript">
-    $(function () {
-        $(".shareBtn").on('click', function (e)
-        {
-            e.preventDefault();
-            var statusID = $(this).attr('id').replace('shareStatus-', '');
-            //var txt = $('#contentShare-'+statusID).val();
-            $.ajax({
-                type: "POST",
-                url: "/content/post/insertStatus",
-                data: $('#fmShareStatus-' + statusID).serialize(),
-                cache: false,
-                success: function () {
-                    $('.uiShare').hide();
-                    $('.notificationShare').show();
-                    setTimeout(function () {
-                        $('.notificationShare').hide();
-                        $('#fade').hide();
-                    }, 3000);
-                }
-            });
-        });
-        $('.cancelBtn').click(function (e) {
-            e.preventDefault();
-            $('#fade').hide();
-            $('.uiShare').hide();
-        });
-        $('.taPostShare').autosize();
-    });
-
-</script>
-
 <div class=" large-100">
     <div class="shareFor column-group">
         <span class="large-30 shareIcon">Share: </span>
@@ -70,7 +38,7 @@ $statusID = str_replace(':', '_', $status->recordID);
     </div>
 </div>
 <div class="actionPopUp column-group push-right large-100">
-    <a class="button">Cancel</a>
+    <a class="button" href="javascript:void(0)" onclick="$.pgwModal('close');" >Cancel</a>
     <a class="button active shareBtn" id="shareStatus-<?php echo $statusID; ?>">Share</a>
 
 </div>

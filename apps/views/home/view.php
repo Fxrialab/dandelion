@@ -1,9 +1,6 @@
 <?php
-if (!empty($page))
-    $p = $page;
-else
-    $p = '';
 $activities = $this->f3->get('activities');
+$page = $this->f3->get('page');
 if (!empty($activities))
 {
     $rand = rand(100, 100000);

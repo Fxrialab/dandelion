@@ -23,7 +23,7 @@ class GroupController extends AppController
     {
         if ($this->isLogin())
         {
-            $this->layout = 'group';
+            $this->layout = 'browsegroup';
             if ($_GET['category'] == 'admin')
                 $role = 'admin';
             else
@@ -321,7 +321,11 @@ class GroupController extends AppController
                 }
             }
             $count = $this->facade->count('groupMember', array('groupID' => $groupID));
-            $data = array('group' => $group, 'member' => $profileArr, 'countMember' => $count);
+            if ($group->data->coverGroup != 'none')
+                $cover = $this->facade->findByPk("photo", $group->data->coverGroup);
+            else
+                $cover = array();
+            $data = array('group' => $group, 'member' => $profileArr, 'countMember' => $count, 'cover' => $cover);
 
             $this->renderModule('detail', 'group', array('data' => $data));
         }
@@ -356,7 +360,7 @@ class GroupController extends AppController
                 $file = $_FILES["myfile"];
                 $code = $this->StringHelper->generateRandomString(5);
                 $newName = $code . time();
-                $image = $this->changeImage($file, 250, $thumbnailDir, $newName, 250, true, $tempDir);
+                $image = $this->changeImageSingle($file, 250, $thumbnailDir, $newName, 250, true, $tempDir);
                 $this->renderModule('cover', 'group', array('image' => $image, 'target' => 'uploadCover'));
             }
         }

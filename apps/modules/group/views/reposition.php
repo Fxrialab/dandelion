@@ -2,12 +2,12 @@
 $photo = $this->f3->get('photo');
 if (!empty($photo))
 {
-    $photoID    = $photo->recordID;
-    $fileName   = $photo->data->fileName;
-    $width      = $photo->data->width;
-    $height     = $photo->data->height;
-    $dragX      = $photo->data->dragX;
-    $dragY      = $photo->data->dragY;
+    $photoID = $photo->recordID;
+    $fileName = $photo->data->fileName;
+    $width = $photo->data->width;
+    $height = $photo->data->height;
+    $dragX = $photo->data->dragX;
+    $dragY = $photo->data->dragY;
     ?>
     <input type="hidden" name="coverFile" value="<?php echo $photoID; ?>">
     <input type="hidden" name="width" value="<?php echo $width; ?>">
@@ -18,18 +18,18 @@ if (!empty($photo))
         <input type="hidden" name="dragY" value="<?php echo $dragY; ?>">
     </div>
     <div class="dragCover" style="width: <?php echo $width; ?>px; height: <?php echo $height; ?>px;  <?php echo 'left: -' . $dragX . 'px' ?>; <?php echo 'top: -' . $dragY . 'px' ?>; cursor: move">
-        <img src="<?php echo UPLOAD_URL ."cover/750px/". $fileName ?>" style="width:100%;">
+        <img src="<?php echo UPLOAD_URL . 'images/' . $fileName ?>" style="width:100%;">
     </div>
     <script>
         //Drap and drop images
         $('.dragCover').draggable({
-            drag: function() {
+            drag: function () {
                 var offset = $(this).offset();
                 var x = Math.abs(offset.left);
                 var y = Math.abs(offset.top);
                 $('.userCover').html('<input type="hidden" name="dragX" value="' + x + '"><input type="hidden" name="dragY" value="' + y + '">');
             },
-            stop: function(event, ui) {
+            stop: function (event, ui) {
                 // Show dropped position.
                 var Stoppos = $(this).position();
                 var left = Math.abs(Stoppos.left);
@@ -39,7 +39,7 @@ if (!empty($photo))
 
         });
     </script>
-<?php
+    <?php
 }
 ?>
 <div class="actionCoverGroup">

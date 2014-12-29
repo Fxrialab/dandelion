@@ -3,7 +3,7 @@ $otherUser = $this->f3->get('otherUser');
 $username = $otherUser->data->username;
 ?>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#scrollFriends').scrollPaginationFriend({
             nop: 20, // The number of posts per scroll to be loaded
             offset: 0, // Initial offset, begins at 0 in this case
@@ -34,11 +34,11 @@ $username = $otherUser->data->username;
                         <h2>Friends</h2>
                     </div>
                     <div class="large-20">
-                        <a href="#" class="button icon add"><span class="label">Find Friends</span></a>
+                        <a href="#" class="button"><i class="fa fa-plus"></i><span class="label">Find Friends</span></a>
                     </div>
-                    <div class="large-5 ">
-                        <a data-dropdown="#dropdown-setting-friend" class="button icon edit"></a>
-                        <div id="dropdown-setting-friend" class="dropdown dropdown-tip dropdown-anchor-right">
+                    <div class="large-5 " style="position: relative">
+                        <a data-dropdown="#dropdown-setting-friend" class="button"><i class="fa fa-pencil fa-b"></i></a>
+                        <div id="dropdown-setting-friend" class="dropdown dropdown-tip dropdown-anchor-right dropdown-right">
                             <ul class="dropdown-menu"> 
                                 <li><a href="#">Mange Sections</a></li>
                                 <li><a href="#">Edit privacy</a></li></ul>
@@ -51,7 +51,11 @@ $username = $otherUser->data->username;
                     <div style="margin-top: 15px;">
                         <nav class="ink-navigation">
                             <ul class="menu horizontal">
-                                <li><a href="/content/friends?user=<?php echo $username ?>&f=friend_all">All friends (<?php if(!empty($friends)) echo count($friends);else echo '0'; ?>)</a></li>
+                                <li><a href="/content/friends?user=<?php echo $username ?>&f=friend_all">All friends (<?php if (!empty($friends))
+    echo count($friends);
+else
+    echo '0';
+?>)</a></li>
                                 <li><a href="/content/friends?user=<?php echo $username ?>&f=friend_recent">Friend Requests</a></li>
                             </ul>
                         </nav>
@@ -72,20 +76,20 @@ $username = $otherUser->data->username;
         </div>
         <div class="arrow_firend_all"></div>
         <div class="column-group">
-               <div class="photoAll" id="scrollFriends">
+            <div class="photoAll" id="scrollFriends">
 
             </div>
         </div>
     </div>
     <script>
-        $('#searchFriend').keyup(function() {
+        $('#searchFriend').keyup(function () {
             var key = $(this).val();
             var userID = $("#userID").val();
             $.ajax({
                 type: "POST",
                 data: {key: key, userID: userID},
                 url: "/searchFriend",
-                success: function(data) {
+                success: function (data) {
                     $('#scrollFriends').html(data);
                 }
 

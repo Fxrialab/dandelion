@@ -21,7 +21,7 @@
 }
 .groupItem{
     padding:5px 15px;
-    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
 }
 .userItem{
     margin: 0 5px;
@@ -36,8 +36,16 @@
     right: 55px;
 }
 .topBarGroup{
-    border: 1px solid #ccc; border-top: none;
-    padding: 10px 10px 10px 0;
+    border-top: none;
+    padding: 5px 0;
+}
+.topBarGroup ul li{
+    border-right: 1px solid #ccc;
+    font-weight: bold;
+  
+}
+.topBarGroup ul li a{
+      color: #888 !important;
 }
 .profileCover li a{
     padding: 0 !important;
@@ -126,3 +134,11 @@
     padding: 10px;
     min-height: 350px;
 }
+.tab-bar-group{
+    padding:5px; margin-bottom: 10px; margin-top: 5px
+}
+
+.coverGroup .actionCover{
+    position: absolute; top: 15px; left: 10px;
+}
+

@@ -53,16 +53,15 @@ class HomeController extends AppController
             $friend = $this->facade->findByAttributes('friendship', array('userA' => $currentUser->recordID));
             if (!empty($_POST['type']) && $_POST['type'] = 'group')
             {
-                $obj->type = 'group';
                 $obj->typeID = $_POST['typeID'];
+                $page = 'group';
             } else
             {
                 $obj->type = 'post';
+                $page = 'home';
             }
             $obj->status = 1;
-//            $obj->owner = $currentUser->recordID;
-            $obj->owner = $friend->data->userB;
-//            $obj->OR = 'owner="'.$currentUser->recordID.'"';
+            $obj->owner = $currentUser->recordID;
             $obj->select = 'LIMIT ' . $limit . ' ORDER BY published DESC offset ' . $offset;
             $activitiesRC = $this->facade->findAll('activity', $obj);
             $homes = array();
@@ -71,17 +70,17 @@ class HomeController extends AppController
                 foreach ($activitiesRC as $key => $activity)
                 {
 
-                    if (!empty($friend) && $friend->data->userA == $currentUser->recordID)
-                    {
+//                    if (!empty($friend) && $friend->data->userA == $currentUser->recordID)
+//                    {
 
                         $verbMod = $activity->data->verb . 'Controller';
                         $obj = new $verbMod;
                         if (method_exists($obj, 'bindingData'))
                             $homes[$activity->recordID] = $obj->bindingData($activity, $key);
-                    }
+//                    }
                 }
             }
-            $this->render('home/view', array('activities' => $homes, 'page' => 'home'));
+            $this->render('home/view', array('activities' => $homes, 'page' => $page));
         }
     }
 

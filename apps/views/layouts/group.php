@@ -22,6 +22,18 @@
                 </div>
             </div>
         </div>
+
         <?php $this->including('footer'); ?>
+        <script type="text/javascript" src="<?php echo $this->f3->get('JS'); ?>customs/group.js"></script>
+        <script id="navCoverPhotoGroupTemplate" type="text/x-jQuery-tmpl">
+            <div class="cancelCover">
+            <nav class="ink-navigation uiTimeLineHeadLine">
+            <ul class="menu horizontal uiTimeLineHeadLine float-right">
+            <li><button type="button" class="ink-button cancel" id="coverPhoto">Cancel</button></li>
+            <li><button type="submit" class="ink-button green-button">Save Changes</button></li>
+            </ul>
+            </nav>
+            </div>
+        </script>
     </body>
 </html>

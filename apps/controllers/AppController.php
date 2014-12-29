@@ -471,7 +471,7 @@ class AppController extends Controller
             move_uploaded_file($tmpName, $moveDefaultFileTo . $newImage);
 
         if (!empty($returnInfo))
-            return array('name' => $newImage, 'width' => $newWidth, 'height' => $newHeight);
+            return array('name' => $newImage, 'width' => $width, 'height' => $height);
         else
             return false;
     }

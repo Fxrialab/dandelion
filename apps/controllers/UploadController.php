@@ -36,8 +36,7 @@ class UploadController extends AppController
                     'url' => UPLOAD_URL . "/thumbnail/" . $photo['name']
                 );
                 $data['success'] = true;
-            }
-            else
+            } else
             {
                 $data['error'] = "Upload is failed, pls try again !";
             }
@@ -70,7 +69,6 @@ class UploadController extends AppController
         }
     }
 
-    //Upload image cover Avatar
     public function uploadAvatar()
     {
         if ($this->isLogin())
@@ -79,15 +77,16 @@ class UploadController extends AppController
                 mkdir(UPLOAD . 'images', 0777);
 
             if (!file_exists(UPLOAD . "/thumbnail"))
-                mkdir(UPLOAD . "thumbnail", 0777); //The folder will display like gallery images on "Choose from my photos"
+                mkdir(UPLOAD . "/thumbnail", 0777); //The folder will display like gallery images on "Choose from my photos"
             $tempDir = UPLOAD . "images/";
-            $thumbnailDir = UPLOAD . "thumbnail/";
+            $thumbnailDir = UPLOAD . "/thumbnail";
+
             if (isset($_FILES["myfile"]))
             {
                 $file = $_FILES["myfile"];
                 $code = $this->StringHelper->generateRandomString(5);
                 $newName = $code . time();
-                $image = $this->changeImageSingle($file, 250, $thumbnailDir, $newName, 250, true, $tempDir);
+                $image = $this->changeImageSingle($file, 160, $thumbnailDir, $newName, 160, true, $tempDir);
                 $this->render('ajax/confirmAvatar', array('image' => $image, 'target' => 'uploadAvatar'));
             }
         }
@@ -117,8 +116,7 @@ class UploadController extends AppController
                     $updateUser = array(
                         'profilePic' => 'none',
                     );
-                }
-                else
+                } else
                 {
                     $updateUser = array(
                         'coverPhoto' => 'none',
@@ -139,114 +137,106 @@ class UploadController extends AppController
         if ($this->isLogin())
         {
             $currentUser = $this->getCurrentUser();
-            if (!empty($_POST['avatar']))
-            {
-                $updateUser = array(
-                    'profilePic' => $_POST['avatar']
-                );
-            }
-            else
-            {
-                $target = $_POST['target'];
-                $file = $_POST['fileName'];
-                $width = $_POST['width'];
-                $height = $_POST['height'];
-                $dragX = $_POST['dragX'];
-                $dragY = $_POST['dragY'];
+
+            $target = $_POST['target'];
+            $file = $_POST['fileName'];
+            $width = $_POST['width'];
+            $height = $_POST['height'];
+            $dragX = $_POST['dragX'];
+            $dragY = $_POST['dragY'];
 //                $pathFile = UPLOAD . 'tmp/' . $file;
-                switch ($target)
-                {
-                    case 'isReposition':
-                        $photoID = $file;
+            switch ($target)
+            {
+                case 'isReposition':
+                    $photoID = $file;
+                    $entry = array(
+                        'dragX' => $dragX,
+                        'dragY' => $dragY,
+                        'type' => 'cover'
+                    );
+                    $this->facade->updateByAttributes('photo', $entry, array('@rid' => '#' . $photoID));
+                    $updateUser = array(
+                        'coverPhoto' => $photoID,
+                    );
+                    break;
+                case 'choosePhoto':
+                    if ($_POST['chooseBy'])
+                    {
+                        $type = $_POST['chooseBy'];
+                        $photo = $this->facade->findByAttributes('photo', array('fileName' => $file));
+                        $photoID = $photo->recordID;
                         $entry = array(
                             'dragX' => $dragX,
-                            'dragY' => $dragY,
-                            'type' => 'cover'
+                            'dragY' => $dragY
                         );
                         $this->facade->updateByAttributes('photo', $entry, array('@rid' => '#' . $photoID));
-                        $updateUser = array(
-                            'coverPhoto' => $photoID,
-                        );
-                        break;
-                    case 'choosePhoto':
-                        if ($_POST['chooseBy'])
+                        if ($type == 'cover')
                         {
-                            $type = $_POST['chooseBy'];
-                            $photo = $this->facade->findByAttributes('photo', array('fileName' => $file));
-                            $photoID = $photo->recordID;
-                            $entry = array(
-                                'dragX' => $dragX,
-                                'dragY' => $dragY
+                            $updateUser = array(
+                                'coverPhoto' => $photoID,
                             );
-                            $this->facade->updateByAttributes('photo', $entry, array('@rid' => '#' . $photoID));
-                            if ($type == 'cover')
-                            {
-                                $updateUser = array(
-                                    'coverPhoto' => $photoID,
-                                );
-                            }
-                            else
-                            {
-                                $updateUser = array(
-                                    'profilePic' => $photoID,
-                                );
-                            }
+                        } else
+                        {
+                            $updateUser = array(
+                                'profilePic' => $photoID,
+                            );
                         }
-                        break;
-                    case 'uploadCover':
-                        //resize image to thumbnail, cover folder and move image from tmp folder to images folder
+                    }
+                    break;
+                case 'uploadCover':
+                    //resize image to thumbnail, cover folder and move image from tmp folder to images folder
 //                        $this->resizeImageFile($pathFile, 150, $thumbnailDir . $file, 80);
 //                        $this->resizeImageFile($pathFile, 170, $avatarDir . $file, 100);
 //                        rename($pathFile, $imagesDir . $file);
-                        //prepare data for save
-                        $entry = array(
-                            'owner' => $currentUser->recordID,
-                            'albumID' => 'none',
-                            'fileName' => $file,
-                            'width' => $width,
-                            'height' => $height,
-                            'dragX' => $dragX,
-                            'dragY' => $dragY,
-                            'thumbnail_url' => '',
-                            'description' => '',
-                            'numberLike' => '0',
-                            'numberComment' => '0',
-                            'statusUpload' => 'uploaded',
-                            'published' => time()
-                        );
-                        $photoID = $this->facade->save('photo', $entry);
-                        $updateUser = array(
-                            'coverPhoto' => $photoID,
-                        );
-                        break;
-                    case 'uploadAvatar':
-                        //resize image to thumbnail, cover folder and move image from tmp folder to images folder
+                    //prepare data for save
+                    $entry = array(
+                        'owner' => $currentUser->recordID,
+                        'albumID' => 'none',
+                        'typeID' => 'none',
+                        'fileName' => $file,
+                        'width' => $width,
+                        'height' => $height,
+                        'dragX' => $dragX,
+                        'dragY' => $dragY,
+                        'thumbnail_url' => '',
+                        'description' => '',
+                        'numberLike' => '0',
+                        'numberComment' => '0',
+                        'statusUpload' => 'uploaded',
+                        'published' => time()
+                    );
+                    $photoID = $this->facade->save('photo', $entry);
+                    $updateUser = array(
+                        'coverPhoto' => $photoID,
+                    );
+                    break;
+                case 'uploadAvatar':
+                    //resize image to thumbnail, cover folder and move image from tmp folder to images folder
 //                        $this->resizeImageFile($pathFile, 150, $thumbnailDir . $file, 80);
 //                        $this->resizeImageFile($pathFile, 750, $coverDir . $file, 100);
 //                        rename($pathFile, $imagesDir . $file);
-                        //prepare data for save
-                        $entry = array(
-                            'owner' => $currentUser->recordID,
-                            'albumID' => 'none',
-                            'fileName' => $file,
-                            'width' => $width,
-                            'height' => $height,
-                            'dragX' => $dragX,
-                            'dragY' => $dragY,
-                            'thumbnail_url' => '',
-                            'description' => '',
-                            'numberLike' => '0',
-                            'numberComment' => '0',
-                            'statusUpload' => 'uploaded',
-                            'published' => time(),
-                            'type' => 'avatar'
-                        );
-                        $photoID = $this->facade->save('photo', $entry);
-                        $updateUser = array(
-                            'profilePic' => $photoID,
-                        );
-                        break;
-                }
+                    //prepare data for save
+                    $entry = array(
+                        'owner' => $currentUser->recordID,
+                        'albumID' => 'none',
+                        'typeID' => 'none',
+                        'fileName' => $file,
+                        'width' => $width,
+                        'height' => $height,
+                        'dragX' => $dragX,
+                        'dragY' => $dragY,
+                        'thumbnail_url' => '',
+                        'description' => '',
+                        'numberLike' => '0',
+                        'numberComment' => '0',
+                        'published' => time(),
+                        'type' => 'avatar'
+                    );
+                    $photoID = $this->facade->save('photo', $entry);
+                    $updateUser = array(
+                        'profilePic' => $photoID,
+                    );
+                    break;
             }
             $this->facade->updateByAttributes('user', $updateUser, array('@rid' => '#' . $currentUser->recordID));
             $user = $this->facade->findByPk('user', $this->f3->get('SESSION.userID'));
@@ -303,16 +293,14 @@ class UploadController extends AppController
                             'top' => $photo->data->dragY,
                             'photoID' => $photo->recordID,
                         ));
-                    }
-                    else
+                    } else
                     {
                         echo json_encode(array(
                             'username' => $user->data->username,
                             'src' => false
                         ));
                     }
-                }
-                elseif ($target == 'profilePic')
+                } elseif ($target == 'profilePic')
                 {
                     if ($user->data->profilePic != 'none')
                     {
@@ -321,8 +309,7 @@ class UploadController extends AppController
                             'username' => $user->data->username,
                             'src' => UPLOAD_URL . "thumbnail/" . $photo->data->fileName,
                         ));
-                    }
-                    else
+                    } else
                     {
                         echo json_encode(array(
                             'username' => $user->data->username,

@@ -11,6 +11,7 @@ $status_contentShare = $status->data->contentShare;
 ?>
 
 <div class="uiBoxPostItem postItem-<?php echo $rpStatusID; ?>">
+
     <div class="uiBoxPostContainer">
         <div style="padding:10px">
             <div class="column-group">
@@ -31,7 +32,7 @@ $status_contentShare = $status->data->contentShare;
                         echo ' shared <a href="/user/' . $this->getUsername($param[0]) . '">' . $param[1] . '</a>';
                     } else
                     {
-                        if ($status->data->param != 'none')
+                        if ($status->data->param != 'none' && $page == 'home')
                         {
                             $param = explode(',', $status->data->param);
                             echo ' <i class="fa fa-caret-right"></i> <a href="/content/group/groupdetail?id=' . $this->getId($param[0]) . '" class="timeLineLink">' . $param[1] . '</a>';
@@ -91,11 +92,17 @@ $status_contentShare = $status->data->contentShare;
             echo '<div style="padding:0 10px;"><div class="column-group">';
             foreach ($photo as $k => $value)
             {
-                $img = '<a class="popupPhoto" href="/content/photo/index?uid=' . $this->getId($value->data->owner) . '&sid=' . $this->getId($status->recordID) . '&pid=' . $this->getId($value->recordID) . '&page=' . $k . '"><img src=' . UPLOAD_URL . 'images/' . $value->data->fileName . '></a>';
                 if (count($photo) == 1)
-                    echo '<div class="large-100 img">' . $img . '</div>';
-                elseif (count($photo) >= 2)
-                    echo '<div class="large-50 img"><div class="imgPost">' . $img . '</div></div>';
+                    echo '<div class="large-100 img"><a class="popupPhoto" href="/content/photo/index?uid=' . $this->getId($value->data->owner) . '&sid=' . $this->getId($status->recordID) . '&pid=' . $this->getId($value->recordID) . '&page=' . $k . '"><img src=' . UPLOAD_URL . 'images/' . $value->data->fileName . '></a></div>';
+                elseif (count($photo) == 2)
+                    echo '<div class="large-50 img"><div class="imgPost"><a class="popupPhoto" href="/content/photo/index?uid=' . $this->getId($value->data->owner) . '&sid=' . $this->getId($status->recordID) . '&pid=' . $this->getId($value->recordID) . '&page=' . $k . '"><img style="width:240px; height:235px" src=' . UPLOAD_URL . 'images/' . $value->data->fileName . '></a></div></div>';
+                elseif (count($photo) == 3)
+                {
+                    if ($k == 2)
+                        echo '<div class="large-100 img"><div class="imgPost"><a class="popupPhoto" href="/content/photo/index?uid=' . $this->getId($value->data->owner) . '&sid=' . $this->getId($status->recordID) . '&pid=' . $this->getId($value->recordID) . '&page=' . $k . '"><img src=' . UPLOAD_URL . 'images/' . $value->data->fileName . '></a></div></div>';
+                    else
+                        echo '<div class="large-50 img"><div class="imgPost"><a class="popupPhoto" href="/content/photo/index?uid=' . $this->getId($value->data->owner) . '&sid=' . $this->getId($status->recordID) . '&pid=' . $this->getId($value->recordID) . '&page=' . $k . '"><img style="width:240px; height:235px" src=' . UPLOAD_URL . 'images/' . $value->data->fileName . '></a></div></div>';
+                }
             }
             echo '   </div></div>';
         }
@@ -203,7 +210,7 @@ $status_contentShare = $status->data->contentShare;
                                 <div class="control-group">
                                     <div class="control">
                                         <input name="typeID" type="hidden" id="<?php echo $uni ?>" value="<?php echo $rpStatusID; ?>" />
-                                        <textarea name="comment" class="taPostComment submitComment" id="comment_<?php echo $uni ?>" spellcheck="false" placeholder="Write a comment..."></textarea>
+                                        <textarea name="comment" class="taPostComment submitComment" id="comment_<?php echo $uni ?>" placeholder="Write a comment..."></textarea>
                                     </div>
                                 </div>
                             </fieldset>
@@ -213,8 +220,6 @@ $status_contentShare = $status->data->contentShare;
             </div>
         </div>
     </div>
+</div>
 
-</div>
-</div>
-</div>
 

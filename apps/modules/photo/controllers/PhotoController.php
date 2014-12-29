@@ -178,7 +178,7 @@ class PhotoController extends AppController
                 //get status friendship
                 $statusFriendShip = $this->getStatusFriendShip($currentUser->recordID, $currentProfileRC->recordID);
                 $album = $this->facade->findAllAttributes('album', array('owner' => $currentProfileID));
-                $this->renderModule("mains/myAlbum", 'photo', array(
+                $this->renderModule("myAlbum", 'photo', array(
                     'currentUser' => $currentUser,
                     'otherUser' => $currentProfileRC,
                     'statusFriendShip' => $statusFriendShip,
@@ -272,7 +272,7 @@ class PhotoController extends AppController
             }
             else
             {
-                $this->renderModule('mains/createAlbum', 'photo');
+                $this->renderModule('createAlbum', 'photo');
             }
         }
     }

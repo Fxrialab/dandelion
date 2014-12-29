@@ -16,7 +16,7 @@
                 ?>
                 <div class="large-33">
                     <div class="photoItems">
-                        <a class="popupPhoto page" href="/content/photo/popupPhoto?pID=<?php echo $value->data->actor ?>_0_<?php echo $value->recordID ?>_<?php echo $k ?>">
+                        <a class="popupPhoto page" href="/content/photo/index?uid=<?php echo $this->getId($value->data->owner) ?>&sid=0&pid<?php echo $this->getId($value->recordID) ?>&page=<?php echo $k ?>">
                             <img src="<?php echo UPLOAD_URL . 'images/' . $value->data->fileName ?>" height="200">
                         </a>
                     </div>

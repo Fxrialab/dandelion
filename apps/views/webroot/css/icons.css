@@ -1,5 +1,15 @@
 .fa{
-    margin-right: 3px;
+    margin-right: 5px;
+}
+.fa-b{
+     margin-right: 0 !important;
+}
+
+.fa-24{
+    font-size: 24px !important;
+}
+.fa-20{
+    font-size: 20px !important;
 }
 .fa-18{
     font-size: 18px !important;
@@ -12,6 +22,9 @@
 }
 .fa-chevron-down-color{
     color: #888 !important
+}
+.fa-white{
+    color: white;
 }
 /*[class^="icon30-"], [class*=" icon30-"] {
     display: inline-block;

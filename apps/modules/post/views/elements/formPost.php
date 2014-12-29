@@ -15,7 +15,7 @@
                     <div class="uiPostContent control-group">
                         <div class="control">
                             <div id="typeActivity"></div>
-                            <div id="typeActivityID" style="display: none"></div>
+                            <div id="typeActivityID"></div>
                             <textarea id="status" name="status" spellcheck="false" placeholder="What's on your mind?"></textarea>
                             <div class="embedElements">
                                 <!-- tag Image, Video, Link here -->
